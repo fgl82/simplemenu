@@ -1,0 +1,23 @@
+#ifndef DEFINITIONS_DEFINED
+#define DEFINITIONS_DEFINED
+#define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
+#define SCREEN_HEIGHT   240
+#define BTN_X			SDLK_SPACE
+#define BTN_A			SDLK_LCTRL
+#define BTN_B			SDLK_LALT
+#define BTN_Y			SDLK_LSHIFT
+#define BTN_L			SDLK_TAB
+#define BTN_R			SDLK_BACKSPACE
+#define BTN_START		SDLK_RETURN
+#define BTN_SELECT		SDLK_ESCAPE
+#define BTN_BACKLIGHT	SDLK_3
+#define BTN_POWER		SDLK_END
+#define BTN_UP			SDLK_UP
+#define BTN_DOWN		SDLK_DOWN
+#define BTN_LEFT		SDLK_LEFT
+#define BTN_RIGHT		SDLK_RIGHT
+#define LIGHTEST_GREEN  {126, 132, 22};
+#define LIGHT_GREEN     {87, 123, 70};
+#define DARK_GREEN      {56, 93, 73};
+#define DARKEST_GREEN   {46, 70, 61};
+#endif
