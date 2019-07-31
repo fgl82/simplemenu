@@ -53,13 +53,14 @@ void freeResources() {
 
 void quit() {
 	freeResources();
-	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
+	exit(0);
+//	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
 }
 
 void drawHeader() {
 	int rgbColor[] = DARKEST_GREEN;
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), "999 IN 1", headerFontColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), "9999 IN 1", headerFontColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {
@@ -110,7 +111,6 @@ void setupDisplay() {
 }
 
 void setupDecorations() {
-	//	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 155, 188, 15));
 	drawHeader();
 	drawFooter();
 }
@@ -135,7 +135,7 @@ void loadGameList() {
 	int game = 0;
 	int page = 0;
 	for (int i=0;i<n;i++){
-		if (strcmp((namelist[i]->d_name),"..")!=0 && strcmp((namelist[i]->d_name),".")!=0){
+		if (strcmp((namelist[i]->d_name),".gitignore")!=0 && strcmp((namelist[i]->d_name),"..")!=0 && strcmp((namelist[i]->d_name),".")!=0){
 			gameList[page][game] = namelist[i]->d_name;
 			game++;
 			if (game==ITEMS_PER_PAGE) {
@@ -154,7 +154,6 @@ void updateScreen() {
 }
 
 void performAction(SDL_Event event) {
-	if (event.type == SDL_KEYDOWN) {
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
 			running=0;
 			return;
@@ -168,15 +167,29 @@ void performAction(SDL_Event event) {
 			executeRom(romToBeExecuted);
 			return;
 		} else if (keys[BTN_DOWN]) {
+			if(currentGame == gamesInPage-1) {
+				if (currentPage < totalPages) {
+					currentGame=0;
+					currentPage++;
+					return;
+				}
+			}
 			if (currentGame < gamesInPage-1) {
 				currentGame++;
+				return;
 			}
-			return;
 		} else if(keys[BTN_UP]) {
-			if (currentGame>0) {
-				currentGame--;
+			if(currentGame == 0) {
+				if (currentPage>0) {
+					currentGame=gamesInPage-1;
+					currentPage--;
+					return;
+				}
 			}
-			return;
+			if (currentGame > 0) {
+				currentGame--;
+				return;
+			}
 		} else if(keys[BTN_RIGHT]) {
 			if (currentPage < totalPages) {
 				currentGame=0;
@@ -190,17 +203,24 @@ void performAction(SDL_Event event) {
 			}
 			return;
 		}
-	}
 }
 
 int main(int argc, char *argv[]) {
 	setupDisplay();
 	setupDecorations();
 	loadGameList();
+	updateScreen();
 	while (running) {
-		updateScreen();
-		SDL_WaitEvent(&event);
-		performAction(event);
+		SDL_EnableKeyRepeat(30,180);
+		while (SDL_WaitEvent(&event)) {
+			if (event.type == SDL_KEYDOWN) {
+				performAction(event);
+				updateScreen();
+			}
+			if (event.type == SDL_KEYUP) {
+				break;
+			}
+		}
 	}
 	quit();
 }

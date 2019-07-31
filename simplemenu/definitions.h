@@ -16,8 +16,8 @@
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define LIGHTEST_GREEN  {126, 132, 22};
-#define LIGHT_GREEN     {87, 123, 70};
-#define DARK_GREEN      {56, 93, 73};
-#define DARKEST_GREEN   {46, 70, 61};
+#define LIGHTEST_GREEN  {1,252,0};
+#define LIGHT_GREEN     {0,209,0};
+#define DARK_GREEN      {0,191,0};
+#define DARKEST_GREEN   {0,92,9};
 #endif
