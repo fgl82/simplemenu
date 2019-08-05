@@ -18,11 +18,13 @@
 
 int currentGame = 0;
 int currentPage = 0;
+int currentEmulator = 0;
 int gamesInPage=0;
 int totalPages=0;
 int running = 1;
-char * gameList[200][10];
+char *gameList[200][10];
 static char buf[1024];
+
 uint8_t *keys;
 
 TTF_Font *font = NULL;
@@ -53,14 +55,14 @@ void freeResources() {
 
 void quit() {
 	freeResources();
-//	exit(0);
-	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
+	exit(0);
+//	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
 }
 
 void drawHeader() {
 	int rgbColor[] = DARKEST_GREEN;
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), "9999 IN 1", headerFontColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), consoles[currentEmulator], headerFontColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {
@@ -115,28 +117,101 @@ void setupDecorations() {
 	drawFooter();
 }
 
-void executeRom (char *rom) {
+char *getExt (char *stringWithExtension) {
+    return strrchr(stringWithExtension, '.');;
+}
+
+char *determineExecutable(char *fileToBeExecutedWithFullPath) {
+	char *ext = getExt(fileToBeExecutedWithFullPath);
+	if (strcmp(ext,".gb\"")==0) {
+		return emulatorExecutables[1];
+	}
+	if (strcmp(ext,".gbc\"")==0) {
+		return emulatorExecutables[2];
+	}
+	if (strcmp(ext,".gba\"")==0) {
+		return emulatorExecutables[3];
+	}
+	if (strcmp(ext,".nes\"")==0) {
+		return emulatorExecutables[4];
+	}
+	if (strcmp(ext,".sfc\"")==0) {
+		return emulatorExecutables[5];
+	}
+	if (strcmp(ext,".gg\"")==0) {
+		return emulatorExecutables[6];
+	}
+	if (strcmp(ext,".sms\"")==0) {
+		return emulatorExecutables[7];
+	}
+	if (strcmp(ext,".md\"")==0) {
+		return emulatorExecutables[8];
+	}
+	if (strcmp(ext,".iso\"")==0) {
+		return emulatorExecutables[9];
+	}
+	if (strcmp(ext,".zip\"")==0) {
+		return emulatorExecutables[10];
+	}
+	if (strcmp(ext,".pce\"")==0) {
+		return emulatorExecutables[11];
+	}
+	if (strcmp(ext,".bin\"")==0) {
+		return emulatorExecutables[12];
+	}
+	return NULL;
+}
+
+void executeFavorite (char fileToBeExecutedWithFullPath[]) {
+	freeResources();
+	screen=NULL;
+	char command[200];
+	char executable[200];
+	strcpy(executable,determineExecutable(fileToBeExecutedWithFullPath));
+	printf("%s\n",executable);
+	strcpy(command, executable);
+	if(executable!=NULL) {
+		strcat(command," ");
+	}
+	printf("%s\n",command);
+	strcat(command,fileToBeExecutedWithFullPath);
+	printf("%s\n",command);
+	int returnValue = system(command);
+	if (returnValue==-1) {
+		printf("ERROR");
+	}
+	SDL_Init(SDL_INIT_VIDEO);
+	setupDisplay();
+	setupDecorations();
+}
+
+void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 	freeResources();
 	char command[200];
-	strcpy(command, emulatorExecutable);
+	strcpy(command, executable);
 	strcat(command," ");
-	strcat(command,rom);
-	system(command);
+	strcat(command,fileToBeExecutedWithFullPath);
+	int returnValue = system(command);
+	if (returnValue==-1) {
+		printf("ERROR");
+	}
 	setupDisplay();
 	setupDecorations();
 }
 
 void loadGameList() {
-	struct dirent **namelist;
-	int n=scandir(romsDirectory, &namelist, 0, alphasort);
-	if (n==-1) {
-		n = scandir(NESromsDirectory, &namelist, 0, alphasort);
-	}
+	struct dirent **files;
+	int n=scandir(romsDirectories[currentEmulator], &files, 0, alphasort);
 	int game = 0;
 	int page = 0;
+	for (int i=0;i<200;i++) {
+		for (int j=0;j<10;j++) {
+			gameList[i][j]=NULL;
+		}
+	}
 	for (int i=0;i<n;i++){
-		if (strcmp((namelist[i]->d_name),".gitignore")!=0 && strcmp((namelist[i]->d_name),"..")!=0 && strcmp((namelist[i]->d_name),".")!=0){
-			gameList[page][game] = namelist[i]->d_name;
+		if (strcmp((files[i]->d_name),".gitignore")!=0 && strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0){
+			gameList[page][game] = files[i]->d_name;
 			game++;
 			if (game==ITEMS_PER_PAGE) {
 				page++;
@@ -145,7 +220,7 @@ void loadGameList() {
 			}
 		}
 	}
-	free(namelist);
+	free(files);
 }
 
 void updateScreen() {
@@ -157,16 +232,51 @@ void performAction(SDL_Event event) {
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
 			running=0;
 			return;
-		} else if (keys[BTN_B]) {
-			char romToBeExecuted[100];
-			strcpy(romToBeExecuted,"\"");
-			strcat(romToBeExecuted,romsDirectory);
-			strcat(romToBeExecuted,gameList[currentPage][currentGame]);
-			strcat(romToBeExecuted,"\"");
-			strcat(romToBeExecuted,"\0");
-			executeRom(romToBeExecuted);
+		}
+		if(keys[BTN_A] && keys[BTN_RIGHT]) {
+			if(emulatorExecutables[currentEmulator+1]) {
+				currentEmulator++;
+				drawHeader();
+				totalPages=0;
+				loadGameList();
+				currentGame=0;
+				currentPage=0;
+				return;
+			}
+		}
+		if(keys[BTN_A] && keys[BTN_LEFT]) {
+			if(currentEmulator>0) {
+				currentEmulator--;
+				drawHeader();
+				totalPages=0;
+				loadGameList();
+				currentGame=0;
+				currentPage=0;
+				return;
+			}
+		}
+		if (keys[BTN_B]) {
+			char fileToBeExecutedwithFullPath[200];
+			if (gameList[currentPage][currentGame]!=NULL) {
+				if (currentEmulator>0) {
+					strcpy(fileToBeExecutedwithFullPath,"\"");
+					strcat(fileToBeExecutedwithFullPath,romsDirectories[currentEmulator]);
+					strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
+					strcat(fileToBeExecutedwithFullPath,"\"");
+					strcat(fileToBeExecutedwithFullPath,"\0");
+					executeCommand(emulatorExecutables[currentEmulator],fileToBeExecutedwithFullPath);
+				} else {
+					strcpy(fileToBeExecutedwithFullPath,"\"");
+					strcat(fileToBeExecutedwithFullPath,romsDirectories[currentEmulator]);
+					strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
+					strcat(fileToBeExecutedwithFullPath,"\"");
+					strcat(fileToBeExecutedwithFullPath,"\0");
+					executeFavorite(fileToBeExecutedwithFullPath);
+				}
+			}
 			return;
-		} else if (keys[BTN_DOWN]) {
+		}
+		if (keys[BTN_DOWN]) {
 			if(currentGame == gamesInPage-1) {
 				if (currentPage < totalPages) {
 					currentGame=0;
@@ -178,7 +288,8 @@ void performAction(SDL_Event event) {
 				currentGame++;
 				return;
 			}
-		} else if(keys[BTN_UP]) {
+		}
+		if(keys[BTN_UP]) {
 			if(currentGame == 0) {
 				if (currentPage>0) {
 					currentGame=gamesInPage-1;
@@ -190,19 +301,21 @@ void performAction(SDL_Event event) {
 				currentGame--;
 				return;
 			}
-		} else if(keys[BTN_RIGHT]) {
+		}
+		if(keys[BTN_RIGHT]) {
 			if (currentPage < totalPages) {
 				currentGame=0;
 				currentPage++;
 			}
-			return;
-		} else if(keys[BTN_LEFT]) {
+		}
+		if(keys[BTN_LEFT]) {
 			if (currentPage > 0) {
 				currentGame=0;
 				currentPage--;
 			}
 			return;
 		}
+
 }
 
 int main(int argc, char *argv[]) {
