@@ -55,8 +55,7 @@ void freeResources() {
 
 void quit() {
 	freeResources();
-	exit(0);
-//	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
+	execlp("sh", "sh", "-c", "kill $(ps -al | grep \"/mnt/\" | grep -v \"/kernel/\" | tr -s [:blank:] | cut -d \" \" -f 2) ; sleep 0.1 ; sync && poweroff",  NULL);
 }
 
 void drawHeader() {
@@ -233,6 +232,10 @@ void performAction(SDL_Event event) {
 			running=0;
 			return;
 		}
+		if (keys[BTN_A] && keys[BTN_START]) {
+			freeResources();
+			exit(0);
+		}
 		if(keys[BTN_A] && keys[BTN_RIGHT]) {
 			if(emulatorExecutables[currentEmulator+1]) {
 				currentEmulator++;
@@ -258,19 +261,14 @@ void performAction(SDL_Event event) {
 		if (keys[BTN_B]) {
 			char fileToBeExecutedwithFullPath[200];
 			if (gameList[currentPage][currentGame]!=NULL) {
+				strcpy(fileToBeExecutedwithFullPath,"\"");
+				strcat(fileToBeExecutedwithFullPath,romsDirectories[currentEmulator]);
+				strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
+				strcat(fileToBeExecutedwithFullPath,"\"");
+				strcat(fileToBeExecutedwithFullPath,"\0");
 				if (currentEmulator>0) {
-					strcpy(fileToBeExecutedwithFullPath,"\"");
-					strcat(fileToBeExecutedwithFullPath,romsDirectories[currentEmulator]);
-					strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
-					strcat(fileToBeExecutedwithFullPath,"\"");
-					strcat(fileToBeExecutedwithFullPath,"\0");
 					executeCommand(emulatorExecutables[currentEmulator],fileToBeExecutedwithFullPath);
 				} else {
-					strcpy(fileToBeExecutedwithFullPath,"\"");
-					strcat(fileToBeExecutedwithFullPath,romsDirectories[currentEmulator]);
-					strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
-					strcat(fileToBeExecutedwithFullPath,"\"");
-					strcat(fileToBeExecutedwithFullPath,"\0");
 					executeFavorite(fileToBeExecutedwithFullPath);
 				}
 			}
