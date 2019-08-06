@@ -240,8 +240,7 @@ void performAction(SDL_Event event) {
 			exit(0);
 		}
 		if(keys[BTN_A] && keys[BTN_RIGHT]) {
-//			if(menuSections[currentEmulator+1]) {
-			if(currentSection<11) {
+			if(currentSection<(sizeof  menuSections/ sizeof menuSections[0])-1) {
 				currentSection++;
 				setupDecorations();
 				totalPages=0;
