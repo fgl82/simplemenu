@@ -40,11 +40,8 @@ void performAction(SDL_Event event) {
 	if (keys[BTN_B]) {
 		char fileToBeExecutedwithFullPath[200];
 		if (gameList[currentPage][currentGame]!=NULL) {
-			strcpy(fileToBeExecutedwithFullPath,"\"");
-			strcat(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
+			strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
 			strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
-			strcat(fileToBeExecutedwithFullPath,"\"");
-			strcat(fileToBeExecutedwithFullPath,"\0");
 			if (currentSection>0) {
 				executeCommand(menuSections[currentSection].executable,fileToBeExecutedwithFullPath);
 			} else {

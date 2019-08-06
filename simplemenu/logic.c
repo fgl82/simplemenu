@@ -7,6 +7,7 @@
 #include <string.h>
 #include <string_utils.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_mouse.h>
 #include <unistd.h>
 
 void quit() {
@@ -15,47 +16,48 @@ void quit() {
 }
 
 char *determineExecutable(char *fileToBeExecutedWithFullPath) {
-	char *ext = getExt(fileToBeExecutedWithFullPath);
-	if (strcmp(ext,".gb\"")==0) {
+	char *ext = getExtension(fileToBeExecutedWithFullPath);
+	if (strcmp(ext,".gb")==0) {
 		return menuSections[1].executable;
 	}
-	if (strcmp(ext,".gbc\"")==0) {
+	if (strcmp(ext,".gbc")==0) {
 		return menuSections[2].executable;
 	}
-	if (strcmp(ext,".gba\"")==0) {
+	if (strcmp(ext,".gba")==0) {
 		return menuSections[3].executable;
 	}
-	if (strcmp(ext,".nes\"")==0) {
+	if (strcmp(ext,".nes")==0) {
 		return menuSections[4].executable;
 	}
-	if (strcmp(ext,".sfc\"")==0) {
+	if (strcmp(ext,".sfc")==0) {
 		return menuSections[5].executable;
 	}
-	if (strcmp(ext,".gg\"")==0) {
+	if (strcmp(ext,".gg")==0) {
 		return menuSections[6].executable;
 	}
-	if (strcmp(ext,".sms\"")==0) {
+	if (strcmp(ext,".sms")==0) {
 		return menuSections[7].executable;
 	}
-	if (strcmp(ext,".md\"")==0) {
+	if (strcmp(ext,".md")==0) {
 		return menuSections[8].executable;
 	}
-	if (strcmp(ext,".iso\"")==0) {
+	if (strcmp(ext,".iso")==0) {
 		return menuSections[9].executable;
 	}
-	if (strcmp(ext,".zip\"")==0) {
+	if (strcmp(ext,".zip")==0) {
 		return menuSections[10].executable;
 	}
-	if (strcmp(ext,".pce\"")==0) {
+	if (strcmp(ext,".pce")==0) {
 		return menuSections[11].executable;
 	}
-	if (strcmp(ext,".bin\"")==0) {
+	if (strcmp(ext,".bin")==0) {
 		return menuSections[12].executable;
 	}
 	return NULL;
 }
 
 void executeFavorite (char fileToBeExecutedWithFullPath[]) {
+	SDL_ShowCursor(1);
 	freeResources();
 	char command[200];
 	char executable[200];
@@ -64,7 +66,9 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	if(executable!=NULL) {
 		strcat(command," ");
 	}
+	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
+	strcat(command,"\"");
 	int returnValue = system(command);
 	if (returnValue==-1) {
 		printf("ERROR");
@@ -75,11 +79,14 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 }
 
 void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
+	SDL_ShowCursor(1);
 	freeResources();
 	char command[200];
 	strcpy(command, executable);
 	strcat(command," ");
+	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
+	strcat(command,"\"");
 	int returnValue = system(command);
 	if (returnValue==-1) {
 		printf("ERROR");
