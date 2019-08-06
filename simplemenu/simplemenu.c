@@ -173,14 +173,11 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	char command[200];
 	char executable[200];
 	strcpy(executable,determineExecutable(fileToBeExecutedWithFullPath));
-	printf("%s\n",executable);
 	strcpy(command, executable);
 	if(executable!=NULL) {
 		strcat(command," ");
 	}
-	printf("%s\n",command);
 	strcat(command,fileToBeExecutedWithFullPath);
-	printf("%s\n",command);
 	int returnValue = system(command);
 	if (returnValue==-1) {
 		printf("ERROR");
@@ -244,7 +241,7 @@ void performAction(SDL_Event event) {
 		}
 		if(keys[BTN_A] && keys[BTN_RIGHT]) {
 //			if(menuSections[currentEmulator+1]) {
-			if(currentSection<12) {
+			if(currentSection<11) {
 				currentSection++;
 				setupDecorations();
 				totalPages=0;
