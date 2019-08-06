@@ -103,9 +103,11 @@ void loadGameList() {
 			gameList[page][game] = files[i]->d_name;
 			game++;
 			if (game==ITEMS_PER_PAGE) {
-				page++;
-				totalPages++;
-				game = 0;
+				if(i!=n-1) {
+					page++;
+					totalPages++;
+					game = 0;
+				}
 			}
 		}
 	}
