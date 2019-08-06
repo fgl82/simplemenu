@@ -619,7 +619,7 @@ void setupSections() {
 	aMenuSection.bodySelectedTextForegroundColor.r=254;
 	aMenuSection.bodySelectedTextForegroundColor.g=205;
 	aMenuSection.bodySelectedTextForegroundColor.b=138;
-	menuSections[11]=aMenuSection;
+	menuSections[12]=aMenuSection;
 }
 
 int main(int argc, char *argv[]) {
