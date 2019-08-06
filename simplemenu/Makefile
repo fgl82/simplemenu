@@ -1,7 +1,7 @@
 # Software Name
 PROGRAM = simplemenu.elf
-PLATFORM = BITTBOY
-#PLATFORM = PC
+#PLATFORM = BITTBOY
+PLATFORM = PC
 
 # Compiler
 
@@ -26,7 +26,7 @@ else
 LDFLAGS	+=  -s
 endif
 
-CFILES =  simplemenu.c string_utils.c graphics.c
+CFILES =  simplemenu.c string_utils.c graphics.c screen.c control.c logic.c
 SFILES = 
 
 OFILES = $(SFILES:.S=.o) $(CFILES:.c=.o)

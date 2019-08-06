@@ -1,4 +1,9 @@
 #include "graphics.h"
+#include "definitions.h"
+
+int calculateProportionalSizeOrDistance(int number) {
+	return (SCREEN_HEIGHT*number)/240;
+}
 
 int draw_shaded_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor) {
 	SDL_Surface *msg;

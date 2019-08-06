@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
-
 #include "string_utils.h"
+
+char *getExt (char *stringWithExtension) {
+    return strrchr(stringWithExtension, '.');;
+}
 
 char *removeExtension(char *fileName) {
     char *retstr;

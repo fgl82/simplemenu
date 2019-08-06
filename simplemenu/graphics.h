@@ -11,6 +11,7 @@ HAlignCenter = 4,
 VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
+int calculateProportionalSizeOrDistance(int number);
 int draw_shaded_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor);
 int draw_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align);
 void draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[]);
