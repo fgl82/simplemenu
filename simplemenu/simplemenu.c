@@ -34,7 +34,7 @@ struct MenuSection {
 	SDL_Color bodyBackgroundColor;
 };
 
-struct MenuSection menuSections[12];
+struct MenuSection menuSections[13];
 
 uint8_t *keys;
 
@@ -169,7 +169,6 @@ char *determineExecutable(char *fileToBeExecutedWithFullPath) {
 
 void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	freeResources();
-	screen=NULL;
 	char command[200];
 	char executable[200];
 	strcpy(executable,determineExecutable(fileToBeExecutedWithFullPath));
