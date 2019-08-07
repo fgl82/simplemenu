@@ -52,6 +52,7 @@ void readConfig() {
 		menuSections[menuSectionCounter]=aMenuSection;
 		menuSectionCounter++;
 	}
+	strcpy(menuSections[menuSectionCounter].sectionName,"END");
 	fclose(fp);
 	if (line) {
 		free(line);

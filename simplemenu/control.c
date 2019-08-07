@@ -16,7 +16,7 @@ void performAction(SDL_Event event) {
 		exit(0);
 	}
 	if(keys[BTN_A] && keys[BTN_RIGHT]) {
-		if(currentSection<(sizeof menuSections/sizeof menuSections[0])-1) {
+		if(strcmp(menuSections[currentSection+1].sectionName,"END")!=0) {
 			currentSection++;
 			setupDecorations();
 			totalPages=0;
