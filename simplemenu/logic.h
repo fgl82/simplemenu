@@ -1,5 +1,6 @@
 #ifndef LOGIC
 #define LOGIC
+void readConfig();
 void quit();
 char *determineExecutable(char *fileToBeExecutedWithFullPath);
 void executeFavorite (char fileToBeExecutedWithFullPath[]);
