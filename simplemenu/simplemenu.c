@@ -21,8 +21,8 @@ void initializeGlobals() {
 }
 
 int main(int argc, char *argv[]) {
-	readConfig();
 	initializeGlobals();
+	readConfig();
 	setupDisplay();
 	setupDecorations();
 	loadGameList();
