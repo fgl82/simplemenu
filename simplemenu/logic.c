@@ -57,7 +57,6 @@ char *determineExecutable(char *fileToBeExecutedWithFullPath) {
 }
 
 void executeFavorite (char fileToBeExecutedWithFullPath[]) {
-	SDL_ShowCursor(1);
 	freeResources();
 	char command[200];
 	char executable[200];
@@ -79,7 +78,6 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 }
 
 void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
-	SDL_ShowCursor(1);
 	freeResources();
 	char command[200];
 	strcpy(command, executable);
