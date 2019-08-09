@@ -9,6 +9,7 @@ int currentPage;
 int currentSection;
 int gamesInPage;
 int totalPages;
+int currentCPU;
 char *gameList[200][10];
 struct MenuSection {
 	char sectionName[50];

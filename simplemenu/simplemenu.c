@@ -2,6 +2,7 @@
 #include <globals.h>
 #include <logic.h>
 #include <screen.h>
+#include <definitions.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
 
@@ -15,6 +16,7 @@ void initializeGlobals() {
 }
 
 int main(int argc, char *argv[]) {
+	HW_Init();
 	initializeGlobals();
 	readConfig();
 	setupDisplay();

@@ -1,5 +1,7 @@
 #ifndef LOGIC
 #define LOGIC
+void HW_Init();
+void setCPU(uint32_t mhz);
 void readConfig();
 void quit();
 char *determineExecutable(char *fileToBeExecutedWithFullPath);

@@ -19,9 +19,21 @@ TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
 void drawHeader() {
+	char finalString [100];
 	int rgbColor[] = {menuSections[currentSection].headerAndFooterTextBackgroundColor.r,menuSections[currentSection].headerAndFooterTextBackgroundColor.g,menuSections[currentSection].headerAndFooterTextBackgroundColor.b};
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), menuSections[currentSection].sectionName, menuSections[currentSection].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	if (currentCPU==NO_OC) {
+		strcpy(finalString,"- ");
+		strcat(finalString,menuSections[currentSection].sectionName);
+		strcat(finalString," -");
+	} else if (currentCPU==MED_OC) {
+		strcpy(finalString,menuSections[currentSection].sectionName);
+	} else {
+		strcpy(finalString,"+ ");
+		strcat(finalString,menuSections[currentSection].sectionName);
+		strcat(finalString," +");
+	}
+	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSection].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {

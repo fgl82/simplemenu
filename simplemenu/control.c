@@ -1,9 +1,10 @@
+#include <definitions.h>
 #include <globals.h>
+#include <graphics.h>
 #include <logic.h>
 #include <screen.h>
 #include <stdlib.h>
 #include <string.h>
-#include <definitions.h>
 #include <SDL/SDL_events.h>
 
 void performAction(SDL_Event event) {
@@ -14,6 +15,19 @@ void performAction(SDL_Event event) {
 	if (keys[BTN_A] && keys[BTN_START]) {
 		freeResources();
 		exit(0);
+	}
+	if(keys[BTN_TB]) {
+		if(currentCPU==NO_OC) {
+			setCPU(MED_OC);
+			drawHeader();
+		} else if (currentCPU==MED_OC) {
+			setCPU(MAX_OC);
+			drawHeader();
+		} else {
+			setCPU(NO_OC);
+			drawHeader();
+		}
+		return;
 	}
 	if(keys[BTN_TA]) {
 		if(strcmp(menuSections[currentSection+1].sectionName,"END")!=0) {
