@@ -1,15 +1,9 @@
-#include <bits/types/FILE.h>
 #include <control.h>
 #include <globals.h>
 #include <logic.h>
 #include <screen.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
-#include <unistd.h>
 
 void initializeGlobals() {
 	running=1;
