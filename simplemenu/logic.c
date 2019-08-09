@@ -119,7 +119,7 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
 	strcat(command,"\"");
-	int returnValue = system(strcat(command,">/dev/null"));
+	int returnValue = system(strcat(command,"&>/dev/null"));
 	if (returnValue==-1) {
 		printf("ERROR");
 	}
@@ -136,7 +136,7 @@ void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
 	strcat(command,"\"");
-	int returnValue = system(strcat(command,">/dev/null"));
+	int returnValue = system(strcat(command,"&>/dev/null"));
 	if (returnValue==-1) {
 		printf("ERROR");
 	}
