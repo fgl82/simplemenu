@@ -14,6 +14,7 @@ struct MenuSection {
 	char sectionName[50];
 	char executable[100];
 	char filesDirectory[100];
+	char fileExtension[5];
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;

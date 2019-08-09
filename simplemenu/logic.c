@@ -32,7 +32,6 @@ void readConfig() {
 		strcpy(aMenuSection.executable,configurations[1]);
 		strcpy(aMenuSection.filesDirectory,configurations[2]);
 		strcpy(aMenuSection.fileExtension,configurations[3]);
-		printf("%s",aMenuSection.fileExtension);
 		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[4]);
 		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[5]);
 		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[6]);
@@ -146,8 +145,6 @@ void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
-	printf("\n");
-	printf("%s - %s\n", extension, section.fileExtension);
 	if(currentSection>0) {
 		return(strcmp(extension,section.fileExtension));
 	}
