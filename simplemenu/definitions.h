@@ -2,22 +2,15 @@
 #define DEFINITIONS_DEFINED
 #define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
 #define SCREEN_HEIGHT   240
-#define BTN_X			SDLK_SPACE
+#define BTN_B			SDLK_SPACE
 #define BTN_A			SDLK_LCTRL
-#define BTN_B			SDLK_LALT
-#define BTN_Y			SDLK_LSHIFT
-#define BTN_L			SDLK_TAB
-#define BTN_R			SDLK_BACKSPACE
+#define BTN_TA			SDLK_LALT
+#define BTN_TB			SDLK_LSHIFT
 #define BTN_START		SDLK_RETURN
 #define BTN_SELECT		SDLK_ESCAPE
-#define BTN_BACKLIGHT	SDLK_3
-#define BTN_POWER		SDLK_END
+#define BTN_R  		    SDLK_RCTRL
 #define BTN_UP			SDLK_UP
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define LIGHTEST_GREEN  {1,252,0};
-#define LIGHT_GREEN     {0,209,0};
-#define DARK_GREEN      {0,191,0};
-#define DARKEST_GREEN   {0,92,9};
 #endif

@@ -15,7 +15,7 @@ void performAction(SDL_Event event) {
 		freeResources();
 		exit(0);
 	}
-	if(keys[BTN_A] && keys[BTN_RIGHT]) {
+	if(keys[BTN_TA]) {
 		if(strcmp(menuSections[currentSection+1].sectionName,"END")!=0) {
 			currentSection++;
 			setupDecorations();
@@ -26,7 +26,7 @@ void performAction(SDL_Event event) {
 			return;
 		}
 	}
-	if(keys[BTN_A] && keys[BTN_LEFT]) {
+	if(keys[BTN_B]) {
 		if(currentSection>0) {
 			currentSection--;
 			setupDecorations();
@@ -37,7 +37,7 @@ void performAction(SDL_Event event) {
 			return;
 		}
 	}
-	if (keys[BTN_B]) {
+	if (keys[BTN_A]) {
 		char fileToBeExecutedwithFullPath[200];
 		if (gameList[currentPage][currentGame]!=NULL) {
 			strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
