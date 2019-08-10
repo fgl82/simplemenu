@@ -12,9 +12,10 @@ int totalPages;
 int currentCPU;
 char *gameList[200][10];
 struct MenuSection {
-	char sectionName[50];
-	char executable[100];
-	char filesDirectory[100];
+	char sectionName[16];
+	char emulatorFolder[24];
+	char executable[16];
+	char filesDirectory[21];
 	char fileExtension[5];
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
@@ -23,6 +24,6 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 };
-struct MenuSection menuSections[25];
+struct MenuSection menuSections[14];
 uint8_t *keys;
 #endif

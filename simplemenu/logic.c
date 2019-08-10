@@ -286,17 +286,17 @@ int32_t memdev = 0;
 
 void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
-	uint32_t x, v;
-	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
-	for(x=0; x<total; x++) {
-		if((oc_table[x] >> 16) >= mhz) {
-			v = memregs[0];
-			v&= 0xffff0000;
-			v|= (oc_table[x] &  0x0000ffff);
-			memregs[0] = v;
-			break;
-		}
-	}
+//	uint32_t x, v;
+//	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
+//	for(x=0; x<total; x++) {
+//		if((oc_table[x] >> 16) >= mhz) {
+//			v = memregs[0];
+//			v&= 0xffff0000;
+//			v|= (oc_table[x] &  0x0000ffff);
+//			memregs[0] = v;
+//			break;
+//		}
+//	}
 }
 
 void HW_Init() {
@@ -321,7 +321,7 @@ void readConfig() {
 	int menuSectionCounter = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		char *ptr = strtok(line, ";");
-		char *configurations[21];
+		char *configurations[22];
 		int i=0;
 		while(ptr != NULL)
 		{
@@ -330,27 +330,28 @@ void readConfig() {
 			i++;
 		}
 		strcpy(aMenuSection.sectionName,configurations[0]);
-		strcpy(aMenuSection.executable,configurations[1]);
-		strcpy(aMenuSection.filesDirectory,configurations[2]);
-		strcpy(aMenuSection.fileExtension,configurations[3]);
-		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[4]);
-		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[5]);
-		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[6]);
-		aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[7]);
-		aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[8]);
-		aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[9]);
-		aMenuSection.bodyBackgroundColor.r=atoi(configurations[10]);
-		aMenuSection.bodyBackgroundColor.g=atoi(configurations[11]);
-		aMenuSection.bodyBackgroundColor.b=atoi(configurations[12]);
-		aMenuSection.bodyTextForegroundColor.r=atoi(configurations[13]);
-		aMenuSection.bodyTextForegroundColor.g=atoi(configurations[14]);
-		aMenuSection.bodyTextForegroundColor.b=atoi(configurations[15]);
-		aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[16]);
-		aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[17]);
-		aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[18]);
-		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[19]);
-		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[20]);
-		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[21]);
+		strcpy(aMenuSection.emulatorFolder,configurations[1]);
+		strcpy(aMenuSection.executable,configurations[2]);
+		strcpy(aMenuSection.filesDirectory,configurations[3]);
+		strcpy(aMenuSection.fileExtension,configurations[4]);
+		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
+		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
+		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
+		aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[8]);
+		aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[9]);
+		aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[10]);
+		aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
+		aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
+		aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
+		aMenuSection.bodyTextForegroundColor.r=atoi(configurations[14]);
+		aMenuSection.bodyTextForegroundColor.g=atoi(configurations[15]);
+		aMenuSection.bodyTextForegroundColor.b=atoi(configurations[16]);
+		aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
+		aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
+		aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
+		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
+		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
+		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
 		menuSections[menuSectionCounter]=aMenuSection;
 		menuSectionCounter++;
 	}
@@ -432,7 +433,10 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 	freeResources();
 	char command[200];
-	strcpy(command, executable);
+	strcpy(command, "cd ");
+	strcat(command, menuSections[currentSection].emulatorFolder);
+	strcat(command, ";./");
+	strcat(command, executable);
 	strcat(command," ");
 	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
