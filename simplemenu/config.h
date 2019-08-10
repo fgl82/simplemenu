@@ -1,4 +1,6 @@
 #ifndef CONFIG
 #define CONFIG
-void readConfig();
+void saveLastState();
+void loadLastState();
+void loadConfig();
 #endif

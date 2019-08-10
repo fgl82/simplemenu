@@ -5,7 +5,39 @@
 #include <unistd.h>
 #include <globals.h>
 
-void readConfig() {
+void saveLastState() {
+	FILE * fp;
+	fp = fopen("./config/last_state.cfg", "w");
+	fprintf(fp, "%d;%d", currentSection, currentGame);
+	fclose(fp);
+}
+
+void loadLastState() {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	fp = fopen("./config/last_state.cfg", "r");
+	char *configurations[2];
+	while ((read = getline(&line, &len, fp)) != -1) {
+		char *ptr = strtok(line, ";");
+		int i=0;
+		while(ptr != NULL)
+		{
+			configurations[i]=ptr;
+			ptr = strtok(NULL, ";");
+			i++;
+		}
+	}
+	currentSection=atoi(configurations[0]);
+	currentGame=atoi(configurations[1]);
+	fclose(fp);
+	if (line) {
+		free(line);
+	}
+}
+
+void loadConfig() {
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;

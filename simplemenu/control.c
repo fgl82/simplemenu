@@ -88,6 +88,7 @@ void performAction(SDL_Event event) {
 	}
 	if (keys[BTN_TA] && keys[BTN_START]) {
 		freeResources();
+		saveLastState();
 		exit(0);
 	}
 	if(keys[BTN_TB]) {
