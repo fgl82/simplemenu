@@ -368,54 +368,56 @@ void quit() {
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
-char *determineExecutable(char *fileToBeExecutedWithFullPath) {
+int determineExecutable (char *fileToBeExecutedWithFullPath) {
 	char *ext = getExtension(fileToBeExecutedWithFullPath);
 	if (strcmp(ext,".gb")==0) {
-		return menuSections[1].executable;
+		return 1;
 	}
 	if (strcmp(ext,".gbc")==0) {
-		return menuSections[2].executable;
+		return 2;
 	}
 	if (strcmp(ext,".gba")==0) {
-		return menuSections[3].executable;
+		return 3;
 	}
 	if (strcmp(ext,".nes")==0) {
-		return menuSections[4].executable;
+		return 4;
 	}
 	if (strcmp(ext,".sfc")==0) {
-		return menuSections[5].executable;
+		return 5;
 	}
 	if (strcmp(ext,".gg")==0) {
-		return menuSections[6].executable;
+		return 6;
 	}
 	if (strcmp(ext,".sms")==0) {
-		return menuSections[7].executable;
+		return 7;
 	}
 	if (strcmp(ext,".md")==0) {
-		return menuSections[8].executable;
+		return 8;
 	}
 	if (strcmp(ext,".iso")==0) {
-		return menuSections[9].executable;
+		return 9;
 	}
 	if (strcmp(ext,".zip")==0) {
-		return menuSections[10].executable;
+		return 10;
 	}
 	if (strcmp(ext,".pce")==0) {
-		return menuSections[11].executable;
+		return 11;
 	}
 	if (strcmp(ext,".bin")==0) {
-		return menuSections[12].executable;
+		return 12;
 	}
-	return NULL;
+	return -1;
 }
 
 void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	freeResources();
 	char command[200];
-	char executable[200];
-	strcpy(executable,determineExecutable(fileToBeExecutedWithFullPath));
-	strcpy(command, executable);
-	if(executable!=NULL) {
+	int section = determineExecutable(fileToBeExecutedWithFullPath);
+	strcpy(command, "cd ");
+	strcat(command, menuSections[section].emulatorFolder);
+	strcat(command, ";./");
+	strcat(command, menuSections[section].executable);
+	if(section!=-1) {
 		strcat(command," ");
 	}
 	strcat(command,"\"");
@@ -425,7 +427,6 @@ void executeFavorite (char fileToBeExecutedWithFullPath[]) {
 	if (returnValue==-1) {
 		printf("ERROR");
 	}
-	SDL_Init(SDL_INIT_VIDEO);
 	setupDisplay();
 	setupDecorations();
 }
