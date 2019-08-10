@@ -1,5 +1,6 @@
 #include <definitions.h>
 #include <globals.h>
+#include <config.h>
 #include <system_logic.h>
 #include <graphics.h>
 #include <logic.h>
