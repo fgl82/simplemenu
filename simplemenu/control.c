@@ -121,5 +121,5 @@ int performAction(SDL_Event event) {
 		rewindPage();
 		return 1;
 	}
-
+	return 0;
 }
