@@ -26,7 +26,7 @@ else
 LDFLAGS	+=  -s
 endif
 
-CFILES =  simplemenu.c string_utils.c graphics.c screen.c control.c logic.c
+CFILES =  simplemenu.c string_utils.c graphics.c screen.c control.c logic.c system_logic.c config.c
 SFILES = 
 
 OFILES = $(SFILES:.S=.o) $(CFILES:.c=.o)
