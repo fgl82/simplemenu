@@ -23,15 +23,18 @@ int main(int argc, char *argv[]) {
 	setupDecorations();
 	loadGameList();
 	updateScreen();
+	int shouldRepeat = 0;
 	while (running) {
-		SDL_EnableKeyRepeat(30,180);
+		if (shouldRepeat) {
+			SDL_EnableKeyRepeat(50,180);
+			shouldRepeat=0;
+		}
 		while (SDL_WaitEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
-				performAction(event);
+				shouldRepeat=performAction(event);
 				updateScreen();
 			}
 			if (event.type == SDL_KEYUP) {
-				SDL_EnableKeyRepeat(30,180);
 				break;
 			}
 		}

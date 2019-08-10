@@ -77,9 +77,9 @@ void drawFooter() {
 }
 
 void setupDisplay() {
+	SDL_PumpEvents();
 	keys = SDL_GetKeyState(NULL);
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
-	SDL_PumpEvents();
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();

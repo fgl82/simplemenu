@@ -74,10 +74,10 @@ void rewindPage() {
 	}
 }
 
-void performAction(SDL_Event event) {
+int performAction(SDL_Event event) {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
-		return;
+		return 0;
 	}
 	if (keys[BTN_TA] && keys[BTN_START]) {
 		freeResources();
@@ -87,39 +87,39 @@ void performAction(SDL_Event event) {
 	if(keys[BTN_TB]) {
 		cycleFrequencies();
 		drawHeader();
-		return;
+		return 0;
 	}
 	if(keys[BTN_TA]) {
 		if(strcmp(menuSections[currentSection+1].sectionName,"END")!=0) {
 			advanceSection();
-			return;
+			return 0;
 		}
 	}
 	if(keys[BTN_B]) {
 		if(currentSection>0) {
 			rewindSection();
-			return;
+			return 0;
 		}
 	}
 	if (keys[BTN_A]) {
 		launchGame();
-		return;
+		return 0;
 	}
 	if (keys[BTN_DOWN]) {
 		scrollDown();
-		return;
+		return 1;
 	}
 	if(keys[BTN_UP]) {
 		scrollUp();
-		return;
+		return 1;
 	}
 	if(keys[BTN_RIGHT]) {
 		advancePage();
-		return;
+		return 1;
 	}
 	if(keys[BTN_LEFT]) {
 		rewindPage();
-		return;
+		return 1;
 	}
 
 }
