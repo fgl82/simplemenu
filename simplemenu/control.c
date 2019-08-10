@@ -1,21 +1,12 @@
 #include <definitions.h>
 #include <globals.h>
+#include <system_logic.h>
 #include <graphics.h>
 #include <logic.h>
 #include <screen.h>
 #include <stdlib.h>
 #include <string.h>
 #include <SDL/SDL_events.h>
-
-void cycleFrequencies() {
-	if(currentCPU==NO_OC) {
-		setCPU(MED_OC);
-	} else if (currentCPU==MED_OC) {
-		setCPU(MAX_OC);
-	} else {
-		setCPU(NO_OC);
-	}
-}
 
 void advanceSection() {
 	currentSection++;
@@ -35,7 +26,7 @@ void rewindSection() {
 	currentPage=0;
 }
 
-void executeGame() {
+void launchGame() {
 	char fileToBeExecutedwithFullPath[200];
 	if (gameList[currentPage][currentGame]!=NULL) {
 		strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
@@ -117,7 +108,7 @@ void performAction(SDL_Event event) {
 		}
 	}
 	if (keys[BTN_A]) {
-		executeGame();
+		launchGame();
 		return;
 	}
 	if (keys[BTN_DOWN]) {
