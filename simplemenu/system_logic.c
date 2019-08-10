@@ -278,17 +278,17 @@ int32_t memdev = 0;
 
 void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
-//	uint32_t x, v;
-//	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
-//	for(x=0; x<total; x++) {
-//		if((oc_table[x] >> 16) >= mhz) {
-//			v = memregs[0];
-//			v&= 0xffff0000;
-//			v|= (oc_table[x] &  0x0000ffff);
-//			memregs[0] = v;
-//			break;
-//		}
-//	}
+	uint32_t x, v;
+	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
+	for(x=0; x<total; x++) {
+		if((oc_table[x] >> 16) >= mhz) {
+			v = memregs[0];
+			v&= 0xffff0000;
+			v|= (oc_table[x] &  0x0000ffff);
+			memregs[0] = v;
+			break;
+		}
+	}
 }
 
 void HW_Init() {
