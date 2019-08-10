@@ -31,11 +31,7 @@ void launchGame() {
 	if (gameList[currentPage][currentGame]!=NULL) {
 		strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
-		if (currentSection>0) {
-			executeCommand(menuSections[currentSection].executable,fileToBeExecutedwithFullPath);
-		} else {
-			executeFavorite(fileToBeExecutedwithFullPath);
-		}
+		executeCommand(menuSections[currentSection].executable,fileToBeExecutedwithFullPath);
 	}
 }
 

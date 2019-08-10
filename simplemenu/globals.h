@@ -24,6 +24,6 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 };
-struct MenuSection menuSections[14];
+struct MenuSection menuSections[13];
 uint8_t *keys;
 #endif

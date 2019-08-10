@@ -15,69 +15,6 @@ void quit() {
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
-int determineExecutable (char *fileToBeExecutedWithFullPath) {
-	char *ext = getExtension(fileToBeExecutedWithFullPath);
-	if (strcmp(ext,".gb")==0) {
-		return 1;
-	}
-	if (strcmp(ext,".gbc")==0) {
-		return 2;
-	}
-	if (strcmp(ext,".gba")==0) {
-		return 3;
-	}
-	if (strcmp(ext,".nes")==0) {
-		return 4;
-	}
-	if (strcmp(ext,".sfc")==0) {
-		return 5;
-	}
-	if (strcmp(ext,".gg")==0) {
-		return 6;
-	}
-	if (strcmp(ext,".sms")==0) {
-		return 7;
-	}
-	if (strcmp(ext,".md")==0) {
-		return 8;
-	}
-	if (strcmp(ext,".iso")==0) {
-		return 9;
-	}
-	if (strcmp(ext,".zip")==0) {
-		return 10;
-	}
-	if (strcmp(ext,".pce")==0) {
-		return 11;
-	}
-	if (strcmp(ext,".bin")==0) {
-		return 12;
-	}
-	return -1;
-}
-
-void executeFavorite (char fileToBeExecutedWithFullPath[]) {
-	freeResources();
-	char command[200];
-	int section = determineExecutable(fileToBeExecutedWithFullPath);
-	strcpy(command, "cd ");
-	strcat(command, menuSections[section].emulatorFolder);
-	strcat(command, ";./");
-	strcat(command, menuSections[section].executable);
-	if(section!=-1) {
-		strcat(command," ");
-	}
-	strcat(command,"\"");
-	strcat(command,fileToBeExecutedWithFullPath);
-	strcat(command,"\"");
-	int returnValue = system(strcat(command,"&>/dev/null"));
-	if (returnValue==-1) {
-		printf("ERROR");
-	}
-	setupDisplay();
-	setupDecorations();
-}
-
 void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 	freeResources();
 	char command[200];
