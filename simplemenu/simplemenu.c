@@ -2,6 +2,7 @@
 #include <globals.h>
 #include <logic.h>
 #include <screen.h>
+#include <system_logic.h>
 #include <definitions.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
