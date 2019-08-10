@@ -78,7 +78,6 @@ void drawFooter() {
 
 void setupDisplay() {
 	keys = SDL_GetKeyState(NULL);
-	SDL_EnableKeyRepeat(30,180);
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 	SDL_PumpEvents();
 	SDL_ShowCursor(0);
