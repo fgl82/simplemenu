@@ -4,8 +4,6 @@
 #include <SDL/SDL_video.h>
 int running;
 SDL_Event event;
-int currentGame;
-int currentPage;
 int currentSection;
 int gamesInPage;
 int totalPages;
@@ -17,6 +15,8 @@ struct MenuSection {
 	char executable[16];
 	char filesDirectory[21];
 	char fileExtension[5];
+	int currentPage;
+	int currentGame;
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;

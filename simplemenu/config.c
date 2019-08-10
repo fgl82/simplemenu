@@ -8,7 +8,7 @@
 void saveLastState() {
 	FILE * fp;
 	fp = fopen("./config/last_state.cfg", "w");
-	fprintf(fp, "%d;%d", currentSection, currentGame);
+	fprintf(fp, "%d;%d;%d", currentSection, menuSections[currentSection].currentPage, menuSections[currentSection].currentGame);
 	fclose(fp);
 }
 
@@ -18,9 +18,10 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	fp = fopen("./config/last_state.cfg", "r");
-	char *configurations[2];
+	char *configurations[3];
+	char *ptr;
 	while ((read = getline(&line, &len, fp)) != -1) {
-		char *ptr = strtok(line, ";");
+		ptr = strtok(line, ";");
 		int i=0;
 		while(ptr != NULL)
 		{
@@ -30,7 +31,8 @@ void loadLastState() {
 		}
 	}
 	currentSection=atoi(configurations[0]);
-	currentGame=atoi(configurations[1]);
+	menuSections[currentSection].currentPage=atoi(configurations[1]);
+	menuSections[currentSection].currentGame=atoi(configurations[2]);
 	fclose(fp);
 	if (line) {
 		free(line);
@@ -78,6 +80,8 @@ void loadConfig() {
 		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
+		aMenuSection.currentPage=0;
+		aMenuSection.currentGame=0;
 		menuSections[menuSectionCounter]=aMenuSection;
 		menuSectionCounter++;
 	}

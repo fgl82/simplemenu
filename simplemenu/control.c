@@ -14,8 +14,6 @@ void advanceSection() {
 	setupDecorations();
 	totalPages=0;
 	loadGameList();
-	currentGame=0;
-	currentPage=0;
 }
 
 void rewindSection() {
@@ -23,58 +21,56 @@ void rewindSection() {
 	setupDecorations();
 	totalPages=0;
 	loadGameList();
-	currentGame=0;
-	currentPage=0;
 }
 
 void launchGame() {
 	char fileToBeExecutedwithFullPath[200];
-	if (gameList[currentPage][currentGame]!=NULL) {
+	if (gameList[menuSections[currentSection].currentPage][menuSections[currentSection].currentGame]!=NULL) {
 		strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
-		strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
+		strcat(fileToBeExecutedwithFullPath,gameList[menuSections[currentSection].currentPage][menuSections[currentSection].currentGame]);
 		executeCommand(menuSections[currentSection].executable,fileToBeExecutedwithFullPath);
 	}
 }
 
 void scrollDown() {
-	if(currentGame == gamesInPage-1) {
-		if (currentPage < totalPages) {
-			currentGame=0;
-			currentPage++;
+	if(menuSections[currentSection].currentGame == gamesInPage-1) {
+		if (menuSections[currentSection].currentPage < totalPages) {
+			menuSections[currentSection].currentGame=0;
+			menuSections[currentSection].currentPage++;
 			return;
 		}
 	}
-	if (currentGame < gamesInPage-1) {
-		currentGame++;
+	if (menuSections[currentSection].currentGame < gamesInPage-1) {
+		menuSections[currentSection].currentGame++;
 		return;
 	}
 }
 
 void scrollUp() {
-	if(currentGame == 0) {
-		if (currentPage>0) {
-			currentGame=gamesInPage-1;
-			currentPage--;
+	if(menuSections[currentSection].currentGame == 0) {
+		if (menuSections[currentSection].currentPage >0) {
+			menuSections[currentSection].currentGame=gamesInPage-1;
+			menuSections[currentSection].currentPage--;
 			return;
 		}
 	}
-	if (currentGame > 0) {
-		currentGame--;
+	if (menuSections[currentSection].currentGame > 0) {
+		menuSections[currentSection].currentGame--;
 		return;
 	}
 }
 
 void advancePage() {
-	if (currentPage < totalPages) {
-		currentGame=0;
-		currentPage++;
+	if (menuSections[currentSection].currentPage < totalPages) {
+		menuSections[currentSection].currentGame=0;
+		menuSections[currentSection].currentPage++;
 	}
 }
 
 void rewindPage() {
-	if (currentPage > 0) {
-		currentGame=0;
-		currentPage--;
+	if (menuSections[currentSection].currentPage > 0) {
+		menuSections[currentSection].currentGame=0;
+		menuSections[currentSection].currentPage--;
 	}
 }
 
