@@ -20,7 +20,8 @@ void initializeGlobals() {
 int main(int argc, char *argv[]) {
 	HW_Init();
 	initializeGlobals();
-	readConfig();
+	loadLastState();
+	loadConfig();
 	setupDisplay();
 	setupDecorations();
 	loadGameList();

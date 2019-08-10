@@ -1,21 +1,18 @@
 #include <constants.h>
+#include <config.h>
 #include <dirent.h>
-#include <fcntl.h>
 #include <globals.h>
-#include <definitions.h>
 #include <screen.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <string_utils.h>
-#include <SDL/SDL.h>
-#include <sys/mman.h>
 #include <unistd.h>
 
 
 void quit() {
 	freeResources();
+	saveLastState();
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
