@@ -10,9 +10,6 @@
 
 void initializeGlobals() {
 	running=1;
-	currentGame = 0;
-	currentPage = 0;
-	currentSection = 0;
 	gamesInPage=0;
 	totalPages=0;
 }
@@ -20,17 +17,21 @@ void initializeGlobals() {
 int main(int argc, char *argv[]) {
 	HW_Init();
 	initializeGlobals();
-	loadLastState();
 	loadConfig();
+	loadLastState();
 	setupDisplay();
 	setupDecorations();
 	loadGameList();
 	updateScreen();
+	int shouldRepeat = 0;
 	while (running) {
-		SDL_EnableKeyRepeat(30,180);
+		if (shouldRepeat) {
+			SDL_EnableKeyRepeat(50,180);
+			shouldRepeat=0;
+		}
 		while (SDL_WaitEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
-				performAction(event);
+				shouldRepeat=performAction(event);
 				updateScreen();
 			}
 			if (event.type == SDL_KEYUP) {

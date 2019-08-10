@@ -1,7 +1,7 @@
 #include <definitions.h>
 #include <globals.h>
-#include <config.h>
 #include <system_logic.h>
+#include <config.h>
 #include <graphics.h>
 #include <logic.h>
 #include <screen.h>
@@ -14,8 +14,6 @@ void advanceSection() {
 	setupDecorations();
 	totalPages=0;
 	loadGameList();
-	currentGame=0;
-	currentPage=0;
 }
 
 void rewindSection() {
@@ -23,65 +21,63 @@ void rewindSection() {
 	setupDecorations();
 	totalPages=0;
 	loadGameList();
-	currentGame=0;
-	currentPage=0;
 }
 
 void launchGame() {
 	char fileToBeExecutedwithFullPath[200];
-	if (gameList[currentPage][currentGame]!=NULL) {
+	if (gameList[menuSections[currentSection].currentPage][menuSections[currentSection].currentGame]!=NULL) {
 		strcpy(fileToBeExecutedwithFullPath,menuSections[currentSection].filesDirectory);
-		strcat(fileToBeExecutedwithFullPath,gameList[currentPage][currentGame]);
+		strcat(fileToBeExecutedwithFullPath,gameList[menuSections[currentSection].currentPage][menuSections[currentSection].currentGame]);
 		executeCommand(menuSections[currentSection].executable,fileToBeExecutedwithFullPath);
 	}
 }
 
 void scrollDown() {
-	if(currentGame == gamesInPage-1) {
-		if (currentPage < totalPages) {
-			currentGame=0;
-			currentPage++;
+	if(menuSections[currentSection].currentGame == gamesInPage-1) {
+		if (menuSections[currentSection].currentPage < totalPages) {
+			menuSections[currentSection].currentGame=0;
+			menuSections[currentSection].currentPage++;
 			return;
 		}
 	}
-	if (currentGame < gamesInPage-1) {
-		currentGame++;
+	if (menuSections[currentSection].currentGame < gamesInPage-1) {
+		menuSections[currentSection].currentGame++;
 		return;
 	}
 }
 
 void scrollUp() {
-	if(currentGame == 0) {
-		if (currentPage>0) {
-			currentGame=gamesInPage-1;
-			currentPage--;
+	if(menuSections[currentSection].currentGame == 0) {
+		if (menuSections[currentSection].currentPage >0) {
+			menuSections[currentSection].currentGame=gamesInPage-1;
+			menuSections[currentSection].currentPage--;
 			return;
 		}
 	}
-	if (currentGame > 0) {
-		currentGame--;
+	if (menuSections[currentSection].currentGame > 0) {
+		menuSections[currentSection].currentGame--;
 		return;
 	}
 }
 
 void advancePage() {
-	if (currentPage < totalPages) {
-		currentGame=0;
-		currentPage++;
+	if (menuSections[currentSection].currentPage < totalPages) {
+		menuSections[currentSection].currentGame=0;
+		menuSections[currentSection].currentPage++;
 	}
 }
 
 void rewindPage() {
-	if (currentPage > 0) {
-		currentGame=0;
-		currentPage--;
+	if (menuSections[currentSection].currentPage > 0) {
+		menuSections[currentSection].currentGame=0;
+		menuSections[currentSection].currentPage--;
 	}
 }
 
-void performAction(SDL_Event event) {
+int performAction(SDL_Event event) {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
-		return;
+		return 0;
 	}
 	if (keys[BTN_TA] && keys[BTN_START]) {
 		freeResources();
@@ -91,39 +87,39 @@ void performAction(SDL_Event event) {
 	if(keys[BTN_TB]) {
 		cycleFrequencies();
 		drawHeader();
-		return;
+		return 0;
 	}
 	if(keys[BTN_TA]) {
 		if(strcmp(menuSections[currentSection+1].sectionName,"END")!=0) {
 			advanceSection();
-			return;
+			return 0;
 		}
 	}
 	if(keys[BTN_B]) {
 		if(currentSection>0) {
 			rewindSection();
-			return;
+			return 0;
 		}
 	}
 	if (keys[BTN_A]) {
 		launchGame();
-		return;
+		return 0;
 	}
 	if (keys[BTN_DOWN]) {
 		scrollDown();
-		return;
+		return 1;
 	}
 	if(keys[BTN_UP]) {
 		scrollUp();
-		return;
+		return 1;
 	}
 	if(keys[BTN_RIGHT]) {
 		advancePage();
-		return;
+		return 1;
 	}
 	if(keys[BTN_LEFT]) {
 		rewindPage();
-		return;
+		return 1;
 	}
-
+	return 0;
 }

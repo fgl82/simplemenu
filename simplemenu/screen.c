@@ -42,9 +42,9 @@ void drawGameList() {
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	gamesInPage=0;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (gameList[currentPage][i]!=NULL) {
+		if (gameList[menuSections[currentSection].currentPage][i]!=NULL) {
 			gamesInPage++;
-			char *nameWithoutExtension = removeExtension(gameList[currentPage][i]);
+			char *nameWithoutExtension = removeExtension(gameList[menuSections[currentSection].currentPage][i]);
 			int charNumber = 0;
 			while (nameWithoutExtension[charNumber]) {
 				if (nameWithoutExtension[charNumber]=='('||charNumber>37) {
@@ -55,7 +55,7 @@ void drawGameList() {
 			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			free(nameWithoutExtension);
-			if (i==currentGame) {
+			if (i==menuSections[currentSection].currentGame) {
 				draw_shaded_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSection].bodySelectedTextForegroundColor, VAlignBottom | HAlignCenter, menuSections[currentSection].bodySelectedTextBackgroundColor);
 			} else {
 				draw_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSection].bodyTextForegroundColor, VAlignBottom | HAlignCenter);
@@ -77,9 +77,9 @@ void drawFooter() {
 }
 
 void setupDisplay() {
+	SDL_PumpEvents();
 	keys = SDL_GetKeyState(NULL);
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
-	SDL_PumpEvents();
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
