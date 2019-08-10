@@ -9,7 +9,6 @@
 #include <string_utils.h>
 #include <unistd.h>
 
-
 void quit() {
 	freeResources();
 	saveLastState();
