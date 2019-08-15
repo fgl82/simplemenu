@@ -1,13 +1,13 @@
+#include <config.h>
 #include <definitions.h>
 #include <globals.h>
-#include <system_logic.h>
-#include <config.h>
-#include <graphics.h>
 #include <logic.h>
 #include <screen.h>
 #include <stdlib.h>
 #include <string.h>
+#include <system_logic.h>
 #include <SDL/SDL_events.h>
+#include <unistd.h>
 
 void advanceSection() {
 	currentSection++;
