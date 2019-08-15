@@ -20,12 +20,16 @@ void executeCommand (char executable[], char fileToBeExecutedWithFullPath[]) {
 	char command[200];
 	strcpy(command, "cd ");
 	strcat(command, menuSections[currentSection].emulatorFolder);
-	strcat(command, ";./");
-	strcat(command, executable);
-	strcat(command," ");
+	strcat(command, ";");
+	if (strcmp(executable,"none")!=0) {
+		strcat(command, "./");
+		strcat(command, executable);
+		strcat(command," ");
+	}
 	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
 	strcat(command,"\"");
+	printf("%s\n",command);
 	int returnValue = system(strcat(command,"&>/dev/null"));
 	if (returnValue==-1) {
 		printf("ERROR");
