@@ -41,6 +41,11 @@ int isExtensionValid(char *extension, struct MenuSection section) {
 	return 0;
 }
 
+int countFiles (char* directoryName) {
+	struct dirent **files;
+	return scandir(directoryName, &files, 0, alphasort);
+}
+
 void loadGameList() {
 	struct dirent **files;
 	int n=scandir(menuSections[currentSection].filesDirectory, &files, 0, alphasort);
