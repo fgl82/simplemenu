@@ -55,7 +55,7 @@ void scrollUp() {
 	if(CURRENT_SECTION.currentGame == 0) {
 		if (CURRENT_SECTION.currentPage >0) {
 			CURRENT_SECTION.currentPage--;
-			countGamesInPage();
+			gamesInPage=countGamesInPage();
 			CURRENT_SECTION.currentGame=gamesInPage-1;
 			return;
 		}
