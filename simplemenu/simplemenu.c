@@ -12,21 +12,33 @@ void initializeGlobals() {
 	running=1;
 }
 
-int main(int argc, char *argv[]) {
+int main() {
+	printf("1\n");
 	HW_Init();
+	printf("2\n");
 	initializeGlobals();
+	printf("3\n");
 	loadConfig();
+	printf("4\n");
 	loadLastState();
+	printf("5\n");
 	loadFavorites();
+	printf("6\n");
 	setupDisplay();
+	printf("7\n");
 	setupDecorations();
+	printf("8\n");
 	if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")==0) {
+		printf("8.1\n");
 		favoritesSectionSelected=1;
 		loadFavoritesList();
 	} else {
+		printf("8.2\n");
 		loadGameList();
 	}
+	printf("9\n");
 	updateScreen();
+	printf("10\n");
 	int shouldRepeat = 0;
 	while (running) {
 		if (shouldRepeat) {
@@ -35,7 +47,7 @@ int main(int argc, char *argv[]) {
 		}
 		while (SDL_WaitEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
-				shouldRepeat=performAction(event);
+				shouldRepeat=performAction();
 				updateScreen();
 			}
 			if (event.type == SDL_KEYUP) {

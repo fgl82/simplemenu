@@ -8,15 +8,17 @@
 #include <unistd.h>
 
 void saveFavorites() {
-	FILE * fp;
-	fp = fopen("./config/favorites.sav", "w");
-	for (int i=0;i<favoritesSize;i++) {
-		fprintf(fp,"%s;",favorites[i].name);
-		fprintf(fp,"%s;",favorites[i].emulatorFolder);
-		fprintf(fp,"%s;",favorites[i].executable);
-		fprintf(fp,"%s\n",favorites[i].filesDirectory);
+	if (favoritesChanged) {
+		FILE * fp;
+		fp = fopen("./config/favorites.sav", "w");
+		for (int i=0;i<favoritesSize;i++) {
+			fprintf(fp,"%s;",favorites[i].name);
+			fprintf(fp,"%s;",favorites[i].emulatorFolder);
+			fprintf(fp,"%s;",favorites[i].executable);
+			fprintf(fp,"%s\n",favorites[i].filesDirectory);
+		}
+		fclose(fp);
 	}
-	fclose(fp);
 }
 
 void loadFavorites() {
@@ -134,7 +136,6 @@ void loadConfig() {
 		}
 	}
 	lastSection=menuSectionCounter-1;
-	strcpy(menuSections[menuSectionCounter].sectionName,"END");
 	fclose(fp);
 	if (line) {
 		free(line);
