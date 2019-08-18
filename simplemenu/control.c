@@ -7,7 +7,6 @@
 #include <string.h>
 #include <system_logic.h>
 #include <SDL/SDL_events.h>
-#include <unistd.h>
 
 int returnTo=0;
 
@@ -55,8 +54,9 @@ void scrollDown() {
 void scrollUp() {
 	if(CURRENT_SECTION.currentGame == 0) {
 		if (CURRENT_SECTION.currentPage >0) {
-			CURRENT_SECTION.currentGame=gamesInPage-1;
 			CURRENT_SECTION.currentPage--;
+			countGamesInPage();
+			CURRENT_SECTION.currentGame=gamesInPage-1;
 			return;
 		}
 	}
@@ -111,11 +111,13 @@ void removeFavorite() {
 }
 
 void markAsFavorite() {
-	strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
-	strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
-	strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
-	strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
-	favoritesSize++;
+	if (favoritesSize<100) {
+		strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
+		strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
+		strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
+		strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
+		favoritesSize++;
+	}
 }
 
 int performAction(SDL_Event event) {
