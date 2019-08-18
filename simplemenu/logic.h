@@ -5,4 +5,5 @@ void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecut
 void loadGameList();
 void loadFavoritesList();
 int countFiles (char* directoryName);
+int countGamesInPage();
 #endif

@@ -118,3 +118,13 @@ void loadGameList() {
 	}
 	free(files);
 }
+
+int countGamesInPage() {
+	int gamesCounter=0;
+	for (int i=0;i<ITEMS_PER_PAGE;i++) {
+		if (gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
+			gamesCounter++;
+		}
+	}
+	return gamesCounter;
+}
