@@ -4,16 +4,19 @@
 #include <SDL/SDL_video.h>
 int running;
 SDL_Event event;
-int currentSection;
+int currentSectionNumber;
 int gamesInPage;
 int totalPages;
+int lastSection;
+int favoritesSize;
 int currentCPU;
+int favoritesSectionSelected;
 char *gameList[200][10];
 struct MenuSection {
-	char sectionName[16];
-	char emulatorFolder[24];
+	char sectionName[25];
+	char emulatorFolder[25];
 	char executable[16];
-	char filesDirectory[21];
+	char filesDirectory[25];
 	char fileExtension[5];
 	int currentPage;
 	int currentGame;
@@ -24,6 +27,16 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 };
-struct MenuSection menuSections[15];
+struct MenuSection menuSections[20];
+
+struct Favorite {
+	char name[100];
+	char emulatorFolder[25];
+	char executable[16];
+	char filesDirectory[25];
+};
+
+struct Favorite favorites[100];
+
 uint8_t *keys;
 #endif

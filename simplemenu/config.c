@@ -1,15 +1,60 @@
+#include <definitions.h>
+#include <globals.h>
+#include <logic.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <globals.h>
-#include <logic.h>
+
+void saveFavorites() {
+	FILE * fp;
+	fp = fopen("./config/favorites.sav", "w");
+	for (int i=0;i<favoritesSize;i++) {
+		fprintf(fp,"%s;",favorites[i].name);
+		fprintf(fp,"%s;",favorites[i].emulatorFolder);
+		fprintf(fp,"%s;",favorites[i].executable);
+		fprintf(fp,"%s\n",favorites[i].filesDirectory);
+	}
+	fclose(fp);
+}
+
+void loadFavorites() {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	fp = fopen("./config/favorites.sav", "r");
+	char *configurations[4];
+	char *ptr;
+	favoritesSize=0;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		ptr = strtok(line, ";");
+		int i=0;
+		while(ptr != NULL)
+		{
+			configurations[i]=ptr;
+			ptr = strtok(NULL, ";");
+			i++;
+		}
+		strcpy(favorites[favoritesSize].name,configurations[0]);
+		strcpy(favorites[favoritesSize].emulatorFolder,configurations[1]);
+		strcpy(favorites[favoritesSize].executable,configurations[2]);
+		strcpy(favorites[favoritesSize].filesDirectory,configurations[3]);
+		int len = strlen(favorites[favoritesSize].filesDirectory);
+		favorites[favoritesSize].filesDirectory[len-1]='\0';
+		favoritesSize++;
+	}
+	fclose(fp);
+	if (line) {
+		free(line);
+	}
+}
 
 void saveLastState() {
 	FILE * fp;
 	fp = fopen("./config/last_state.cfg", "w");
-	fprintf(fp, "%d;%d;%d", currentSection, menuSections[currentSection].currentPage, menuSections[currentSection].currentGame);
+	fprintf(fp, "%d;%d;%d", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
 	fclose(fp);
 }
 
@@ -31,9 +76,9 @@ void loadLastState() {
 			i++;
 		}
 	}
-	currentSection=atoi(configurations[0]);
-	menuSections[currentSection].currentPage=atoi(configurations[1]);
-	menuSections[currentSection].currentGame=atoi(configurations[2]);
+	currentSectionNumber=atoi(configurations[0]);
+	CURRENT_SECTION.currentPage=atoi(configurations[1]);
+	CURRENT_SECTION.currentGame=atoi(configurations[2]);
 	fclose(fp);
 	if (line) {
 		free(line);
@@ -50,7 +95,7 @@ void loadConfig() {
 	int menuSectionCounter = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		char *ptr = strtok(line, ";");
-		char *configurations[22];
+		char *configurations[23];
 		int i=0;
 		while(ptr != NULL)
 		{
@@ -58,7 +103,7 @@ void loadConfig() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (countFiles(configurations[3])>2) {
+		if (countFiles(configurations[3])>2||strcmp(configurations[2],"favs")==0) {
 			strcpy(aMenuSection.sectionName,configurations[0]);
 			strcpy(aMenuSection.emulatorFolder,configurations[1]);
 			strcpy(aMenuSection.executable,configurations[2]);
@@ -88,6 +133,7 @@ void loadConfig() {
 			menuSectionCounter++;
 		}
 	}
+	lastSection=menuSectionCounter-1;
 	strcpy(menuSections[menuSectionCounter].sectionName,"END");
 	fclose(fp);
 	if (line) {

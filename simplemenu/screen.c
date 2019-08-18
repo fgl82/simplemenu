@@ -20,31 +20,31 @@ TTF_Font *footerFont = NULL;
 
 void drawHeader() {
 	char finalString [100];
-	int rgbColor[] = {menuSections[currentSection].headerAndFooterTextBackgroundColor.r,menuSections[currentSection].headerAndFooterTextBackgroundColor.g,menuSections[currentSection].headerAndFooterTextBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==NO_OC) {
 		strcpy(finalString,"- ");
-		strcat(finalString,menuSections[currentSection].sectionName);
+		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," -");
 	} else if (currentCPU==MED_OC) {
-		strcpy(finalString,menuSections[currentSection].sectionName);
+		strcpy(finalString,menuSections[currentSectionNumber].sectionName);
 	} else {
 		strcpy(finalString,"+ ");
-		strcat(finalString,menuSections[currentSection].sectionName);
+		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSection].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {
-	int rgbColor[] = {menuSections[currentSection].bodyBackgroundColor.r,menuSections[currentSection].bodyBackgroundColor.g,menuSections[currentSection].bodyBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor.r,menuSections[currentSectionNumber].bodyBackgroundColor.g,menuSections[currentSectionNumber].bodyBackgroundColor.b};
 	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	gamesInPage=0;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (gameList[menuSections[currentSection].currentPage][i]!=NULL) {
+		if (gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
 			gamesInPage++;
-			char *nameWithoutExtension = removeExtension(gameList[menuSections[currentSection].currentPage][i]);
+			char *nameWithoutExtension = removeExtension(gameList[menuSections[currentSectionNumber].currentPage][i]);
 			int charNumber = 0;
 			while (nameWithoutExtension[charNumber]) {
 				if (nameWithoutExtension[charNumber]=='('||charNumber>37) {
@@ -55,10 +55,10 @@ void drawGameList() {
 			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			free(nameWithoutExtension);
-			if (i==menuSections[currentSection].currentGame) {
-				draw_shaded_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSection].bodySelectedTextForegroundColor, VAlignBottom | HAlignCenter, menuSections[currentSection].bodySelectedTextBackgroundColor);
+			if (i==menuSections[currentSectionNumber].currentGame) {
+				draw_shaded_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSectionNumber].bodySelectedTextForegroundColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 			} else {
-				draw_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSection].bodyTextForegroundColor, VAlignBottom | HAlignCenter);
+				draw_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSectionNumber].bodyTextForegroundColor, VAlignBottom | HAlignCenter);
 			}
 			nextLine+=calculateProportionalSizeOrDistance(19);
 		}
@@ -71,9 +71,9 @@ void updateScreen() {
 }
 
 void drawFooter() {
-	int rgbColor[] = {menuSections[currentSection].headerAndFooterTextBackgroundColor.r,menuSections[currentSection].headerAndFooterTextBackgroundColor.g,menuSections[currentSection].headerAndFooterTextBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
-	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), "SELECT+START: SHUT DOWN", menuSections[currentSection].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), "SELECT+START: SHUT DOWN", menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
 }
 
 void setupDisplay() {

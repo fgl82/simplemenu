@@ -10,8 +10,6 @@
 
 void initializeGlobals() {
 	running=1;
-	gamesInPage=0;
-	totalPages=0;
 }
 
 int main(int argc, char *argv[]) {
@@ -19,9 +17,15 @@ int main(int argc, char *argv[]) {
 	initializeGlobals();
 	loadConfig();
 	loadLastState();
+	loadFavorites();
 	setupDisplay();
 	setupDecorations();
-	loadGameList();
+	if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")==0) {
+		favoritesSectionSelected=1;
+		loadFavoritesList();
+	} else {
+		loadGameList();
+	}
 	updateScreen();
 	int shouldRepeat = 0;
 	while (running) {
