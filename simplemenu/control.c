@@ -7,6 +7,7 @@
 #include <string.h>
 #include <system_logic.h>
 #include <SDL/SDL_events.h>
+#include <unistd.h>
 
 int returnTo=0;
 
