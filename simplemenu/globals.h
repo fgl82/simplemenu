@@ -12,6 +12,7 @@ int favoritesSize;
 int currentCPU;
 int favoritesSectionSelected;
 char *gameList[200][10];
+
 struct MenuSection {
 	char sectionName[25];
 	char emulatorFolder[25];
