@@ -28,7 +28,7 @@ int main() {
 	printf("7\n");
 	setupDecorations();
 	printf("8\n");
-	if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")==0) {
+	if(currentSectionNumber==lastSection) {
 		printf("8.1\n");
 		favoritesSectionSelected=1;
 		loadFavoritesList();
