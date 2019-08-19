@@ -114,11 +114,13 @@ void removeFavorite() {
 void markAsFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize<100) {
-		strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
-		strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
-		strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
-		strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
-		favoritesSize++;
+		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
+			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
+			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
+			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
+			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
+			favoritesSize++;
+		}
 	}
 }
 

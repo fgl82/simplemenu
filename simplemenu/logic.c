@@ -17,6 +17,15 @@ void quit() {
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
+int doesFavoriteExist(char *name) {
+	for(int i=0;i<favoritesSize;i++) {
+		if (strcmp(favorites[i].name,name)==0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecutedWithFullPath[]) {
 	freeResources();
 	char command[200];
