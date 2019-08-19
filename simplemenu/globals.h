@@ -38,7 +38,7 @@ struct Favorite {
 	char filesDirectory[25];
 };
 
-struct Favorite favorites[100];
+struct Favorite favorites[500];
 
 uint8_t *keys;
 #endif
