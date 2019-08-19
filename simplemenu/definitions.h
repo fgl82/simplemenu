@@ -16,6 +16,7 @@
 #define NO_OC 408
 #define MED_OC 702
 #define MAX_OC 798
+#define FAVORITES_SIZE 500
 #define CURRENT_FAVORITE_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
 #define CURRENT_FAVORITE favorites[CURRENT_FAVORITE_NUMBER]
 #define CURRENT_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
