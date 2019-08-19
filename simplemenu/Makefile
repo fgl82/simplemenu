@@ -1,7 +1,7 @@
 # Software Name
 PROGRAM = simplemenu.elf
-PLATFORM = BITTBOY
-#PLATFORM = PC
+#PLATFORM = BITTBOY
+PLATFORM = PC
 
 # Compiler
 
@@ -14,7 +14,7 @@ CC = gcc
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
-CFLAGS = -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -no-pie
+CFLAGS = -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -no-pie
 CFLAGS +=  -I.
 
 LIBS += -lasound -lSDL_mixer -lmikmod -lvorbisidec -logg -lSDL -lm -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lstdc++

@@ -98,6 +98,7 @@ void showOrHideFavorites() {
 }
 
 void removeFavorite() {
+	favoritesChanged=1;
 	if (favoritesSize>0) {
 		for (int i=CURRENT_FAVORITE_NUMBER;i<favoritesSize;i++) {
 			favorites[i]=favorites[i+1];
@@ -111,6 +112,7 @@ void removeFavorite() {
 }
 
 void markAsFavorite() {
+	favoritesChanged=1;
 	if (favoritesSize<100) {
 		strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
 		strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
@@ -120,7 +122,7 @@ void markAsFavorite() {
 	}
 }
 
-int performAction(SDL_Event event) {
+int performAction() {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
 		return 0;
@@ -149,13 +151,13 @@ int performAction(SDL_Event event) {
 		return 0;
 	}
 	if(keys[BTN_TA]) {
-		if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")!=0 && strcmp(NEXT_SECTION.sectionName,"9999 IN 1")!=0) {
+		if(currentSectionNumber<lastSection-1) {
 			advanceSection();
 		}
 		return 0;
 	}
 	if(keys[BTN_B]) {
-		if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")!=0&&currentSectionNumber>0) {
+		if(currentSectionNumber!=lastSection&&currentSectionNumber>0) {
 			rewindSection();
 		}
 		return 0;

@@ -10,9 +10,19 @@
 
 void initializeGlobals() {
 	running=1;
+	currentSectionNumber=0;
+	gamesInPage=0;
+	totalPages=0;
+	lastSection=0;
+	favoritesSize=0;
+	currentCPU=MED_OC;
+	favoritesSectionSelected=0;
+	favoritesChanged=0;
 }
 
-int main(int argc, char *argv[]) {
+
+
+int main() {
 	HW_Init();
 	initializeGlobals();
 	loadConfig();
@@ -20,7 +30,7 @@ int main(int argc, char *argv[]) {
 	loadFavorites();
 	setupDisplay();
 	setupDecorations();
-	if(strcmp(CURRENT_SECTION.sectionName,"9999 IN 1")==0) {
+	if(currentSectionNumber==lastSection) {
 		favoritesSectionSelected=1;
 		loadFavoritesList();
 	} else {
@@ -35,7 +45,7 @@ int main(int argc, char *argv[]) {
 		}
 		while (SDL_WaitEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
-				shouldRepeat=performAction(event);
+				shouldRepeat=performAction();
 				updateScreen();
 			}
 			if (event.type == SDL_KEYUP) {
