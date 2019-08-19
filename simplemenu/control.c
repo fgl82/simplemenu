@@ -113,7 +113,7 @@ void removeFavorite() {
 
 void markAsFavorite() {
 	favoritesChanged=1;
-	if (favoritesSize<100) {
+	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
