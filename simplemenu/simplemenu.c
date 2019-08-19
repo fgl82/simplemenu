@@ -10,35 +10,33 @@
 
 void initializeGlobals() {
 	running=1;
+	currentSectionNumber=0;
+	gamesInPage=0;
+	totalPages=0;
+	lastSection=0;
+	favoritesSize=0;
+	currentCPU=MED_OC;
+	favoritesSectionSelected=0;
+	favoritesChanged=0;
 }
 
+
+
 int main() {
-	printf("1\n");
 	HW_Init();
-	printf("2\n");
 	initializeGlobals();
-	printf("3\n");
 	loadConfig();
-	printf("4\n");
 	loadLastState();
-	printf("5\n");
 	loadFavorites();
-	printf("6\n");
 	setupDisplay();
-	printf("7\n");
 	setupDecorations();
-	printf("8\n");
 	if(currentSectionNumber==lastSection) {
-		printf("8.1\n");
 		favoritesSectionSelected=1;
 		loadFavoritesList();
 	} else {
-		printf("8.2\n");
 		loadGameList();
 	}
-	printf("9\n");
 	updateScreen();
-	printf("10\n");
 	int shouldRepeat = 0;
 	while (running) {
 		if (shouldRepeat) {

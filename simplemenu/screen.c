@@ -1,10 +1,11 @@
 #include <constants.h>
+#include <definitions.h>
 #include <globals.h>
 #include <graphics.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <string_utils.h>
-#include <definitions.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>

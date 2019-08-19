@@ -33,8 +33,7 @@ void loadFavorites() {
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
-		while(ptr != NULL)
-		{
+		while(ptr != NULL) {
 			configurations[i]=ptr;
 			ptr = strtok(NULL, ";");
 			i++;
@@ -71,16 +70,15 @@ void loadLastState() {
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
-		while(ptr != NULL)
-		{
+		while(ptr != NULL) {
 			configurations[i]=ptr;
 			ptr = strtok(NULL, ";");
 			i++;
 		}
+		currentSectionNumber=atoi(configurations[0]);
+		CURRENT_SECTION.currentPage=atoi(configurations[1]);
+		CURRENT_SECTION.currentGame=atoi(configurations[2]);
 	}
-	currentSectionNumber=atoi(configurations[0]);
-	CURRENT_SECTION.currentPage=atoi(configurations[1]);
-	CURRENT_SECTION.currentGame=atoi(configurations[2]);
 	fclose(fp);
 	if (line) {
 		free(line);
@@ -89,23 +87,21 @@ void loadLastState() {
 
 void loadConfig() {
 	FILE * fp;
-	char * line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	struct MenuSection aMenuSection;
+	char line[500];
+	char *configurations[23];
 	fp = fopen("./config/sections.cfg", "r");
 	int menuSectionCounter = 0;
-	while ((read = getline(&line, &len, fp)) != -1) {
-		char *ptr = strtok(line, ";");
-		char *configurations[23];
+	while (fgets(line, sizeof(line), fp) != NULL)
+	{
 		int i=0;
-		while(ptr != NULL)
-		{
+		char *ptr = strtok(line, ";");
+		while(ptr != NULL) {
 			configurations[i]=ptr;
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (countFiles(configurations[3])>2||strcmp(configurations[2],"favs")==0) {
+		if (strcmp(configurations[2],"favs")==0||countFiles(configurations[3])>2) {
+			struct MenuSection aMenuSection;
 			strcpy(aMenuSection.sectionName,configurations[0]);
 			strcpy(aMenuSection.emulatorFolder,configurations[1]);
 			strcpy(aMenuSection.executable,configurations[2]);
@@ -137,7 +133,4 @@ void loadConfig() {
 	}
 	lastSection=menuSectionCounter-1;
 	fclose(fp);
-	if (line) {
-		free(line);
-	}
 }
