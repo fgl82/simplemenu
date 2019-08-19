@@ -6,4 +6,5 @@ void loadGameList();
 void loadFavoritesList();
 int countFiles (char* directoryName);
 int countGamesInPage();
+int doesFavoriteExist(char *name);
 #endif
