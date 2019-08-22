@@ -4,6 +4,7 @@
 #include <globals.h>
 #include <definitions.h>
 #include <screen.h>
+#include <control.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -136,4 +137,44 @@ int countGamesInPage() {
 		}
 	}
 	return gamesCounter;
+}
+
+void determineStartingScreen(int sectionCount) {
+	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
+		favoritesSectionSelected=1;
+		loadFavoritesList();
+	} else {
+		if(CURRENT_SECTION.hidden) {
+			int startingSectionNumber = currentSectionNumber;
+			int stillOnInitialSection=0;
+			int rewinded = rewindSection();
+			if(rewinded) {
+				while(menuSections[currentSectionNumber].hidden) {
+					if(currentSectionNumber==0) {
+						stillOnInitialSection=1;
+						break;
+					}
+					rewindSection();
+				}
+				if (stillOnInitialSection) {
+					currentSectionNumber = startingSectionNumber;
+				}
+				setupDecorations();
+				totalPages=0;
+				loadGameList();
+			}
+			if(currentSectionNumber==startingSectionNumber) {
+				int advanced = advanceSection();
+				if(advanced) {
+					while(menuSections[currentSectionNumber].hidden) {
+						advanceSection();
+					}
+					setupDecorations();
+					totalPages=0;
+					loadGameList();
+				}
+			}
+		}
+		loadGameList();
+	}
 }

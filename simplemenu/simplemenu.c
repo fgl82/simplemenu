@@ -13,29 +13,22 @@ void initializeGlobals() {
 	currentSectionNumber=0;
 	gamesInPage=0;
 	totalPages=0;
-	lastSection=0;
+	favoritesSectionNumber=0;
 	favoritesSize=0;
 	currentCPU=MED_OC;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 }
 
-
-
 int main() {
 	HW_Init();
 	initializeGlobals();
-	loadConfig();
+	int sectionCount=loadConfig();
 	loadLastState();
 	loadFavorites();
 	setupDisplay();
 	setupDecorations();
-	if(currentSectionNumber==lastSection) {
-		favoritesSectionSelected=1;
-		loadFavoritesList();
-	} else {
-		loadGameList();
-	}
+	determineStartingScreen(sectionCount);
 	updateScreen();
 	int shouldRepeat = 0;
 	while (running) {

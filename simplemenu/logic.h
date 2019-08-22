@@ -7,4 +7,5 @@ void loadFavoritesList();
 int countFiles (char* directoryName);
 int countGamesInPage();
 int doesFavoriteExist(char *name);
+void determineStartingScreen(int sectionCount);
 #endif

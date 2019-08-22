@@ -85,7 +85,7 @@ void loadLastState() {
 	}
 }
 
-void loadConfig() {
+int loadConfig() {
 	FILE * fp;
 	char line[500];
 	char *configurations[23];
@@ -100,37 +100,42 @@ void loadConfig() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (strcmp(configurations[2],"favs")==0||countFiles(configurations[3])>2) {
-			struct MenuSection aMenuSection;
-			strcpy(aMenuSection.sectionName,configurations[0]);
-			strcpy(aMenuSection.emulatorFolder,configurations[1]);
-			strcpy(aMenuSection.executable,configurations[2]);
-			strcpy(aMenuSection.filesDirectory,configurations[3]);
-			strcpy(aMenuSection.fileExtension,configurations[4]);
-			aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
-			aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
-			aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
-			aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[8]);
-			aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[9]);
-			aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[10]);
-			aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
-			aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
-			aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
-			aMenuSection.bodyTextForegroundColor.r=atoi(configurations[14]);
-			aMenuSection.bodyTextForegroundColor.g=atoi(configurations[15]);
-			aMenuSection.bodyTextForegroundColor.b=atoi(configurations[16]);
-			aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
-			aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
-			aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
-			aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
-			aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
-			aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
-			aMenuSection.currentPage=0;
-			aMenuSection.currentGame=0;
-			menuSections[menuSectionCounter]=aMenuSection;
-			menuSectionCounter++;
+		struct MenuSection aMenuSection;
+		strcpy(aMenuSection.sectionName,configurations[0]);
+		strcpy(aMenuSection.emulatorFolder,configurations[1]);
+		strcpy(aMenuSection.executable,configurations[2]);
+		strcpy(aMenuSection.filesDirectory,configurations[3]);
+		strcpy(aMenuSection.fileExtension,configurations[4]);
+		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
+		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
+		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
+		aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[8]);
+		aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[9]);
+		aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[10]);
+		aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
+		aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
+		aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
+		aMenuSection.bodyTextForegroundColor.r=atoi(configurations[14]);
+		aMenuSection.bodyTextForegroundColor.g=atoi(configurations[15]);
+		aMenuSection.bodyTextForegroundColor.b=atoi(configurations[16]);
+		aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
+		aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
+		aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
+		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
+		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
+		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
+		aMenuSection.hidden=1;
+		if (strcmp(configurations[2],"favs")!=0) {
+			if(countFiles(configurations[3])>2) {
+				aMenuSection.hidden=0;
+			}
 		}
+		aMenuSection.currentPage=0;
+		aMenuSection.currentGame=0;
+		menuSections[menuSectionCounter]=aMenuSection;
+		menuSectionCounter++;
 	}
-	lastSection=menuSectionCounter-1;
+	favoritesSectionNumber=menuSectionCounter-1;
 	fclose(fp);
+	return menuSectionCounter;
 }
