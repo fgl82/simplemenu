@@ -7,7 +7,7 @@ SDL_Event event;
 int currentSectionNumber;
 int gamesInPage;
 int totalPages;
-int lastSection;
+int favoritesSectionNumber;
 int favoritesSize;
 int currentCPU;
 int favoritesSectionSelected;
@@ -20,6 +20,7 @@ struct MenuSection {
 	char executable[16];
 	char filesDirectory[25];
 	char fileExtension[5];
+	int hidden;
 	int currentPage;
 	int currentGame;
 	SDL_Color headerAndFooterTextBackgroundColor;

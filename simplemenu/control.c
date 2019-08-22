@@ -10,18 +10,20 @@
 
 int returnTo=0;
 
-void advanceSection() {
-	currentSectionNumber++;
-	setupDecorations();
-	totalPages=0;
-	loadGameList();
+int advanceSection() {
+	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
+		currentSectionNumber++;
+		return 1;
+	}
+	return 0;
 }
 
-void rewindSection() {
-	currentSectionNumber--;
-	setupDecorations();
-	totalPages=0;
-	loadGameList();
+int rewindSection() {
+	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
+		currentSectionNumber--;
+		return 1;
+	}
+	return 0;
 }
 
 void launchGame() {
@@ -91,7 +93,7 @@ void showOrHideFavorites() {
 	}
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
-	currentSectionNumber=lastSection;
+	currentSectionNumber=favoritesSectionNumber;
 	setupDecorations();
 	totalPages=0;
 	loadFavoritesList();
@@ -153,14 +155,44 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_TA]) {
-		if(currentSectionNumber<lastSection-1) {
-			advanceSection();
+		int startingSectionNumber = currentSectionNumber;
+		int wasLastSectionWithContent=0;
+		int advanced = advanceSection();
+		if(advanced) {
+			while(menuSections[currentSectionNumber].hidden) {
+				if(currentSectionNumber==favoritesSectionNumber-1) {
+					wasLastSectionWithContent=1;
+					break;
+				}
+				advanceSection();
+			}
+			if (wasLastSectionWithContent) {
+				currentSectionNumber = startingSectionNumber;
+			}
+			setupDecorations();
+			totalPages=0;
+			loadGameList();
 		}
 		return 0;
 	}
 	if(keys[BTN_B]) {
-		if(currentSectionNumber!=lastSection&&currentSectionNumber>0) {
-			rewindSection();
+		int startingSectionNumber = currentSectionNumber;
+		int wasFirstSectionWithContent=0;
+		int rewinded = rewindSection();
+		if(rewinded) {
+			while(menuSections[currentSectionNumber].hidden) {
+				if(currentSectionNumber==0) {
+					wasFirstSectionWithContent=1;
+					break;
+				}
+				rewindSection();
+			}
+			if (wasFirstSectionWithContent) {
+				currentSectionNumber = startingSectionNumber;
+			}
+			setupDecorations();
+			totalPages=0;
+			loadGameList();
 		}
 		return 0;
 	}
