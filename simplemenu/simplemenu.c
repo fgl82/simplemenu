@@ -20,15 +20,6 @@ void initializeGlobals() {
 	favoritesChanged=0;
 }
 
-void determineStartingScreen(int sectionCount) {
-	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
-		favoritesSectionSelected=1;
-		loadFavoritesList();
-	} else {
-		loadGameList();
-	}
-}
-
 int main() {
 	HW_Init();
 	initializeGlobals();
