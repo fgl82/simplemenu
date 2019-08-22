@@ -124,10 +124,10 @@ int loadConfig() {
 		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
-		aMenuSection.hidden=1;
+		aMenuSection.hidden=0;
 		if (strcmp(configurations[2],"favs")!=0) {
-			if(countFiles(configurations[3])>2) {
-				aMenuSection.hidden=0;
+			if(countFiles(configurations[3])<3) {
+				aMenuSection.hidden=1;
 			}
 		}
 		aMenuSection.currentPage=0;
