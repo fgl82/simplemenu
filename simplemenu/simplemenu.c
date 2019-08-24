@@ -20,12 +20,18 @@ void initializeGlobals() {
 	favoritesChanged=0;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	HW_Init();
 	initializeGlobals();
 	int sectionCount=loadConfig();
-	loadLastState();
 	loadFavorites();
+	if (argv[1]!=NULL) {
+		printf("%s\n",argv[1]);
+		setSectionsState(argv[1]);
+		currentSectionNumber=atoi(argv[2]);
+	} else {
+		loadLastState();
+	}
 	setupDisplay();
 	setupDecorations();
 	determineStartingScreen(sectionCount);
