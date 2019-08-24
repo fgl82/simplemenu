@@ -29,26 +29,17 @@ int doesFavoriteExist(char *name) {
 
 void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecutedWithFullPath[]) {
 	freeResources();
-	char command[200];
-	strcpy(command, "cd ");
-	if (favoritesSectionSelected) {
-		strcat(command, emulatorFolder);
-	} else {
-		strcat(command, emulatorFolder);
-	}
-	strcat(command, ";");
+	char command[200]="";
 	if (strcmp(executable,"none")!=0) {
-		strcat(command, "./");
+		strcpy(command, "./");
 		strcat(command, executable);
 		strcat(command," ");
 	}
 	strcat(command,"\"");
 	strcat(command,fileToBeExecutedWithFullPath);
 	strcat(command,"\"");
-	int returnValue = system(strcat(command,"&>/dev/null"));
-	if (returnValue==-1) {
-		printf("ERROR");
-	}
+	//	execlp("/home/bittboy/git/invoker/invoker/invoker.elf","invoker.elf",emulatorFolder,command, NULL);
+	execlp("./invoker.elf","invoker.elf",emulatorFolder,command, NULL);
 	setupDisplay();
 	setupDecorations();
 }
