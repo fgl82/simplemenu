@@ -1,10 +1,10 @@
-#include <constants.h>
 #include <config.h>
+#include <constants.h>
+#include <control.h>
+#include <definitions.h>
 #include <dirent.h>
 #include <globals.h>
-#include <definitions.h>
 #include <screen.h>
-#include <control.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,30 +27,45 @@ int doesFavoriteExist(char *name) {
 	return 0;
 }
 
+void setSectionsState(char *states) {
+	char *endSemiColonStr;
+	char *semiColonToken = strtok_r(states, ";", &endSemiColonStr);
+	int i=0;
+	while (semiColonToken != NULL)
+	{
+		char *endDashToken;
+		char *dashToken = strtok_r(semiColonToken, "-", &endDashToken);
+		int j=0;
+		while (dashToken != NULL)
+		{
+			if (j==0) {
+				menuSections[i].currentPage=atoi(dashToken);
+			} else {
+				menuSections[i].currentGame=atoi(dashToken);
+			}
+			j++;
+			dashToken = strtok_r(NULL, "-", &endDashToken);
+		}
+		semiColonToken = strtok_r(NULL, ";", &endSemiColonStr);
+		i++;
+	}
+}
+
 void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecutedWithFullPath[]) {
 	freeResources();
-	char command[200];
-	strcpy(command, "cd ");
-	if (favoritesSectionSelected) {
-		strcat(command, emulatorFolder);
-	} else {
-		strcat(command, emulatorFolder);
+	//prepare sections states
+	char states[100]="";
+	for (int i=0;i<favoritesSectionNumber;i++) {
+		char tempString[200]="";
+		snprintf(tempString,sizeof(tempString),"%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame);
+		strcat(states,tempString);
 	}
-	strcat(command, ";");
-	if (strcmp(executable,"none")!=0) {
-		strcat(command, "./");
-		strcat(command, executable);
-		strcat(command," ");
-	}
-	strcat(command,"\"");
-	strcat(command,fileToBeExecutedWithFullPath);
-	strcat(command,"\"");
-	int returnValue = system(strcat(command,"&>/dev/null"));
-	if (returnValue==-1) {
-		printf("ERROR");
-	}
-	setupDisplay();
-	setupDecorations();
+	//prepare section number to return to that
+	char sectionNumber[3]="";
+	snprintf(sectionNumber,sizeof(sectionNumber),"%d",currentSectionNumber);
+	//execute through invoker
+	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
+//	execlp("/home/bittboy/git/invoker/invoker/invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
