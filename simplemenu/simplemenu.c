@@ -26,7 +26,6 @@ int main(int argc, char* argv[]) {
 	int sectionCount=loadConfig();
 	loadFavorites();
 	if (argv[1]!=NULL) {
-		printf("%s\n",argv[1]);
 		setSectionsState(argv[1]);
 		currentSectionNumber=atoi(argv[2]);
 	} else {
