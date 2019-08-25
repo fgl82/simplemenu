@@ -28,8 +28,8 @@ int doesFavoriteExist(char *name) {
 }
 
 void setSectionsState(char *states) {
-	char *endSemiColonToken;
-	char *semiColonToken = strtok_r(states, ";", &endSemiColonToken);
+	char *endSemiColonStr;
+	char *semiColonToken = strtok_r(states, ";", &endSemiColonStr);
 	int i=0;
 	while (semiColonToken != NULL)
 	{
@@ -46,29 +46,26 @@ void setSectionsState(char *states) {
 			j++;
 			dashToken = strtok_r(NULL, "-", &endDashToken);
 		}
-		semiColonToken = strtok_r(NULL, ";", &endSemiColonToken);
+		semiColonToken = strtok_r(NULL, ";", &endSemiColonStr);
 		i++;
 	}
 }
 
 void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecutedWithFullPath[]) {
 	freeResources();
+	//prepare sections states
 	char states[100]="";
 	for (int i=0;i<favoritesSectionNumber;i++) {
 		char tempString[200]="";
 		snprintf(tempString,sizeof(tempString),"%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame);
 		strcat(states,tempString);
 	}
-	char sectionNumber[5];
+	//prepare section number to return to that
+	char sectionNumber[3]="";
 	snprintf(sectionNumber,sizeof(sectionNumber),"%d",currentSectionNumber);
-	char command[200]="";
-	if (strcmp(executable,"none")!=0) {
-		snprintf(command, sizeof(command), "./%s \"%s\"", executable, fileToBeExecutedWithFullPath);
-	} else {
-		snprintf(command, sizeof(command), "\"%s\"", fileToBeExecutedWithFullPath);
-	}
-//	execlp("./invoker.elf","invoker.elf", emulatorFolder, command, NULL);
-	execlp("/home/bittboy/git/invoker/invoker/invoker.elf","invoker.elf", emulatorFolder, command, states, sectionNumber, NULL);
+	//execute through invoker
+	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
+//	execlp("/home/bittboy/git/invoker/invoker/invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
