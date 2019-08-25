@@ -51,11 +51,11 @@ void setSectionsState(char *states) {
 	}
 }
 
-void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecutedWithFullPath[]) {
+void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
 	freeResources();
 	//prepare sections states
 	char states[100]="";
-	for (int i=0;i<favoritesSectionNumber;i++) {
+	for (int i=0;i<favoritesSectionNumber+1;i++) {
 		char tempString[200]="";
 		snprintf(tempString,sizeof(tempString),"%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame);
 		strcat(states,tempString);
@@ -63,6 +63,9 @@ void executeCommand (char *emulatorFolder, char *executable, char fileToBeExecut
 	//prepare section number to return to that
 	char sectionNumber[3]="";
 	snprintf(sectionNumber,sizeof(sectionNumber),"%d",currentSectionNumber);
+	if (favoritesChanged) {
+		saveFavorites();
+	}
 	//execute through invoker
 	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
 //	execlp("/home/bittboy/git/invoker/invoker/invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
