@@ -18,6 +18,7 @@ void saveFavorites() {
 			fprintf(fp,"%s\n",favorites[i].filesDirectory);
 		}
 		fclose(fp);
+		favoritesChanged=0;
 	}
 }
 
