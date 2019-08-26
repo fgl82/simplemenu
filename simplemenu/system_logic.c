@@ -1,9 +1,9 @@
+#include <definitions.h>
 #include <fcntl.h>
+#include <globals.h>
 #include <stdio.h>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <globals.h>
-#include <definitions.h>
 
 volatile uint32_t *memregs;
 

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <system_logic.h>
-#include <SDL/SDL_events.h>
+#include <SDL/SDL_keysym.h>
 
 int returnTo=0;
 
@@ -198,6 +198,8 @@ int performAction() {
 		return 0;
 	}
 	if (keys[BTN_A]) {
+		saveFavorites();
+		freeResources();
 		launchGame();
 		return 0;
 	}

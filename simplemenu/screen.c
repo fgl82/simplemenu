@@ -2,16 +2,8 @@
 #include <definitions.h>
 #include <globals.h>
 #include <graphics.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <string_utils.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_events.h>
-#include <SDL/SDL_keyboard.h>
-#include <SDL/SDL_mouse.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_video.h>
+#include <string.h>
 
 SDL_Surface *screen = NULL;
 char buf[1024];

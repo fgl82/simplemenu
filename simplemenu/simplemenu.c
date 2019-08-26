@@ -1,10 +1,11 @@
+#include <config.h>
 #include <control.h>
+#include <definitions.h>
 #include <globals.h>
 #include <logic.h>
 #include <screen.h>
+#include <stdlib.h>
 #include <system_logic.h>
-#include <definitions.h>
-#include <config.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
 
@@ -22,6 +23,8 @@ void initializeGlobals() {
 
 int main(int argc, char* argv[]) {
 	HW_Init();
+	putenv("SDL_NOMOUSE=1");
+	putenv("HOME=/mnt/");
 	initializeGlobals();
 	int sectionCount=loadConfig();
 	loadFavorites();
