@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);
 		currentSectionNumber=atoi(argv[2]);
+		returnTo=atoi(argv[3]);
 	} else {
 		loadLastState();
 	}

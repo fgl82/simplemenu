@@ -8,8 +8,6 @@
 #include <system_logic.h>
 #include <SDL/SDL_keysym.h>
 
-int returnTo=0;
-
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;

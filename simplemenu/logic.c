@@ -58,9 +58,11 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		snprintf(tempString,sizeof(tempString),"%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame);
 		strcat(states,tempString);
 	}
+	char pReturnTo[3];
+	snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
 	char sectionNumber[3]="";
 	snprintf(sectionNumber,sizeof(sectionNumber),"%d",currentSectionNumber);
-	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, NULL);
+	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, pReturnTo, NULL);
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
