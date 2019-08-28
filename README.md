@@ -2,15 +2,15 @@
 Simple launcher for the new bittboy.
 
 Controls:
-
-- B: previous section
-- A: launch game
-- TA: next section
-- TB: overclocking, underclocking, normal (cyclic)
-- R: go into or exit the favorites screen
-- Start outside favorites: adds a game to favorites
-- Start in favorites: removes the game from favorites
-- Start + Select: shut down
+- DPad: scroll games and pages.
+- B: previous section.
+- A: launch game.
+- TA: next section.
+- TB: overclocking, underclocking, normal (cyclic).
+- R: go into or exit the favorites screen.
+- Start outside favorites: adds a game to favorites.
+- Start in favorites: removes the game from favorites.
+- Start + Select: shut down.
 
 Notes:
 
