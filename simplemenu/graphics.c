@@ -73,6 +73,6 @@ void displayImageOnSurface(char *fileName, SDL_Surface *surface, int rgbColor[])
 	}
 	img = SDL_DisplayFormatAlpha(_img);
 	SDL_FreeSurface(_img);
-	SDL_Rect bgrect = draw_rectangle(surface, (SCREEN_WIDTH/2)-(img->w/2), img->h, 0, 0, rgbColor, 1);
+	SDL_Rect bgrect = draw_rectangle(surface, img->w, img->h, (SCREEN_WIDTH/2)-(img->w/2),(SCREEN_HEIGHT/2)-(img->h/2), rgbColor, 1);
 	SDL_BlitSurface(img, NULL, surface, &bgrect);
 }
