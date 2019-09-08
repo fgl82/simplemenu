@@ -11,10 +11,25 @@ TTF_Font *font = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
+void displayGamePicture() {
+	int rgbColor[] = {40, 40, 40};
+	char gameNameFullPath[100];
+	if (favoritesSectionSelected) {
+		if (favoritesSize == 0) {
+			return;
+		}
+		strcpy(gameNameFullPath,CURRENT_FAVORITE.filesDirectory);
+	} else {
+		strcpy(gameNameFullPath, CURRENT_SECTION.filesDirectory);
+	}
+	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
+	strcat(gameNameFullPath,".png");
+	displayImageOnSurface(gameNameFullPath, screen, rgbColor);
+}
 void drawHeader() {
 	char finalString [100];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor, 0);
 	if (currentCPU==NO_OC) {
 		strcpy(finalString,"- ");
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
@@ -26,12 +41,12 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {
 	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor.r,menuSections[currentSectionNumber].bodyBackgroundColor.g,menuSections[currentSectionNumber].bodyBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor, 0);
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	gamesInPage=0;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
@@ -58,15 +73,23 @@ void drawGameList() {
 	}
 }
 
-void updateScreen() {
-	drawGameList();
-	SDL_Flip(screen);
-}
-
 void drawFooter() {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor, 0);
 	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), "SELECT+START: SHUT DOWN", menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+}
+
+void setupDecorations() {
+	drawHeader();
+	drawFooter();
+}
+
+void updateScreen() {\
+	drawGameList();
+	if (pictureMode) {
+		displayGamePicture();
+	}
+	SDL_Flip(screen);
 }
 
 void setupDisplay() {
@@ -79,11 +102,6 @@ void setupDisplay() {
 	font = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(14));
 	headerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(16));
-}
-
-void setupDecorations() {
-	drawHeader();
-	drawFooter();
 }
 
 void freeResources() {

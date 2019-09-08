@@ -24,6 +24,10 @@ int rewindSection() {
 	return 0;
 }
 
+void showPicture() {
+	displayGamePicture();
+}
+
 void launchGame() {
 	char fileToBeExecutedwithFullPath[200];
 	if (favoritesSectionSelected && favoritesSize > 0) {
@@ -200,6 +204,14 @@ int performAction() {
 		freeResources();
 		launchGame();
 		return 0;
+	}
+	if (keys[BTN_SELECT]) {
+		if (pictureMode) {
+			pictureMode=0;
+			setupDecorations();
+		} else {
+			pictureMode=1;
+		}
 	}
 	if (keys[BTN_DOWN]) {
 		scrollDown();

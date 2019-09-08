@@ -14,6 +14,7 @@ int favoritesSectionSelected;
 int favoritesChanged;
 int returnTo;
 char *gameList[200][10];
+int pictureMode;
 
 struct MenuSection {
 	char sectionName[25];

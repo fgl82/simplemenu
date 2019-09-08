@@ -60,9 +60,11 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	}
 	char pReturnTo[3];
 	snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
-	char sectionNumber[3]="";
-	snprintf(sectionNumber,sizeof(sectionNumber),"%d",currentSectionNumber);
-	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, sectionNumber, pReturnTo, NULL);
+	char pSectionNumber[3]="";
+	char pPictureMode[2]="";
+	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
+	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
+	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
