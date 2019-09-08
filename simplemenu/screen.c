@@ -12,9 +12,11 @@ TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
 void displayGamePicture() {
-	char gameName[100] = "./media/";
+	char gameName[100];
+	strcpy(gameName, CURRENT_SECTION.filesDirectory);
 	strcat(gameName,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameName,".png");
+	printf("%s\n",gameName);
 	displayImageOnSurface(gameName, screen);
 }
 void drawHeader() {

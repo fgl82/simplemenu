@@ -69,7 +69,7 @@ void displayImageOnSurface(char *fileName, SDL_Surface *surface) {
 	SDL_Surface* img = NULL;
 	SDL_Surface* _img = IMG_Load(fileName);
 	if (_img==NULL) {
-		_img = IMG_Load("./media/default.png");
+		_img = IMG_Load("./resources/default.png");
 	}
 	int rgbColor[] = {0, 0, 0};
 	img = SDL_DisplayFormat(_img);
