@@ -51,11 +51,29 @@ int draw_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, con
 	return msg->w;
 }
 
-void draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[]) {
+SDL_Rect draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[], int isBackground) {
 	SDL_Rect rectangle;
 	rectangle.w = width;
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
-	SDL_FillRect(surface, &rectangle, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+	if (isBackground) {
+		SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+	} else {
+		SDL_FillRect(surface, &rectangle, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+	}
+	return(rectangle);
+}
+
+void displayImageOnSurface(char *fileName, SDL_Surface *surface) {
+	SDL_Surface* img = NULL;
+	SDL_Surface* _img = IMG_Load(fileName);
+	if (_img==NULL) {
+		_img = IMG_Load("./media/default.png");
+	}
+	int rgbColor[] = {0, 0, 0};
+	img = SDL_DisplayFormat(_img);
+	SDL_FreeSurface(_img);
+	SDL_Rect bgrect = draw_rectangle(surface, img->w, img->h, 0, 0, rgbColor, 1);
+	SDL_BlitSurface(img, NULL, surface, &bgrect);
 }

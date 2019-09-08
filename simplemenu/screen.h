@@ -7,4 +7,5 @@ void drawFooter();
 void setupDisplay();
 void setupDecorations();
 void freeResources();
+void displayGamePicture();
 #endif
