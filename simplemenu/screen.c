@@ -12,12 +12,18 @@ TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
 void displayGamePicture() {
-	char gameName[100];
-	strcpy(gameName, CURRENT_SECTION.filesDirectory);
-	strcat(gameName,removeExtension(CURRENT_GAME_NAME));
-	strcat(gameName,".png");
-	printf("%s\n",gameName);
-	displayImageOnSurface(gameName, screen);
+	char gameNameFullPath[100];
+	if (favoritesSectionSelected) {
+		if (favoritesSize == 0) {
+			return;
+		}
+		strcpy(gameNameFullPath,CURRENT_FAVORITE.filesDirectory);
+	} else {
+		strcpy(gameNameFullPath, CURRENT_SECTION.filesDirectory);
+	}
+	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
+	strcat(gameNameFullPath,".png");
+	displayImageOnSurface(gameNameFullPath, screen);
 }
 void drawHeader() {
 	char finalString [100];
