@@ -43,7 +43,7 @@ void launchGame() {
 
 void scrollDown() {
 	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
-		if (CURRENT_SECTION.currentPage < totalPages) {
+		if (CURRENT_SECTION.currentPage < totalPages-1) {
 			CURRENT_SECTION.currentGame=0;
 			CURRENT_SECTION.currentPage++;
 			return;
@@ -71,7 +71,7 @@ void scrollUp() {
 }
 
 void advancePage() {
-	if (CURRENT_SECTION.currentPage < totalPages) {
+	if (CURRENT_SECTION.currentPage < totalPages-1) {
 		CURRENT_SECTION.currentGame=0;
 		CURRENT_SECTION.currentPage++;
 	}
