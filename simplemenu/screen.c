@@ -94,10 +94,9 @@ void setupDecorations() {
 }
 
 void updateScreen() {\
+	drawGameList();
 	if (pictureMode) {
 		displayGamePicture();
-	} else {
-		drawGameList();
 	}
 	SDL_Flip(screen);
 }
