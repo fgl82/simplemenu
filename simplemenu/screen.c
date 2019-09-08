@@ -12,6 +12,7 @@ TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
 void displayGamePicture() {
+	int rgbColor[] = {40, 40, 40};
 	char gameNameFullPath[100];
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
@@ -23,7 +24,7 @@ void displayGamePicture() {
 	}
 	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameNameFullPath,".png");
-	displayImageOnSurface(gameNameFullPath, screen);
+	displayImageOnSurface(gameNameFullPath, screen, rgbColor);
 }
 void drawHeader() {
 	char finalString [100];
@@ -40,7 +41,7 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	draw_text(screen, headerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {

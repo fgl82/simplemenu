@@ -19,6 +19,7 @@ void initializeGlobals() {
 	currentCPU=MED_OC;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
+	pictureMode=0;
 }
 
 int main(int argc, char* argv[]) {
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]) {
 		setSectionsState(argv[1]);
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
+		pictureMode=atoi(argv[4]);
 	} else {
 		loadLastState();
 	}
