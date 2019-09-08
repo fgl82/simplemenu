@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_DEFINED
 #define GRAPHICS_DEFINED
 
+#include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_video.h>
 
