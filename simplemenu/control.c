@@ -24,7 +24,7 @@ int rewindSection() {
 	return 0;
 }
 
-int showPicture() {
+void showPicture() {
 	displayGamePicture();
 }
 
