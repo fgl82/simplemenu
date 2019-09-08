@@ -1,5 +1,8 @@
-#include "graphics.h"
-#include "definitions.h"
+#include <definitions.h>
+#include <graphics.h>
+#include <stdio.h>
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;
@@ -51,28 +54,41 @@ int draw_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, con
 	return msg->w;
 }
 
-SDL_Rect draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[], int isBackground) {
+SDL_Rect draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[]) {
 	SDL_Rect rectangle;
 	rectangle.w = width;
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
-	if (isBackground) {
-		SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
-	} else {
-		SDL_FillRect(surface, &rectangle, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
-	}
+	SDL_FillRect(surface, &rectangle, SDL_MapRGB(surface->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	return(rectangle);
 }
 
-void displayImageOnSurface(char *fileName, SDL_Surface *surface, int rgbColor[]) {
-	SDL_Surface* img = NULL;
-	SDL_Surface* _img = IMG_Load(fileName);
-	if (_img==NULL) {
-		_img = IMG_Load("./resources/default.png");
+SDL_Surface *loadImage (char *fileName) {
+	SDL_Surface *img = NULL;
+	SDL_Surface *_img = IMG_Load(fileName);
+	if (_img!=NULL) {
+		img = SDL_DisplayFormatAlpha(_img);
+		SDL_FreeSurface(_img);
 	}
-	img = SDL_DisplayFormatAlpha(_img);
-	SDL_FreeSurface(_img);
-	SDL_Rect bgrect = draw_rectangle(surface, img->w, img->h, (SCREEN_WIDTH/2)-(img->w/2),(SCREEN_HEIGHT/2)-(img->h/2), rgbColor, 1);
+	return(img);
+}
+
+void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
+	SDL_Surface *img = loadImage (fileName);
+	int rgbColor[]={0, 0, 0};
+	SDL_Rect bgrect = draw_rectangle(surface, img->w, img->h, (SCREEN_WIDTH/2)-(img->w/2),(SCREEN_HEIGHT/2)-(img->h/2), rgbColor);
 	SDL_BlitSurface(img, NULL, surface, &bgrect);
+	SDL_FreeSurface(img);
+}
+
+void displayImageOnSurface(char *fileName, char *fallBackText, TTF_Font *font, SDL_Color color, SDL_Surface *surface, int rgbColor[]) {
+	SDL_Surface *img = loadImage (fileName);
+	if (img==NULL) {
+		draw_text(surface, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, color, VAlignTop | HAlignCenter);
+	} else {
+		SDL_Rect bgrect = draw_rectangle(surface, 0, 0, (SCREEN_WIDTH/2)-(img->w/2),(SCREEN_HEIGHT/2)-(img->h/2), rgbColor);
+		SDL_BlitSurface(img, NULL, surface, &bgrect);
+	}
+	SDL_FreeSurface(img);
 }
