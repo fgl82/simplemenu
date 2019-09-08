@@ -68,10 +68,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
-	if(currentSectionNumber>0) {
-		return(strcmp(extension,section.fileExtension));
-	}
-	return 0;
+	return(strcmp(extension,section.fileExtension));
 }
 
 int countFiles (char* directoryName) {
