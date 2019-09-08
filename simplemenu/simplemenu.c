@@ -41,18 +41,17 @@ int main(int argc, char* argv[]) {
 	setupDecorations();
 	determineStartingScreen(sectionCount);
 	updateScreen();
-	int shouldRepeat = 0;
-	while (running) {
-		if (shouldRepeat) {
-			SDL_EnableKeyRepeat(50,180);
-			shouldRepeat=0;
-		}
-		while (SDL_WaitEvent(&event)) {
-			if (event.type == SDL_KEYDOWN) {
-				shouldRepeat=performAction();
+	SDL_EnableKeyRepeat(500,180);
+	while (running==1) {
+		while(SDL_PollEvent(&event)){
+			switch(event.type){
+			case SDL_KEYDOWN:
+				performAction();
 				updateScreen();
-			}
-			if (event.type == SDL_KEYUP) {
+				break;
+			case SDL_KEYUP:
+				break;
+			default:
 				break;
 			}
 		}
