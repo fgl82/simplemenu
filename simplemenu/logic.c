@@ -121,11 +121,13 @@ void loadGameList() {
 			gameList[i][j]=NULL;
 		}
 	}
+	int lastRound=0;
 	for (int i=0;i<n;i++){
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
 				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)==0){
+			lastRound=0;
 			gameList[page][game] = files[i]->d_name;
 			game++;
 			if (game==ITEMS_PER_PAGE) {
@@ -133,9 +135,13 @@ void loadGameList() {
 					page++;
 					totalPages++;
 					game = 0;
+					lastRound=1;
 				}
 			}
 		}
+	}
+	if (lastRound==1) {
+		totalPages--;
 	}
 	free(files);
 }
