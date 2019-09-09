@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	SDL_EnableKeyRepeat(500,180);
-	while (running==1) {
+	while (running) {
 		while(SDL_PollEvent(&event)){
 			switch(event.type){
 			case SDL_KEYDOWN:
