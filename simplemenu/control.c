@@ -1,8 +1,10 @@
 #include <config.h>
+#include <constants.h>
 #include <definitions.h>
 #include <globals.h>
 #include <logic.h>
 #include <screen.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <system_logic.h>
@@ -41,20 +43,6 @@ void launchGame() {
 	}
 }
 
-void scrollDown() {
-	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
-		if (CURRENT_SECTION.currentPage < totalPages-1) {
-			CURRENT_SECTION.currentGame=0;
-			CURRENT_SECTION.currentPage++;
-			return;
-		}
-	}
-	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
-		CURRENT_SECTION.currentGame++;
-		return;
-	}
-}
-
 void scrollUp() {
 	if(CURRENT_SECTION.currentGame == 0) {
 		if (CURRENT_SECTION.currentPage >0) {
@@ -70,10 +58,24 @@ void scrollUp() {
 	}
 }
 
+void scrollDown() {
+	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
+		if (CURRENT_SECTION.currentPage < totalPages) {
+			CURRENT_SECTION.currentGame=0;
+			CURRENT_SECTION.currentPage++;
+			return;
+		}
+	}
+	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
+		CURRENT_SECTION.currentGame++;
+		return;
+	}
+}
+
 void advancePage() {
-	if (CURRENT_SECTION.currentPage < totalPages-1) {
-		CURRENT_SECTION.currentGame=0;
+	if(CURRENT_SECTION.currentPage<totalPages) {
 		CURRENT_SECTION.currentPage++;
+		CURRENT_SECTION.currentGame=0;
 	}
 }
 
