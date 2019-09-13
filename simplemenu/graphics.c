@@ -85,10 +85,14 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 void displayImageOnSurface(char *fileName, char *fallBackText, TTF_Font *font, SDL_Color color, SDL_Surface *surface, int rgbColor[]) {
 	SDL_Surface *img = loadImage (fileName);
 	if (img==NULL) {
-		draw_text(surface, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, color, VAlignTop | HAlignCenter);
+		draw_text(surface, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(129), fallBackText, color, VAlignTop | HAlignCenter);
 	} else {
-		SDL_Rect bgrect = draw_rectangle(surface, 0, 0, (SCREEN_WIDTH/2)-(img->w/2),(SCREEN_HEIGHT/2)-(img->h/2), rgbColor);
-		SDL_BlitSurface(img, NULL, surface, &bgrect);
+		SDL_Rect rectangleDest;
+		rectangleDest.w = 0;
+		rectangleDest.h = 0;
+		rectangleDest.x = SCREEN_WIDTH/2-img->w/2;
+		rectangleDest.y = ((SCREEN_HEIGHT)/2-img->h/2);
+		SDL_BlitSurface(img, NULL, surface, &rectangleDest);
 	}
 	SDL_FreeSurface(img);
 }
