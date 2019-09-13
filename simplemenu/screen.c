@@ -38,7 +38,7 @@ void displayGamePicture() {
 	white.g=255;
 	white.b=255;
 
-	int gray[]={40,40,40};
+	int gray[]={80,80,80};
 
 	char nameToDisplay[200]="";
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
