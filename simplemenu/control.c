@@ -154,7 +154,7 @@ int performAction() {
 		showOrHideFavorites();
 		return 0;
 	}
-	if(keys[BTN_TB]) {
+	if(keys[BTN_SELECT]) {
 		cycleFrequencies();
 		drawHeader();
 		return 0;
@@ -180,7 +180,7 @@ int performAction() {
 		}
 		return 0;
 	}
-	if(keys[BTN_B]) {
+	if(keys[BTN_TB]) {
 		int startingSectionNumber = currentSectionNumber;
 		int wasFirstSectionWithContent=0;
 		int rewinded = rewindSection();
@@ -207,7 +207,7 @@ int performAction() {
 		launchGame();
 		return 0;
 	}
-	if (keys[BTN_SELECT]) {
+	if (keys[BTN_B]) {
 		if (pictureMode) {
 			pictureMode=0;
 			setupDecorations();
