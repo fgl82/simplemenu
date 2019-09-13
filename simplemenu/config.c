@@ -56,7 +56,10 @@ void loadFavorites() {
 void saveLastState() {
 	FILE * fp;
 	fp = fopen("./config/last_state.cfg", "w");
-	fprintf(fp, "%d;%d;%d", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
+	fprintf(fp, "%d;\n", currentSectionNumber);
+	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
+		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
+	}
 	fclose(fp);
 }
 
@@ -68,6 +71,7 @@ void loadLastState() {
 	fp = fopen("./config/last_state.cfg", "r");
 	char *configurations[3];
 	char *ptr;
+	int first = -1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -76,10 +80,15 @@ void loadLastState() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		currentSectionNumber=atoi(configurations[0]);
-		CURRENT_SECTION.currentPage=atoi(configurations[1]);
-		CURRENT_SECTION.currentGame=atoi(configurations[2]);
+		if (first==-1) {
+			first=atoi(configurations[0]);
+		} else {
+			currentSectionNumber=atoi(configurations[0]);
+			CURRENT_SECTION.currentPage=atoi(configurations[1]);
+			CURRENT_SECTION.currentGame=atoi(configurations[2]);
+		}
 	}
+	currentSectionNumber=first;
 	fclose(fp);
 	if (line) {
 		free(line);
@@ -91,7 +100,6 @@ int loadConfig() {
 	char line[500];
 	char *configurations[23];
 	fp = fopen("./config/sections.cfg", "r");
-	int menuSectionCounter = 0;
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
 		int i=0;

@@ -9,6 +9,7 @@ int gamesInPage;
 int totalPages;
 int favoritesSectionNumber;
 int favoritesSize;
+int menuSectionCounter;
 int currentCPU;
 int favoritesSectionSelected;
 int favoritesChanged;

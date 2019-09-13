@@ -22,7 +22,7 @@ void stripGameName(char *gameName) {
 	strcpy(gameName,removeExtension(gameName));
 	int charNumber = 0;
 	while (gameName[charNumber]) {
-		if (gameName[charNumber]=='('||charNumber>37) {
+		if (gameName[charNumber]=='('||charNumber>34) {
 			gameName[charNumber]='\0';
 			break;
 		}
