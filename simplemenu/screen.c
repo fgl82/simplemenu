@@ -21,7 +21,7 @@ TTF_Font *footerFont = NULL;
 
 void displayGamePicture() {
 	int rgbColor[] = {40, 40, 40};
-	char gameNameFullPath[100];
+	char gameNameFullPath[200]="";
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
@@ -32,15 +32,24 @@ void displayGamePicture() {
 	}
 	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameNameFullPath,".png");
-	displayBackGroundImage("./resources/back.png", screen);
+//	displayBackGroundImage("./resources/back.png", screen);
 	SDL_Color white;
 	white.r=255;
 	white.g=255;
 	white.b=255;
+
+	int gray[]={40,40,40};
+
 	char nameToDisplay[200]="";
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
 	stripGameName(nameToDisplay);
-	displayImageOnSurface(gameNameFullPath, nameToDisplay, font, white, screen, rgbColor);
+
+	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, gray);
+	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, white, screen, rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, gray);
+	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, white, VAlignTop | HAlignCenter);
+
+
 }
 void drawHeader() {
 	char finalString [100];
@@ -82,15 +91,15 @@ void drawGameList() {
 	}
 }
 
-void drawFooter() {
+void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
-	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), "SELECT+START: SHUT DOWN", menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
 }
 
 void setupDecorations() {
 	drawHeader();
-	drawFooter();
+	drawFooter("SELECT+START: SHUT DOWN");
 }
 
 void updateScreen() {\
