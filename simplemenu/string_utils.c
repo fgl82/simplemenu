@@ -23,7 +23,7 @@ void stripGameName(char *gameName) {
 	int charNumber = 0;
 	while (gameName[charNumber]) {
 		if (gameName[charNumber]=='('||charNumber>34) {
-			gameName[charNumber]='\0';
+			gameName[charNumber-1]='\0';
 			break;
 		}
 		charNumber++;
