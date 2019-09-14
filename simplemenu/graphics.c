@@ -85,7 +85,7 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 void displayImageOnSurface(char *fileName, char *fallBackText, TTF_Font *font, SDL_Color color, SDL_Surface *surface, int rgbColor[]) {
 	SDL_Surface *img = loadImage (fileName);
 	if (img==NULL) {
-		draw_text(surface, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(129), fallBackText, color, VAlignTop | HAlignCenter);
+		draw_text(surface, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, color, VAlignTop | HAlignCenter);
 	} else {
 		SDL_Rect rectangleDest;
 		rectangleDest.w = 0;

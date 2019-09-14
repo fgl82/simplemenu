@@ -38,16 +38,17 @@ void displayGamePicture() {
 	white.g=255;
 	white.b=255;
 
-	int gray[]={80,80,80};
+	int backgroundColor[]={CURRENT_SECTION.bodyBackgroundColor.r,CURRENT_SECTION.bodyBackgroundColor.g,CURRENT_SECTION.bodyBackgroundColor.b};
+	int footerBackgroundColor[]={CURRENT_SECTION.headerAndFooterTextBackgroundColor.r,CURRENT_SECTION.headerAndFooterTextBackgroundColor.g,CURRENT_SECTION.headerAndFooterTextBackgroundColor.b};
 
 	char nameToDisplay[200]="";
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
 	stripGameName(nameToDisplay);
 
-	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, gray);
-	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, white, screen, rgbColor);
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, gray);
-	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, white, VAlignTop | HAlignCenter);
+	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, backgroundColor);
+	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, CURRENT_SECTION.bodyTextForegroundColor, screen, rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, footerBackgroundColor);
+	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, CURRENT_SECTION.headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 
 
 }
@@ -66,7 +67,7 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	draw_text(screen, headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(23), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	draw_text(screen, headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawGameList() {
