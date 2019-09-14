@@ -20,7 +20,7 @@ TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
 void displayGamePicture() {
-	int rgbColor[] = {40, 40, 40};
+	int rgbColor[] = {21, 18, 26};
 	char gameNameFullPath[200]="";
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
@@ -45,10 +45,10 @@ void displayGamePicture() {
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
 	stripGameName(nameToDisplay);
 
-	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, backgroundColor);
-	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, CURRENT_SECTION.bodyTextForegroundColor, screen, rgbColor);
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, footerBackgroundColor);
-	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, CURRENT_SECTION.headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
+	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, white, screen, rgbColor);
+	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
+	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, white, VAlignTop | HAlignCenter);
 
 
 }
