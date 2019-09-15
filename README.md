@@ -2,14 +2,14 @@
 Simple launcher for the new bittboy.
 
 Controls:
-- B: previous section
-- A: launch game
+- TB: previous section
 - TA: next section
-- TB: overclocking, underclocking, normal (cyclic)
+- A: launch game
+- B: switch between menu and artwork modes
+- Select: overclocking, underclocking, normal (cyclic)
 - R: go into or exit the favorites screen
 - Start outside favorites: adds a game to favorites
 - Start in favorites: removes the game from favorites
-- Select: switch between menu and artwork modes
 - Start + Select: shutdown
 
 Notes:
