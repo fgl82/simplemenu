@@ -14,7 +14,7 @@ int currentCPU;
 int favoritesSectionSelected;
 int favoritesChanged;
 int returnTo;
-char *gameList[200][10];
+char *gameList[1000][10];
 int pictureMode;
 
 struct MenuSection {

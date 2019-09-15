@@ -92,21 +92,25 @@ void sortFavorites() {
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
-	for (int i=0;i<200;i++) {
+	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
 			gameList[i][j]=NULL;
 		}
 	}
+	char currentLetter;
+	char previousLetter='\0';
 	for (int i=0;i<favoritesSize;i++){
-		gameList[page][game] = favorites[i].name;
-		game++;
-		if (game==ITEMS_PER_PAGE) {
+		currentLetter=favorites[i].name[0];
+		if (game==ITEMS_PER_PAGE||(currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
 			if(i!=favoritesSize-1) {
 				page++;
 				totalPages++;
 				game = 0;
 			}
 		}
+		gameList[page][game] = favorites[i].name;
+		game++;
+		previousLetter=currentLetter;
 	}
 	sortFavorites();
 }
@@ -116,21 +120,22 @@ void loadGameList() {
 	int n=scandir(CURRENT_SECTION.filesDirectory, &files, 0, alphasort);
 	int game = 0;
 	int page = 0;
-	for (int i=0;i<200;i++) {
+	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
 			gameList[i][j]=NULL;
 		}
 	}
 	int lastRound=0;
+	char currentLetter;
+	char previousLetter='\0';
 	for (int i=0;i<n;i++){
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
 				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)==0){
+			currentLetter=files[i]->d_name[0];
 			lastRound=0;
-			gameList[page][game] = files[i]->d_name;
-			game++;
-			if (game==ITEMS_PER_PAGE) {
+			if (game==ITEMS_PER_PAGE||(currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
 				if(i!=n-1) {
 					page++;
 					totalPages++;
@@ -138,6 +143,9 @@ void loadGameList() {
 					lastRound=1;
 				}
 			}
+			gameList[page][game] = files[i]->d_name;
+			game++;
+			previousLetter=currentLetter;
 		}
 	}
 	if (lastRound==1) {
