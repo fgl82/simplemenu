@@ -86,50 +86,56 @@ void scrollDown() {
 }
 
 void advancePage() {
-	if(CURRENT_SECTION.currentPage<totalPages) {
+	if(CURRENT_SECTION.currentPage<=totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=CURRENT_GAME_NAME[0];
-			while(CURRENT_GAME_NAME[0]==currentLetter) {
+			while(CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0])) {
+				scrollDown();
+				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+					break;
+				}
+			}
+		} else {
+			if(CURRENT_SECTION.currentPage!=totalPages) {
 				CURRENT_SECTION.currentPage++;
 				CURRENT_SECTION.currentGame=0;
 			}
-		} else {
-			CURRENT_SECTION.currentPage++;
-			CURRENT_SECTION.currentGame=0;		
 		}
 	}
 }
 
 void rewindPage() {
-	if (CURRENT_SECTION.currentPage > 0) {
-		if (CURRENT_SECTION.alphabeticalPaging) {
-			char currentLetter=CURRENT_GAME_NAME[0];
-			while(CURRENT_GAME_NAME[0]==currentLetter) {
-				CURRENT_SECTION.currentPage--;
-				CURRENT_SECTION.currentGame=0;
-				if (CURRENT_SECTION.currentPage==0) {
+	if (CURRENT_SECTION.alphabeticalPaging) {
+		char currentLetter=CURRENT_GAME_NAME[0];
+		int hitStart = 0;
+		int wasDigit = isdigit(CURRENT_GAME_NAME[0]);
+		while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
+			scrollUp();
+			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+				hitStart = 1;
+				break;
+			}
+		}
+		if (!hitStart) {
+			wasDigit = isdigit(CURRENT_GAME_NAME[0]);
+			currentLetter=CURRENT_GAME_NAME[0];
+			while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
+				scrollUp();
+				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+					hitStart = 1;
 					break;
 				}
 			}
-			if (CURRENT_SECTION.currentPage!=0) {
-				currentLetter=CURRENT_GAME_NAME[0];
-				while(CURRENT_GAME_NAME[0]==currentLetter) {
-					CURRENT_SECTION.currentPage--;
-					CURRENT_SECTION.currentGame=0;
-					if (CURRENT_SECTION.currentPage==0) {
-						break;
-					}
-				}
-				if (CURRENT_SECTION.currentPage!=0) {
-					CURRENT_SECTION.currentPage++;
-				}
+			printf("papa\n");
+			if (!hitStart) {
+				scrollDown();
 			}
-			gamesInPage=countGamesInPage();
-		} else {
-			CURRENT_SECTION.currentPage--;
-			gamesInPage=countGamesInPage();
-			CURRENT_SECTION.currentGame=gamesInPage-1;
 		}
+		gamesInPage=countGamesInPage();
+	} else 	if (CURRENT_SECTION.currentPage > 0) {
+		CURRENT_SECTION.currentPage--;
+		gamesInPage=countGamesInPage();
+		CURRENT_SECTION.currentGame=gamesInPage-1;
 	}
 }
 

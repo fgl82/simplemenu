@@ -58,7 +58,7 @@ void saveLastState() {
 	fp = fopen("./config/last_state.cfg", "w");
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
-		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame, CURRENT_SECTION.alphabeticalPaging);
+		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
 	}
 	fclose(fp);
 }
@@ -86,7 +86,7 @@ void loadLastState() {
 			currentSectionNumber=atoi(configurations[0]);
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
 			CURRENT_SECTION.currentGame=atoi(configurations[2]);
-			CURRENT_SECTION.alphabeticalPaging=atoi(configurations[3]);
+			CURRENT_SECTION.alphabeticalPaging=1;
 		}
 	}
 	currentSectionNumber=first;
