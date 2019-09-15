@@ -126,7 +126,6 @@ void rewindPage() {
 					break;
 				}
 			}
-			printf("papa\n");
 			if (!hitStart) {
 				scrollDown();
 			}
