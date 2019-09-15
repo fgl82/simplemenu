@@ -6,14 +6,14 @@ Controls:
 - TA: next section
 - A: launch game
 - B: switch between menu and artwork modes
+- Left or Right: next or previous 10 games
 - Select: 
   - +Start: shutdown
   - +Up: overclocking, underclocking, normal (cyclic)
-  - +Down: enable or disable alphabetical paging for the current section
-  - +Left or Right: if in alphabetical paging mode, scroll to the next page (instead of to the next letter), forward or back, which is the default behavior for left and right when alphabetical paging is disabled.
+  - +Left or Right: scroll to the next next letter, forward or back
 - R: go into or exit the favorites screen
-- Start outside favorites: adds a game to favorites
-- Start in favorites: removes the game from favorites
+- Start, outside favorites: adds a game to favorites
+- Start, in favorites: removes the game from favorites
 
 Notes:
 - Sections need to be added manually in the config file, the numbers at the end are the colors of the header, footer, body and associated text, in rgb form.
