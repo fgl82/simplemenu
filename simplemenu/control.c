@@ -270,9 +270,11 @@ int performAction() {
 		return 0;
 	}
 	if (keys[BTN_A]) {
-		saveFavorites();
-		freeResources();
-		launchGame();
+		if (countGamesInPage()>0) {
+			saveFavorites();
+			freeResources();
+			launchGame();
+		}
 		return 0;
 	}
 	if (keys[BTN_B]) {
