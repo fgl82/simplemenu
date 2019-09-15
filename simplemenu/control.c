@@ -10,6 +10,19 @@
 #include <system_logic.h>
 #include <SDL/SDL_keysym.h>
 
+void changePaging() {
+	CURRENT_SECTION.alphabeticalPaging=1+(CURRENT_SECTION.alphabeticalPaging*-1);
+	setupDecorations();
+	totalPages=0;
+	CURRENT_SECTION.currentGame=0;
+	CURRENT_SECTION.currentPage=0;
+	if (favoritesSectionSelected) {
+		loadFavoritesList();
+	} else {
+		loadGameList();
+	}
+}
+
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
@@ -74,32 +87,42 @@ void scrollDown() {
 
 void advancePage() {
 	if(CURRENT_SECTION.currentPage<totalPages) {
-		char currentLetter=CURRENT_GAME_NAME[0];
-		while(CURRENT_GAME_NAME[0]==currentLetter) {
+		if (CURRENT_SECTION.alphabeticalPaging) {
+			char currentLetter=CURRENT_GAME_NAME[0];
+			while(CURRENT_GAME_NAME[0]==currentLetter) {
+				CURRENT_SECTION.currentPage++;
+				CURRENT_SECTION.currentGame=0;
+			}
+		} else {
 			CURRENT_SECTION.currentPage++;
-			CURRENT_SECTION.currentGame=0;
+			CURRENT_SECTION.currentGame=0;		
 		}
 	}
 }
 
 void rewindPage() {
 	if (CURRENT_SECTION.currentPage > 0) {
-		char currentLetter=CURRENT_GAME_NAME[0];
-		while(CURRENT_GAME_NAME[0]==currentLetter) {
-			CURRENT_SECTION.currentPage--;
+		if (CURRENT_SECTION.alphabeticalPaging) {
+			char currentLetter=CURRENT_GAME_NAME[0];
+			while(CURRENT_GAME_NAME[0]==currentLetter) {
+				CURRENT_SECTION.currentPage--;
+				CURRENT_SECTION.currentGame=0;
+			}
+			currentLetter=CURRENT_GAME_NAME[0];
+			while(CURRENT_GAME_NAME[0]==currentLetter&&CURRENT_SECTION.currentPage>0) {
+				CURRENT_SECTION.currentPage--;
+				CURRENT_SECTION.currentGame=0;
+			}
+			if (CURRENT_SECTION.currentPage>0) {
+				CURRENT_SECTION.currentPage++;
+			}
+			gamesInPage=countGamesInPage();
 			CURRENT_SECTION.currentGame=0;
-		}
-		currentLetter=CURRENT_GAME_NAME[0];
-		while(CURRENT_GAME_NAME[0]==currentLetter&&CURRENT_SECTION.currentPage>0) {
+		} else {
 			CURRENT_SECTION.currentPage--;
-			CURRENT_SECTION.currentGame=0;
+			gamesInPage=countGamesInPage();
+			CURRENT_SECTION.currentGame=gamesInPage-1;
 		}
-		if (CURRENT_SECTION.currentPage>0) {
-			CURRENT_SECTION.currentPage++;
-		}
-		gamesInPage=countGamesInPage();
-		CURRENT_SECTION.currentGame=0;
-
 	}
 }
 
@@ -157,6 +180,10 @@ int performAction() {
 		saveLastState();
 		saveFavorites();
 		exit(0);
+	}
+	if (keys[BTN_R] && keys[BTN_START]) {
+		changePaging();
+		return 0;
 	}
 	if (keys[BTN_START]) {
 		if (!favoritesSectionSelected) {

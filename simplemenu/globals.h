@@ -26,6 +26,7 @@ struct MenuSection {
 	int hidden;
 	int currentPage;
 	int currentGame;
+	int alphabeticalPaging;
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;

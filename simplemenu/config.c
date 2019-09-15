@@ -58,7 +58,7 @@ void saveLastState() {
 	fp = fopen("./config/last_state.cfg", "w");
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
-		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
+		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame, CURRENT_SECTION.alphabeticalPaging);
 	}
 	fclose(fp);
 }
@@ -69,7 +69,7 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	fp = fopen("./config/last_state.cfg", "r");
-	char *configurations[3];
+	char *configurations[4];
 	char *ptr;
 	int first = -1;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -86,6 +86,7 @@ void loadLastState() {
 			currentSectionNumber=atoi(configurations[0]);
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
 			CURRENT_SECTION.currentGame=atoi(configurations[2]);
+			CURRENT_SECTION.alphabeticalPaging=atoi(configurations[3]);
 		}
 	}
 	currentSectionNumber=first;

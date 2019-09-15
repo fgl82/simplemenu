@@ -101,7 +101,7 @@ void loadFavoritesList() {
 	char previousLetter='\0';
 	for (int i=0;i<favoritesSize;i++){
 		currentLetter=favorites[i].name[0];
-		if (game==ITEMS_PER_PAGE||(currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
+		if (game==ITEMS_PER_PAGE||(CURRENT_SECTION.alphabeticalPaging&&currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
 			if(i!=favoritesSize-1) {
 				page++;
 				totalPages++;
@@ -135,7 +135,7 @@ void loadGameList() {
 				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)==0){
 			currentLetter=files[i]->d_name[0];
 			lastRound=0;
-			if (game==ITEMS_PER_PAGE||(currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
+			if (game==ITEMS_PER_PAGE||(CURRENT_SECTION.alphabeticalPaging&&currentLetter!=previousLetter&&!(isdigit(previousLetter)&&isdigit(currentLetter))&&previousLetter!='\0')) {
 				if(i!=n-1) {
 					page++;
 					totalPages++;
