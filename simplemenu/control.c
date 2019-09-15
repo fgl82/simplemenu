@@ -109,12 +109,13 @@ void rewindPage() {
 				CURRENT_SECTION.currentGame=0;
 			}
 			currentLetter=CURRENT_GAME_NAME[0];
-			while(CURRENT_GAME_NAME[0]==currentLetter&&CURRENT_SECTION.currentPage>0) {
-				CURRENT_SECTION.currentPage--;
-				CURRENT_SECTION.currentGame=0;
-			}
-			if (CURRENT_SECTION.currentPage>0) {
-				CURRENT_SECTION.currentPage++;
+			while(CURRENT_GAME_NAME[0]==currentLetter) {
+				if (CURRENT_SECTION.currentPage>0) {
+					CURRENT_SECTION.currentPage--;
+					CURRENT_SECTION.currentGame=0;
+				} else {
+					break;
+				}
 			}
 			gamesInPage=countGamesInPage();
 			CURRENT_SECTION.currentGame=0;
