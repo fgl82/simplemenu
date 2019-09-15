@@ -40,8 +40,10 @@ void setSectionsState(char *states) {
 		{
 			if (j==0) {
 				menuSections[i].currentPage=atoi(dashToken);
-			} else {
+			} else if (j==1) {
 				menuSections[i].currentGame=atoi(dashToken);
+			} else {
+				menuSections[i].alphabeticalPaging=atoi(dashToken);
 			}
 			j++;
 			dashToken = strtok_r(NULL, "-", &endDashToken);
@@ -55,7 +57,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char states[200]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
 		char tempString[200]="";
-		snprintf(tempString,sizeof(tempString),"%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame);
+		snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame,menuSections[i].alphabeticalPaging);
 		strcat(states,tempString);
 	}
 	char pReturnTo[3];
