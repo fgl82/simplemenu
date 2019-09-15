@@ -103,7 +103,7 @@ void setupDecorations() {
 	drawFooter("SELECT+START: SHUT DOWN");
 }
 
-void updateScreen() {\
+void updateScreen() {
 	drawGameList();
 	if (pictureMode) {
 		displayGamePicture();
