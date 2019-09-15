@@ -166,6 +166,8 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
+			loadFavoritesList();
+			loadGameList();
 		}
 	}
 }
@@ -181,7 +183,7 @@ int performAction() {
 		saveFavorites();
 		exit(0);
 	}
-	if (keys[BTN_R] && keys[BTN_START]) {
+	if (keys[BTN_RIGHT] && keys[BTN_UP]) {
 		changePaging();
 		return 0;
 	}
