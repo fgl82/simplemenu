@@ -108,15 +108,11 @@ void rewindPage() {
 				CURRENT_SECTION.currentPage--;
 				CURRENT_SECTION.currentGame=0;
 			}
-			currentLetter=CURRENT_GAME_NAME[0];
-			while(CURRENT_GAME_NAME[0]==currentLetter) {
-				if (CURRENT_SECTION.currentPage>0) {
-					CURRENT_SECTION.currentPage--;
-					CURRENT_SECTION.currentGame=0;
-				} else {
-					break;
-				}
-			}
+//			currentLetter=CURRENT_GAME_NAME[0];
+//			while(CURRENT_GAME_NAME[0]==currentLetter&&CURRENT_SECTION.currentPage>0) {
+//				CURRENT_SECTION.currentPage--;
+//				CURRENT_SECTION.currentGame=0;
+//			}
 			gamesInPage=countGamesInPage();
 			CURRENT_SECTION.currentGame=0;
 		} else {
@@ -184,7 +180,7 @@ int performAction() {
 		saveFavorites();
 		exit(0);
 	}
-	if (keys[BTN_RIGHT] && keys[BTN_UP] && keys[BTN_TA]) {
+	if (keys[BTN_TB] && keys[BTN_TA]) {
 		changePaging();
 		return 0;
 	}
