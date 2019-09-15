@@ -210,25 +210,15 @@ int performAction() {
 	}
 	if(keys[BTN_SELECT]) {
 		if (keys[BTN_RIGHT]) {
-			if (CURRENT_SECTION.alphabeticalPaging) {
-				CURRENT_SECTION.alphabeticalPaging=0;
-				advancePage();
-				CURRENT_SECTION.alphabeticalPaging=1;
-				CURRENT_SECTION.currentGame=0;
-			}
+			CURRENT_SECTION.alphabeticalPaging=1;
+			advancePage();
+			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if (keys[BTN_LEFT]) {
-			if (CURRENT_SECTION.alphabeticalPaging) {
-				CURRENT_SECTION.alphabeticalPaging=0;
-				rewindPage();
-				CURRENT_SECTION.alphabeticalPaging=1;
-				CURRENT_SECTION.currentGame=0;
-			}
-			return 0;
-		}
-		if (keys[BTN_DOWN]) {
-			changePaging();
+			CURRENT_SECTION.alphabeticalPaging=1;
+			rewindPage();
+			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if (keys[BTN_UP]) {

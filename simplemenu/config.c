@@ -86,7 +86,7 @@ void loadLastState() {
 			currentSectionNumber=atoi(configurations[0]);
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
 			CURRENT_SECTION.currentGame=atoi(configurations[2]);
-			CURRENT_SECTION.alphabeticalPaging=1;
+			CURRENT_SECTION.alphabeticalPaging=0;
 		}
 	}
 	currentSectionNumber=first;
