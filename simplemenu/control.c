@@ -190,10 +190,6 @@ int performAction() {
 		saveFavorites();
 		exit(0);
 	}
-	if (keys[BTN_TB] && keys[BTN_TA]) {
-		changePaging();
-		return 0;
-	}
 	if (keys[BTN_START]) {
 		if (!favoritesSectionSelected) {
 			markAsFavorite();
@@ -207,9 +203,33 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_SELECT]) {
-		cycleFrequencies();
-		drawHeader();
-		return 0;
+		if (keys[BTN_RIGHT]) {
+			if (CURRENT_SECTION.alphabeticalPaging) {
+				CURRENT_SECTION.alphabeticalPaging=0;
+				advancePage();
+				CURRENT_SECTION.alphabeticalPaging=1;
+				CURRENT_SECTION.currentGame=0;
+			}
+			return 0;
+		}
+		if (keys[BTN_LEFT]) {
+			if (CURRENT_SECTION.alphabeticalPaging) {
+				CURRENT_SECTION.alphabeticalPaging=0;
+				rewindPage();
+				CURRENT_SECTION.alphabeticalPaging=1;
+				CURRENT_SECTION.currentGame=0;
+			}
+			return 0;
+		}
+		if (keys[BTN_DOWN]) {
+			changePaging();
+			return 0;
+		}
+		if (keys[BTN_UP]) {
+			cycleFrequencies();
+			drawHeader();
+			return 0;
+		}
 	}
 	if(keys[BTN_TA]) {
 		int startingSectionNumber = currentSectionNumber;
