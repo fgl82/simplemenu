@@ -1,4 +1,4 @@
-# simplemenu
+# Simple Menu
 Simple launcher for the new bittboy.
 
 Controls:
@@ -7,13 +7,13 @@ Controls:
 - A: launch game
 - B: switch between menu and artwork modes
 - Select: 
+  - +Start: shutdown
   - +Up: overclocking, underclocking, normal (cyclic)
   - +Down: enable or disable alphabetical paging for the current section
   - +Left or Right: if in alphabetical paging mode, scroll to the next page (instead of to the next letter), forward or back, which is the default behavior for left and right when alphabetical paging is disabled.
 - R: go into or exit the favorites screen
 - Start outside favorites: adds a game to favorites
 - Start in favorites: removes the game from favorites
-- Start + Select: shutdown
 
 Notes:
 - Sections need to be added manually in the config file, the numbers at the end are the colors of the header, footer, body and associated text, in rgb form.
