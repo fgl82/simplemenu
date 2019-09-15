@@ -183,7 +183,7 @@ int performAction() {
 		saveFavorites();
 		exit(0);
 	}
-	if (keys[BTN_RIGHT] && keys[BTN_UP]) {
+	if (keys[BTN_RIGHT] && keys[BTN_UP] && keys[BTN_TA]) {
 		changePaging();
 		return 0;
 	}
@@ -195,7 +195,7 @@ int performAction() {
 		}
 		return 0;
 	}
-	if (keys[SDLK_RCTRL]) {
+	if (keys[BTN_R]) {
 		showOrHideFavorites();
 		return 0;
 	}
