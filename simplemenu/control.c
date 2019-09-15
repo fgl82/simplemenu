@@ -135,7 +135,7 @@ void rewindPage() {
 	} else 	if (CURRENT_SECTION.currentPage > 0) {
 		CURRENT_SECTION.currentPage--;
 		gamesInPage=countGamesInPage();
-		CURRENT_SECTION.currentGame=gamesInPage-1;
+		CURRENT_SECTION.currentGame=0;
 	}
 }
 
