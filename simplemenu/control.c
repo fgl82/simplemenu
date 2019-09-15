@@ -106,6 +106,9 @@ void rewindPage() {
 			char currentLetter=CURRENT_GAME_NAME[0];
 			while(CURRENT_GAME_NAME[0]==currentLetter) {
 				CURRENT_SECTION.currentPage--;
+				if(CURRENT_SECTION.currentPage==0) {
+					break;
+				}
 				CURRENT_SECTION.currentGame=0;
 			}
 //			currentLetter=CURRENT_GAME_NAME[0];
