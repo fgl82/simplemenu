@@ -89,9 +89,16 @@ void advancePage() {
 	if(CURRENT_SECTION.currentPage<=totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=CURRENT_GAME_NAME[0];
+			int countEquals=0;
 			while(CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0])) {
+				countEquals++;
 				scrollDown();
 				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+					if (PREVIOUS_GAME_NAME[0]==CURRENT_GAME_NAME[0]) {
+						for (int i=0;i<countEquals;i++) {
+							scrollUp();
+						}
+					}
 					break;
 				}
 			}
