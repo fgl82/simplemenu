@@ -47,13 +47,16 @@ int main(int argc, char* argv[]) {
 			switch(event.type){
 			case SDL_KEYDOWN:
 				performAction();
-				updateScreen();
 				break;
 			case SDL_KEYUP:
+				if(event.key.keysym.sym==BTN_SELECT) {
+					selectPressed=0;
+				}
 				break;
 			default:
 				break;
 			}
+			updateScreen();
 		}
 	}
 	quit();

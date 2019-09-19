@@ -16,6 +16,7 @@ int favoritesChanged;
 int returnTo;
 char *gameList[1000][10];
 int pictureMode;
+int selectPressed;
 
 struct MenuSection {
 	char sectionName[25];
@@ -43,7 +44,7 @@ struct Favorite {
 	char filesDirectory[25];
 };
 
-struct Favorite favorites[500];
+struct Favorite favorites[2000];
 
 uint8_t *keys;
 #endif

@@ -16,8 +16,43 @@
 SDL_Surface *screen = NULL;
 char buf[1024];
 TTF_Font *font = NULL;
+TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
+
+void showLetter() {
+	int width = 80;
+	int filling[3];
+	int borderColor[3];
+	SDL_Color textColor;
+	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
+	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
+	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
+	textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+	if (pictureMode) {
+		filling[0] = 21;
+		filling[1] = 18;
+		filling[2] = 26;
+		borderColor[0]=255;
+		borderColor[1]=255;
+		borderColor[2]=255;
+		textColor.r=255;
+		textColor.g=255;
+		textColor.b=255;
+	}
+	draw_rectangle(screen, calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
+	draw_rectangle(screen, calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
+	char letter[2]="";
+	letter[0]=CURRENT_GAME_NAME[0];
+	letter[1]='\0';
+	if(isdigit(letter[0])) {
+		letter[0]='#';
+	}
+	draw_text(screen, BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), letter, textColor, VAlignMiddle | HAlignCenter);
+}
 
 void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
@@ -32,14 +67,11 @@ void displayGamePicture() {
 	}
 	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameNameFullPath,".png");
-//	displayBackGroundImage("./resources/back.png", screen);
+	//	displayBackGroundImage("./resources/back.png", screen);
 	SDL_Color white;
 	white.r=255;
 	white.g=255;
 	white.b=255;
-
-	int backgroundColor[]={CURRENT_SECTION.bodyBackgroundColor.r,CURRENT_SECTION.bodyBackgroundColor.g,CURRENT_SECTION.bodyBackgroundColor.b};
-	int footerBackgroundColor[]={CURRENT_SECTION.headerAndFooterTextBackgroundColor.r,CURRENT_SECTION.headerAndFooterTextBackgroundColor.g,CURRENT_SECTION.headerAndFooterTextBackgroundColor.b};
 
 	char nameToDisplay[200]="";
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
@@ -108,6 +140,9 @@ void updateScreen() {
 	if (pictureMode) {
 		displayGamePicture();
 	}
+	if (selectPressed) {
+		showLetter();
+	}
 	SDL_Flip(screen);
 }
 
@@ -119,6 +154,7 @@ void setupDisplay() {
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	font = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(14));
+	BIGFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(36));
 	headerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(16));
 }
