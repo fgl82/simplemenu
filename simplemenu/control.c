@@ -110,13 +110,14 @@ void rewindPage() {
 		int hitStart = 0;
 		int wasDigit = isdigit(CURRENT_GAME_NAME[0]);
 		while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
+			printf("first loop: %s\n",CURRENT_GAME_NAME);
 			scrollUp();
 			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 				hitStart = 1;
 				break;
 			}
 		}
-		if (!hitStart) {
+		if (!hitStart||isdigit(CURRENT_GAME_NAME[0])) {
 			wasDigit = isdigit(CURRENT_GAME_NAME[0]);
 			currentLetter=CURRENT_GAME_NAME[0];
 			while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
@@ -126,8 +127,10 @@ void rewindPage() {
 					break;
 				}
 			}
-			if (!hitStart||(!(wasDigit&&isdigit(CURRENT_GAME_NAME[0])&&CURRENT_GAME_NAME[0]!=currentLetter))) {
-				scrollDown();
+			if (!hitStart) {
+				if (!(wasDigit&&isdigit(CURRENT_GAME_NAME[0])&&CURRENT_GAME_NAME[0]!=currentLetter)) {
+					scrollDown();
+				}
 			}
 		}
 		gamesInPage=countGamesInPage();
