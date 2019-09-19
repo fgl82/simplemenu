@@ -106,32 +106,27 @@ void advancePage() {
 
 void rewindPage() {
 	if (CURRENT_SECTION.alphabeticalPaging) {
-		char currentLetter=CURRENT_GAME_NAME[0];
 		int hitStart = 0;
 		int wasDigit = isdigit(CURRENT_GAME_NAME[0]);
-		while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
-			printf("first loop: %s\n",CURRENT_GAME_NAME);
-			scrollUp();
-			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-				hitStart = 1;
-				break;
-			}
-		}
-		if (!hitStart||isdigit(CURRENT_GAME_NAME[0])) {
-			wasDigit = isdigit(CURRENT_GAME_NAME[0]);
-			currentLetter=CURRENT_GAME_NAME[0];
-			while(CURRENT_GAME_NAME[0]==currentLetter||(wasDigit&&isdigit(CURRENT_GAME_NAME[0]))) {
-				scrollUp();
+		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
 					break;
+				} else {
+					scrollUp();
 				}
-			}
-			if (!hitStart) {
-				if (!(wasDigit&&isdigit(CURRENT_GAME_NAME[0])&&CURRENT_GAME_NAME[0]!=currentLetter)) {
-					scrollDown();
+		}
+		if (!hitStart) {
+			scrollUp();
+		}
+		hitStart=0;
+		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
+				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+					hitStart = 1;
+					break;
+				} else {
+					scrollUp();
 				}
-			}
 		}
 		gamesInPage=countGamesInPage();
 	} else 	if (CURRENT_SECTION.currentPage > 0) {
