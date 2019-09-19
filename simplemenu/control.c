@@ -86,7 +86,7 @@ void scrollDown() {
 }
 
 void advancePage() {
-	if(CURRENT_SECTION.currentPage<=totalPages) {
+	if(CURRENT_SECTION.currentPage<=totalPages&&NEXT_GAME_NAME!=NULL) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=CURRENT_GAME_NAME[0];
 			int countEquals=0;
@@ -109,6 +109,7 @@ void advancePage() {
 			}
 		}
 	}
+	gamesInPage=countGamesInPage();
 }
 
 void rewindPage() {
