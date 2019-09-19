@@ -94,13 +94,12 @@ void sortFavorites() {
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
-	for (int i=0;i<2000;i++) {
+	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
 			gameList[i][j]=NULL;
 		}
 	}
 	char currentLetter;
-	char previousLetter='\0';
 	for (int i=0;i<favoritesSize;i++){
 		currentLetter=favorites[i].name[0];
 		if (game==ITEMS_PER_PAGE) {
@@ -112,7 +111,6 @@ void loadFavoritesList() {
 		}
 		gameList[page][game] = favorites[i].name;
 		game++;
-		previousLetter=currentLetter;
 	}
 	sortFavorites();
 }
@@ -129,7 +127,6 @@ void loadGameList() {
 	}
 	int lastRound=0;
 	char currentLetter;
-	char previousLetter='\0';
 	for (int i=0;i<n;i++){
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
@@ -147,7 +144,6 @@ void loadGameList() {
 			}
 			gameList[page][game] = files[i]->d_name;
 			game++;
-			previousLetter=currentLetter;
 		}
 	}
 	if (lastRound==1) {
