@@ -126,7 +126,7 @@ void rewindPage() {
 					break;
 				}
 			}
-			if (!hitStart) {
+			if (!hitStart||(!(wasDigit&&isdigit(CURRENT_GAME_NAME[0])&&CURRENT_GAME_NAME[0]!=currentLetter))) {
 				scrollDown();
 			}
 		}
