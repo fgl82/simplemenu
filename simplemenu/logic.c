@@ -94,7 +94,7 @@ void sortFavorites() {
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
-	for (int i=0;i<1000;i++) {
+	for (int i=0;i<2000;i++) {
 		for (int j=0;j<10;j++) {
 			gameList[i][j]=NULL;
 		}
