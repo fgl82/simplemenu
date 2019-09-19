@@ -127,7 +127,9 @@ void rewindPage() {
 			scrollUp();
 		}
 		hitStart=0;
-		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
+		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0]||
+				(isdigit(CURRENT_GAME_NAME[0])&&isdigit(PREVIOUS_GAME_NAME[0]))
+				)) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
 					break;
