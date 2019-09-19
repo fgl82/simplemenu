@@ -46,7 +46,7 @@ void showLetter() {
 	draw_rectangle(screen, calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
 	draw_rectangle(screen, calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
 	char letter[2]="";
-	letter[0]=CURRENT_GAME_NAME[0];
+	letter[0]=toupper(CURRENT_GAME_NAME[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
 		letter[0]='#';
