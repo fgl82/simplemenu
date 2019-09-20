@@ -2,18 +2,22 @@
 Simple launcher for the new bittboy.
 
 Controls:
-- TB: previous section
-- TA: next section
-- A: launch game
-- B: switch between menu and artwork modes
-- Left or Right: next or previous 10 games
-- Select: 
-  - +Start: shutdown
-  - +Up: overclocking, underclocking, normal (cyclic)
-  - +Left or Right: scroll to the next next letter, forward or back
-- R: go into or exit the favorites screen
-- Start, outside favorites: adds a game to favorites
-- Start, in favorites: removes the game from favorites
+- TB: switch between menu and screenshot modes.
+- TA: launch game.
+- B, in favorites: removes the game from favorites.
+- B, outside of favorites: adds a game to favorites.
+- Left: previous 10 games.
+- Right: next 10 games.
+- Up: previous game.
+- Down: next game.
+- A: hotkey 
+  - +Left: previous section.
+  - +Right: next section.
+  - +Up: previous letter.
+  - +Down: next letter.
+- R: go into or exit the favorites screen.
+- Start: cycle through overclocking (798), underclocking(408) and normal(702).
+- Select+Start: shut down.
 
 Notes:
 - Sections need to be added manually in the config file, the numbers at the end are the colors of the header, footer, body and associated text, in rgb form.
