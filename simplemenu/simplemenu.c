@@ -49,8 +49,8 @@ int main(int argc, char* argv[]) {
 				performAction();
 				break;
 			case SDL_KEYUP:
-				if(event.key.keysym.sym==BTN_SELECT) {
-					selectPressed=0;
+				if(event.key.keysym.sym==BTN_A) {
+					hotKeyPressed=0;
 				}
 				break;
 			default:

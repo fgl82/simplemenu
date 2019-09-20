@@ -70,7 +70,17 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 }
 
 int isExtensionValid(char *extension, struct MenuSection section) {
-	return(strcmp(extension,section.fileExtension));
+	char *ptr = strtok(section.fileExtensions, ",");
+	int i=0;
+	while(ptr != NULL) {
+		int areStringsDifferent = strcmp(extension,ptr);
+		if (!areStringsDifferent) {
+			return(1);
+		}
+		ptr = strtok(NULL, ",");
+		i++;
+	}
+	return(0);
 }
 
 int countFiles (char* directoryName) {
@@ -131,7 +141,7 @@ void loadGameList() {
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
-				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)==0){
+				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)){
 			currentLetter=files[i]->d_name[0];
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {

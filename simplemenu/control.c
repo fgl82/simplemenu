@@ -117,12 +117,12 @@ void rewindPage() {
 		int hitStart = 0;
 		int wasDigit = isdigit(CURRENT_GAME_NAME[0]);
 		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
-				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-					hitStart = 1;
-					break;
-				} else {
-					scrollUp();
-				}
+			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+				hitStart = 1;
+				break;
+			} else {
+				scrollUp();
+			}
 		}
 		if (!hitStart) {
 			scrollUp();
@@ -130,13 +130,13 @@ void rewindPage() {
 		hitStart=0;
 		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0]||
 				(isdigit(CURRENT_GAME_NAME[0])&&isdigit(PREVIOUS_GAME_NAME[0]))
-				)) {
-				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-					hitStart = 1;
-					break;
-				} else {
-					scrollUp();
-				}
+		)) {
+			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+				hitStart = 1;
+				break;
+			} else {
+				scrollUp();
+			}
 		}
 		gamesInPage=countGamesInPage();
 	} else 	if (CURRENT_SECTION.currentPage > 0) {
@@ -197,58 +197,23 @@ int isSelectPressed() {
 }
 
 int performAction() {
-
-	if(keys[BTN_SELECT]) {
-		if (!keys[BTN_UP]) {
-			if (keys[BTN_RIGHT]) {
-				selectPressed=1;
-				CURRENT_SECTION.alphabeticalPaging=1;
-				advancePage();
-				CURRENT_SECTION.alphabeticalPaging=0;
-				return 0;
-			}
-			if (keys[BTN_LEFT]) {
-				selectPressed=1;
-				CURRENT_SECTION.alphabeticalPaging=1;
-				rewindPage();
-				CURRENT_SECTION.alphabeticalPaging=0;
-				return 0;
-			}
-		} else {
-			if (!selectPressed) {
-				cycleFrequencies();
-				drawHeader();
-				return 0;
-			}
-		}
-	}
-
-	if (!selectPressed) {
-
-		if (keys[BTN_SELECT] && keys[BTN_START]) {
-			running=0;
+	if(keys[BTN_A]) {
+		if (keys[BTN_DOWN]) {
+			hotKeyPressed=1;
+			CURRENT_SECTION.alphabeticalPaging=1;
+			advancePage();
+			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
-		if (keys[BTN_TA] && keys[BTN_START]) {
-			freeResources();
-			saveLastState();
-			saveFavorites();
-			exit(0);
-		}
-		if (keys[BTN_START]) {
-			if (!favoritesSectionSelected) {
-				markAsFavorite();
-			} else {
-				removeFavorite();
-			}
+		if (keys[BTN_UP]) {
+			hotKeyPressed=1;
+			CURRENT_SECTION.alphabeticalPaging=1;
+			rewindPage();
+			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
-		if (keys[BTN_R]) {
-			showOrHideFavorites();
-			return 0;
-		}
-
-		if(keys[BTN_TA]) {
+		if(keys[BTN_RIGHT]) {
+			hotKeyPressed=0;
 			int startingSectionNumber = currentSectionNumber;
 			int wasLastSectionWithContent=0;
 			int advanced = advanceSection();
@@ -269,7 +234,8 @@ int performAction() {
 			}
 			return 0;
 		}
-		if(keys[BTN_TB]) {
+		if(keys[BTN_LEFT]) {
+			hotKeyPressed=0;
 			int startingSectionNumber = currentSectionNumber;
 			int wasFirstSectionWithContent=0;
 			int rewinded = rewindSection();
@@ -290,7 +256,37 @@ int performAction() {
 			}
 			return 0;
 		}
-		if (keys[BTN_A]) {
+	}
+
+	if (!hotKeyPressed) {
+		if (keys[BTN_SELECT] && keys[BTN_START]) {
+			running=0;
+			return 0;
+		}
+		if (keys[BTN_R] && keys[BTN_START]) {
+			freeResources();
+			saveLastState();
+			saveFavorites();
+			exit(0);
+		}
+		if (keys[BTN_B]) {
+			if (!favoritesSectionSelected) {
+				markAsFavorite();
+			} else {
+				removeFavorite();
+			}
+			return 0;
+		}
+		if (keys[BTN_START]) {
+			cycleFrequencies();
+			drawHeader();
+			return 0;
+		}
+		if (keys[BTN_R]) {
+			showOrHideFavorites();
+			return 0;
+		}
+		if (keys[BTN_TA]) {
 			if (countGamesInPage()>0) {
 				saveFavorites();
 				freeResources();
@@ -298,7 +294,7 @@ int performAction() {
 			}
 			return 0;
 		}
-		if (keys[BTN_B]) {
+		if (keys[BTN_TB]) {
 			if (pictureMode) {
 				pictureMode=0;
 				setupDecorations();

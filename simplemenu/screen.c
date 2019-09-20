@@ -140,7 +140,7 @@ void updateScreen() {
 	if (pictureMode) {
 		displayGamePicture();
 	}
-	if (selectPressed) {
+	if (hotKeyPressed) {
 		showLetter();
 	}
 	SDL_Flip(screen);

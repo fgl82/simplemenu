@@ -16,14 +16,14 @@ int favoritesChanged;
 int returnTo;
 char *gameList[1000][10];
 int pictureMode;
-int selectPressed;
+int hotKeyPressed;
 
 struct MenuSection {
 	char sectionName[25];
 	char emulatorFolder[25];
 	char executable[16];
 	char filesDirectory[25];
-	char fileExtension[5];
+	char fileExtensions[50];
 	int hidden;
 	int currentPage;
 	int currentGame;

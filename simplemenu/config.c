@@ -115,7 +115,7 @@ int loadConfig() {
 		strcpy(aMenuSection.emulatorFolder,configurations[1]);
 		strcpy(aMenuSection.executable,configurations[2]);
 		strcpy(aMenuSection.filesDirectory,configurations[3]);
-		strcpy(aMenuSection.fileExtension,configurations[4]);
+		strcpy(aMenuSection.fileExtensions,configurations[4]);
 		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
 		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
 		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
