@@ -38,7 +38,6 @@ int main(int argc, char* argv[]) {
 		loadLastState();
 	}
 	setupDisplay();
-	setupDecorations();
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	SDL_EnableKeyRepeat(500,180);
@@ -47,16 +46,17 @@ int main(int argc, char* argv[]) {
 			switch(event.type){
 			case SDL_KEYDOWN:
 				performAction();
+				updateScreen();
 				break;
 			case SDL_KEYUP:
 				if(event.key.keysym.sym==BTN_A) {
 					hotKeyPressed=0;
+					updateScreen();
 				}
 				break;
 			default:
 				break;
 			}
-			updateScreen();
 		}
 	}
 	quit();

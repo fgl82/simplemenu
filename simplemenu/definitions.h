@@ -17,8 +17,8 @@
 #define MED_OC 702
 #define MAX_OC 798
 #define FAVORITES_SIZE 2000
-#define CURRENT_FAVORITE_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
-#define CURRENT_FAVORITE favorites[CURRENT_FAVORITE_NUMBER]
+#define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
+#define CURRENT_FAVORITE favorites[CURRENT_GAME_NUMBER]
 #define CURRENT_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
 #define PREVIOUS_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame-1]
 #define NEXT_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame+1]

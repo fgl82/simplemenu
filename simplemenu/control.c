@@ -12,8 +12,6 @@
 
 void changePaging() {
 	CURRENT_SECTION.alphabeticalPaging=1+(CURRENT_SECTION.alphabeticalPaging*-1);
-	setupDecorations();
-	totalPages=0;
 	CURRENT_SECTION.currentGame=0;
 	CURRENT_SECTION.currentPage=0;
 	if (favoritesSectionSelected) {
@@ -150,15 +148,12 @@ void showOrHideFavorites() {
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
-		setupDecorations();
-		totalPages=0;
 		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-	setupDecorations();
 	totalPages=0;
 	loadFavoritesList();
 }
@@ -166,12 +161,11 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		for (int i=CURRENT_FAVORITE_NUMBER;i<favoritesSize;i++) {
+		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			favorites[i]=favorites[i+1];
 		}
 		favoritesSize--;
 		scrollUp();
-		setupDecorations();
 		totalPages=0;
 		loadFavoritesList();
 	}
@@ -228,8 +222,6 @@ int performAction() {
 				if (wasLastSectionWithContent) {
 					currentSectionNumber = startingSectionNumber;
 				}
-				setupDecorations();
-				totalPages=0;
 				loadGameList();
 			}
 			return 0;
@@ -250,8 +242,6 @@ int performAction() {
 				if (wasFirstSectionWithContent) {
 					currentSectionNumber = startingSectionNumber;
 				}
-				setupDecorations();
-				totalPages=0;
 				loadGameList();
 			}
 			return 0;
@@ -297,7 +287,6 @@ int performAction() {
 		if (keys[BTN_TB]) {
 			if (pictureMode) {
 				pictureMode=0;
-				setupDecorations();
 			} else {
 				pictureMode=1;
 			}

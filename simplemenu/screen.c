@@ -1,4 +1,5 @@
 #include <constants.h>
+#include <logic.h>
 #include <definitions.h>
 #include <globals.h>
 #include <graphics.h>
@@ -81,8 +82,6 @@ void displayGamePicture() {
 	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, white, screen, rgbColor);
 	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, white, VAlignTop | HAlignCenter);
-
-
 }
 void drawHeader() {
 	char finalString [100];
@@ -132,11 +131,18 @@ void drawFooter(char *text) {
 
 void setupDecorations() {
 	drawHeader();
-	drawFooter("SELECT+START: SHUT DOWN");
+	char tempString[200];
+	if (CURRENT_GAME_NAME==NULL) {
+		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+10*CURRENT_SECTION.currentPage, countGamesInSection());
+	} else {
+		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+1+10*CURRENT_SECTION.currentPage, countGamesInSection());
+	}
+	drawFooter(tempString);
 }
 
 void updateScreen() {
 	drawGameList();
+	setupDecorations();
 	if (pictureMode) {
 		displayGamePicture();
 	}

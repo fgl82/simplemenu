@@ -104,14 +104,13 @@ void sortFavorites() {
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
+	totalPages=0;
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
 			gameList[i][j]=NULL;
 		}
 	}
-	char currentLetter;
 	for (int i=0;i<favoritesSize;i++){
-		currentLetter=favorites[i].name[0];
 		if (game==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize-1) {
 				page++;
@@ -126,6 +125,7 @@ void loadFavoritesList() {
 }
 
 void loadGameList() {
+	totalPages=0;
 	struct dirent **files;
 	int n=scandir(CURRENT_SECTION.filesDirectory, &files, 0, alphasort);
 	int game = 0;
@@ -136,13 +136,11 @@ void loadGameList() {
 		}
 	}
 	int lastRound=0;
-	char currentLetter;
 	for (int i=0;i<n;i++){
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
 				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)){
-			currentLetter=files[i]->d_name[0];
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
 				if(i!=n-1) {
@@ -172,6 +170,18 @@ int countGamesInPage() {
 	return gamesCounter;
 }
 
+int countGamesInSection() {
+	int gamesCounter=0;
+	for (int i=0;i<=totalPages;i++) {
+		for (int j=0;j<ITEMS_PER_PAGE;j++) {
+			if (gameList[i][j]!=NULL) {
+				gamesCounter++;
+			}
+		}
+	}
+	return gamesCounter;
+}
+
 void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
@@ -192,8 +202,6 @@ void determineStartingScreen(int sectionCount) {
 				if (stillOnInitialSection) {
 					currentSectionNumber = startingSectionNumber;
 				}
-				setupDecorations();
-				totalPages=0;
 				loadGameList();
 			}
 			if(currentSectionNumber==startingSectionNumber) {
@@ -202,8 +210,6 @@ void determineStartingScreen(int sectionCount) {
 					while(menuSections[currentSectionNumber].hidden) {
 						advanceSection();
 					}
-					setupDecorations();
-					totalPages=0;
 					loadGameList();
 				}
 			}
