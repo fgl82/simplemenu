@@ -35,7 +35,7 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 };
-struct MenuSection menuSections[20];
+struct MenuSection menuSections[50];
 
 struct Favorite {
 	char name[100];

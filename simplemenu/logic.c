@@ -184,7 +184,7 @@ void loadGameList() {
 	if (lastRound==1) {
 		totalPages--;
 	}
-	if (totalPages<=0) {
+	if (totalPages<0) {
 		CURRENT_SECTION.hidden=1;
 	}
 	free(files);
