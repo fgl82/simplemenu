@@ -25,6 +25,9 @@ int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
 		return 1;
+	} else if (currentSectionNumber!=favoritesSectionNumber) {
+		currentSectionNumber=0;
+		return 1;
 	}
 	return 0;
 }
@@ -32,6 +35,9 @@ int advanceSection() {
 int rewindSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
 		currentSectionNumber--;
+		return 1;
+	} else if (currentSectionNumber!=favoritesSectionNumber) {
+		currentSectionNumber=menuSectionCounter-2;
 		return 1;
 	}
 	return 0;
