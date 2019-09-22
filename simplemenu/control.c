@@ -135,12 +135,15 @@ void rewindPage() {
 				scrollUp();
 			}
 		}
-		gamesInPage=countGamesInPage();
-	} else 	if (CURRENT_SECTION.currentPage > 0) {
+	} else if (CURRENT_SECTION.currentPage > 0) {
 		CURRENT_SECTION.currentPage--;
-		gamesInPage=countGamesInPage();
 		CURRENT_SECTION.currentGame=0;
+	} else {
+		CURRENT_SECTION.currentPage=totalPages;
+		CURRENT_SECTION.currentGame=0;
+
 	}
+	gamesInPage=countGamesInPage();
 }
 
 void showOrHideFavorites() {
