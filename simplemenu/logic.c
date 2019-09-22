@@ -70,8 +70,10 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 }
 
-int isExtensionValid(char *extension, struct MenuSection section) {
-	char *ptr = strtok(section.fileExtensions, ",");
+int isExtensionValid(char *extension, char *fileExtensions) {
+	char fileExtensionsCopy[200];
+	strcpy(fileExtensionsCopy, fileExtensions);
+	char *ptr = strtok(fileExtensionsCopy, ",");
 	int i=0;
 	while(ptr != NULL) {
 		int areStringsDifferent = strcmp(extension,ptr);
@@ -91,16 +93,16 @@ int is_regular_file(const char *path)
 	return S_ISREG(path_stat.st_mode);
 }
 
-int countFiles (char* directoryName, struct MenuSection section) {
+int countFiles (char* directoryName, char *fileExtensions) {
 	struct dirent **files;
 	int filescount = scandir(directoryName, &files, 0, alphasort);
 	int result=0;
 	for (int i=0;i<filescount;i++){
 		char path[2000] = "";
-		strcpy(path,section.filesDirectory);
+		strcpy(path,directoryName);
 		strcat(path,files[i]->d_name);
 		if (strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0) {
-			if(is_regular_file(path)&&isExtensionValid(getExtension(files[i]->d_name),section)) {
+			if(is_regular_file(path)&&isExtensionValid(getExtension(files[i]->d_name),fileExtensions)) {
 				result++;
 			}
 		}
@@ -164,7 +166,7 @@ void loadGameList() {
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
 				is_regular_file(path)&&
-				isExtensionValid(getExtension(files[i]->d_name),CURRENT_SECTION)){
+				isExtensionValid(getExtension(files[i]->d_name),CURRENT_SECTION.fileExtensions)){
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
 				if(i!=n-1) {

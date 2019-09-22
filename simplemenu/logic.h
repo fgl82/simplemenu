@@ -4,7 +4,7 @@ void quit();
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath);
 void loadGameList();
 void loadFavoritesList();
-int countFiles (char* directoryName, struct MenuSection section);
+int countFiles (char* directoryName, char *fileExtensions);
 int countGamesInPage();
 int countGamesInSection();
 int doesFavoriteExist(char *name);
