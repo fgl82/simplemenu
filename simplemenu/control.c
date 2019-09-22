@@ -147,9 +147,7 @@ void showOrHideFavorites() {
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
-		if(CURRENT_SECTION.hidden) {
-			determineStartingScreen(menuSectionCounter);
-		}
+		determineStartingScreen(menuSectionCounter);
 		loadGameList();
 		return;
 	}

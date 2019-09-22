@@ -86,12 +86,12 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 	return(0);
 }
 
-int is_regular_file(const char *path)
-{
-	struct stat path_stat;
-	stat(path, &path_stat);
-	return S_ISREG(path_stat.st_mode);
-}
+//int is_regular_file(const char *path)
+//{
+//	struct stat path_stat;
+//	stat(path, &path_stat);
+//	return S_ISREG(path_stat.st_mode);
+//}
 
 int countFiles (char* directoryName, char *fileExtensions) {
 	struct dirent **files;
@@ -102,7 +102,8 @@ int countFiles (char* directoryName, char *fileExtensions) {
 		strcpy(path,directoryName);
 		strcat(path,files[i]->d_name);
 		if (strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0) {
-			if(is_regular_file(path)&&isExtensionValid(getExtension(files[i]->d_name),fileExtensions)) {
+			char *ext = getExtension(files[i]->d_name);
+			if(ext&&isExtensionValid(ext,fileExtensions)) {
 				result++;
 			}
 		}
@@ -162,11 +163,11 @@ void loadGameList() {
 		char path[2000] = "";
 		strcpy(path,CURRENT_SECTION.filesDirectory);
 		strcat(path,files[i]->d_name);
-		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
-				strcmp((files[i]->d_name),"..")!=0 &&
-				strcmp((files[i]->d_name),".")!=0 &&
-				is_regular_file(path)&&
-				isExtensionValid(getExtension(files[i]->d_name),CURRENT_SECTION.fileExtensions)){
+		char *ext = getExtension(files[i]->d_name);
+		if (strcmp((files[i]->d_name),"..")!=0 &&
+			strcmp((files[i]->d_name),".")!=0 &&
+			ext&&
+			isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
 				if(i!=n-1) {
