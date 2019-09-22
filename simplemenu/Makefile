@@ -1,28 +1,25 @@
 # Software Name
 PROGRAM = simplemenu.elf
-PLATFORM = BITTBOY
-#PLATFORM = PC
+#PLATFORM = BITTBOY
+PLATFORM = PC
 
 # Compiler
 
 ifeq ($(PLATFORM), BITTBOY)
 CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
+CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 else ifeq ($(PROFILE), RS97)
 CC = /opt/rs97-toolchain/bin/mipsel-linux-gcc
+CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 else
 CC = gcc
+CFLAGS = -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
-ifeq ($(PLATFORM), BITTBOY)
-CFLAGS = -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -no-pie -static
-else
-CFLAGS = -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -no-pie
-endif
- 
 CFLAGS +=  -I.
 
-LIBS += -lstdc++ -lrt -lpthread -ldl -lasound -lSDL_mixer -lmikmod -lvorbisidec -logg -lm -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lSDL
+LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
 ifeq ($(DEBUG), YES)
