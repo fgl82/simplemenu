@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string_utils.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 void quit() {
@@ -83,22 +84,41 @@ int isExtensionValid(char *extension, struct MenuSection section) {
 	return(0);
 }
 
-int countFiles (char* directoryName) {
+int is_regular_file(const char *path)
+{
+	struct stat path_stat;
+	stat(path, &path_stat);
+	return S_ISREG(path_stat.st_mode);
+}
+
+int countFiles (char* directoryName, struct MenuSection section) {
 	struct dirent **files;
-	return scandir(directoryName, &files, 0, alphasort);
+	int filescount = scandir(directoryName, &files, 0, alphasort);
+	int result=0;
+	for (int i=0;i<filescount;i++){
+		char path[2000] = "";
+		strcpy(path,section.filesDirectory);
+		strcat(path,files[i]->d_name);
+		if (strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0) {
+			if(is_regular_file(path)&&isExtensionValid(getExtension(files[i]->d_name),section)) {
+				result++;
+			}
+		}
+	}
+	return result;
 }
 
 void sortFavorites() {
-    struct Favorite tmp;
-    for(int i=0; i<favoritesSize; i++) {
-        for(int j = 0; j<favoritesSize; j++) {
-            if(strcmp(favorites[i].name, favorites[j].name) < 0) {
-                tmp = favorites[i];
-                favorites[i] = favorites[j];
-                favorites[j] = tmp;
-            }
-        }
-    }
+	struct Favorite tmp;
+	for(int i=0; i<favoritesSize; i++) {
+		for(int j = 0; j<favoritesSize; j++) {
+			if(strcmp(favorites[i].name, favorites[j].name) < 0) {
+				tmp = favorites[i];
+				favorites[i] = favorites[j];
+				favorites[j] = tmp;
+			}
+		}
+	}
 }
 
 void loadFavoritesList() {
@@ -137,10 +157,14 @@ void loadGameList() {
 	}
 	int lastRound=0;
 	for (int i=0;i<n;i++){
+		char path[2000] = "";
+		strcpy(path,CURRENT_SECTION.filesDirectory);
+		strcat(path,files[i]->d_name);
 		if (strcmp((files[i]->d_name),".gitignore")!=0 &&
 				strcmp((files[i]->d_name),"..")!=0 &&
 				strcmp((files[i]->d_name),".")!=0 &&
-				isExtensionValid(getExtension((files[i]->d_name)),CURRENT_SECTION)){
+				is_regular_file(path)&&
+				isExtensionValid(getExtension(files[i]->d_name),CURRENT_SECTION)){
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
 				if(i!=n-1) {
@@ -156,6 +180,9 @@ void loadGameList() {
 	}
 	if (lastRound==1) {
 		totalPages--;
+	}
+	if (totalPages<=0) {
+		CURRENT_SECTION.hidden=1;
 	}
 	free(files);
 }

@@ -135,14 +135,14 @@ int loadConfig() {
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
 		aMenuSection.hidden=0;
-		if (strcmp(configurations[2],"favs")!=0) {
-			if(countFiles(configurations[3])<3) {
-				aMenuSection.hidden=1;
-			}
-		}
 		aMenuSection.currentPage=0;
 		aMenuSection.currentGame=0;
 		menuSections[menuSectionCounter]=aMenuSection;
+		if (strcmp(configurations[2],"favs")!=0) {
+			if(countFiles(menuSections[menuSectionCounter].filesDirectory, menuSections[menuSectionCounter])==0) {
+				menuSections[menuSectionCounter].hidden=1;
+			}
+		}
 		menuSectionCounter++;
 	}
 	favoritesSectionNumber=menuSectionCounter-1;
