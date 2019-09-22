@@ -99,11 +99,11 @@ int countFiles (char* directoryName, char *fileExtensions) {
 	int result=0;
 	for (int i=0;i<filescount;i++){
 		char path[2000] = "";
-		strcpy(path,directoryName);
-		strcat(path,files[i]->d_name);
-		if (strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0) {
-			char *ext = getExtension(files[i]->d_name);
-			if(ext&&isExtensionValid(ext,fileExtensions)) {
+		char *ext = getExtension(files[i]->d_name);
+		if (ext&&strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0&&strcmp(ext,".png")!=0) {
+			strcpy(path,directoryName);
+			strcat(path,files[i]->d_name);
+			if(isExtensionValid(ext,fileExtensions)) {
 				result++;
 			}
 		}
@@ -164,10 +164,10 @@ void loadGameList() {
 		strcpy(path,CURRENT_SECTION.filesDirectory);
 		strcat(path,files[i]->d_name);
 		char *ext = getExtension(files[i]->d_name);
-		if (strcmp((files[i]->d_name),"..")!=0 &&
-			strcmp((files[i]->d_name),".")!=0 &&
-			ext&&
-			isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
+		if (ext&&strcmp((files[i]->d_name),"..")!=0 &&
+				strcmp((files[i]->d_name),".")!=0 &&
+				strcmp(ext,".png")!=0&&
+				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
 				if(i!=n-1) {
