@@ -53,36 +53,30 @@ void scrollUp() {
 	if(CURRENT_SECTION.currentGame == 0) {
 		if (CURRENT_SECTION.currentPage >0) {
 			CURRENT_SECTION.currentPage--;
-			gamesInPage=countGamesInPage();
-			CURRENT_SECTION.currentGame=gamesInPage-1;
-			return;
 		} else {
 			CURRENT_SECTION.currentPage=totalPages;
-			gamesInPage=countGamesInPage();
-			CURRENT_SECTION.currentGame=gamesInPage;
 		}
+		gamesInPage=countGamesInPage();
+		CURRENT_SECTION.currentGame=gamesInPage-1;
+		return;
 	}
 	if (CURRENT_SECTION.currentGame > 0) {
 		CURRENT_SECTION.currentGame--;
-		return;
 	}
 }
 
 void scrollDown() {
 	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
 		if (CURRENT_SECTION.currentPage < totalPages) {
-			CURRENT_SECTION.currentGame=0;
 			CURRENT_SECTION.currentPage++;
-			return;
 		} else {
-			CURRENT_SECTION.currentGame=0;
 			CURRENT_SECTION.currentPage=0;
-			return;
 		}
+		CURRENT_SECTION.currentGame=0;
+		return;
 	}
 	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
 		CURRENT_SECTION.currentGame++;
-		return;
 	}
 }
 
