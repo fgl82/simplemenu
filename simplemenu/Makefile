@@ -1,7 +1,7 @@
 # Software Name
 PROGRAM = simplemenu.elf
-#PLATFORM = BITTBOY
-PLATFORM = PC
+PLATFORM = BITTBOY
+#PLATFORM = PC
 
 # Compiler
 
