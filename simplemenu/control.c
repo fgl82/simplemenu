@@ -94,11 +94,10 @@ void advancePage() {
 		} else {
 			if(CURRENT_SECTION.currentPage!=totalPages) {
 				CURRENT_SECTION.currentPage++;
-				CURRENT_SECTION.currentGame=0;
 			} else {
 				CURRENT_SECTION.currentPage=0;
-				CURRENT_SECTION.currentGame=0;
 			}
+			CURRENT_SECTION.currentGame=0;
 		}
 	}
 	gamesInPage=countGamesInPage();
