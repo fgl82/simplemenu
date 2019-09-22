@@ -10,17 +10,6 @@
 #include <system_logic.h>
 #include <SDL/SDL_keysym.h>
 
-void changePaging() {
-	CURRENT_SECTION.alphabeticalPaging=1+(CURRENT_SECTION.alphabeticalPaging*-1);
-	CURRENT_SECTION.currentGame=0;
-	CURRENT_SECTION.currentPage=0;
-	if (favoritesSectionSelected) {
-		loadFavoritesList();
-	} else {
-		loadGameList();
-	}
-}
-
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
@@ -67,6 +56,10 @@ void scrollUp() {
 			gamesInPage=countGamesInPage();
 			CURRENT_SECTION.currentGame=gamesInPage-1;
 			return;
+		} else {
+			CURRENT_SECTION.currentPage=totalPages;
+			gamesInPage=countGamesInPage();
+			CURRENT_SECTION.currentGame=gamesInPage;
 		}
 	}
 	if (CURRENT_SECTION.currentGame > 0) {
@@ -81,6 +74,10 @@ void scrollDown() {
 			CURRENT_SECTION.currentGame=0;
 			CURRENT_SECTION.currentPage++;
 			return;
+		} else {
+			CURRENT_SECTION.currentGame=0;
+			CURRENT_SECTION.currentPage=0;
+			return;
 		}
 	}
 	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
@@ -90,25 +87,22 @@ void scrollDown() {
 }
 
 void advancePage() {
-	if(CURRENT_SECTION.currentPage<=totalPages&&NEXT_GAME_NAME!=NULL) {
+	if(CURRENT_SECTION.currentPage<=totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=CURRENT_GAME_NAME[0];
-			int countEquals=0;
-			while(CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0])) {
-				countEquals++;
-				scrollDown();
+			while((CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
 				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
-					if (PREVIOUS_GAME_NAME[0]==CURRENT_GAME_NAME[0]) {
-						for (int i=0;i<countEquals;i++) {
-							scrollUp();
-						}
-					}
+					scrollDown();
 					break;
 				}
+				scrollDown();
 			}
 		} else {
 			if(CURRENT_SECTION.currentPage!=totalPages) {
 				CURRENT_SECTION.currentPage++;
+				CURRENT_SECTION.currentGame=0;
+			} else {
+				CURRENT_SECTION.currentPage=0;
 				CURRENT_SECTION.currentGame=0;
 			}
 		}
