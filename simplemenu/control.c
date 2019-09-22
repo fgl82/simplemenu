@@ -113,7 +113,6 @@ void advancePage() {
 void rewindPage() {
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		int hitStart = 0;
-		int wasDigit = isdigit(CURRENT_GAME_NAME[0]);
 		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
 			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 				hitStart = 1;
