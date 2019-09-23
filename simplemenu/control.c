@@ -1,14 +1,13 @@
-#include <config.h>
-#include <constants.h>
-#include <definitions.h>
-#include <globals.h>
-#include <logic.h>
-#include <screen.h>
-#include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <system_logic.h>
-#include <SDL/SDL_keysym.h>
+
+#include "../headers/config.h"
+#include "../headers/definitions.h"
+#include "../headers/globals.h"
+#include "../headers/logic.h"
+#include "../headers/screen.h"
+#include "../headers/system_logic.h"
 
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
@@ -57,7 +56,9 @@ void scrollUp() {
 			CURRENT_SECTION.currentPage=totalPages;
 		}
 		gamesInPage=countGamesInPage();
-		CURRENT_SECTION.currentGame=gamesInPage-1;
+		if (gamesInPage>0) {
+			CURRENT_SECTION.currentGame=gamesInPage-1;
+		}
 		return;
 	}
 	if (CURRENT_SECTION.currentGame > 0) {
@@ -67,7 +68,7 @@ void scrollUp() {
 
 void scrollDown() {
 	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
-		if (CURRENT_SECTION.currentPage < totalPages) {
+		if (CURRENT_SECTION.currentPage < totalPages-1) {
 			CURRENT_SECTION.currentPage++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
@@ -86,6 +87,7 @@ void advancePage() {
 			char currentLetter=CURRENT_GAME_NAME[0];
 			while((CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
 				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+					printf("%s\n",CURRENT_GAME_NAME);
 					scrollDown();
 					break;
 				}
@@ -161,7 +163,6 @@ void removeFavorite() {
 			favorites[i]=favorites[i+1];
 		}
 		favoritesSize--;
-		scrollUp();
 		totalPages=0;
 		loadFavoritesList();
 	}
