@@ -1,16 +1,13 @@
 #include <stdlib.h>
-#include <SDL/SDL_events.h>
-#include <SDL/SDL_keyboard.h>
 
 #include "../headers/config.h"
 #include "../headers/control.h"
+#include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/system_logic.h"
-#include "../headers/definitions.h"
-
-
 
 void initializeGlobals() {
 	running=1;
@@ -27,8 +24,6 @@ void initializeGlobals() {
 
 int main(int argc, char* argv[]) {
 	HW_Init();
-	putenv("SDL_NOMOUSE=1");
-	putenv("HOME=/mnt/");
 	initializeGlobals();
 	int sectionCount=loadConfig();
 	loadFavorites();
@@ -43,22 +38,18 @@ int main(int argc, char* argv[]) {
 	setupDisplay();
 	determineStartingScreen(sectionCount);
 	updateScreen();
-	SDL_EnableKeyRepeat(500,180);
+	enableKeyRepeat(500.180);
+
 	while (running) {
-		while(SDL_PollEvent(&event)){
-			switch(event.type){
-			case SDL_KEYDOWN:
+		while(pollEvent()){
+			if(getEventType()==getKeyDown()){
 				performAction();
 				updateScreen();
-				break;
-			case SDL_KEYUP:
-				if(event.key.keysym.sym==BTN_A) {
+			} else if (getEventType()==getKeyUp()) {
+				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
 					updateScreen();
 				}
-				break;
-			default:
-				break;
 			}
 		}
 	}

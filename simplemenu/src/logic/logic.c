@@ -181,7 +181,7 @@ void loadGameList() {
 		}
 	}
 	int lastRound=0;
-	sortGameList(files, n);
+//	sortGameList(files, n);
 	for (int i=0;i<n;i++){
 		char path[2000] = "";
 		strcpy(path,CURRENT_SECTION.filesDirectory);

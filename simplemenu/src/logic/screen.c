@@ -1,39 +1,28 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_events.h>
-#include <SDL/SDL_keyboard.h>
-#include <SDL/SDL_mouse.h>
-#include <SDL/SDL_ttf.h>
 #include <SDL/SDL_video.h>
 
 #include "../headers/constants.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/graphics.h"
+#include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
 
-SDL_Surface *screen = NULL;
 char buf[1024];
-TTF_Font *font = NULL;
-TTF_Font *BIGFont = NULL;
-TTF_Font *headerFont = NULL;
-TTF_Font *footerFont = NULL;
 
 void showLetter() {
 	int width = 80;
 	int filling[3];
 	int borderColor[3];
-	SDL_Color textColor;
 	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
 	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
 	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
 	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
 	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
 	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
-	textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -41,19 +30,20 @@ void showLetter() {
 		borderColor[0]=255;
 		borderColor[1]=255;
 		borderColor[2]=255;
-		textColor.r=255;
-		textColor.g=255;
-		textColor.b=255;
 	}
-	draw_rectangle(screen, calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
-	draw_rectangle(screen, calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
 	char letter[2]="";
 	letter[0]=toupper(CURRENT_GAME_NAME[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
-	draw_text(screen, BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), letter, textColor, VAlignMiddle | HAlignCenter);
+	SDL_Color white;
+	white.r=255;
+	white.g=255;
+	white.b=255;
+	drawCurrentLetter(letter, white);
 }
 
 void displayGamePicture() {
@@ -70,24 +60,20 @@ void displayGamePicture() {
 	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameNameFullPath,".png");
 	//	displayBackGroundImage("./resources/back.png", screen);
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
 
 	char nameToDisplay[200]="";
 	strcpy(nameToDisplay,CURRENT_GAME_NAME);
 	stripGameName(nameToDisplay);
 
-	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
-	displayImageOnSurface(gameNameFullPath, "NO SCREENSHOT", font, white, screen, rgbColor);
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
-	draw_text(screen, font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), nameToDisplay, white, VAlignTop | HAlignCenter);
+	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
+	displayImageOnScreen(gameNameFullPath, "NO SCREENSHOT");
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
+	drawPictureTextOnScreen(nameToDisplay);
 }
 void drawHeader() {
 	char finalString [100];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==NO_OC) {
 		strcpy(finalString,"- ");
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
@@ -99,14 +85,14 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	draw_text(screen, headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), finalString, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	drawTextOnHeader(finalString);
 }
 
 void drawGameList() {
 	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor.r,menuSections[currentSectionNumber].bodyBackgroundColor.g,menuSections[currentSectionNumber].bodyBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
-	int nextLine = calculateProportionalSizeOrDistance(29);
+	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 	gamesInPage=0;
+	int nextLine = calculateProportionalSizeOrDistance(29);
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
 			gamesInPage++;
@@ -115,9 +101,9 @@ void drawGameList() {
 			stripGameName(nameWithoutExtension);
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
-				draw_shaded_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSectionNumber].bodySelectedTextForegroundColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+				drawShadedGameNameOnScreen(buf, nextLine);
 			} else {
-				draw_text(screen, font, SCREEN_WIDTH/2, nextLine, buf, menuSections[currentSectionNumber].bodyTextForegroundColor, VAlignBottom | HAlignCenter);
+				drawNonShadedGameNameOnScreen(buf, nextLine);
 			}
 			nextLine+=calculateProportionalSizeOrDistance(19);
 		}
@@ -126,8 +112,8 @@ void drawGameList() {
 
 void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
-	draw_rectangle(screen, SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
-	draw_text(screen, font, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
+	drawTextOnFooter(text);
 }
 
 void setupDecorations() {
@@ -150,29 +136,12 @@ void updateScreen() {
 	if (hotKeyPressed) {
 		showLetter();
 	}
-	SDL_Flip(screen);
+	refreshScreen();
 }
 
 void setupDisplay() {
-	SDL_PumpEvents();
-	keys = SDL_GetKeyState(NULL);
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
-	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	TTF_Init();
-	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(36));
-	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
-	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));
-}
-
-void freeResources() {
-	TTF_CloseFont(font);
-	font = NULL;
-	TTF_CloseFont(headerFont);
-	headerFont = NULL;
-	TTF_CloseFont(footerFont);
-	footerFont = NULL;
-	SDL_Quit();
-	TTF_Quit();
+	pumpEvents();
+	initializeKeys();
+	initializeFonts();
+	initializeDisplay();
 }

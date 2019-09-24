@@ -1,7 +1,6 @@
 #ifndef GRAPHICS_DEFINED
 #define GRAPHICS_DEFINED
 
-#include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_video.h>
 
@@ -13,9 +12,22 @@ VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
 int calculateProportionalSizeOrDistance(int number);
-int draw_shaded_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor);
-int draw_text(SDL_Surface *destinationSurface, TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align);
-SDL_Rect draw_rectangle(SDL_Surface *surface, int width, int height, int x, int y, int rgbColor[]);
-void displayImageOnSurface(char *fileName, char *fallBackText, TTF_Font *font, SDL_Color color, SDL_Surface *surface, int rgbColor[]);
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor);
+int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align);
+void drawShadedGameNameOnScreen(char *buf, int position);
+void drawNonShadedGameNameOnScreen(char *buf, int position);
+void drawPictureTextOnScreen(char *buf);
+void drawImgFallbackTextOnScreen( char *fallBackText);
+void drawTextOnFooter(const char text[64]);
+void drawTextOnHeader(char *text);
+void drawCurrentLetter(char *letter, SDL_Color textColor);
+SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]);
+SDL_Surface *loadImage (char *fileName);
 void displayBackGroundImage(char *fileName, SDL_Surface *surface);
+void displayImageOnScreen(char *fileName, char *fallBackText);
+void initializeDisplay();
+void refreshScreen();
+void initializeFonts();
+void freeResources();
+
 #endif

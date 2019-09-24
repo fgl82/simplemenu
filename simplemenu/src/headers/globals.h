@@ -3,7 +3,6 @@
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_video.h>
 int running;
-SDL_Event event;
 int currentSectionNumber;
 int gamesInPage;
 int totalPages;
