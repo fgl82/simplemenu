@@ -128,6 +128,24 @@ void sortFavorites() {
 	}
 }
 
+void sortGameList(struct dirent* files[], int length) {
+	struct dirent *tmp;
+	for(int i=0; i<length; i++) {
+		for(int j = 0; j<length; j++) {
+			char *first = toLower(files[i]->d_name);
+			char *second = toLower(files[j]->d_name);
+			if(strcmp(first, second) < 0) {
+				tmp = files[i];
+				files[i] = files[j];
+				files[j] = tmp;
+			}
+			free(first);
+			free(second);
+		}
+	}
+}
+
+
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
@@ -163,6 +181,7 @@ void loadGameList() {
 		}
 	}
 	int lastRound=0;
+	sortGameList(files, n);
 	for (int i=0;i<n;i++){
 		char path[2000] = "";
 		strcpy(path,CURRENT_SECTION.filesDirectory);
