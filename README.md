@@ -20,7 +20,8 @@ Controls:
 - Select+Start: shut down.
 
 Notes:
-- Sections need to be added manually in the config file, the numbers at the end are the colors of the header, footer, body and associated text, in rgb form.
-- Don't delete or modify the Scripts or Favorites sections, that will definitely break it.
+- Screen captures should be inside the rom folder, have the same name as their companion rom and the "png" extension.
+- Sections need to be added manually in the config file, the numbers at the end are the colors of the header background, header text, body background, body text, highlighted text background and highlighted text foreground, expressed in RGB form.
+- Don't delete or modify the Scripts or Favorites (9999 in 1) sections; that will definitely break it.
 - At this point, no command line parameters are supported.
 - Favorites are only written if they were changed and, even then, only when launching a game or quitting the menu, to minimize writes to the sd card.
