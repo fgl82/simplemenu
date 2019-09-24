@@ -1,6 +1,15 @@
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
+char *toLower (char* string) {
+	char *copy = malloc(2000);
+	strcpy(copy, string);
+	for(int i=0;copy[i]; i++) {
+		copy[i] = tolower(copy[i]);
+	}
+	return copy;
+}
 
 char *getExtension (char *stringWithExtension) {
 	return strrchr(stringWithExtension, '.');

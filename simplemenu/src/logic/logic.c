@@ -115,11 +115,15 @@ void sortFavorites() {
 	struct Favorite tmp;
 	for(int i=0; i<favoritesSize; i++) {
 		for(int j = 0; j<favoritesSize; j++) {
-			if(strcmp(favorites[i].name, favorites[j].name) < 0) {
+			char *first = toLower(favorites[i].name);
+			char *second = toLower(favorites[j].name);
+			if(strcmp(first, second) < 0) {
 				tmp = favorites[i];
 				favorites[i] = favorites[j];
 				favorites[j] = tmp;
 			}
+			free(first);
+			free(second);
 		}
 	}
 }
