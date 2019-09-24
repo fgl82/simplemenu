@@ -1,16 +1,16 @@
-#include <config.h>
-#include <constants.h>
-#include <control.h>
-#include <definitions.h>
 #include <dirent.h>
-#include <globals.h>
-#include <screen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string_utils.h>
-#include <sys/stat.h>
 #include <unistd.h>
+
+#include "../headers/config.h"
+#include "../headers/constants.h"
+#include "../headers/control.h"
+#include "../headers/globals.h"
+#include "../headers/screen.h"
+#include "../headers/string_utils.h"
+#include "../headers/definitions.h"
 
 void quit() {
 	freeResources();

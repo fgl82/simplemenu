@@ -1,8 +1,8 @@
-#include <definitions.h>
-#include <graphics.h>
+#include "../headers/graphics.h"
+
 #include <stdio.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
+
+#include "../headers/definitions.h"
 
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;

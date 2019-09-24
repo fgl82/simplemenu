@@ -1,18 +1,19 @@
-#include <constants.h>
-#include <logic.h>
-#include <definitions.h>
-#include <globals.h>
-#include <graphics.h>
+#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <string_utils.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
 #include <SDL/SDL_mouse.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_video.h>
+
+#include "../headers/constants.h"
+#include "../headers/definitions.h"
+#include "../headers/globals.h"
+#include "../headers/graphics.h"
+#include "../headers/logic.h"
+#include "../headers/string_utils.h"
 
 SDL_Surface *screen = NULL;
 char buf[1024];
@@ -159,10 +160,10 @@ void setupDisplay() {
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
-	font = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(14));
-	BIGFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(36));
-	headerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(20));
-	footerFont = TTF_OpenFont("akashi.ttf", calculateProportionalSizeOrDistance(16));
+	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
+	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(36));
+	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
+	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));
 }
 
 void freeResources() {

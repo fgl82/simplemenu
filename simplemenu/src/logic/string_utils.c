@@ -1,6 +1,6 @@
-#include "definitions.h"
 #include <stdlib.h>
 #include <string.h>
+
 
 char *getExtension (char *stringWithExtension) {
 	return strrchr(stringWithExtension, '.');

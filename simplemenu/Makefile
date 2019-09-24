@@ -1,45 +1,55 @@
 # Software Name
-PROGRAM = simplemenu.elf
+TARGET = simplemenu.elf
 PLATFORM = BITTBOY
 #PLATFORM = PC
 
 # Compiler
 
 ifeq ($(PLATFORM), BITTBOY)
-CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
-CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
+	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
+	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
+	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 else ifeq ($(PROFILE), RS97)
-CC = /opt/rs97-toolchain/bin/mipsel-linux-gcc
-CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
+	CC = /opt/rs97-toolchain/bin/mipsel-linux-gcc
+	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 else
-CC = gcc
-CFLAGS = -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
+	CC = gcc
+	LINKER   = gcc
+	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
 CFLAGS +=  -I.
-
 LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
 ifeq ($(DEBUG), YES)
-CFLAGS +=  -DDEBUG -g3
+	CFLAGS +=  -DDEBUG -g3
 else
-LDFLAGS	+=  -s
+	LDFLAGS	+=  -s -lm
 endif
 
-CFILES =  simplemenu.c string_utils.c graphics.c screen.c control.c logic.c system_logic.c config.c
-SFILES = 
+SRCDIR   = src/logic
+OBJDIR   = src/obj
+BINDIR   = output
+SOURCES  := $(wildcard $(SRCDIR)/*.c)
+OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+rm       = rm -f
+	
+$(BINDIR)/$(TARGET): $(OBJECTS)
+	@$(LINKER) $(OBJECTS) $(LDFLAGS) -o $@
+	@echo "Linking complete!"
 
-OFILES = $(SFILES:.S=.o) $(CFILES:.c=.o)
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled "$<" successfully!"
 
-$(PROGRAM):	$(OFILES)
-			$(CC) $(CFLAGS) $(OFILES) -o $@ $(LDFLAGS)
-
-all: $(PROGRAM)
-
-%.o: %.c
-	 $(CC) $(CFLAGS) -c $< -o $@
-
+.PHONY: clean
 clean:
-	 -rm -f $(OFILES) $(MAPFILE) $(PROGRAM)
+	@$(rm) $(OBJECTS)
+	@echo "Cleanup complete!"
+
+.PHONY: remove
+remove: clean
+	@$(rm) $(BINDIR)/$(TARGET)
+	@echo "Executable removed!"

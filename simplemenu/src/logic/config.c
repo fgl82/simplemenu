@@ -1,11 +1,12 @@
-#include <definitions.h>
-#include <globals.h>
-#include <logic.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "../headers/globals.h"
+#include "../headers/logic.h"
+#include "../headers/definitions.h"
 
 void saveFavorites() {
 	if (favoritesChanged) {

@@ -1,13 +1,16 @@
-#include <config.h>
-#include <control.h>
-#include <definitions.h>
-#include <globals.h>
-#include <logic.h>
-#include <screen.h>
 #include <stdlib.h>
-#include <system_logic.h>
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_keyboard.h>
+
+#include "../headers/config.h"
+#include "../headers/control.h"
+#include "../headers/globals.h"
+#include "../headers/logic.h"
+#include "../headers/screen.h"
+#include "../headers/system_logic.h"
+#include "../headers/definitions.h"
+
+
 
 void initializeGlobals() {
 	running=1;

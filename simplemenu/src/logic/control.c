@@ -1,14 +1,13 @@
-#include <config.h>
-#include <constants.h>
-#include <definitions.h>
-#include <globals.h>
-#include <logic.h>
-#include <screen.h>
-#include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <system_logic.h>
-#include <SDL/SDL_keysym.h>
+
+#include "../headers/config.h"
+#include "../headers/definitions.h"
+#include "../headers/globals.h"
+#include "../headers/logic.h"
+#include "../headers/screen.h"
+#include "../headers/system_logic.h"
 
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
@@ -57,7 +56,9 @@ void scrollUp() {
 			CURRENT_SECTION.currentPage=totalPages;
 		}
 		gamesInPage=countGamesInPage();
-		CURRENT_SECTION.currentGame=gamesInPage-1;
+		if (gamesInPage>0) {
+			CURRENT_SECTION.currentGame=gamesInPage-1;
+		}
 		return;
 	}
 	if (CURRENT_SECTION.currentGame > 0) {
@@ -66,17 +67,25 @@ void scrollUp() {
 }
 
 void scrollDown() {
-	if(CURRENT_SECTION.currentGame == gamesInPage-1) {
-		if (CURRENT_SECTION.currentPage < totalPages) {
-			CURRENT_SECTION.currentPage++;
+	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
+		printf("CURRENT GAME IS NOT THE LAST GAME IN THE PAGE, SO INCREASE\n");
+		if (NEXT_GAME_NAME!=NULL) {
+			CURRENT_SECTION.currentGame++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
+			CURRENT_SECTION.currentGame=0;
 		}
+	} else {
+		printf("SCROLLING DOWN, GAME IS THE FINAL IN PAGE\n");
+		if (CURRENT_SECTION.currentPage < totalPages) {
+			printf("CURRENT PAGE IS NOT THE LAST, SO INCREASE\n");
+			CURRENT_SECTION.currentPage++;
+		} else {
+			printf("CURRENT PAGE IS THE LAST, GO BACK TO 0\n");
+			CURRENT_SECTION.currentPage=0;
+		}
+		printf("SELECT GAME 0\n");
 		CURRENT_SECTION.currentGame=0;
-		return;
-	}
-	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
-		CURRENT_SECTION.currentGame++;
 	}
 }
 
@@ -86,6 +95,7 @@ void advancePage() {
 			char currentLetter=CURRENT_GAME_NAME[0];
 			while((CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
 				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+					printf("ADVANCING PAGE - SCROLLING DOWN FROM: %s\n",CURRENT_GAME_NAME);
 					scrollDown();
 					break;
 				}
@@ -161,7 +171,6 @@ void removeFavorite() {
 			favorites[i]=favorites[i+1];
 		}
 		favoritesSize--;
-		scrollUp();
 		totalPages=0;
 		loadFavoritesList();
 	}
