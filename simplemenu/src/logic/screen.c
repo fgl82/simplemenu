@@ -92,10 +92,10 @@ void drawGameList() {
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
+		if (CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
 			gamesInPage++;
 			char nameWithoutExtension[200];
-			strcpy(nameWithoutExtension,gameList[menuSections[currentSectionNumber].currentPage][i]);
+			strcpy(nameWithoutExtension,CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
 			stripGameName(nameWithoutExtension);
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {

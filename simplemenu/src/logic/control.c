@@ -53,7 +53,7 @@ void scrollUp() {
 		if (CURRENT_SECTION.currentPage >0) {
 			CURRENT_SECTION.currentPage--;
 		} else {
-			CURRENT_SECTION.currentPage=totalPages;
+			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		}
 		gamesInPage=countGamesInPage();
 		if (gamesInPage>0) {
@@ -75,7 +75,7 @@ void scrollDown() {
 			CURRENT_SECTION.currentGame=0;
 		}
 	} else {
-		if (CURRENT_SECTION.currentPage < totalPages) {
+		if (CURRENT_SECTION.currentPage < CURRENT_SECTION.totalPages) {
 			CURRENT_SECTION.currentPage++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
@@ -85,18 +85,18 @@ void scrollDown() {
 }
 
 void advancePage() {
-	if(CURRENT_SECTION.currentPage<=totalPages) {
+	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=CURRENT_GAME_NAME[0];
 			while((CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
-				if (CURRENT_SECTION.currentPage==totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
 					scrollDown();
 					break;
 				}
 				scrollDown();
 			}
 		} else {
-			if(CURRENT_SECTION.currentPage!=totalPages) {
+			if(CURRENT_SECTION.currentPage!=CURRENT_SECTION.totalPages) {
 				CURRENT_SECTION.currentPage++;
 			} else {
 				CURRENT_SECTION.currentPage=0;
@@ -136,7 +136,7 @@ void rewindPage() {
 		CURRENT_SECTION.currentPage--;
 		CURRENT_SECTION.currentGame=0;
 	} else {
-		CURRENT_SECTION.currentPage=totalPages;
+		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		CURRENT_SECTION.currentGame=0;
 
 	}
@@ -148,13 +148,13 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		determineStartingScreen(menuSectionCounter);
-		loadGameList();
+//		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-	totalPages=0;
+	CURRENT_SECTION.totalPages=0;
 	loadFavoritesList();
 }
 
@@ -165,7 +165,7 @@ void removeFavorite() {
 			favorites[i]=favorites[i+1];
 		}
 		favoritesSize--;
-		totalPages=0;
+		CURRENT_SECTION.totalPages=0;
 		loadFavoritesList();
 	}
 	if(CURRENT_GAME_NAME==NULL) {

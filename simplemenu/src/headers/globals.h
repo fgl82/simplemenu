@@ -3,20 +3,21 @@
 #include <SDL/SDL_events.h>
 #include <SDL/SDL_video.h>
 int running;
-int currentSectionNumber;
-int gamesInPage;
-int totalPages;
+
 int favoritesSectionNumber;
-int favoritesSize;
-int menuSectionCounter;
-int currentCPU;
 int favoritesSectionSelected;
 int favoritesChanged;
+int favoritesSize;
 int returnTo;
-char *gameList[1000][10];
+
+int initialSection;
+int currentSectionNumber;
+int menuSectionCounter;
+int gamesInPage;
+
+int currentCPU;
 int pictureMode;
 int hotKeyPressed;
-int initialSection;
 
 struct MenuSection {
 	char sectionName[25];
@@ -28,12 +29,14 @@ struct MenuSection {
 	int currentPage;
 	int currentGame;
 	int alphabeticalPaging;
+	int totalPages;
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;
 	SDL_Color bodySelectedTextBackgroundColor;
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
+	char *gameList[1000][10];
 };
 struct MenuSection menuSections[50];
 

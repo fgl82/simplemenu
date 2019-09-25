@@ -13,7 +13,7 @@ void initializeGlobals() {
 	running=1;
 	currentSectionNumber=0;
 	gamesInPage=0;
-	totalPages=0;
+	CURRENT_SECTION.totalPages=0;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
 	currentCPU=MED_OC;
@@ -21,12 +21,24 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	initialSection=0;
+//	for (int i=0;i<1000 ;i++) {
+//		for (int j=0;j<10;j++) {
+//			CURRENT_SECTION.gameList[i][j]=NULL;
+//		}
+//	}
 }
 
 int main(int argc, char* argv[]) {
 	HW_Init();
 	initializeGlobals();
 	int sectionCount=loadConfig();
+	for (int i=0;i<sectionCount;i++) {
+		for (int j=0;j<1000;j++) {
+			for (int k=0;k<10;k++) {
+				menuSections[i].gameList[j][k]=NULL;
+			}
+		}
+	}
 	loadFavorites();
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);

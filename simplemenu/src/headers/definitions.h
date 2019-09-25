@@ -19,9 +19,9 @@
 #define FAVORITES_SIZE 2000
 #define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
 #define CURRENT_FAVORITE favorites[CURRENT_GAME_NUMBER]
-#define CURRENT_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
-#define PREVIOUS_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame-1]
-#define NEXT_GAME_NAME gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame+1]
 #define CURRENT_SECTION menuSections[currentSectionNumber]
 #define NEXT_SECTION menuSections[currentSectionNumber+1]
+#define CURRENT_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
+#define PREVIOUS_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame-1]
+#define NEXT_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame+1]
 #endif
