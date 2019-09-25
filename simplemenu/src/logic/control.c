@@ -21,7 +21,7 @@ int advanceSection() {
 }
 
 int rewindSection() {
-	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
+	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>initialSection) {
 		currentSectionNumber--;
 		return 1;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
@@ -167,6 +167,9 @@ void removeFavorite() {
 		favoritesSize--;
 		totalPages=0;
 		loadFavoritesList();
+	}
+	if(CURRENT_GAME_NAME==NULL) {
+		scrollUp();
 	}
 }
 

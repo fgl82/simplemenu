@@ -10,4 +10,5 @@ int countGamesInSection();
 int doesFavoriteExist(char *name);
 void setSectionsState(char *states);
 void determineStartingScreen(int sectionCount);
+int getFirstNonHiddenSection(int sectionCount);
 #endif

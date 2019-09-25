@@ -128,24 +128,6 @@ void sortFavorites() {
 	}
 }
 
-void sortGameList(struct dirent* files[], int length) {
-	struct dirent *tmp;
-	for(int i=0; i<length; i++) {
-		for(int j = 0; j<length; j++) {
-			char *first = toLower(files[i]->d_name);
-			char *second = toLower(files[j]->d_name);
-			if(strcmp(first, second) < 0) {
-				tmp = files[i];
-				files[i] = files[j];
-				files[j] = tmp;
-			}
-			free(first);
-			free(second);
-		}
-	}
-}
-
-
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
@@ -157,7 +139,7 @@ void loadFavoritesList() {
 	}
 	for (int i=0;i<favoritesSize;i++){
 		if (game==ITEMS_PER_PAGE) {
-			if(i!=favoritesSize-1) {
+			if(i!=favoritesSize) {
 				page++;
 				totalPages++;
 				game = 0;
@@ -167,6 +149,33 @@ void loadFavoritesList() {
 		game++;
 	}
 	sortFavorites();
+}
+
+void swap_dirent_ptrs(struct dirent **arg1, struct dirent **arg2)
+{
+    struct dirent *tmp = *arg1;
+    *arg1 = *arg2;
+    *arg2 = tmp;
+}
+
+void sortGameList(struct dirent **args, unsigned int len)
+{
+    unsigned int i, pvt=0;
+    if (len <= 1)
+        return;
+    swap_dirent_ptrs(args+((unsigned int)rand() % len), args+len-1);
+    for (i=0;i<len-1;++i)
+    {
+    	char *first = toLower(args[i]->d_name);
+    	char *second = toLower(args[len-1]->d_name);
+        if (strcmp(first, second) < 0)
+            swap_dirent_ptrs(args+i, args+pvt++);
+        free(first);
+        free(second);
+    }
+    swap_dirent_ptrs(args+pvt, args+len-1);
+    sortGameList(args, pvt++);
+    sortGameList(args+pvt, len - pvt);
 }
 
 void loadGameList() {
@@ -180,8 +189,8 @@ void loadGameList() {
 			gameList[i][j]=NULL;
 		}
 	}
-	int lastRound=0;
-//	sortGameList(files, n);
+//	int lastRound=0;
+	sortGameList(files, n);
 	for (int i=0;i<n;i++){
 		char path[2000] = "";
 		strcpy(path,CURRENT_SECTION.filesDirectory);
@@ -191,22 +200,25 @@ void loadGameList() {
 				strcmp((files[i]->d_name),".")!=0 &&
 				strcmp(ext,".png")!=0&&
 				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
-			lastRound=0;
+//			lastRound=0;
 			if (game==ITEMS_PER_PAGE) {
-				if(i!=n-1) {
+				if(i!=n) {
 					page++;
 					totalPages++;
 					game = 0;
-					lastRound=1;
+//					lastRound=1;
 				}
 			}
 			gameList[page][game] = files[i]->d_name;
 			game++;
 		}
 	}
-	if (lastRound==1) {
-		totalPages--;
-	}
+//	if (lastRound==1) {
+////		if (CURRENT_GAME_NAME==NULL) {
+//			printf("Reducing one page\n");
+//			totalPages--;
+////		}
+//	}
 	if (totalPages<0) {
 		CURRENT_SECTION.hidden=1;
 	}
@@ -233,6 +245,15 @@ int countGamesInSection() {
 		}
 	}
 	return gamesCounter;
+}
+
+int getFirstNonHiddenSection(int sectionCount) {
+	for (int i=0;i<sectionCount;i++) {
+		if (menuSections[i].hidden==0) {
+			return i;
+		}
+	}
+	return 0;
 }
 
 void determineStartingScreen(int sectionCount) {

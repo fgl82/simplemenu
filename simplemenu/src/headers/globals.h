@@ -16,6 +16,7 @@ int returnTo;
 char *gameList[1000][10];
 int pictureMode;
 int hotKeyPressed;
+int initialSection;
 
 struct MenuSection {
 	char sectionName[25];

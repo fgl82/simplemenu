@@ -39,11 +39,9 @@ void showLetter() {
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
-	drawCurrentLetter(letter, white);
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+
+	drawCurrentLetter(letter, textColor);
 }
 
 void displayGamePicture() {
