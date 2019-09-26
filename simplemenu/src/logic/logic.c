@@ -236,6 +236,8 @@ void loadGameList() {
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 				//			lastRound=0;
+				int size = strlen(files[i]->d_name)+1;
+				CURRENT_SECTION.gameList[page][game]=malloc(size);
 				if (game==ITEMS_PER_PAGE) {
 					if(i!=n) {
 						page++;
@@ -244,10 +246,8 @@ void loadGameList() {
 					}
 				}
 //				CURRENT_SECTION.gameList[page][game]=files[i]->d_name;
-				CURRENT_SECTION.gameList[page][game]=malloc(200);
 				strcpy(CURRENT_SECTION.gameList[page][game],files[i]->d_name);
 				strcat(CURRENT_SECTION.gameList[page][game],"\0");
-				wasAllocated++;
 				game++;
 			}
 		}
