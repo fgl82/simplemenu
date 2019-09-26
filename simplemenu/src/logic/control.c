@@ -87,8 +87,8 @@ void scrollDown() {
 void advancePage() {
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
-			char currentLetter=CURRENT_GAME_NAME[0];
-			while((CURRENT_GAME_NAME[0]==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
+			char currentLetter=tolower(CURRENT_GAME_NAME[0]);
+			while((tolower(CURRENT_GAME_NAME[0])==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
 					scrollDown();
 					break;
@@ -110,20 +110,20 @@ void advancePage() {
 void rewindPage() {
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		int hitStart = 0;
-		char startingLetter = CURRENT_GAME_NAME[0];
+		char startingLetter = tolower(CURRENT_GAME_NAME[0]);
 		while(1) {
 			scrollUp();
 			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 				hitStart = 1;
 				break;
 			} else {
-				if (CURRENT_GAME_NAME[0]!=startingLetter) {
+				if (tolower(CURRENT_GAME_NAME[0])!=startingLetter) {
 					break;
 				}
 			}
 		}
-		startingLetter=CURRENT_GAME_NAME[0];
-		if(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)&&(PREVIOUS_GAME_NAME[0]==startingLetter)) {
+		startingLetter=tolower(CURRENT_GAME_NAME[0]);
+		if(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)&&tolower((PREVIOUS_GAME_NAME[0])==startingLetter)) {
 			int wasItADigit = isdigit(startingLetter);
 			while(1) {
 				scrollUp();
@@ -132,7 +132,7 @@ void rewindPage() {
 					break;
 				} else {
 					if (!(isdigit(CURRENT_GAME_NAME[0])&&wasItADigit)&&
-							CURRENT_GAME_NAME[0]!=startingLetter) {
+							tolower(CURRENT_GAME_NAME[0])!=startingLetter) {
 						scrollDown();
 						break;
 					}
