@@ -110,32 +110,30 @@ void advancePage() {
 void rewindPage() {
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		int hitStart = 0;
+		char startingLetter = CURRENT_GAME_NAME[0];
 		while(1) {
 			scrollUp();
 			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 				hitStart = 1;
 				break;
 			} else {
-				printf("curr char = %c\n",CURRENT_GAME_NAME[0]);
-				printf("prev char = %c\n",PREVIOUS_GAME_NAME[0]);
-				if (CURRENT_GAME_NAME[0]!=PREVIOUS_GAME_NAME[0]) {
-					scrollDown();
+				if (CURRENT_GAME_NAME[0]!=startingLetter) {
 					break;
 				}
 			}
 		}
-		if (!hitStart) {
-			hitStart=0;
-			while(1) {
-				scrollUp();
-				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-					hitStart = 1;
+		startingLetter=CURRENT_GAME_NAME[0];
+		int wasItADigit = isdigit(startingLetter);
+		while(1) {
+			scrollUp();
+			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+				hitStart = 1;
+				break;
+			} else {
+				if (!(isdigit(CURRENT_GAME_NAME[0])&&wasItADigit)&&
+						CURRENT_GAME_NAME[0]!=startingLetter) {
+					scrollDown();
 					break;
-				} else {
-					if (!(isdigit(CURRENT_GAME_NAME[0])&&isdigit(PREVIOUS_GAME_NAME[0]))&&CURRENT_GAME_NAME[0]!=PREVIOUS_GAME_NAME[0]) {
-//						scrollDown();
-						break;
-					}
 				}
 			}
 		}
@@ -155,7 +153,7 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		determineStartingScreen(menuSectionCounter);
-//		loadGameList();
+		//		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
