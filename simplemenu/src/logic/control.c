@@ -123,17 +123,19 @@ void rewindPage() {
 			}
 		}
 		startingLetter=CURRENT_GAME_NAME[0];
-		int wasItADigit = isdigit(startingLetter);
-		while(1) {
-			scrollUp();
-			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-				hitStart = 1;
-				break;
-			} else {
-				if (!(isdigit(CURRENT_GAME_NAME[0])&&wasItADigit)&&
-						CURRENT_GAME_NAME[0]!=startingLetter) {
-					scrollDown();
+		if(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)&&(PREVIOUS_GAME_NAME[0]==startingLetter)) {
+			int wasItADigit = isdigit(startingLetter);
+			while(1) {
+				scrollUp();
+				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+					hitStart = 1;
 					break;
+				} else {
+					if (!(isdigit(CURRENT_GAME_NAME[0])&&wasItADigit)&&
+							CURRENT_GAME_NAME[0]!=startingLetter) {
+						scrollDown();
+						break;
+					}
 				}
 			}
 		}
@@ -159,7 +161,7 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-//	CURRENT_SECTION.totalPages=0;
+	//	CURRENT_SECTION.totalPages=0;
 	loadFavoritesList();
 }
 
@@ -189,8 +191,8 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
-//			loadFavoritesList();
-//			loadGameList();
+			//			loadFavoritesList();
+			//			loadGameList();
 		}
 	}
 }
