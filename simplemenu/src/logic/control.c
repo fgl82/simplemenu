@@ -110,26 +110,33 @@ void advancePage() {
 void rewindPage() {
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		int hitStart = 0;
-		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0])) {
+		while(1) {
+			scrollUp();
 			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 				hitStart = 1;
 				break;
 			} else {
-				scrollUp();
+				printf("curr char = %c\n",CURRENT_GAME_NAME[0]);
+				printf("prev char = %c\n",PREVIOUS_GAME_NAME[0]);
+				if (CURRENT_GAME_NAME[0]!=PREVIOUS_GAME_NAME[0]) {
+					scrollDown();
+					break;
+				}
 			}
 		}
 		if (!hitStart) {
-			scrollUp();
-		}
-		hitStart=0;
-		while(PREVIOUS_GAME_NAME!=NULL&&(CURRENT_GAME_NAME[0]==PREVIOUS_GAME_NAME[0]||
-				(isdigit(CURRENT_GAME_NAME[0])&&isdigit(PREVIOUS_GAME_NAME[0]))
-		)) {
-			if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
-				hitStart = 1;
-				break;
-			} else {
+			hitStart=0;
+			while(1) {
 				scrollUp();
+				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
+					hitStart = 1;
+					break;
+				} else {
+					if (!(isdigit(CURRENT_GAME_NAME[0])&&isdigit(PREVIOUS_GAME_NAME[0]))&&CURRENT_GAME_NAME[0]!=PREVIOUS_GAME_NAME[0]) {
+//						scrollDown();
+						break;
+					}
+				}
 			}
 		}
 	} else if (CURRENT_SECTION.currentPage > 0) {
