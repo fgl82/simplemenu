@@ -153,7 +153,7 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		determineStartingScreen(menuSectionCounter);
-		//		loadGameList();
+		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
@@ -166,11 +166,13 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
+		printf("%d\n",CURRENT_GAME_NUMBER);
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			favorites[i]=favorites[i+1];
 		}
 		favoritesSize--;
 		CURRENT_SECTION.totalPages=0;
+//		loadGameList();
 		loadFavoritesList();
 	}
 	if(CURRENT_GAME_NAME==NULL) {
@@ -187,8 +189,8 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
-			loadFavoritesList();
-			loadGameList();
+//			loadFavoritesList();
+//			loadGameList();
 		}
 	}
 }
