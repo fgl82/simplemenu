@@ -159,7 +159,7 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-	CURRENT_SECTION.totalPages=0;
+//	CURRENT_SECTION.totalPages=0;
 	loadFavoritesList();
 }
 
@@ -172,7 +172,7 @@ void removeFavorite() {
 		}
 		favoritesSize--;
 		CURRENT_SECTION.totalPages=0;
-//		loadGameList();
+		loadGameList();
 		loadFavoritesList();
 	}
 	if(CURRENT_GAME_NAME==NULL) {
