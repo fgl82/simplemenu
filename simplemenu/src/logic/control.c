@@ -161,8 +161,6 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		printf("current game number real: %d\n", CURRENT_GAME_NUMBER);
-		printf("current game number favorites: %d\n", FAVORITES_SECTION.currentGame);
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
 			strcpy(favorites[i].executable,favorites[i+1].executable);
