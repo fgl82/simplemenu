@@ -167,18 +167,15 @@ int countGamesInSection() {
 	return gamesCounter;
 }
 
-void loadFavoritesList() {
+void loadFavoritesSectionGameList() {
 	int game = 0;
 	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
-	printf("papa 1\n");
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
-//			free(FAVORITES_SECTION.gameList[i][j]);
 			FAVORITES_SECTION.gameList[i][j]=NULL;
 		}
 	}
-	printf("papa 2\n");
 	for (int i=0;i<favoritesSize;i++){
 		if (game==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize) {
@@ -187,15 +184,9 @@ void loadFavoritesList() {
 				game = 0;
 			}
 		}
-		int size = strlen(favorites[i].name)+1;
-		FAVORITES_SECTION.gameList[page][game]=malloc(size);
-		strcpy(FAVORITES_SECTION.gameList[page][game],favorites[i].name);
-		strcat(FAVORITES_SECTION.gameList[page][game],"\0");
-		printf("papa 3\n");
 		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
 		game++;
 	}
-	printf("papa 4\n");
 	char ** pepe =*FAVORITES_SECTION.gameList;
 	sortFavoritesList(pepe,countGamesInSection());
 }
@@ -292,7 +283,7 @@ int getFirstNonHiddenSection(int sectionCount) {
 void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
-		loadFavoritesList();
+		loadFavoritesSectionGameList();
 	} else {
 		if(CURRENT_SECTION.hidden) {
 			int startingSectionNumber = currentSectionNumber;

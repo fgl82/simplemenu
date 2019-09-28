@@ -3,7 +3,7 @@
 void quit();
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath);
 void loadGameList();
-void loadFavoritesList();
+void loadFavoritesSectionGameList();
 int countFiles (char* directoryName, char *fileExtensions);
 int countGamesInPage();
 int countGamesInSection();
