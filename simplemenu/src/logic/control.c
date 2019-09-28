@@ -256,6 +256,46 @@ int performAction() {
 		}
 	}
 
+	if(keys[BTN_LB]) {
+		int startingSectionNumber = currentSectionNumber;
+		int wasFirstSectionWithContent=0;
+		int rewinded = rewindSection();
+		if(rewinded) {
+			while(menuSections[currentSectionNumber].hidden) {
+				if(currentSectionNumber==0) {
+					wasFirstSectionWithContent=1;
+					break;
+				}
+				rewindSection();
+			}
+			if (wasFirstSectionWithContent) {
+				currentSectionNumber = startingSectionNumber;
+			}
+			loadGameList();
+		}
+		return 0;
+	}
+
+	if(keys[BTN_RB]) {
+		int startingSectionNumber = currentSectionNumber;
+		int wasLastSectionWithContent=0;
+		int advanced = advanceSection();
+		if(advanced) {
+			while(menuSections[currentSectionNumber].hidden) {
+				if(currentSectionNumber==favoritesSectionNumber-1) {
+					wasLastSectionWithContent=1;
+					break;
+				}
+				advanceSection();
+			}
+			if (wasLastSectionWithContent) {
+				currentSectionNumber = startingSectionNumber;
+			}
+			loadGameList();
+		}
+		return 0;
+	}
+
 	if (!hotKeyPressed) {
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
 			running=0;
