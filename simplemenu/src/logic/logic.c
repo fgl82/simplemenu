@@ -170,24 +170,33 @@ int countGamesInSection() {
 void loadFavoritesList() {
 	int game = 0;
 	int page = 0;
-	CURRENT_SECTION.totalPages=0;
+	FAVORITES_SECTION.totalPages=0;
+	printf("papa 1\n");
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
-			CURRENT_SECTION.gameList[i][j]=NULL;
+//			free(FAVORITES_SECTION.gameList[i][j]);
+			FAVORITES_SECTION.gameList[i][j]=NULL;
 		}
 	}
+	printf("papa 2\n");
 	for (int i=0;i<favoritesSize;i++){
 		if (game==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize) {
 				page++;
-				CURRENT_SECTION.totalPages++;
+				FAVORITES_SECTION.totalPages++;
 				game = 0;
 			}
 		}
-		CURRENT_SECTION.gameList[page][game] = favorites[i].name;
+		int size = strlen(favorites[i].name)+1;
+		FAVORITES_SECTION.gameList[page][game]=malloc(size);
+		strcpy(FAVORITES_SECTION.gameList[page][game],favorites[i].name);
+		strcat(FAVORITES_SECTION.gameList[page][game],"\0");
+		printf("papa 3\n");
+		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
 		game++;
 	}
-	char ** pepe =*CURRENT_SECTION.gameList;
+	printf("papa 4\n");
+	char ** pepe =*FAVORITES_SECTION.gameList;
 	sortFavoritesList(pepe,countGamesInSection());
 }
 
@@ -219,7 +228,7 @@ void sortGameList(struct dirent **args, unsigned int len)
 }
 
 void loadGameList() {
-	if (CURRENT_SECTION.gameList[0][0] ==NULL) {
+	if (CURRENT_SECTION.gameList[0][0] == NULL) {
 		CURRENT_SECTION.totalPages=0;
 		struct dirent **files;
 		int n=scandir(CURRENT_SECTION.filesDirectory, &files, 0, alphasort);

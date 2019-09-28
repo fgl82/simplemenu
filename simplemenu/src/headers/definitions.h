@@ -20,6 +20,7 @@
 #define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
 #define CURRENT_FAVORITE favorites[CURRENT_GAME_NUMBER]
 #define CURRENT_SECTION menuSections[currentSectionNumber]
+#define FAVORITES_SECTION menuSections[favoritesSectionNumber]
 #define NEXT_SECTION menuSections[currentSectionNumber+1]
 #define CURRENT_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
 #define PREVIOUS_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame-1]
