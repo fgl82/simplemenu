@@ -167,10 +167,16 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		printf("%d\n",CURRENT_GAME_NUMBER);
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
-			favorites[i]=favorites[i+1];
+			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
+			strcpy(favorites[i].executable,favorites[i+1].executable);
+			strcpy(favorites[i].filesDirectory,favorites[i+1].filesDirectory);
+			strcpy(favorites[i].name,favorites[i+1].name);
 		}
+		strcpy(favorites[favoritesSize].emulatorFolder,"\0");
+		strcpy(favorites[favoritesSize].executable,"\0");
+		strcpy(favorites[favoritesSize].filesDirectory,"\0");
+		strcpy(favorites[favoritesSize].name,"\0");
 		favoritesSize--;
 		loadFavoritesSectionGameList();
 	}
@@ -188,8 +194,7 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
-//			loadFavoritesList();
-			loadGameList();
+//			loadGameList();
 		}
 	}
 }

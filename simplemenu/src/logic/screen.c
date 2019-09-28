@@ -97,6 +97,7 @@ void drawGameList() {
 			char nameWithoutExtension[200];
 			strcpy(nameWithoutExtension,CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
 			stripGameName(nameWithoutExtension);
+			sprintf(buf,"%s", "");
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
 				drawShadedGameNameOnScreen(buf, nextLine);

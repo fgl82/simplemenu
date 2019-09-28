@@ -111,23 +111,6 @@ int countFiles (char* directoryName, char *fileExtensions) {
 	return result;
 }
 
-void sortFavorites() {
-	struct Favorite tmp;
-	for(int i=0; i<favoritesSize; i++) {
-		for(int j = 0; j<favoritesSize; j++) {
-			char *first = toLower(favorites[i].name);
-			char *second = toLower(favorites[j].name);
-			if(strcmp(first, second) < 0) {
-				tmp = favorites[i];
-				favorites[i] = favorites[j];
-				favorites[j] = tmp;
-			}
-			free(first);
-			free(second);
-		}
-	}
-}
-
 void swap_str_ptrs(char **arg1, char **arg2)
 {
     char *tmp = *arg1;
@@ -135,24 +118,24 @@ void swap_str_ptrs(char **arg1, char **arg2)
     *arg2 = tmp;
 }
 
-void sortFavoritesList(char *args[], unsigned int len)
+void sortGames(char *names[], unsigned int len)
 {
     unsigned int i, pvt=0;
     if (len <= 1)
         return;
-    swap_str_ptrs(args+((unsigned int)rand() % len), args+len-1);
+    swap_str_ptrs(names+((unsigned int)rand() % len), names+len-1);
     for (i=0;i<len-1;++i)
     {
-    	char *first = toLower(args[i]);
-    	char *second = toLower(args[len-1]);
+    	char *first = toLower(names[i]);
+    	char *second = toLower(names[len-1]);
         if (strcmp(first, second) < 0)
-            swap_str_ptrs(args+i, args+pvt++);
+            swap_str_ptrs(names+i, names+pvt++);
         free(first);
         free(second);
     }
-    swap_str_ptrs(args+pvt, args+len-1);
-    sortFavoritesList(args, pvt++);
-    sortFavoritesList(args+pvt, len - pvt);
+    swap_str_ptrs(names+pvt, names+len-1);
+    sortGames(names, pvt++);
+    sortGames(names+pvt, len - pvt);
 }
 
 int countGamesInSection() {
@@ -180,42 +163,15 @@ void loadFavoritesSectionGameList() {
 		if (game==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize) {
 				page++;
-				FAVORITES_SECTION.totalPages++;
 				game = 0;
+				FAVORITES_SECTION.totalPages++;
 			}
 		}
 		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
 		game++;
 	}
 	char ** pepe =*FAVORITES_SECTION.gameList;
-	sortFavoritesList(pepe,countGamesInSection());
-}
-
-void swap_dirent_ptrs(struct dirent **arg1, struct dirent **arg2)
-{
-    struct dirent *tmp = *arg1;
-    *arg1 = *arg2;
-    *arg2 = tmp;
-}
-
-void sortGameList(struct dirent **args, unsigned int len)
-{
-    unsigned int i, pvt=0;
-    if (len <= 1)
-        return;
-    swap_dirent_ptrs(args+((unsigned int)rand() % len), args+len-1);
-    for (i=0;i<len-1;++i)
-    {
-    	char *first = toLower(args[i]->d_name);
-    	char *second = toLower(args[len-1]->d_name);
-        if (strcmp(first, second) < 0)
-            swap_dirent_ptrs(args+i, args+pvt++);
-        free(first);
-        free(second);
-    }
-    swap_dirent_ptrs(args+pvt, args+len-1);
-    sortGameList(args, pvt++);
-    sortGameList(args+pvt, len - pvt);
+	sortGames(pepe,countGamesInSection());
 }
 
 void loadGameList() {
@@ -225,7 +181,6 @@ void loadGameList() {
 		int n=scandir(CURRENT_SECTION.filesDirectory, &files, 0, alphasort);
 		int game = 0;
 		int page = 0;
-		sortGameList(files, n);
 		for (int i=0;i<n;i++){
 			char path[2000] = "";
 			strcpy(path,CURRENT_SECTION.filesDirectory);
@@ -258,6 +213,8 @@ void loadGameList() {
 			free(files[i]);
 		}
 		free(files);
+		char ** pepe =*CURRENT_SECTION.gameList;
+		sortGames(pepe,countGamesInSection());
 	}
 }
 

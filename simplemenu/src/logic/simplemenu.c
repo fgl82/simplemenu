@@ -21,11 +21,6 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	initialSection=0;
-//	for (int i=0;i<1000 ;i++) {
-//		for (int j=0;j<10;j++) {
-//			CURRENT_SECTION.gameList[i][j]=NULL;
-//		}
-//	}
 }
 
 int main(int argc, char* argv[]) {

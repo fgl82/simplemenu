@@ -45,6 +45,7 @@ struct Favorite {
 	char emulatorFolder[25];
 	char executable[16];
 	char filesDirectory[25];
+    struct Favorite *next;
 };
 
 struct Favorite favorites[2000];
