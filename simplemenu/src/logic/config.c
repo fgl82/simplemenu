@@ -1,4 +1,3 @@
-#include <bits/types/FILE.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,11 +12,22 @@ void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;
 		fp = fopen("./config/favorites.sav", "w");
-		for (int i=0;i<favoritesSize;i++) {
-			fprintf(fp,"%s;",favorites[i].name);
-			fprintf(fp,"%s;",favorites[i].emulatorFolder);
-			fprintf(fp,"%s;",favorites[i].executable);
-			fprintf(fp,"%s\n",favorites[i].filesDirectory);
+		struct Favorite favorite;
+		char *name;
+		for (int j=0;j<1000;j++) {
+			for (int k=0;k<10;k++) {
+				name = FAVORITES_SECTION.gameList[j][k];
+				if (name!=NULL) {
+					favorite=findFavorite(name);
+					fprintf(fp,"%s;",favorite.name);
+					fprintf(fp,"%s;",favorite.emulatorFolder);
+					fprintf(fp,"%s;",favorite.executable);
+					fprintf(fp,"%s\n",favorite.filesDirectory);
+				}
+			}
+			if (name==NULL) {
+				break;
+			}
 		}
 		fclose(fp);
 		favoritesChanged=0;

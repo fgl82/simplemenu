@@ -19,6 +19,17 @@ void quit() {
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
+struct Favorite findFavorite(char *name) {
+	struct Favorite favorite;
+	for (int i=0; i<favoritesSize;i++) {
+		favorite = favorites[i];
+		if (strcmp(favorite.name, name)==0) {
+			return favorite;
+		}
+	}
+	return favorite;
+}
+
 int doesFavoriteExist(char *name) {
 	for(int i=0;i<favoritesSize;i++) {
 		if (strcmp(favorites[i].name,name)==0) {
@@ -85,13 +96,6 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 	}
 	return(0);
 }
-
-//int is_regular_file(const char *path)
-//{
-//	struct stat path_stat;
-//	stat(path, &path_stat);
-//	return S_ISREG(path_stat.st_mode);
-//}
 
 int countFiles (char* directoryName, char *fileExtensions) {
 	struct dirent **files;
@@ -190,7 +194,6 @@ void loadGameList() {
 					strcmp((files[i]->d_name),".")!=0 &&
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
-				//			lastRound=0;
 				int size = strlen(files[i]->d_name)+1;
 				CURRENT_SECTION.gameList[page][game]=malloc(size);
 				if (game==ITEMS_PER_PAGE) {
@@ -200,7 +203,6 @@ void loadGameList() {
 						game = 0;
 					}
 				}
-//				CURRENT_SECTION.gameList[page][game]=files[i]->d_name;
 				strcpy(CURRENT_SECTION.gameList[page][game],files[i]->d_name);
 				strcat(CURRENT_SECTION.gameList[page][game],"\0");
 				game++;

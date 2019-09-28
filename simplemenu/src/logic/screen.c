@@ -51,7 +51,8 @@ void displayGamePicture() {
 		if (favoritesSize == 0) {
 			return;
 		}
-		strcpy(gameNameFullPath,CURRENT_FAVORITE.filesDirectory);
+		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
+		strcpy(gameNameFullPath, favorite.filesDirectory);
 	} else {
 		strcpy(gameNameFullPath, CURRENT_SECTION.filesDirectory);
 	}
