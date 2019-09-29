@@ -1,4 +1,5 @@
 #include <dirent.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,49 +98,31 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 	return(0);
 }
 
-int countFiles (char* directoryName, char *fileExtensions) {
-	struct dirent **files;
-	int filescount = scandir(directoryName, &files, 0, alphasort);
-	int result=0;
-	for (int i=0;i<filescount;i++){
-		char path[2000] = "";
-		char *ext = getExtension(files[i]->d_name);
-		if (ext&&strcmp((files[i]->d_name),"..")!=0 && strcmp((files[i]->d_name),".")!=0&&strcmp(ext,".png")!=0) {
-			strcpy(path,directoryName);
-			strcat(path,files[i]->d_name);
-			if(isExtensionValid(ext,fileExtensions)) {
-				result++;
-			}
-		}
-	}
-	return result;
-}
-
 void swap_str_ptrs(char **arg1, char **arg2)
 {
-    char *tmp = *arg1;
-    *arg1 = *arg2;
-    *arg2 = tmp;
+	char *tmp = *arg1;
+	*arg1 = *arg2;
+	*arg2 = tmp;
 }
 
 void sortGames(char *names[], unsigned int len)
 {
-    unsigned int i, pvt=0;
-    if (len <= 1)
-        return;
-    swap_str_ptrs(names+((unsigned int)rand() % len), names+len-1);
-    for (i=0;i<len-1;++i)
-    {
-    	char *first = toLower(names[i]);
-    	char *second = toLower(names[len-1]);
-        if (strcmp(first, second) < 0)
-            swap_str_ptrs(names+i, names+pvt++);
-        free(first);
-        free(second);
-    }
-    swap_str_ptrs(names+pvt, names+len-1);
-    sortGames(names, pvt++);
-    sortGames(names+pvt, len - pvt);
+	unsigned int i, pvt=0;
+	if (len <= 1)
+		return;
+	swap_str_ptrs(names+((unsigned int)rand() % len), names+len-1);
+	for (i=0;i<len-1;++i)
+	{
+		char *first = toLower(names[i]);
+		char *second = toLower(names[len-1]);
+		if (strcmp(first, second) < 0)
+			swap_str_ptrs(names+i, names+pvt++);
+		free(first);
+		free(second);
+	}
+	swap_str_ptrs(names+pvt, names+len-1);
+	sortGames(names, pvt++);
+	sortGames(names+pvt, len - pvt);
 }
 
 int countGamesInSection() {
@@ -178,23 +161,54 @@ void loadFavoritesSectionGameList() {
 	sortGames(pepe,countGamesInSection());
 }
 
+int recursivelyScanDirectory (char *directory, char* files[])
+{
+	DIR * d;
+	d = opendir (directory);
+	int i=0;
+	while (1) {
+		struct dirent *entry;
+		const char * d_name;
+		entry = readdir (d);
+		if (!entry) {
+			break;
+		}
+		d_name = entry->d_name;
+		if (entry->d_type & DT_DIR) {
+			if (strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s/%s", directory, d_name);
+				i+=recursivelyScanDirectory(path, files);
+			}
+		} else {
+			files[i]=malloc(sizeof(entry->d_name));
+			strcpy(files[i],entry->d_name);
+			i++;
+		}
+	}
+	return i;
+}
+
 void loadGameList() {
+	int loadedFiles=0;
+	printf("NOT YET FOR SECTION %d\n", currentSectionNumber);
 	if (CURRENT_SECTION.gameList[0][0] == NULL) {
+		printf("WENT IN FOR SECTION %d\n", currentSectionNumber);
 		CURRENT_SECTION.totalPages=0;
-		struct dirent **files;
-		int n=scandir(CURRENT_SECTION.filesDirectory, &files, 0, alphasort);
+		char *files[8000];
+		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files);
 		int game = 0;
 		int page = 0;
 		for (int i=0;i<n;i++){
-			char path[2000] = "";
+			char path[3000] = "";
 			strcpy(path,CURRENT_SECTION.filesDirectory);
-			strcat(path,files[i]->d_name);
-			char *ext = getExtension(files[i]->d_name);
-			if (ext&&strcmp((files[i]->d_name),"..")!=0 &&
-					strcmp((files[i]->d_name),".")!=0 &&
+			strcat(path,files[i]);
+			char *ext = getExtension(files[i]);
+			if (ext&&strcmp((files[i]),"..")!=0 &&
+					strcmp((files[i]),".")!=0 &&
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
-				int size = strlen(files[i]->d_name)+1;
+				int size = strlen(files[i])+1;
 				CURRENT_SECTION.gameList[page][game]=malloc(size);
 				if (game==ITEMS_PER_PAGE) {
 					if(i!=n) {
@@ -203,18 +217,20 @@ void loadGameList() {
 						game = 0;
 					}
 				}
-				strcpy(CURRENT_SECTION.gameList[page][game],files[i]->d_name);
+				strcpy(CURRENT_SECTION.gameList[page][game],files[i]);
+				loadedFiles++;
 				strcat(CURRENT_SECTION.gameList[page][game],"\0");
 				game++;
 			}
 		}
-		if (CURRENT_SECTION.totalPages<0) {
+		if (loadedFiles==0) {
+			printf("0 pages %d\n", currentSectionNumber);
 			CURRENT_SECTION.hidden=1;
 		}
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
-		free(files);
+//		free(files);
 		char ** pepe =*CURRENT_SECTION.gameList;
 		sortGames(pepe,countGamesInSection());
 	}
@@ -244,33 +260,16 @@ void determineStartingScreen(int sectionCount) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
 	} else {
+		loadGameList();
 		if(CURRENT_SECTION.hidden) {
-			int startingSectionNumber = currentSectionNumber;
-			int stillOnInitialSection=0;
-			int rewinded = rewindSection();
-			if(rewinded) {
-				while(menuSections[currentSectionNumber].hidden) {
-					if(currentSectionNumber==0) {
-						stillOnInitialSection=1;
-						break;
-					}
-					rewindSection();
-				}
-				if (stillOnInitialSection) {
-					currentSectionNumber = startingSectionNumber;
-				}
-				loadGameList();
-			}
-			if(currentSectionNumber==startingSectionNumber) {
-				int advanced = advanceSection();
-				if(advanced) {
-					while(menuSections[currentSectionNumber].hidden) {
-						advanceSection();
-					}
+			int advanced = advanceSection();
+			loadGameList();
+			if(advanced) {
+				while(CURRENT_SECTION.hidden) {
+					advanceSection();
 					loadGameList();
 				}
 			}
 		}
-		loadGameList();
 	}
 }

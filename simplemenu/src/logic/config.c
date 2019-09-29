@@ -150,11 +150,7 @@ int loadConfig() {
 		aMenuSection.currentPage=0;
 		aMenuSection.currentGame=0;
 		menuSections[menuSectionCounter]=aMenuSection;
-		if (strcmp(configurations[2],"favs")!=0) {
-			if(countFiles(menuSections[menuSectionCounter].filesDirectory, menuSections[menuSectionCounter].fileExtensions)==0) {
-				menuSections[menuSectionCounter].hidden=1;
-			}
-		}
+		menuSections[menuSectionCounter].hidden=0;
 		menuSectionCounter++;
 	}
 	favoritesSectionNumber=menuSectionCounter-1;

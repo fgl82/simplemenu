@@ -27,13 +27,6 @@ int main(int argc, char* argv[]) {
 	HW_Init();
 	initializeGlobals();
 	int sectionCount=loadConfig();
-	for (int i=0;i<sectionCount;i++) {
-		for (int j=0;j<1000;j++) {
-			for (int k=0;k<10;k++) {
-				menuSections[i].gameList[j][k]=NULL;
-			}
-		}
-	}
 	loadFavorites();
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);

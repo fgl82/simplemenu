@@ -21,7 +21,7 @@ int advanceSection() {
 }
 
 int rewindSection() {
-	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>initialSection) {
+	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
 		currentSectionNumber--;
 		return 1;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
@@ -149,7 +149,7 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		determineStartingScreen(menuSectionCounter);
-		loadGameList();
+//		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
@@ -214,82 +214,52 @@ int performAction() {
 		}
 		if(keys[BTN_RIGHT]) {
 			hotKeyPressed=0;
-			int startingSectionNumber = currentSectionNumber;
-			int wasLastSectionWithContent=0;
 			int advanced = advanceSection();
 			if(advanced) {
-				while(menuSections[currentSectionNumber].hidden) {
-					if(currentSectionNumber==favoritesSectionNumber-1) {
-						wasLastSectionWithContent=1;
-						break;
-					}
-					advanceSection();
-				}
-				if (wasLastSectionWithContent) {
-					currentSectionNumber = startingSectionNumber;
-				}
 				loadGameList();
+				while(CURRENT_SECTION.hidden) {
+					advanceSection();
+					loadGameList();
+				}
 			}
 			return 0;
 		}
 		if(keys[BTN_LEFT]) {
 			hotKeyPressed=0;
-			int startingSectionNumber = currentSectionNumber;
-			int wasFirstSectionWithContent=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
-				while(menuSections[currentSectionNumber].hidden) {
-					if(currentSectionNumber==0) {
-						wasFirstSectionWithContent=1;
-						break;
-					}
-					rewindSection();
-				}
-				if (wasFirstSectionWithContent) {
-					currentSectionNumber = startingSectionNumber;
-				}
 				loadGameList();
+				while(CURRENT_SECTION.hidden) {
+					rewindSection();
+					loadGameList();
+				}
 			}
 			return 0;
 		}
 	}
 
 	if(keys[BTN_LB]) {
-		int startingSectionNumber = currentSectionNumber;
-		int wasFirstSectionWithContent=0;
+		hotKeyPressed=0;
 		int rewinded = rewindSection();
 		if(rewinded) {
-			while(menuSections[currentSectionNumber].hidden) {
-				if(currentSectionNumber==0) {
-					wasFirstSectionWithContent=1;
-					break;
-				}
-				rewindSection();
-			}
-			if (wasFirstSectionWithContent) {
-				currentSectionNumber = startingSectionNumber;
-			}
 			loadGameList();
+			while(CURRENT_SECTION.hidden) {
+				rewindSection();
+				loadGameList();
+			}
 		}
 		return 0;
 	}
 
 	if(keys[BTN_RB]) {
-		int startingSectionNumber = currentSectionNumber;
-		int wasLastSectionWithContent=0;
+		hotKeyPressed=0;
 		int advanced = advanceSection();
 		if(advanced) {
-			while(menuSections[currentSectionNumber].hidden) {
-				if(currentSectionNumber==favoritesSectionNumber-1) {
-					wasLastSectionWithContent=1;
-					break;
-				}
-				advanceSection();
-			}
-			if (wasLastSectionWithContent) {
-				currentSectionNumber = startingSectionNumber;
-			}
 			loadGameList();
+			while(CURRENT_SECTION.hidden) {
+				advanceSection();
+				loadGameList();
+			}
 		}
 		return 0;
 	}
