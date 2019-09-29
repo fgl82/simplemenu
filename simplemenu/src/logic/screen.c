@@ -55,11 +55,11 @@ void displayGamePicture() {
 			return;
 		}
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		strcpy(gameNameFullPath, favorite.filesDirectory);
+		strcpy(gameNameFullPath, removeExtension(favorite.name));
 	} else {
-		strcpy(gameNameFullPath, CURRENT_SECTION.filesDirectory);
+		strcpy(gameNameFullPath, removeExtension(CURRENT_GAME_NAME));
 	}
-	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
+	//	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
 	strcat(gameNameFullPath,".png");
 	//	displayBackGroundImage("./resources/back.png", screen);
 
