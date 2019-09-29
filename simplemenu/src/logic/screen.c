@@ -46,6 +46,7 @@ void showLetter() {
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
+
 	drawCurrentLetter(letter, textColor);
 	free(currentGame);
 }
