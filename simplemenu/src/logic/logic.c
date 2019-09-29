@@ -227,7 +227,6 @@ void loadGameList() {
 						game = 0;
 					}
 				}
-//				printf("%s\n",files[i]);
 				strcpy(CURRENT_SECTION.gameList[page][game],files[i]);
 				loadedFiles++;
 				strcat(CURRENT_SECTION.gameList[page][game],"\0");

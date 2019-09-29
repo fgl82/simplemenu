@@ -28,22 +28,11 @@ char *removeExtension(char *fileName) {
 }
 
 char *removePath(char *fileName) {
-	//	char *retstr;
-	//	char *lastdot;
-	//	retstr = malloc(strlen (fileName) + 1);
-	//	strcpy (retstr, fileName);
-	//	lastdot = strrchr (retstr, '//');
-	//	if (lastdot != NULL) {
-	//		*lastdot = '\0';
-	//	}
-	//	printf("%s\n",retstr);
-	//	return retstr;
 	char *e;
 	e = strrchr(fileName, '/');
 	if (e==NULL) {
 		return fileName;
 	} else {
-//		printf("%s\n",e+1);
 		return e+1;
 	}
 }

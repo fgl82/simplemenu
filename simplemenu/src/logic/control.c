@@ -123,7 +123,6 @@ void rewindPage() {
 		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 		strcpy(currentGame, CURRENT_GAME_NAME);
 		stripGameName(currentGame);
-		printf("currentName %s\n",currentGame);
 		char *previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 
 		int hitStart = 0;
@@ -132,7 +131,6 @@ void rewindPage() {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			printf("previousName %s\n",previousGame);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -145,7 +143,6 @@ void rewindPage() {
 				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 				strcpy(currentGame, CURRENT_GAME_NAME);
 				stripGameName(currentGame);
-				printf("currentName %s\n",currentGame);
 			} else {
 				break;
 			}
@@ -159,12 +156,10 @@ void rewindPage() {
 		currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 		strcpy(currentGame, CURRENT_GAME_NAME);
 		stripGameName(currentGame);
-		printf("currentName %s\n",currentGame);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			printf("previousName %s\n",previousGame);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 				 (isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 
@@ -179,7 +174,6 @@ void rewindPage() {
 				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 				strcpy(currentGame, CURRENT_GAME_NAME);
 				stripGameName(currentGame);
-				printf("currentName %s\n",currentGame);
 			} else {
 				break;
 			}
