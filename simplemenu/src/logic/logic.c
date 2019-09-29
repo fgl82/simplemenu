@@ -13,6 +13,13 @@
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
 
+char *getCurrentGameName() {
+	char * name = malloc(strlen(CURRENT_GAME_NAME)+1);
+	strcpy(name, CURRENT_GAME_NAME);
+	stripGameName(name);
+	return name;
+}
+
 void quit() {
 	freeResources();
 	saveLastState();
@@ -161,14 +168,13 @@ void loadFavoritesSectionGameList() {
 	sortGames(pepe,countGamesInSection());
 }
 
-int recursivelyScanDirectory (char *directory, char* files[])
+int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 {
 	DIR * d;
 	d = opendir (directory);
-	int i=0;
 	while (1) {
 		struct dirent *entry;
-		const char * d_name;
+		char * d_name;
 		entry = readdir (d);
 		if (!entry) {
 			break;
@@ -177,32 +183,34 @@ int recursivelyScanDirectory (char *directory, char* files[])
 		if (entry->d_type & DT_DIR) {
 			if (strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
-				snprintf (path, PATH_MAX, "%s/%s", directory, d_name);
-				i+=recursivelyScanDirectory(path, files);
+				char * e = strrchr(d_name, '/');
+				if (e==NULL) {
+					strcat(d_name, "/");
+				}
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				i=+recursivelyScanDirectory1(path, files, i);
 			}
 		} else {
-			files[i]=malloc(sizeof(entry->d_name));
-			strcpy(files[i],entry->d_name);
+			char path[PATH_MAX];
+			snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+			files[i]=malloc(sizeof(path));
+			strcpy(files[i],path);
 			i++;
 		}
 	}
+	free(d);
 	return i;
 }
 
 void loadGameList() {
 	int loadedFiles=0;
-	printf("NOT YET FOR SECTION %d\n", currentSectionNumber);
 	if (CURRENT_SECTION.gameList[0][0] == NULL) {
-		printf("WENT IN FOR SECTION %d\n", currentSectionNumber);
 		CURRENT_SECTION.totalPages=0;
 		char *files[8000];
-		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files);
+		int n = recursivelyScanDirectory1(CURRENT_SECTION.filesDirectory, files, 0);
 		int game = 0;
 		int page = 0;
 		for (int i=0;i<n;i++){
-			char path[3000] = "";
-			strcpy(path,CURRENT_SECTION.filesDirectory);
-			strcat(path,files[i]);
 			char *ext = getExtension(files[i]);
 			if (ext&&strcmp((files[i]),"..")!=0 &&
 					strcmp((files[i]),".")!=0 &&
@@ -217,6 +225,7 @@ void loadGameList() {
 						game = 0;
 					}
 				}
+//				printf("%s\n",files[i]);
 				strcpy(CURRENT_SECTION.gameList[page][game],files[i]);
 				loadedFiles++;
 				strcat(CURRENT_SECTION.gameList[page][game],"\0");
@@ -224,13 +233,11 @@ void loadGameList() {
 			}
 		}
 		if (loadedFiles==0) {
-			printf("0 pages %d\n", currentSectionNumber);
 			CURRENT_SECTION.hidden=1;
 		}
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
-//		free(files);
 		char ** pepe =*CURRENT_SECTION.gameList;
 		sortGames(pepe,countGamesInSection());
 	}

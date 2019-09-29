@@ -27,8 +27,30 @@ char *removeExtension(char *fileName) {
 	return retstr;
 }
 
+char *removePath(char *fileName) {
+	//	char *retstr;
+	//	char *lastdot;
+	//	retstr = malloc(strlen (fileName) + 1);
+	//	strcpy (retstr, fileName);
+	//	lastdot = strrchr (retstr, '//');
+	//	if (lastdot != NULL) {
+	//		*lastdot = '\0';
+	//	}
+	//	printf("%s\n",retstr);
+	//	return retstr;
+	char *e;
+	e = strrchr(fileName, '/');
+	if (e==NULL) {
+		return fileName;
+	} else {
+//		printf("%s\n",e+1);
+		return e+1;
+	}
+}
+
 void stripGameName(char *gameName) {
 	strcpy(gameName,removeExtension(gameName));
+	strcpy(gameName,removePath(gameName));
 	int charNumber = 0;
 	while (gameName[charNumber]) {
 		if (gameName[charNumber]=='('||charNumber>35) {

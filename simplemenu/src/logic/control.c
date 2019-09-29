@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -7,6 +8,7 @@
 #include "../headers/globals.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 
 int advanceSection() {
@@ -39,11 +41,11 @@ void launchGame() {
 	char fileToBeExecutedwithFullPath[200];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
+//		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,favorite.name);
 		executeCommand(favorite.emulatorFolder,favorite.executable,fileToBeExecutedwithFullPath);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
+//		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,fileToBeExecutedwithFullPath);
 	}
@@ -87,15 +89,23 @@ void scrollDown() {
 
 void advancePage() {
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
+		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
+		strcpy(currentGame, CURRENT_GAME_NAME);
+		stripGameName(currentGame);
 		if (CURRENT_SECTION.alphabeticalPaging) {
-			char currentLetter=tolower(CURRENT_GAME_NAME[0]);
-			while((tolower(CURRENT_GAME_NAME[0])==currentLetter||isdigit(CURRENT_GAME_NAME[0]))) {
+			char currentLetter=tolower(currentGame[0]);
+			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
 					scrollDown();
 					break;
 				}
 				scrollDown();
+				free(currentGame);
+				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
+				strcpy(currentGame, CURRENT_GAME_NAME);
+				stripGameName(currentGame);
 			}
+			free(currentGame);
 		} else {
 			if(CURRENT_SECTION.currentPage!=CURRENT_SECTION.totalPages) {
 				CURRENT_SECTION.currentPage++;

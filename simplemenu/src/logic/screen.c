@@ -34,14 +34,17 @@ void showLetter() {
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
 	char letter[2]="";
-	letter[0]=toupper(CURRENT_GAME_NAME[0]);
+	char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
+	strcpy(currentGame, CURRENT_GAME_NAME);
+	stripGameName(currentGame);
+	letter[0]=toupper(currentGame[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
 	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
-
 	drawCurrentLetter(letter, textColor);
+	free(currentGame);
 }
 
 void displayGamePicture() {
