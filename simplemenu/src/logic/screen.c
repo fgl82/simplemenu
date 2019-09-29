@@ -23,6 +23,7 @@ void showLetter() {
 	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
 	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
 	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -30,6 +31,9 @@ void showLetter() {
 		borderColor[0]=255;
 		borderColor[1]=255;
 		borderColor[2]=255;
+		textColor.r=255;
+		textColor.g=255;
+		textColor.b=255;
 	}
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
@@ -42,7 +46,6 @@ void showLetter() {
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
-	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
 	drawCurrentLetter(letter, textColor);
 	free(currentGame);
 }

@@ -38,16 +38,18 @@ void showPicture() {
 }
 
 void launchGame() {
-	char fileToBeExecutedwithFullPath[200];
+	char fileToBeExecutedwithFullPath[2000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
 //		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,favorite.name);
-		executeCommand(favorite.emulatorFolder,favorite.executable,fileToBeExecutedwithFullPath);
+//		printf("./invoker.elf %s%s %s\n ",favorite.emulatorFolder, favorite.executable, CURRENT_GAME_NAME);
+		executeCommand(favorite.emulatorFolder,favorite.executable,CURRENT_GAME_NAME);
 	} else if (CURRENT_GAME_NAME!=NULL) {
 //		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
-		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,fileToBeExecutedwithFullPath);
+//		printf("./invoker.elf %s%s %s\n ",CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable, CURRENT_GAME_NAME);
+		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
 
