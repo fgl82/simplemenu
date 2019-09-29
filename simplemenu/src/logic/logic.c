@@ -122,6 +122,8 @@ void sortGames(char *names[], unsigned int len)
 	{
 		char *first = toLower(names[i]);
 		char *second = toLower(names[len-1]);
+		stripGameName(first);
+		stripGameName(second);
 		if (strcmp(first, second) < 0)
 			swap_str_ptrs(names+i, names+pvt++);
 		free(first);
