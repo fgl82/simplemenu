@@ -2,8 +2,8 @@
 - <span style="color:red">**S**</span>impleMenu
 - <span style="color:red">**I**</span>s (a)
 - <span style="color:red">**M**</span>inimalistic 
-- <span style="color:red">**P**</span>ractical (and)
-- <span style="color:red">**L**</span>ean
+- <span style="color:red">**P**</span>ractical
+- <span style="color:red">**L**</span>ean (and)
 - <span style="color:red">**E**</span>fficient 
 - <span style="color:red">**M**</span>enu (to)
 - <span style="color:red">**E**</span>nhance
