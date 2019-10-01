@@ -23,7 +23,6 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-	initialSection=0;
 }
 
 int main(int argc, char* argv[]) {
@@ -41,7 +40,6 @@ int main(int argc, char* argv[]) {
 	}
 	setupDisplay();
 	determineStartingScreen(sectionCount);
-	initialSection=getFirstNonHiddenSection(sectionCount);
 	updateScreen();
 	enableKeyRepeat(500.180);
 	while (running) {

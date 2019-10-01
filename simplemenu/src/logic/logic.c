@@ -174,6 +174,9 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 {
 	DIR * d;
 	d = opendir (directory);
+	if (d==NULL) {
+		return 0;
+	}
 	while (1) {
 		struct dirent *entry;
 		char * d_name;

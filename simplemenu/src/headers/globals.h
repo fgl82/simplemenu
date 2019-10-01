@@ -10,7 +10,6 @@ int favoritesChanged;
 int favoritesSize;
 int returnTo;
 
-int initialSection;
 int currentSectionNumber;
 int menuSectionCounter;
 int gamesInPage;
