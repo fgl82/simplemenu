@@ -4,8 +4,6 @@
 #include "../headers/globals.h"
 #include "../headers/definitions.h"
 
-#include <bits/stdint-intn.h>
-#include <bits/stdint-uintn.h>
 #include <fcntl.h> //for battery
 #include <linux/soundcard.h>
 #include <stdio.h>
