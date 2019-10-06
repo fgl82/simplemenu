@@ -16,9 +16,9 @@
 #define BTN_RIGHT		SDLK_RIGHT
 #define BTN_LB			SDLK_TAB
 #define BTN_RB			SDLK_BACKSPACE
-#define NO_OC 408
-#define MED_OC 702
-#define MAX_OC 732
+#define NO_OC 342
+#define MED_OC 528
+#define MAX_OC 624
 #define FAVORITES_SIZE 2000
 #define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
 #define CURRENT_FAVORITE_NAME_IN_FAVORITES_LIST favorites[CURRENT_GAME_NUMBER]
