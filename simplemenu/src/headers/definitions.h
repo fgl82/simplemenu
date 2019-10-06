@@ -8,13 +8,14 @@
 #define BTN_TB			SDLK_LSHIFT
 #define BTN_START		SDLK_RETURN
 #define BTN_SELECT		SDLK_ESCAPE
-#define BTN_R  		    SDLK_RCTRL
+//#define BTN_R  		    SDLK_RCTRL BITTBOY
+#define BTN_R  		    SDLK_END
 #define BTN_UP			SDLK_UP
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define BTN_RB			SDLK_TAB
-#define BTN_LB			SDLK_BACKSPACE
+#define BTN_LB			SDLK_TAB
+#define BTN_RB			SDLK_BACKSPACE
 #define NO_OC 408
 #define MED_OC 702
 #define MAX_OC 732

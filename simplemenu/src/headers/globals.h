@@ -20,9 +20,9 @@ int hotKeyPressed;
 
 struct MenuSection {
 	char sectionName[25];
-	char emulatorFolder[25];
-	char executable[16];
-	char filesDirectory[25];
+	char emulatorFolder[200];
+	char executable[200];
+	char filesDirectory[200];
 	char fileExtensions[50];
 	int hidden;
 	int currentPage;
@@ -41,9 +41,9 @@ struct MenuSection menuSections[50];
 
 struct Favorite {
 	char name[100];
-	char emulatorFolder[25];
-	char executable[16];
-	char filesDirectory[25];
+	char emulatorFolder[200];
+	char executable[200];
+	char filesDirectory[200];
     struct Favorite *next;
 };
 

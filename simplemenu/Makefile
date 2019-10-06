@@ -1,7 +1,8 @@
 # Software Name
 TARGET = simplemenu.elf
 #PLATFORM = BITTBOY
-PLATFORM = PC
+PLATFORM = RS97
+#PLATFORM = PC
 
 # Compiler
 
@@ -9,9 +10,12 @@ ifeq ($(PLATFORM), BITTBOY)
 	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
-else ifeq ($(PROFILE), RS97)
+	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz
+else ifeq ($(PLATFORM), RS97)
 	CC = /opt/rs97-toolchain/bin/mipsel-linux-gcc
+	LINKER = /opt/rs97-toolchain/bin/mipsel-linux-gcc
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lbz2
 else
 	CC = gcc
 	LINKER   = gcc
@@ -20,7 +24,6 @@ endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
 CFLAGS +=  -I.
-LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
 ifeq ($(DEBUG), YES)
