@@ -14,8 +14,9 @@
 volatile uint32_t *memregs;
 int32_t memdev = 0;
 
-void SetCPU(uint32_t mhz)
+void setCPU(uint32_t mhz)
 {
+	currentCPU = mhz;
     if (memdev > 0)
     {
         uint32_t m = mhz / 6;
@@ -45,7 +46,7 @@ void HW_Init()
     close(soundDev);
 
     /* Set CPU clock to its default */
-    SetCPU(MED_OC);
+    setCPU(MED_OC);
 }
 
 void cycleFrequencies() {

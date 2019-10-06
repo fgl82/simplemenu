@@ -245,7 +245,7 @@ int isSelectPressed() {
 }
 
 int performAction() {
-	if(keys[BTN_A]) {
+	if(keys[BTN_TA]) {
 		if (keys[BTN_DOWN]) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
@@ -340,7 +340,7 @@ int performAction() {
 			showOrHideFavorites();
 			return 0;
 		}
-		if (keys[BTN_TA]) {
+		if (keys[BTN_A]) {
 			if (countGamesInPage()>0) {
 				saveFavorites();
 				freeResources();
