@@ -17,6 +17,7 @@ int gamesInPage;
 int currentCPU;
 int pictureMode;
 int hotKeyPressed;
+int leftOrRightPressed;
 
 struct MenuSection {
 	char sectionName[25];
@@ -24,6 +25,7 @@ struct MenuSection {
 	char executable[200];
 	char filesDirectory[200];
 	char fileExtensions[50];
+	char consolePicture[100];
 	int hidden;
 	int currentPage;
 	int currentGame;

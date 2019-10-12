@@ -1,15 +1,15 @@
 //for soundcard
 
-#include "../headers/system_logic.h"
-#include "../headers/globals.h"
-#include "../headers/definitions.h"
-
 #include <fcntl.h> //for battery
 #include <linux/soundcard.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <stdint.h>
+
+#include "../headers/definitions.h"
+#include "../headers/globals.h"
 
 volatile uint32_t *memregs;
 int32_t memdev = 0;

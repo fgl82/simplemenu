@@ -1,8 +1,8 @@
 # Software Name
 TARGET = simplemenu.elf
 #PLATFORM = BITTBOY
-PLATFORM = RS97
-#PLATFORM = PC
+#PLATFORM = RS97
+PLATFORM = PC
 
 # Compiler
 
@@ -20,6 +20,7 @@ else
 	CC = gcc
 	LINKER   = gcc
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
+	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz	
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.

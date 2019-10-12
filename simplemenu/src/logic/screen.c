@@ -14,6 +14,38 @@
 
 char buf[1024];
 
+void displayLoadingSign() {
+	int width = 90;
+	int height = 30;
+	int filling[3];
+	int borderColor[3];
+	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
+	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
+	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+	if (pictureMode) {
+
+		filling[0] = 21;
+		filling[1] = 18;
+		filling[2] = 26;
+		borderColor[0]=255;
+		borderColor[1]=255;
+		borderColor[2]=255;
+		textColor.r=255;
+		textColor.g=255;
+		textColor.b=255;
+	}
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-(width/2),SCREEN_HEIGHT/2-(height/2), borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-(width/2),SCREEN_HEIGHT/2-(height/2), filling);
+	char *loading = malloc(strlen("LOADING")+1);
+	strcpy(loading,"LOADING");
+	drawLoadingSign(loading, textColor);
+	free(loading);
+}
+
 void showLetter() {
 	int width = 80;
 	int filling[3];
@@ -52,6 +84,13 @@ void showLetter() {
 	free(currentGame);
 }
 
+
+void showConsole() {
+	int rgbColor[] = {200, 200, 200};
+//	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
+	displayImageOnScreen(CURRENT_SECTION.consolePicture, "PICTURE NOT FOUND");
+}
+
 void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
 	char gameNameFullPath[200]="";
@@ -77,6 +116,11 @@ void displayGamePicture() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	drawPictureTextOnScreen(nameToDisplay);
 }
+
+void displayBackgroundPicture() {
+	displayImageOnScreen("./resources/back.png", "NO SCREENSHOT");
+}
+
 void drawHeader() {
 	char finalString [100];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
@@ -133,6 +177,8 @@ void setupDecorations() {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+1+10*CURRENT_SECTION.currentPage, countGamesInSection());
 	}
 	drawFooter(tempString);
+//	displayLoadingSign();
+
 }
 
 void updateScreen() {
@@ -143,6 +189,10 @@ void updateScreen() {
 	}
 	if (hotKeyPressed) {
 		showLetter();
+	}
+	if (leftOrRightPressed) {
+		displayBackgroundPicture();
+		showConsole();
 	}
 	refreshScreen();
 }

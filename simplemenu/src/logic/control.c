@@ -262,6 +262,7 @@ int performAction() {
 		}
 		if(keys[BTN_RIGHT]) {
 			hotKeyPressed=0;
+			leftOrRightPressed=1;
 			int advanced = advanceSection();
 			if(advanced) {
 				loadGameList();
@@ -274,6 +275,7 @@ int performAction() {
 		}
 		if(keys[BTN_LEFT]) {
 			hotKeyPressed=0;
+			leftOrRightPressed=1;
 			int rewinded = rewindSection();
 			if(rewinded) {
 				loadGameList();

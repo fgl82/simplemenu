@@ -1,5 +1,6 @@
 #ifndef SCREEN_DEFINED
 #define SCREEN_DEFINED
+void displayLoadingSign();
 void updateScreen();
 void drawHeader();
 void drawGameList();
