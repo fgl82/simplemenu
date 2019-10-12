@@ -17,13 +17,15 @@ int gamesInPage;
 int currentCPU;
 int pictureMode;
 int hotKeyPressed;
+int leftOrRightPressed;
 
 struct MenuSection {
 	char sectionName[25];
-	char emulatorFolder[25];
-	char executable[16];
-	char filesDirectory[25];
+	char emulatorFolder[200];
+	char executable[200];
+	char filesDirectory[200];
 	char fileExtensions[50];
+	char consolePicture[100];
 	int hidden;
 	int currentPage;
 	int currentGame;
@@ -41,9 +43,9 @@ struct MenuSection menuSections[50];
 
 struct Favorite {
 	char name[100];
-	char emulatorFolder[25];
-	char executable[16];
-	char filesDirectory[25];
+	char emulatorFolder[200];
+	char executable[200];
+	char filesDirectory[200];
     struct Favorite *next;
 };
 

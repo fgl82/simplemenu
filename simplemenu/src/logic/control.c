@@ -1,11 +1,11 @@
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../headers/config.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/graphics.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
@@ -246,14 +246,14 @@ int isSelectPressed() {
 
 int performAction() {
 	if(keys[BTN_A]) {
-		if (keys[BTN_DOWN]) {
+		if (keys[BTN_DOWN]&&!leftOrRightPressed) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
-		if (keys[BTN_UP]) {
+		if (keys[BTN_UP]&&!leftOrRightPressed) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
@@ -264,6 +264,10 @@ int performAction() {
 			hotKeyPressed=0;
 			int advanced = advanceSection();
 			if(advanced) {
+				leftOrRightPressed=1;
+				displayBackgroundPicture();
+				showConsole();
+				refreshScreen();
 				loadGameList();
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
@@ -276,6 +280,10 @@ int performAction() {
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
+				leftOrRightPressed=1;
+				displayBackgroundPicture();
+				showConsole();
+				refreshScreen();
 				loadGameList();
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();

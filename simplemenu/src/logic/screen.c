@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <SDL/SDL_video.h>
 
@@ -51,6 +52,11 @@ void showLetter() {
 	free(currentGame);
 }
 
+
+void showConsole() {
+	displayImageOnScreen(CURRENT_SECTION.consolePicture, "PICTURE NOT FOUND");
+}
+
 void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
 	char gameNameFullPath[200]="";
@@ -76,6 +82,11 @@ void displayGamePicture() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	drawPictureTextOnScreen(nameToDisplay);
 }
+
+void displayBackgroundPicture() {
+	displayImageOnScreen("./resources/back.png", "NO SCREENSHOT");
+}
+
 void drawHeader() {
 	char finalString [100];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
@@ -135,15 +146,17 @@ void setupDecorations() {
 }
 
 void updateScreen() {
-	drawGameList();
-	setupDecorations();
-	if (pictureMode) {
-		displayGamePicture();
+	if (!leftOrRightPressed) {
+		drawGameList();
+		setupDecorations();
+		if (pictureMode) {
+			displayGamePicture();
+		}
+		if (hotKeyPressed) {
+			showLetter();
+		}
+		refreshScreen();
 	}
-	if (hotKeyPressed) {
-		showLetter();
-	}
-	refreshScreen();
 }
 
 void setupDisplay() {

@@ -13,8 +13,8 @@
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define BTN_RB			SDLK_TAB
-#define BTN_LB			SDLK_BACKSPACE
+#define BTN_LB			SDLK_TAB
+#define BTN_RB			SDLK_BACKSPACE
 #define NO_OC 408
 #define MED_OC 702
 #define MAX_OC 732

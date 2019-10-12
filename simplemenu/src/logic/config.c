@@ -111,7 +111,7 @@ void loadLastState() {
 int loadConfig() {
 	FILE * fp;
 	char line[500];
-	char *configurations[23];
+	char *configurations[24];
 	fp = fopen("./config/sections.cfg", "r");
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
@@ -146,6 +146,8 @@ int loadConfig() {
 		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
+		strcpy(aMenuSection.consolePicture,configurations[23]);
+		aMenuSection.consolePicture[strlen(aMenuSection.consolePicture)-1]='\0';
 		aMenuSection.hidden=0;
 		aMenuSection.currentPage=0;
 		aMenuSection.currentGame=0;

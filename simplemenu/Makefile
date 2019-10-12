@@ -1,7 +1,7 @@
 # Software Name
 TARGET = simplemenu.elf
-#PLATFORM = BITTBOY
-PLATFORM = PC
+PLATFORM = BITTBOY
+#PLATFORM = PC
 
 # Compiler
 

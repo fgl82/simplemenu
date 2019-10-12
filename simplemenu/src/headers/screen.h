@@ -8,4 +8,6 @@ void setupDisplay();
 void setupDecorations();
 void freeResources();
 void displayGamePicture();
+void displayBackgroundPicture();
+void showConsole();
 #endif
