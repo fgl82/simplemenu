@@ -16,4 +16,4 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 # Artwork License
 Creative Commons CC BY-NC-SA - https://creativecommons.org/licenses/by-nc-sa/3.0/
 
-Logos are from https://github.com/rxbrad/es-theme-gbz35
+Logos from https://github.com/rxbrad/es-theme-gbz35
