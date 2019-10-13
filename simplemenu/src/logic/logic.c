@@ -12,6 +12,7 @@
 #include "../headers/globals.h"
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
+#include "../headers/system_logic.h"
 
 char *getCurrentGameName() {
 	char * name = malloc(strlen(CURRENT_GAME_NAME)+1);
@@ -24,6 +25,7 @@ void quit() {
 	freeResources();
 	saveLastState();
 	saveFavorites();
+	clearTimer();
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 

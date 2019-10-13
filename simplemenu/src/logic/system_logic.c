@@ -8,11 +8,11 @@
 #include <unistd.h>
 #include <stdint.h>
 
-#include "../headers/definitions.h"
 #include "../headers/globals.h"
 
 volatile uint32_t *memregs;
 int32_t memdev = 0;
+int oldCPU;
 
 void setCPU(uint32_t mhz)
 {
@@ -22,6 +22,56 @@ void setCPU(uint32_t mhz)
         uint32_t m = mhz / 6;
         memregs[0x10 >> 2] = (m << 24) | 0x090520;
     }
+}
+
+int getBacklight()
+{
+	char buf[32] = "-1";
+	FILE *f = fopen("/sys/devices/platform/backlight/backlight/backlight/brightness", "r");
+	if (f) {
+		fgets(buf, sizeof(buf), f);
+	}
+	fclose(f);
+	return atoi(buf);
+}
+
+void setBacklight(int level) {
+	char buf[200] = {0};
+	sprintf(buf, "echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness", level);
+	system(buf);
+}
+
+void clearTimer() {
+	if (timeoutTimer != NULL) {
+		SDL_RemoveTimer(timeoutTimer);
+	}
+	timeoutTimer = NULL;
+}
+
+uint32_t suspend(uint32_t interval, void *param) {
+	clearTimer();
+	backlightValue = getBacklight();
+	oldCPU=currentCPU;
+	setBacklight(0);
+	setCPU(200);
+	isSuspended=1;
+	return 0;
+};
+
+void resetTimeoutTimer() {
+	if(isSuspended) {
+		setCPU(oldCPU);
+		setBacklight(backlightValue);
+		currentCPU=oldCPU;
+		isSuspended=0;
+	}
+	clearTimer();
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+}
+
+void initSuspendTimer() {
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+	isSuspended=0;
 }
 
 void HW_Init()
@@ -46,15 +96,15 @@ void HW_Init()
     close(soundDev);
 
     /* Set CPU clock to its default */
-    setCPU(MED_OC);
+    setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
-	if(currentCPU==NO_OC) {
-		setCPU(MED_OC);
-	} else if (currentCPU==MED_OC) {
-		setCPU(MAX_OC);
+	if(currentCPU==OC_UC) {
+		setCPU(OC_NO);
+	} else if (currentCPU==OC_NO) {
+		setCPU(OC_OC);
 	} else {
-		setCPU(NO_OC);
+		setCPU(OC_UC);
 	}
 }

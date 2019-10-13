@@ -11,7 +11,6 @@
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
 TTF_Font *BIGFont = NULL;
-TTF_Font *loadingFont = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
@@ -101,10 +100,6 @@ void drawCurrentLetter(char *letter, SDL_Color textColor) {
 	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
-void drawLoadingSign(char *text, SDL_Color textColor) {
-	drawTextOnScreen(loadingFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), text, textColor, VAlignMiddle | HAlignCenter);
-}
-
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]) {
 	SDL_Rect rectangle;
 	rectangle.w = width;
@@ -149,7 +144,7 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 }
 
 void initializeDisplay() {
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_TIMER);
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 }
@@ -161,7 +156,6 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	loadingFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(18));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(36));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));

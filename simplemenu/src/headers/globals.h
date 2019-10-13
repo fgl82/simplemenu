@@ -1,7 +1,9 @@
 #ifndef GLOBALS_DEFINED
 #define GLOBALS_DEFINED
-#include <SDL/SDL_events.h>
+
+#include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
+
 int running;
 
 int favoritesSectionNumber;
@@ -18,6 +20,15 @@ int currentCPU;
 int pictureMode;
 int hotKeyPressed;
 int leftOrRightPressed;
+
+int OC_UC;
+int OC_NO;
+int OC_OC;
+
+SDL_TimerID timeoutTimer;
+int timeoutValue;
+int isSuspended;
+int backlightValue;
 
 struct MenuSection {
 	char sectionName[25];

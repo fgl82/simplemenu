@@ -108,7 +108,35 @@ void loadLastState() {
 	}
 }
 
-int loadConfig() {
+void loadConfig() {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	fp = fopen("./config/config.cfg", "r");
+	int i=0;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		if(line[0]=='#') {
+			continue;
+		}
+		if (i==0) {
+			OC_UC=atoi(line);
+		} else if (i==1) {
+			OC_NO=atoi(line);
+		} else if (i==2){
+			OC_OC=atoi(line);
+		} else {
+			timeoutValue=atoi(line);
+		}
+		i++;
+	}
+	fclose(fp);
+	if (line) {
+		free(line);
+	}
+}
+
+int loadSections() {
 	FILE * fp;
 	char line[500];
 	char *configurations[24];

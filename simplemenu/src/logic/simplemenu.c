@@ -19,16 +19,18 @@ void initializeGlobals() {
 	CURRENT_SECTION.totalPages=0;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	currentCPU=MED_OC;
+	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
+	backlightValue = getBacklight();
 }
 
 int main(int argc, char* argv[]) {
-	HW_Init();
+	loadConfig();
 	initializeGlobals();
-	int sectionCount=loadConfig();
+	HW_Init();
+	int sectionCount=loadSections();
 	loadFavorites();
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);
@@ -39,12 +41,14 @@ int main(int argc, char* argv[]) {
 		loadLastState();
 	}
 	setupDisplay();
+	initSuspendTimer();
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat(500.180);
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
+				resetTimeoutTimer();
 				performAction();
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
