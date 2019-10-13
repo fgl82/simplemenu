@@ -91,11 +91,11 @@ void drawHeader() {
 	char finalString [100];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
-	if (currentCPU==NO_OC) {
+	if (currentCPU==OC_UC) {
 		strcpy(finalString,"- ");
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," -");
-	} else if (currentCPU==MED_OC) {
+	} else if (currentCPU==OC_NO) {
 		strcpy(finalString,menuSections[currentSectionNumber].sectionName);
 	} else {
 		strcpy(finalString,"+ ");
@@ -165,3 +165,5 @@ void setupDisplay() {
 	initializeFonts();
 	initializeDisplay();
 }
+
+

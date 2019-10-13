@@ -1,12 +1,14 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/mman.h>
+#include <SDL/SDL_timer.h>
 #include <unistd.h>
 
-#include "../headers/definitions.h"
 #include "../headers/globals.h"
 
 volatile uint32_t *memregs;
+
+int oldCPU;
 
 uint32_t oc_table[] = {
 		0x00c81802,
@@ -292,7 +294,59 @@ void setCPU(uint32_t mhz) {
 	}
 }
 
+int getBacklight()
+{
+	char buf[32] = "-1";
+	FILE *f = fopen("/sys/devices/platform/backlight/backlight/backlight/brightness", "r");
+	if (f) {
+		fgets(buf, sizeof(buf), f);
+	}
+	fclose(f);
+	return atoi(buf);
+}
+
+void setBacklight(int level) {
+	char buf[200] = {0};
+	sprintf(buf, "echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness", level);
+	printf("echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness\n", level);
+	system(buf);
+}
+
+void clearTimer() {
+	if (timeoutTimer != NULL) {
+		SDL_RemoveTimer(timeoutTimer);
+	}
+	timeoutTimer = NULL;
+}
+
+uint32_t suspend(uint32_t interval, void *param) {
+	clearTimer();
+	backlightValue = getBacklight();
+	oldCPU=currentCPU;
+	setBacklight(0);
+	setCPU(200);
+	isSuspended=1;
+	return 0;
+};
+
+void resetTimeoutTimer() {
+	if(isSuspended) {
+		setCPU(oldCPU);
+		setBacklight(backlightValue);
+		currentCPU=oldCPU;
+		isSuspended=0;
+	}
+	clearTimer();
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+}
+
+void initSuspendTimer() {
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+	isSuspended=0;
+}
+
 void HW_Init() {
+	backlightValue = 0;
 	memdev = open("/dev/mem", O_RDWR);
 	if (memdev > 0)	{
 		memregs = (uint32_t*)mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x01c20000);
@@ -301,15 +355,17 @@ void HW_Init() {
 			close(memdev);
 		}
 	}
-	setCPU(MED_OC);
+	setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
-	if(currentCPU==NO_OC) {
-		setCPU(MED_OC);
-	} else if (currentCPU==MED_OC) {
-		setCPU(MAX_OC);
+	if(currentCPU==OC_UC) {
+		setCPU(OC_NO);
+	} else if (currentCPU==OC_NO) {
+		setCPU(OC_OC);
 	} else {
-		setCPU(NO_OC);
+		setCPU(OC_UC);
 	}
 }
+
+

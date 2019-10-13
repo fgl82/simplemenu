@@ -246,6 +246,7 @@ int isSelectPressed() {
 
 int performAction() {
 	if(keys[BTN_A]) {
+		setBacklight(3);
 		if (keys[BTN_DOWN]&&!leftOrRightPressed) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
@@ -320,7 +321,7 @@ int performAction() {
 		return 0;
 	}
 
-	if (!hotKeyPressed) {
+	if (!hotKeyPressed&&!leftOrRightPressed) {
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
 			running=0;
 			return 0;
