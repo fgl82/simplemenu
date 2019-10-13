@@ -308,7 +308,6 @@ int getBacklight()
 void setBacklight(int level) {
 	char buf[200] = {0};
 	sprintf(buf, "echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness", level);
-	printf("echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness\n", level);
 	system(buf);
 }
 
