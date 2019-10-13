@@ -27,7 +27,7 @@ void setCPU(uint32_t mhz)
 int getBacklight()
 {
 	char buf[32] = "-1";
-	FILE *f = fopen("/sys/devices/platform/backlight/backlight/backlight/brightness", "r");
+	FILE *f = fopen("/proc/jz/lcd_backlight", "r");
 	if (f) {
 		fgets(buf, sizeof(buf), f);
 	}
@@ -37,7 +37,7 @@ int getBacklight()
 
 void setBacklight(int level) {
 	char buf[200] = {0};
-	sprintf(buf, "echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness", level);
+	sprintf(buf, "echo %d > /proc/jz/lcd_backlight", level);
 	system(buf);
 }
 
