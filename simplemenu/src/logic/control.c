@@ -265,14 +265,14 @@ int performAction() {
 			int advanced = advanceSection();
 			if(advanced) {
 				leftOrRightPressed=1;
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 				loadGameList();
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
 					loadGameList();
 				}
+				displayBackgroundPicture();
+				showConsole();
+				refreshScreen();
 			}
 			return 0;
 		}
@@ -281,14 +281,14 @@ int performAction() {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				leftOrRightPressed=1;
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 				loadGameList();
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
 					loadGameList();
 				}
+				displayBackgroundPicture();
+				showConsole();
+				refreshScreen();
 			}
 			return 0;
 		}
