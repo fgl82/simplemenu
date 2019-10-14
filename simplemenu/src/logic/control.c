@@ -246,6 +246,15 @@ int isSelectPressed() {
 
 int performAction() {
 	if(keys[BTN_A]) {
+		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
+			for(int i=0;i<100;i++) {
+				selectRandomGame();
+				updateScreen();
+			}
+			saveFavorites();
+			freeResources();
+			launchGame();
+		}
 		if (keys[BTN_DOWN]&&!leftOrRightPressed) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;

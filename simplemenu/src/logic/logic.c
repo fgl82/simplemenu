@@ -268,6 +268,16 @@ int getFirstNonHiddenSection(int sectionCount) {
 	return 0;
 }
 
+void selectRandomGame() {
+	int gamesInSection = countGamesInSection();
+	if (gamesInSection%10==0) {
+		CURRENT_SECTION.currentPage = rand() % ((int)gamesInSection/10);
+	} else {
+		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/10) +1);
+	}
+	CURRENT_SECTION.currentGame = rand() % countGamesInPage();
+}
+
 void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;

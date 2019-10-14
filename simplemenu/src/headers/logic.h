@@ -12,4 +12,5 @@ void setSectionsState(char *states);
 void determineStartingScreen(int sectionCount);
 int getFirstNonHiddenSection(int sectionCount);
 struct Favorite findFavorite(char *name);
+void selectRandomGame();
 #endif
