@@ -1,7 +1,5 @@
-#include <dirent.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <time.h>
 
 #include "../headers/config.h"
 #include "../headers/control.h"
@@ -24,6 +22,7 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	backlightValue = getBacklight();
+	srand(time(0));	
 }
 
 int main(int argc, char* argv[]) {
