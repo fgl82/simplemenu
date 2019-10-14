@@ -13,8 +13,11 @@
 # People who provided technical assistance so this launcher could exist
 
 Gameblabla/Sauce: https://github.com/gameblabla
+
 James O' Farrell: https://github.com/jamesofarrell
+
 TriforceX: https://github.com/TriForceX
+
 Vamastah/Szymor: https://github.com/szymor
 
 # Code License
