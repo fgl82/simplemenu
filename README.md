@@ -20,6 +20,11 @@ TriforceX: https://github.com/TriForceX
 
 Vamastah/Szymor: https://github.com/szymor
 
+# People who provided excellent suggestions
+Dancero643: https://www.youtube.com/channel/UCM_EKCNx0qwGC7CCOBjhyLg
+
+MADX
+
 # Code License
 https://www.gnu.org/licenses/gpl-3.0.en.html
 
