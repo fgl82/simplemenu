@@ -10,6 +10,13 @@
 - <span style="color:red">**N**</span>ew Bittboys'
 - <span style="color:red">**U**</span>sability 
 
+#People who provided technical assistance so this launcher could exist
+
+Gameblabla/Sauce: https://github.com/gameblabla
+James O' Farrell: https://github.com/jamesofarrell
+TriforceX: https://github.com/TriForceX
+Vamastah/Szymor: https://github.com/szymor
+
 # Code License
 https://www.gnu.org/licenses/gpl-3.0.en.html
 
