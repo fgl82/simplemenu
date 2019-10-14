@@ -10,7 +10,7 @@
 - <span style="color:red">**N**</span>ew Bittboys'
 - <span style="color:red">**U**</span>sability 
 
-#People who provided technical assistance so this launcher could exist
+# People who provided technical assistance so this launcher could exist
 
 Gameblabla/Sauce: https://github.com/gameblabla
 James O' Farrell: https://github.com/jamesofarrell
