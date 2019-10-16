@@ -28,6 +28,7 @@ int OC_OC;
 SDL_TimerID timeoutTimer;
 int timeoutValue;
 int isSuspended;
+int isUSBMode;
 int backlightValue;
 
 struct MenuSection {

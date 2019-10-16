@@ -246,7 +246,24 @@ int isSelectPressed() {
 }
 
 int performAction() {
+	if (keys[BTN_R] && keys[BTN_START]) {
+		freeResources();
+		saveLastState();
+		saveFavorites();
+		exit(0);
+	}
+	if (keys[BTN_START]&&isUSBMode) {
+		hotKeyPressed=0;
+		isUSBMode=0;
+		system("./usb_mode_off.sh");
+		return 0;
+	}
 	if(keys[BTN_TA]) {
+		if (keys[BTN_START]&&!leftOrRightPressed) {
+			hotKeyPressed=0;
+			isUSBMode = 1;
+			system("./usb_mode_on.sh");
+		}
 		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
@@ -304,42 +321,34 @@ int performAction() {
 		}
 	}
 
-	if(keys[BTN_LB]) {
-		hotKeyPressed=0;
-		int rewinded = rewindSection();
-		if(rewinded) {
-			loadGameList();
-			while(CURRENT_SECTION.hidden) {
-				rewindSection();
+	if (!hotKeyPressed&&!leftOrRightPressed&&!isUSBMode) {
+		if(keys[BTN_LB]) {
+			hotKeyPressed=0;
+			int rewinded = rewindSection();
+			if(rewinded) {
 				loadGameList();
+				while(CURRENT_SECTION.hidden) {
+					rewindSection();
+					loadGameList();
+				}
 			}
+			return 0;
 		}
-		return 0;
-	}
-
-	if(keys[BTN_RB]) {
-		hotKeyPressed=0;
-		int advanced = advanceSection();
-		if(advanced) {
-			loadGameList();
-			while(CURRENT_SECTION.hidden) {
-				advanceSection();
+		if(keys[BTN_RB]) {
+			hotKeyPressed=0;
+			int advanced = advanceSection();
+			if(advanced) {
 				loadGameList();
+				while(CURRENT_SECTION.hidden) {
+					advanceSection();
+					loadGameList();
+				}
 			}
+			return 0;
 		}
-		return 0;
-	}
-
-	if (!hotKeyPressed&&!leftOrRightPressed) {
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
 			running=0;
 			return 0;
-		}
-		if (keys[BTN_R] && keys[BTN_START]) {
-			freeResources();
-			saveLastState();
-			saveFavorites();
-			exit(0);
 		}
 		if (keys[BTN_B]) {
 			if (!favoritesSectionSelected) {

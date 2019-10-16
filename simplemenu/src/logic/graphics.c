@@ -143,6 +143,24 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 	SDL_FreeSurface(img);
 }
 
+void drawUSBScreen() {
+	SDL_Color white;
+	white.r=255;
+	white.g=255;
+	white.b=255;
+	SDL_Color black;
+	black.r=0;
+	black.g=0;
+	black.b=0;
+	displayImageOnScreen("./resources/usb.png","");
+	drawTextOnScreen(headerFont,163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,163,215,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,163,31,"USB MODE",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,163,217,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,161,29,"USB MODE",white,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,161,215,"PRESS START TO END",white,VAlignMiddle | HAlignCenter);
+}
+
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_TIMER);
 	SDL_ShowCursor(0);
