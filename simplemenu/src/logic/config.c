@@ -125,8 +125,10 @@ void loadConfig() {
 			OC_NO=atoi(line);
 		} else if (i==2){
 			OC_OC=atoi(line);
-		} else {
+		} else if (i==3){
 			timeoutValue=atoi(line);
+		} else {
+			OC_SLEEP=atoi(line);
 		}
 		i++;
 	}

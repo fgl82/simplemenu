@@ -24,6 +24,7 @@ int leftOrRightPressed;
 int OC_UC;
 int OC_NO;
 int OC_OC;
+int OC_SLEEP;
 
 SDL_TimerID timeoutTimer;
 int timeoutValue;

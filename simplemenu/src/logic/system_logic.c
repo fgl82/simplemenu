@@ -53,7 +53,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 	backlightValue = getBacklight();
 	oldCPU=currentCPU;
 	setBacklight(0);
-	setCPU(200);
+	setCPU(OC_SLEEP);
 	isSuspended=1;
 	return 0;
 };

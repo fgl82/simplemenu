@@ -300,6 +300,5 @@ void determineStartingScreen(int sectionCount) {
 void deleteCurrentGame() {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
-	printf("%s\n",command);
 	system(command);
 }
