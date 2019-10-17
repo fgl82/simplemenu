@@ -259,6 +259,16 @@ int countGamesInPage() {
 	return gamesCounter;
 }
 
+int countGamesInSpecificPage(int page) {
+	int gamesCounter=0;
+	for (int i=0;i<ITEMS_PER_PAGE;i++) {
+		if (CURRENT_SECTION.gameList[page][i]!=NULL) {
+			gamesCounter++;
+		}
+	}
+	return gamesCounter;
+}
+
 int getFirstNonHiddenSection(int sectionCount) {
 	for (int i=0;i<sectionCount;i++) {
 		if (menuSections[i].hidden==0) {
@@ -301,4 +311,6 @@ void deleteCurrentGame() {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
 	system(command);
+	CURRENT_SECTION.gameList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]=NULL;
 }
+

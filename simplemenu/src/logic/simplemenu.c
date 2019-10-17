@@ -21,7 +21,7 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-	backlightValue = getBacklight();
+//	backlightValue = getBacklight();
 	srand(time(0));	
 }
 
@@ -40,14 +40,14 @@ int main(int argc, char* argv[]) {
 		loadLastState();
 	}
 	setupDisplay();
-	initSuspendTimer();
+//	initSuspendTimer();
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat(500.180);
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
-				resetTimeoutTimer();
+//				resetTimeoutTimer();
 				performAction();
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {

@@ -42,14 +42,14 @@ void launchGame() {
 	char fileToBeExecutedwithFullPath[2000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-//		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
+		//		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,favorite.name);
-//		printf("./invoker.elf %s%s %s\n ",favorite.emulatorFolder, favorite.executable, CURRENT_GAME_NAME);
+		//		printf("./invoker.elf %s%s %s\n ",favorite.emulatorFolder, favorite.executable, CURRENT_GAME_NAME);
 		executeCommand(favorite.emulatorFolder,favorite.executable,CURRENT_GAME_NAME);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-//		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
+		//		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
-//		printf("./invoker.elf %s%s %s\n ",CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable, CURRENT_GAME_NAME);
+		//		printf("./invoker.elf %s%s %s\n ",CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable, CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
@@ -164,7 +164,7 @@ void rewindPage() {
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
-				 (isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
+					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -198,7 +198,7 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		determineStartingScreen(menuSectionCounter);
-//		loadGameList();
+		//		loadGameList();
 		return;
 	}
 	favoritesSectionSelected=1;
@@ -260,11 +260,18 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_A]) {
-		if (keys[BTN_X]&&!leftOrRightPressed) {
-			deleteCurrentGame(CURRENT_GAME_NAME);
-			loadGameList(1);
-			setupDecorations();
+		//		if (keys[BTN_RB]&&!leftOrRightPressed) {
+		deleteCurrentGame(CURRENT_GAME_NAME);
+		loadGameList(1);
+		if(CURRENT_GAME_NAME==NULL) {
+			scrollUp();
 		}
+		while(CURRENT_SECTION.hidden) {
+			rewindSection();
+			loadGameList(0);
+		}
+		setupDecorations();
+		//		}
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
 			isUSBMode = 1;
