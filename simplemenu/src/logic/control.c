@@ -256,12 +256,19 @@ int performAction() {
 		hotKeyPressed=0;
 		isUSBMode=0;
 		system("./usb_mode_off.sh");
+		initSuspendTimer();
 		return 0;
 	}
 	if(keys[BTN_TA]) {
+		if (keys[BTN_B]&&!leftOrRightPressed) {
+			deleteCurrentGame(CURRENT_GAME_NAME);
+			loadGameList(1);
+			updateScreen();
+		}
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
 			isUSBMode = 1;
+			clearTimer();
 			system("./usb_mode_on.sh");
 		}
 		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
@@ -292,10 +299,10 @@ int performAction() {
 			int advanced = advanceSection();
 			if(advanced) {
 				leftOrRightPressed=1;
-				loadGameList();
+				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
-					loadGameList();
+					loadGameList(0);
 				}
 				displayBackgroundPicture();
 				showConsole();
@@ -308,10 +315,10 @@ int performAction() {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				leftOrRightPressed=1;
-				loadGameList();
+				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
-					loadGameList();
+					loadGameList(0);
 				}
 				displayBackgroundPicture();
 				showConsole();
@@ -326,10 +333,10 @@ int performAction() {
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
-				loadGameList();
+				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
-					loadGameList();
+					loadGameList(0);
 				}
 			}
 			return 0;
@@ -338,10 +345,10 @@ int performAction() {
 			hotKeyPressed=0;
 			int advanced = advanceSection();
 			if(advanced) {
-				loadGameList();
+				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
-					loadGameList();
+					loadGameList(0);
 				}
 			}
 			return 0;

@@ -209,9 +209,9 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 	return i;
 }
 
-void loadGameList() {
+void loadGameList(int refresh) {
 	int loadedFiles=0;
-	if (CURRENT_SECTION.gameList[0][0] == NULL) {
+	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
 		CURRENT_SECTION.totalPages=0;
 		char *files[8000];
 		int n = recursivelyScanDirectory1(CURRENT_SECTION.filesDirectory, files, 0);
@@ -283,16 +283,23 @@ void determineStartingScreen(int sectionCount) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
 	} else {
-		loadGameList();
+		loadGameList(0);
 		if(CURRENT_SECTION.hidden) {
 			int advanced = advanceSection();
-			loadGameList();
+			loadGameList(0);
 			if(advanced) {
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
-					loadGameList();
+					loadGameList(0);
 				}
 			}
 		}
 	}
+}
+
+void deleteCurrentGame() {
+	char command [300];
+	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
+	printf("%s\n",command);
+	system(command);
 }

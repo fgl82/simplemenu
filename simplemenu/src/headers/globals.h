@@ -54,7 +54,7 @@ struct MenuSection {
 struct MenuSection menuSections[50];
 
 struct Favorite {
-	char name[100];
+	char name[300];
 	char emulatorFolder[200];
 	char executable[200];
 	char filesDirectory[200];
