@@ -260,18 +260,18 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_A]) {
-		//		if (keys[BTN_RB]&&!leftOrRightPressed) {
-		deleteCurrentGame(CURRENT_GAME_NAME);
-		loadGameList(1);
-		if(CURRENT_GAME_NAME==NULL) {
-			scrollUp();
+		if (keys[BTN_X]&&!leftOrRightPressed) {
+			deleteCurrentGame(CURRENT_GAME_NAME);
+			loadGameList(1);
+			if(CURRENT_GAME_NAME==NULL) {
+				scrollUp();
+			}
+			while(CURRENT_SECTION.hidden) {
+				rewindSection();
+				loadGameList(0);
+			}
+			setupDecorations();
 		}
-		while(CURRENT_SECTION.hidden) {
-			rewindSection();
-			loadGameList(0);
-		}
-		setupDecorations();
-		//		}
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
 			isUSBMode = 1;
