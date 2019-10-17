@@ -263,7 +263,7 @@ int performAction() {
 		if (keys[BTN_X]&&!leftOrRightPressed) {
 			deleteCurrentGame(CURRENT_GAME_NAME);
 			loadGameList(1);
-			updateScreen();
+			setupDecorations();
 		}
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
