@@ -259,8 +259,8 @@ int performAction() {
 		initSuspendTimer();
 		return 0;
 	}
-	if(keys[BTN_TA]) {
-		if (keys[BTN_B]&&!leftOrRightPressed) {
+	if(keys[BTN_A]) {
+		if (keys[BTN_X]&&!leftOrRightPressed) {
 			deleteCurrentGame(CURRENT_GAME_NAME);
 			loadGameList(1);
 			updateScreen();
@@ -357,7 +357,7 @@ int performAction() {
 			running=0;
 			return 0;
 		}
-		if (keys[BTN_B]) {
+		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
 				markAsFavorite();
 			} else {
@@ -374,7 +374,7 @@ int performAction() {
 			showOrHideFavorites();
 			return 0;
 		}
-		if (keys[BTN_A]) {
+		if (keys[BTN_B]) {
 			if (countGamesInPage()>0) {
 				saveFavorites();
 				freeResources();
@@ -382,7 +382,7 @@ int performAction() {
 			}
 			return 0;
 		}
-		if (keys[BTN_TB]) {
+		if (keys[BTN_Y]) {
 			if (pictureMode) {
 				pictureMode=0;
 			} else {

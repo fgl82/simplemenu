@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 				performAction();
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
-				if(getPressedKey()==BTN_TA) {
+				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
 					leftOrRightPressed=0;
 					updateScreen();
