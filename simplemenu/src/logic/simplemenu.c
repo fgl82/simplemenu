@@ -51,9 +51,6 @@ int main(int argc, char* argv[]) {
 				performAction();
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
-				if (!isUSBMode) {
-					resetTimeoutTimer();
-				}
 				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
 					leftOrRightPressed=0;

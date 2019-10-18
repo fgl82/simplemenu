@@ -256,7 +256,6 @@ int performAction() {
 		hotKeyPressed=0;
 		isUSBMode=0;
 		system("./usb_mode_off.sh");
-		initSuspendTimer();
 		return 0;
 	}
 	if(keys[BTN_A]) {
@@ -275,7 +274,6 @@ int performAction() {
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
 			isUSBMode = 1;
-			clearTimer();
 			system("./usb_mode_on.sh");
 		}
 		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
