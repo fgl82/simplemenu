@@ -146,7 +146,7 @@ void setupDecorations() {
 }
 
 void updateScreen() {
-	if (!leftOrRightPressed) {
+	if (!leftOrRightPressed&&!isUSBMode) {
 		drawGameList();
 		setupDecorations();
 		if (pictureMode) {
@@ -155,8 +155,10 @@ void updateScreen() {
 		if (hotKeyPressed) {
 			showLetter();
 		}
-		refreshScreen();
+	} else if (isUSBMode) {
+		drawUSBScreen();
 	}
+	refreshScreen();
 }
 
 void setupDisplay() {

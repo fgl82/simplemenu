@@ -24,10 +24,12 @@ int leftOrRightPressed;
 int OC_UC;
 int OC_NO;
 int OC_OC;
+int OC_SLEEP;
 
 SDL_TimerID timeoutTimer;
 int timeoutValue;
 int isSuspended;
+int isUSBMode;
 int backlightValue;
 
 struct MenuSection {
@@ -53,7 +55,7 @@ struct MenuSection {
 struct MenuSection menuSections[50];
 
 struct Favorite {
-	char name[100];
+	char name[300];
 	char emulatorFolder[200];
 	char executable[200];
 	char filesDirectory[200];

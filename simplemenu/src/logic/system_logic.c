@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "../headers/globals.h"
+#include "../headers/system_logic.h"
 
 volatile uint32_t *memregs;
 
@@ -319,12 +320,16 @@ void clearTimer() {
 }
 
 uint32_t suspend(uint32_t interval, void *param) {
-	clearTimer();
-	backlightValue = getBacklight();
-	oldCPU=currentCPU;
-	setBacklight(0);
-	setCPU(200);
-	isSuspended=1;
+	if (!isUSBMode) {
+		clearTimer();
+		backlightValue = getBacklight();
+		oldCPU=currentCPU;
+		setBacklight(0);
+		setCPU(OC_SLEEP);
+		isSuspended=1;
+	} else {
+		resetTimeoutTimer();
+	}
 	return 0;
 };
 
@@ -345,7 +350,6 @@ void initSuspendTimer() {
 }
 
 void HW_Init() {
-	backlightValue = 0;
 	memdev = open("/dev/mem", O_RDWR);
 	if (memdev > 0)	{
 		memregs = (uint32_t*)mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x01c20000);

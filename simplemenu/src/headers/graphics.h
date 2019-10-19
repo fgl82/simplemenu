@@ -29,5 +29,5 @@ void initializeDisplay();
 void refreshScreen();
 void initializeFonts();
 void freeResources();
-
+void drawUSBScreen();
 #endif
