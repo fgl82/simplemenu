@@ -237,6 +237,7 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
+			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}
 	}
 }

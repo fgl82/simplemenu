@@ -22,7 +22,7 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	backlightValue = getBacklight();
-	srand(time(0));	
+	srand(time(0));
 }
 
 int main(int argc, char* argv[]) {
@@ -47,9 +47,11 @@ int main(int argc, char* argv[]) {
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
+				if (!isSuspended) {
+					performAction();
+					updateScreen();
+				}
 				resetTimeoutTimer();
-				performAction();
-				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
