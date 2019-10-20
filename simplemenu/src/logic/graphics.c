@@ -97,7 +97,7 @@ void drawTextOnHeader(char *text) {
 }
 
 void drawCurrentLetter(char *letter, SDL_Color textColor) {
-	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), letter, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]) {

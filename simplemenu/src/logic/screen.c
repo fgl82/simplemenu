@@ -36,8 +36,8 @@ void showLetter() {
 		textColor.g=255;
 		textColor.b=255;
 	}
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5), borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
 	char letter[2]="";
 	char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 	strcpy(currentGame, CURRENT_GAME_NAME);
@@ -47,7 +47,6 @@ void showLetter() {
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
-
 	drawCurrentLetter(letter, textColor);
 	free(currentGame);
 }
