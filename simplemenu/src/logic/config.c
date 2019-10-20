@@ -7,6 +7,7 @@
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/logic.h"
+#include "../headers/string_utils.h"
 
 void saveFavorites() {
 	if (favoritesChanged) {

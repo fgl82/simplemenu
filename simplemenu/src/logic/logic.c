@@ -107,35 +107,6 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 	return(0);
 }
 
-void swap_str_ptrs(char **arg1, char **arg2)
-{
-	char *tmp = *arg1;
-	*arg1 = *arg2;
-	*arg2 = tmp;
-}
-
-void sortGames(char *names[], unsigned int len)
-{
-	unsigned int i, pvt=0;
-	if (len <= 1)
-		return;
-	swap_str_ptrs(names+((unsigned int)rand() % len), names+len-1);
-	for (i=0;i<len-1;++i)
-	{
-		char *first = toLower(names[i]);
-		char *second = toLower(names[len-1]);
-		stripGameName(first);
-		stripGameName(second);
-		if (strcmp(first, second) < 0)
-			swap_str_ptrs(names+i, names+pvt++);
-		free(first);
-		free(second);
-	}
-	swap_str_ptrs(names+pvt, names+len-1);
-	sortGames(names, pvt++);
-	sortGames(names+pvt, len - pvt);
-}
-
 int countGamesInSection() {
 	int gamesCounter=0;
 	for (int i=0;i<=CURRENT_SECTION.totalPages;i++) {
@@ -184,8 +155,6 @@ void loadFavoritesSectionGameList() {
 		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
 		game++;
 	}
-//	char ** pepe =*FAVORITES_SECTION.gameList;
-//	sortGames(pepe,countGamesInSection());
 }
 
 int recursivelyScanDirectory1 (char *directory, char* files[], int i)
@@ -225,6 +194,29 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 	return i;
 }
 
+int compareGamesFromGameList (const void * a, const void * b ) {
+	char * s1 = toLower(*(char **)a);
+	char * s2 = toLower(*(char **)b);
+	stripGameName(s1);
+	stripGameName(s2);
+	int value = strcmp(s1, s2);
+	free(s1);
+	free(s2);
+	return value;
+}
+
+//static int compareGames2(const void *a, const void *b)
+//{
+//	char * s1 = toLower((char*)a);
+//	char * s2 = toLower((char*)b);
+//	stripGameName(s1);
+//	stripGameName(s2);
+//	int value = strcmp(s1, s2);
+//	free(s1);
+//	free(s2);
+//	return value;
+//}
+
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
@@ -260,8 +252,7 @@ void loadGameList(int refresh) {
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
-		char ** pepe =*CURRENT_SECTION.gameList;
-		sortGames(pepe,countGamesInSection());
+		qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameList);
 	}
 }
 
