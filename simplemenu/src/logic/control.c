@@ -271,11 +271,11 @@ int performAction() {
 			}
 			setupDecorations();
 		}
-		if (keys[BTN_START]&&!leftOrRightPressed) {
-			hotKeyPressed=0;
-			isUSBMode = 1;
-			system("./usb_mode_on.sh");
-		}
+//		if (keys[BTN_START]&&!leftOrRightPressed) {
+//			hotKeyPressed=0;
+//			isUSBMode = 1;
+//			system("./usb_mode_on.sh");
+//		}
 		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
