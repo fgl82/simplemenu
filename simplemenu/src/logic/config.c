@@ -63,6 +63,7 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
+	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 
 void saveLastState() {

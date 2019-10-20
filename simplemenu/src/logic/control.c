@@ -1,5 +1,4 @@
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -237,6 +236,7 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
+			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}
 	}
 }

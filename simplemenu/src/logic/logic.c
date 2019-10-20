@@ -148,6 +148,22 @@ int countGamesInSection() {
 	return gamesCounter;
 }
 
+int compareFavorites(const void *s1, const void *s2)
+{
+	struct Favorite *e1 = (struct Favorite *)s1;
+	struct Favorite *e2 = (struct Favorite *)s2;
+
+	char *first = toLower(e1->name);
+	char *second = toLower(e2->name);
+	stripGameName(first);
+	stripGameName(second);
+
+	int nameCompare = strcmp(first,second);
+	free(first);
+	free(second);
+	return nameCompare;
+}
+
 void loadFavoritesSectionGameList() {
 	int game = 0;
 	int page = 0;
@@ -168,8 +184,8 @@ void loadFavoritesSectionGameList() {
 		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
 		game++;
 	}
-	char ** pepe =*FAVORITES_SECTION.gameList;
-	sortGames(pepe,countGamesInSection());
+//	char ** pepe =*FAVORITES_SECTION.gameList;
+//	sortGames(pepe,countGamesInSection());
 }
 
 int recursivelyScanDirectory1 (char *directory, char* files[], int i)
@@ -300,7 +316,7 @@ void determineStartingScreen(int sectionCount) {
 			if(advanced) {
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
-					loadGameList(0);				
+					loadGameList(0);
 				}
 			}
 		}
