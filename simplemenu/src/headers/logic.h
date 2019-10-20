@@ -14,4 +14,5 @@ int getFirstNonHiddenSection(int sectionCount);
 struct Favorite findFavorite(char *name);
 void selectRandomGame();
 void deleteCurrentGame();
+int compareFavorites(const void *s1, const void *s2);
 #endif
