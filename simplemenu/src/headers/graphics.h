@@ -30,4 +30,5 @@ void refreshScreen();
 void initializeFonts();
 void freeResources();
 void drawUSBScreen();
+void drawShutDownText();
 #endif

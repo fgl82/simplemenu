@@ -19,7 +19,7 @@ else ifeq ($(PLATFORM), RS97)
 else
 	CC = gcc
 	LINKER   = gcc
-	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
+	CFLAGS = -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
 	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz	
 endif
 
