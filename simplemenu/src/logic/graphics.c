@@ -92,12 +92,20 @@ void drawTextOnFooter(const char text[64]) {
 	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
 }
 
+void drawShutDownText(const char text[64]) {
+	SDL_Color white;
+	white.r=255;
+	white.g=255;
+	white.b=255;
+	drawTextOnScreen(BIGFont, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
+}
+
 void drawTextOnHeader(char *text) {
 	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
 void drawCurrentLetter(char *letter, SDL_Color textColor) {
-	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), letter, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]) {

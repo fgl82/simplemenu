@@ -12,7 +12,7 @@
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
 
-char buf[1024];
+char buf[300];
 
 void showLetter() {
 	int width = 80;
@@ -36,8 +36,8 @@ void showLetter() {
 		textColor.g=255;
 		textColor.b=255;
 	}
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-width/2-5,SCREEN_HEIGHT/2-width/2-5, borderColor);
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-width/2, filling);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5), borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
 	char letter[2]="";
 	char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 	strcpy(currentGame, CURRENT_GAME_NAME);
@@ -47,7 +47,6 @@ void showLetter() {
 	if(isdigit(letter[0])) {
 		letter[0]='#';
 	}
-
 	drawCurrentLetter(letter, textColor);
 	free(currentGame);
 }
@@ -59,28 +58,30 @@ void showConsole() {
 
 void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
-	char gameNameFullPath[200]="";
+	char *pictureWithFullPath=malloc(600);
+	char *tempGameName=malloc(300);
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
 		}
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		strcpy(gameNameFullPath, removeExtension(favorite.name));
+		strcpy(pictureWithFullPath, favorite.filesDirectory);
+		tempGameName=getGameName(favorite.name);
 	} else {
-		strcpy(gameNameFullPath, removeExtension(CURRENT_GAME_NAME));
+		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
+		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
-	//	strcat(gameNameFullPath,removeExtension(CURRENT_GAME_NAME));
-	strcat(gameNameFullPath,".png");
-	//	displayBackGroundImage("./resources/back.png", screen);
-
-	char nameToDisplay[200]="";
-	strcpy(nameToDisplay,CURRENT_GAME_NAME);
-	stripGameName(nameToDisplay);
-
+	strcat(pictureWithFullPath,"/media/");
+	tempGameName=getNameWithoutExtension(tempGameName);
+	strcat(pictureWithFullPath,tempGameName);
+	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
-	displayImageOnScreen(gameNameFullPath, "NO SCREENSHOT");
+	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
+	stripGameName(tempGameName);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
-	drawPictureTextOnScreen(nameToDisplay);
+	drawPictureTextOnScreen(tempGameName);
+	free(pictureWithFullPath);
+	free(tempGameName);
 }
 
 void displayBackgroundPicture() {
@@ -103,6 +104,12 @@ void drawHeader() {
 		strcat(finalString," +");
 	}
 	drawTextOnHeader(finalString);
+}
+
+void drawShutDownScreen() {
+	int black[] = {0,0,0};
+	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
+	drawShutDownText("SHUTTING DOWN");
 }
 
 void drawGameList() {
@@ -167,5 +174,3 @@ void setupDisplay() {
 	initializeFonts();
 	initializeDisplay();
 }
-
-

@@ -282,6 +282,7 @@ int32_t memdev = 0;
 
 void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
+	#ifndef TARGET_PC
 	uint32_t x, v;
 	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
 	for(x=0; x<total; x++) {
@@ -293,6 +294,7 @@ void setCPU(uint32_t mhz) {
 			break;
 		}
 	}
+	#endif
 }
 
 int getBacklight()

@@ -10,6 +10,7 @@
 #include "../headers/control.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/graphics.h"
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
@@ -22,7 +23,9 @@ char *getCurrentGameName() {
 }
 
 void quit() {
-	freeResources();
+	drawShutDownScreen();
+	refreshScreen();
+//	freeResources();
 	saveLastState();
 	saveFavorites();
 	clearTimer();
@@ -173,7 +176,7 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 		}
 		d_name = entry->d_name;
 		if (entry->d_type & DT_DIR) {
-			if (strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (strcmp(d_name,"media") != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
 				char * e = strrchr(d_name, '/');
 				if (e==NULL) {

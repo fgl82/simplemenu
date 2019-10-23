@@ -10,4 +10,5 @@ void freeResources();
 void displayGamePicture();
 void displayBackgroundPicture();
 void showConsole();
+void drawShutDownScreen();
 #endif

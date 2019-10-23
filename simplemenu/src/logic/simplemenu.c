@@ -21,7 +21,9 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
+	#ifndef TARGET_PC
 	backlightValue = getBacklight();
+	#endif
 	srand(time(0));
 }
 
@@ -40,7 +42,9 @@ int main(int argc, char* argv[]) {
 		loadLastState();
 	}
 	setupDisplay();
+	#ifndef TARGET_PC
 	initSuspendTimer();
+	#endif
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat(500.180);
@@ -51,7 +55,9 @@ int main(int argc, char* argv[]) {
 					performAction();
 					updateScreen();
 				}
+				#ifndef TARGET_PC
 				resetTimeoutTimer();
+				#endif
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
