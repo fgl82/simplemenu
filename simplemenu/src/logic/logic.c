@@ -313,4 +313,23 @@ void deleteCurrentGame() {
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
 	system(command);
 	CURRENT_SECTION.gameList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]=NULL;
+	char *pictureWithFullPath=malloc(600);
+	char *tempGameName=malloc(300);
+	if (favoritesSectionSelected) {
+		if (favoritesSize == 0) {
+			return;
+		}
+		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
+		strcpy(pictureWithFullPath, favorite.filesDirectory);
+		tempGameName=getGameName(favorite.name);
+	} else {
+		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
+		tempGameName=getGameName(CURRENT_GAME_NAME);
+	}
+	strcat(pictureWithFullPath,"media/");
+	tempGameName=getNameWithoutExtension(tempGameName);
+	strcat(pictureWithFullPath,tempGameName);
+	strcat(pictureWithFullPath,".png");
+	snprintf(command,sizeof(command),"rm \"%s\";",pictureWithFullPath);
+	system(command);
 }
