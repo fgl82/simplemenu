@@ -260,7 +260,7 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_A]) {
-		if (keys[BTN_X]&&!leftOrRightPressed) {
+		if (keys[BTN_X]&&!leftOrRightPressed&&currentSectionNumber!=favoritesSectionNumber) {
 			deleteCurrentGame(CURRENT_GAME_NAME);
 			loadGameList(1);
 			if(CURRENT_GAME_NAME==NULL) {
