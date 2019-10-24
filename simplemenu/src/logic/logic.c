@@ -122,22 +122,6 @@ int countGamesInSection() {
 	return gamesCounter;
 }
 
-int compareFavorites(const void *s1, const void *s2)
-{
-	struct Favorite *e1 = (struct Favorite *)s1;
-	struct Favorite *e2 = (struct Favorite *)s2;
-
-	char *first = toLower(e1->name);
-	char *second = toLower(e2->name);
-	stripGameName(first);
-	stripGameName(second);
-
-	int nameCompare = strcmp(first,second);
-	free(first);
-	free(second);
-	return nameCompare;
-}
-
 void loadFavoritesSectionGameList() {
 	int game = 0;
 	int page = 0;
@@ -160,7 +144,7 @@ void loadFavoritesSectionGameList() {
 	}
 }
 
-int recursivelyScanDirectory1 (char *directory, char* files[], int i)
+int recursivelyScanDirectory (char *directory, char* files[], int i)
 {
 	DIR * d;
 	d = opendir (directory);
@@ -183,7 +167,7 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i=+recursivelyScanDirectory1(path, files, i);
+				i=+recursivelyScanDirectory(path, files, i);
 			}
 		} else {
 			char path[PATH_MAX];
@@ -197,35 +181,42 @@ int recursivelyScanDirectory1 (char *directory, char* files[], int i)
 	return i;
 }
 
-int compareGamesFromGameList (const void * a, const void * b ) {
-	char * s1 = toLower(*(char **)a);
-	char * s2 = toLower(*(char **)b);
-	stripGameName(s1);
-	stripGameName(s2);
-	int value = strcmp(s1, s2);
-	free(s1);
-	free(s2);
+int genericGameCompare(char *game1, char *game2) {
+	char* s1 = game1;
+	char* s2 = game2;
+	int pos1=positionWhereGameNameStartsInFullPath(s1);
+	int pos2=positionWhereGameNameStartsInFullPath(s2);
+	s1+=pos1;
+	s2+=pos2;
+	char *temp1 = malloc(strlen(s1)+1);
+	strcpy(temp1,s1);
+	char *temp2 = malloc(strlen(s2)+1);
+	strcpy(temp2,s2);
+	temp1[0]=tolower(temp1[0]);
+	temp2[0]=tolower(temp2[0]);
+	int value = strcmp(temp1, temp2);
 	return value;
 }
 
-//static int compareGames2(const void *a, const void *b)
-//{
-//	char * s1 = toLower((char*)a);
-//	char * s2 = toLower((char*)b);
-//	stripGameName(s1);
-//	stripGameName(s2);
-//	int value = strcmp(s1, s2);
-//	free(s1);
-//	free(s2);
-//	return value;
-//}
+int compareFavorites(const void *f1, const void *f2)
+{
+	struct Favorite *e1 = (struct Favorite *)f1;
+	struct Favorite *e2 = (struct Favorite *)f2;
+	return genericGameCompare(e1->name, e2->name);
+}
+
+int compareGamesFromGameList (const void *game1, const void *game2) {
+	char* s1 = (char *)(*(char **)game1);
+	char* s2 = (char *)(*(char **)game2);
+	return genericGameCompare(s1, s2);
+}
 
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
 		CURRENT_SECTION.totalPages=0;
 		char *files[8000];
-		int n = recursivelyScanDirectory1(CURRENT_SECTION.filesDirectory, files, 0);
+		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files, 0);
 		int game = 0;
 		int page = 0;
 		for (int i=0;i<n;i++){
@@ -322,4 +313,23 @@ void deleteCurrentGame() {
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
 	system(command);
 	CURRENT_SECTION.gameList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]=NULL;
+	char *pictureWithFullPath=malloc(600);
+	char *tempGameName=malloc(300);
+	if (favoritesSectionSelected) {
+		if (favoritesSize == 0) {
+			return;
+		}
+		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
+		strcpy(pictureWithFullPath, favorite.filesDirectory);
+		tempGameName=getGameName(favorite.name);
+	} else {
+		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
+		tempGameName=getGameName(CURRENT_GAME_NAME);
+	}
+	strcat(pictureWithFullPath,"media/");
+	tempGameName=getNameWithoutExtension(tempGameName);
+	strcat(pictureWithFullPath,tempGameName);
+	strcat(pictureWithFullPath,".png");
+	snprintf(command,sizeof(command),"rm \"%s\";",pictureWithFullPath);
+	system(command);
 }

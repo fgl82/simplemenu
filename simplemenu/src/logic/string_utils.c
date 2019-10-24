@@ -68,3 +68,14 @@ void stripGameName(char *gameName) {
 		charNumber++;
 	}
 }
+
+int positionWhereGameNameStartsInFullPath (char* string) {
+	int counter=strlen(string);
+	for (int i=strlen(string);i>0;i--) {
+		if(string[i-1]=='/') {
+			break;
+		}
+		counter--;
+	}
+	return(counter);
+}
