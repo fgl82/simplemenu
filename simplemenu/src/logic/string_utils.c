@@ -68,3 +68,18 @@ void stripGameName(char *gameName) {
 		charNumber++;
 	}
 }
+
+int positionWhereGameNameStartsInFullPath (char* string) {
+//	char *copy = malloc(strlen(string)+1);
+//	strcpy(copy, string);
+	int counter=strlen(string);
+	for (int i=strlen(string);i>0;i--) {
+		if(string[i-1]=='/') {
+			break;
+		}
+		counter--;
+	}
+//	copy[counter] = tolower(copy[counter]);
+//	copy+=counter;
+	return(counter);
+}
