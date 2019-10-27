@@ -55,9 +55,9 @@ int main(int argc, char* argv[]) {
 					performAction();
 					updateScreen();
 				}
-#ifndef TARGET_PC
+				#ifndef TARGET_PC
 				resetTimeoutTimer();
-#endif
+				#endif
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
