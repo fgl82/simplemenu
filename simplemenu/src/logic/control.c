@@ -42,14 +42,10 @@ void launchGame() {
 	char fileToBeExecutedwithFullPath[2000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		//		strcpy(fileToBeExecutedwithFullPath,favorite.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,favorite.name);
-		//		printf("./invoker.elf %s%s %s\n ",favorite.emulatorFolder, favorite.executable, CURRENT_GAME_NAME);
 		executeCommand(favorite.emulatorFolder,favorite.executable,CURRENT_GAME_NAME);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-		//		strcpy(fileToBeExecutedwithFullPath,CURRENT_SECTION.filesDirectory);
 		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
-		//		printf("./invoker.elf %s%s %s\n ",CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable, CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
@@ -297,7 +293,6 @@ int performAction() {
 				updateScreen();
 			}
 			saveFavorites();
-			freeResources();
 			launchGame();
 		}	
 		if (keys[BTN_DOWN]&&!leftOrRightPressed) {
@@ -410,7 +405,6 @@ int performAction() {
 			}
 			if (countGamesInPage()>0) {
 				saveFavorites();
-				freeResources();
 				launchGame();
 			}
 			return 0;

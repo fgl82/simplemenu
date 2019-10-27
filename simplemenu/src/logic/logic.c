@@ -84,6 +84,18 @@ void setSectionsState(char *states) {
 	}
 }
 
+int checkIfEmulatorExists(char *path, char *executable) {
+	char executableWithFullPath[300];
+	strcpy(executableWithFullPath,path);
+	strcat(executableWithFullPath,executable);
+	FILE * fp;
+	fp = fopen(executableWithFullPath, "r");
+	if (fp==NULL) {
+		return 0;
+	}
+	return 1;
+}
+
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
 	char states[200]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
@@ -97,7 +109,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-	execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+	if (checkIfEmulatorExists(emulatorFolder,executable)) {
+		freeResources();
+		execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+	} else {
+		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
+	}
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
