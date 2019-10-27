@@ -15,6 +15,12 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 
+void generateError(char *pErrorMessage, int pThereIsACriticalError) {
+	itsStoppedBecauseOfAnError=1;
+	errorMessage=pErrorMessage;
+	thereIsACriticalError=pThereIsACriticalError;
+}
+
 char *getCurrentGameName() {
 	char * name = malloc(strlen(CURRENT_GAME_NAME)+1);
 	strcpy(name, CURRENT_GAME_NAME);
@@ -293,6 +299,11 @@ void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
+		if (countGamesInPage()==0) {
+			favoritesSectionSelected=0;
+			currentSectionNumber=0;
+			determineStartingScreen(sectionCount);
+		}
 	} else {
 		loadGameList(0);
 		if(CURRENT_SECTION.hidden) {
@@ -300,6 +311,10 @@ void determineStartingScreen(int sectionCount) {
 			loadGameList(0);
 			if(advanced) {
 				while(CURRENT_SECTION.hidden) {
+					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
+						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
+						break;
+					}
 					advanceSection();
 					loadGameList(0);
 				}

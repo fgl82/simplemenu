@@ -14,6 +14,31 @@
 
 char buf[300];
 
+void showErrorMessage(char *errorMessage) {
+	int width = (((strlen(errorMessage))*(180))/calculateProportionalSizeOrDistance(18));
+	int height = calculateProportionalSizeOrDistance(40);
+	if(strchr(errorMessage,'-')!=NULL) {
+		height = calculateProportionalSizeOrDistance(60);
+		width = (((strlen(errorMessage)/2)*calculateProportionalSizeOrDistance(200))/calculateProportionalSizeOrDistance(18))+calculateProportionalSizeOrDistance(20);
+	}
+	int filling[3];
+	int borderColor[3];
+	borderColor[0]=255;
+	borderColor[1]=0;
+	borderColor[2]=0;
+	filling[0]=100;
+	filling[1]=0;
+	filling[2]=0;
+	SDL_Color textColor;
+	textColor.r=255;
+	textColor.g=0;
+	textColor.b=0;
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
+	drawError(errorMessage, textColor);
+	itsStoppedBecauseOfAnError=1;
+}
+
 void showLetter() {
 	int width = 80;
 	int filling[3];
@@ -153,17 +178,21 @@ void setupDecorations() {
 }
 
 void updateScreen() {
-	if (!leftOrRightPressed&&!isUSBMode) {
+	if (!leftOrRightPressed&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		drawGameList();
 		setupDecorations();
 		if (pictureMode) {
 			displayGamePicture();
 		}
 		if (hotKeyPressed) {
-			showLetter();
+			if (CURRENT_GAME_NAME!=NULL) {
+				showLetter();
+			}
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
+	}  else if (itsStoppedBecauseOfAnError) {
+		showErrorMessage(errorMessage);
 	}
 	refreshScreen();
 }

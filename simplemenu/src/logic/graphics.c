@@ -108,6 +108,21 @@ void drawCurrentLetter(char *letter, SDL_Color textColor) {
 	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
+void drawError(char *errorMessage, SDL_Color textColor) {
+	if(strchr(errorMessage,'-')==NULL) {
+		drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);
+	} else {
+		char *line2 = strchr(errorMessage,'-');
+		int index = (line2-errorMessage);
+		line2++;
+		char line1[200];
+		strcpy(line1, errorMessage);
+		line1[index]='\0';
+		drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3)-calculateProportionalSizeOrDistance(12), line1, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3)+calculateProportionalSizeOrDistance(12), line2, textColor, VAlignMiddle | HAlignCenter);
+	}
+}
+
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]) {
 	SDL_Rect rectangle;
 	rectangle.w = width;
