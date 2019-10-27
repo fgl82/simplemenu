@@ -15,6 +15,10 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 
+int sectionHasADatFile() {
+	return 0;
+}
+
 void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 	itsStoppedBecauseOfAnError=1;
 	errorMessage=pErrorMessage;
@@ -93,6 +97,7 @@ int checkIfEmulatorExists(char *path, char *executable) {
 	if (fp==NULL) {
 		return 0;
 	}
+	fclose(fp);
 	return 1;
 }
 
