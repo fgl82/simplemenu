@@ -185,7 +185,6 @@ void updateScreen() {
 			displayGamePicture();
 		}
 		if (hotKeyPressed) {
-			printf("papa5\n");
 			if (CURRENT_GAME_NAME!=NULL) {
 				showLetter();
 			}
