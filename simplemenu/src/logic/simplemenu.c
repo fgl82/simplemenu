@@ -31,21 +31,25 @@ int main(int argc, char* argv[]) {
 	loadConfig();
 	initializeGlobals();
 	HW_Init();
-	int sectionCount=loadSections();
-	loadFavorites();
-	if (argv[1]!=NULL) {
-		setSectionsState(argv[1]);
-		currentSectionNumber=atoi(argv[2]);
-		returnTo=atoi(argv[3]);
-		pictureMode=atoi(argv[4]);
-	} else {
-		loadLastState();
-	}
 	setupDisplay();
-	#ifndef TARGET_PC
-	initSuspendTimer();
-	#endif
-	determineStartingScreen(sectionCount);
+	int sectionCount=loadSections();
+	if (sectionCount==-1) {
+		generateError("SECTIONS FILE NOT FOUND-SHUTTING DOWN",1);
+	} else {
+		loadFavorites();
+		if (argv[1]!=NULL) {
+			setSectionsState(argv[1]);
+			currentSectionNumber=atoi(argv[2]);
+			returnTo=atoi(argv[3]);
+			pictureMode=atoi(argv[4]);
+		} else {
+			loadLastState();
+		}
+		#ifndef TARGET_PC
+		initSuspendTimer();
+		#endif
+		determineStartingScreen(sectionCount);
+	}
 	updateScreen();
 	enableKeyRepeat(500.180);
 	while (running) {

@@ -266,7 +266,7 @@ int performAction() {
 		system("./usb_mode_off.sh");
 		return 0;
 	}
-	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
+	if(itsStoppedBecauseOfAnError&&!keys[BTN_TA]) {
 		return(0);
 	}	
 	if(keys[BTN_A]) {

@@ -41,6 +41,10 @@ void loadFavorites() {
 	size_t len = 0;
 	ssize_t read;
 	fp = fopen("./config/favorites.sav", "r");
+	if (fp==NULL) {
+		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
+		return;
+	}
 	char *configurations[4];
 	char *ptr;
 	favoritesSize=0;
@@ -83,6 +87,10 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	fp = fopen("./config/last_state.cfg", "r");
+	if (fp==NULL) {
+		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
+		return;
+	}
 	char *configurations[4];
 	char *ptr;
 	int first = -1;
@@ -145,6 +153,9 @@ int loadSections() {
 	char line[500];
 	char *configurations[24];
 	fp = fopen("./config/sections.cfg", "r");
+	if (fp==NULL) {
+		return -1;
+	}
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
 		int i=0;

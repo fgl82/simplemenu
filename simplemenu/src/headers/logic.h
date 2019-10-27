@@ -1,5 +1,6 @@
 #ifndef LOGIC
 #define LOGIC
+void generateError(char *pErrorMessage, int pThereIsACriticalError);
 void quit();
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath);
 void loadGameList();

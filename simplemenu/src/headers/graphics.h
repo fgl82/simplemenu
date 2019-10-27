@@ -31,4 +31,5 @@ void initializeFonts();
 void freeResources();
 void drawUSBScreen();
 void drawShutDownText();
+void drawError(char *errorMessage, SDL_Color textColor);
 #endif
