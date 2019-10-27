@@ -21,9 +21,9 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-#ifndef TARGET_PC
+	#ifndef TARGET_PC
 	backlightValue = getBacklight();
-#endif
+	#endif
 	srand(time(0));
 }
 

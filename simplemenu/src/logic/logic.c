@@ -84,6 +84,18 @@ void setSectionsState(char *states) {
 	}
 }
 
+int checkIfEmulatorExists(char *path, char *executable) {
+	char executableWithFullPath[300];
+	strcpy(executableWithFullPath,path);
+	strcat(executableWithFullPath,executable);
+	FILE * fp;
+	fp = fopen(executableWithFullPath, "r");
+	if (fp==NULL) {
+		return 0;
+	}
+	return 1;
+}
+
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
 	char states[200]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
