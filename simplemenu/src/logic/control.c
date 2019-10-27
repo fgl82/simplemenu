@@ -92,6 +92,9 @@ void scrollDown() {
 
 void advancePage() {
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
+		if (CURRENT_GAME_NAME==NULL) {
+			return;
+		}
 		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 		strcpy(currentGame, CURRENT_GAME_NAME);
 		stripGameName(currentGame);
@@ -122,6 +125,9 @@ void advancePage() {
 }
 
 void rewindPage() {
+	if (CURRENT_GAME_NAME==NULL) {
+		return;
+	}
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 		strcpy(currentGame, CURRENT_GAME_NAME);
@@ -197,8 +203,9 @@ void showOrHideFavorites() {
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
-		determineStartingScreen(menuSectionCounter);
-		//		loadGameList();
+		if (returnTo==0) {
+			determineStartingScreen(menuSectionCounter);
+		}
 		return;
 	}
 	favoritesSectionSelected=1;
@@ -259,7 +266,10 @@ int performAction() {
 		system("./usb_mode_off.sh");
 		return 0;
 	}
-	if(keys[BTN_A]) {
+	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
+		return(0);
+	}
+	if(keys[BTN_B]) {
 		if (keys[BTN_X]&&!leftOrRightPressed&&currentSectionNumber!=favoritesSectionNumber) {
 			deleteCurrentGame(CURRENT_GAME_NAME);
 			loadGameList(1);
@@ -274,8 +284,12 @@ int performAction() {
 		}
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
-			isUSBMode = 1;
-			system("./usb_mode_on.sh");
+			int returnedValue = system("./usb_mode_on.sh");
+			if (returnedValue==0) {
+				isUSBMode = 1;
+			} else {
+				generateError("USB MODE  NOT AVAILABLE",0);
+			}
 		}
 		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
 			for(int i=0;i<100;i++) {
@@ -373,14 +387,27 @@ int performAction() {
 		}
 		if (keys[BTN_START]) {
 			cycleFrequencies();
-			drawHeader();
 			return 0;
 		}
 		if (keys[BTN_R]) {
 			showOrHideFavorites();
 			return 0;
 		}
-		if (keys[BTN_B]) {
+		if (keys[BTN_A]) {
+			if(itsStoppedBecauseOfAnError) {
+				if(thereIsACriticalError) {
+					#ifndef TARGET_PC
+					quit();
+					#else
+					freeResources();
+					saveLastState();
+					saveFavorites();
+					exit(0);
+					#endif
+				}
+				itsStoppedBecauseOfAnError=0;
+				return 0;
+			}
 			if (countGamesInPage()>0) {
 				saveFavorites();
 				freeResources();

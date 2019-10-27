@@ -3,8 +3,8 @@
 #define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
 #define SCREEN_HEIGHT   240
 #define BTN_X			SDLK_SPACE
-#define BTN_B			SDLK_LCTRL
-#define BTN_A			SDLK_LALT
+#define BTN_A			SDLK_LCTRL
+#define BTN_B			SDLK_LALT
 #define BTN_Y			SDLK_LSHIFT
 #define BTN_START		SDLK_RETURN
 #define BTN_SELECT		SDLK_ESCAPE

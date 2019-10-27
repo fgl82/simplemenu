@@ -6,6 +6,10 @@
 
 int running;
 
+int itsStoppedBecauseOfAnError;
+char *errorMessage;
+int thereIsACriticalError;
+
 int favoritesSectionNumber;
 int favoritesSectionSelected;
 int favoritesChanged;
