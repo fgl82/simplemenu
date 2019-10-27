@@ -21,9 +21,9 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-	#ifndef TARGET_PC
+#ifndef TARGET_PC
 	backlightValue = getBacklight();
-	#endif
+#endif
 	srand(time(0));
 }
 
@@ -33,23 +33,19 @@ int main(int argc, char* argv[]) {
 	HW_Init();
 	setupDisplay();
 	int sectionCount=loadSections();
-	if (sectionCount==-1) {
-		generateError("SECTIONS FILE NOT FOUND-SHUTTING DOWN",1);
+	loadFavorites();
+	if (argv[1]!=NULL) {
+		setSectionsState(argv[1]);
+		currentSectionNumber=atoi(argv[2]);
+		returnTo=atoi(argv[3]);
+		pictureMode=atoi(argv[4]);
 	} else {
-		loadFavorites();
-		if (argv[1]!=NULL) {
-			setSectionsState(argv[1]);
-			currentSectionNumber=atoi(argv[2]);
-			returnTo=atoi(argv[3]);
-			pictureMode=atoi(argv[4]);
-		} else {
-			loadLastState();
-		}
-		#ifndef TARGET_PC
-		initSuspendTimer();
-		#endif
-		determineStartingScreen(sectionCount);
+		loadLastState();
 	}
+	#ifndef TARGET_PC
+	initSuspendTimer();
+	#endif
+	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat(500.180);
 	while (running) {
@@ -59,9 +55,9 @@ int main(int argc, char* argv[]) {
 					performAction();
 					updateScreen();
 				}
-				#ifndef TARGET_PC
+#ifndef TARGET_PC
 				resetTimeoutTimer();
-				#endif
+#endif
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_A) {
 					hotKeyPressed=0;
