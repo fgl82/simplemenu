@@ -315,6 +315,7 @@ void selectRandomGame() {
 void determineStartingScreen(int sectionCount) {
 	if (sectionCount==-1) {
 		generateError("SECTIONS FILE NOT FOUND-SHUTTING DOWN",1);
+		return;
 	}
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
