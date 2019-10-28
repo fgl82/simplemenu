@@ -13,22 +13,23 @@ void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;
 		fp = fopen("./config/favorites.sav", "w");
-		struct Favorite favorite;
-		char *name;
-		for (int j=0;j<1000;j++) {
-			for (int k=0;k<10;k++) {
-				name = FAVORITES_SECTION.gameList[j][k];
-				if (name!=NULL) {
-					favorite=findFavorite(name);
-					fprintf(fp,"%s;",favorite.name);
-					fprintf(fp,"%s;",favorite.emulatorFolder);
-					fprintf(fp,"%s;",favorite.executable);
-					fprintf(fp,"%s\n",favorite.filesDirectory);
-				}
-			}
-			if (name==NULL) {
+		int linesWritten=0;
+		for (int j=0;j<favoritesSize;j++) {
+			struct Favorite favorite = favorites[j];
+			if (strlen(favorite.name)==1) {
 				break;
 			}
+			printf("%s\n",favorite.name);
+			if(linesWritten>0) {
+				fprintf(fp,"\n");
+			}
+//			favorite=findFavorite(name);
+			fprintf(fp,"%s;",favorite.name);
+			fprintf(fp,"%s;",favorite.alias);
+			fprintf(fp,"%s;",favorite.emulatorFolder);
+			fprintf(fp,"%s;",favorite.executable);
+			fprintf(fp,"%s",favorite.filesDirectory);
+			linesWritten++;
 		}
 		fclose(fp);
 		favoritesChanged=0;
@@ -36,6 +37,7 @@ void saveFavorites() {
 }
 
 void loadFavorites() {
+	printf("START\n");
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
@@ -45,7 +47,7 @@ void loadFavorites() {
 		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
 	}
-	char *configurations[4];
+	char *configurations[5];
 	char *ptr;
 	favoritesSize=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -57,9 +59,10 @@ void loadFavorites() {
 			i++;
 		}
 		strcpy(favorites[favoritesSize].name,configurations[0]);
-		strcpy(favorites[favoritesSize].emulatorFolder,configurations[1]);
-		strcpy(favorites[favoritesSize].executable,configurations[2]);
-		strcpy(favorites[favoritesSize].filesDirectory,configurations[3]);
+		strcpy(favorites[favoritesSize].alias,configurations[1]);
+		strcpy(favorites[favoritesSize].emulatorFolder,configurations[2]);
+		strcpy(favorites[favoritesSize].executable,configurations[3]);
+		strcpy(favorites[favoritesSize].filesDirectory,configurations[4]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		favorites[favoritesSize].filesDirectory[len-1]='\0';
 		favoritesSize++;
@@ -68,6 +71,7 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
+	printf("DONE\n");
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 
@@ -151,13 +155,12 @@ void loadConfig() {
 int loadSections() {
 	FILE * fp;
 	char line[500];
-	char *configurations[24];
+	char *configurations[25];
 	fp = fopen("./config/sections.cfg", "r");
 	if (fp==NULL) {
 		return -1;
 	}
-	while (fgets(line, sizeof(line), fp) != NULL)
-	{
+	while (fgets(line, sizeof(line), fp) != NULL) {
 		int i=0;
 		char *ptr = strtok(line, ";");
 		while(ptr != NULL) {
@@ -190,7 +193,10 @@ int loadSections() {
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
 		strcpy(aMenuSection.consolePicture,configurations[23]);
-		aMenuSection.consolePicture[strlen(aMenuSection.consolePicture)-1]='\0';
+		strcpy(aMenuSection.datFileName,configurations[24]);
+		if (strlen(aMenuSection.datFileName)>1) {
+			aMenuSection.datFileName[strlen(aMenuSection.datFileName)-1]='\0';
+		}
 		aMenuSection.hidden=0;
 		aMenuSection.currentPage=0;
 		aMenuSection.currentGame=0;

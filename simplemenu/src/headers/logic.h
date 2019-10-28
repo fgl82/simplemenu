@@ -16,4 +16,6 @@ struct Favorite findFavorite(char *name);
 void selectRandomGame();
 void deleteCurrentGame();
 int compareFavorites(const void *s1, const void *s2);
+FILE *getSectionDatFile();
+char *getRomRealName(char *nameWithoutExtension);
 #endif

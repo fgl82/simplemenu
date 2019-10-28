@@ -15,8 +15,51 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 
-int sectionHasADatFile() {
-	return 0;
+FILE *datFile;
+
+FILE *getSectionDatFile() {
+	FILE *datFile;
+	char datFileWithFullPath[400]="";
+	strcpy(datFileWithFullPath,CURRENT_SECTION.filesDirectory);
+	strcat(datFileWithFullPath,CURRENT_SECTION.datFileName);
+	datFile = fopen(datFileWithFullPath, "r");
+	return datFile;
+}
+
+char *getRomRealName(char *nameWithoutExtension) {
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	char newName[200]="";
+	char nameAttributeString[200]="";
+	//put together tthe string to be searched
+	strcpy(nameAttributeString,"name=\"");
+	strcat(nameAttributeString,nameWithoutExtension);
+	strcat(nameAttributeString,"\"\0");
+	datFile=getSectionDatFile();
+	while ((read = getline(&line, &len, datFile)) != -1) {
+		if(strstr(line, nameAttributeString) != NULL) {
+			line[strlen(line)-1]='\0';
+			read = getline(&line, &len, datFile);
+			int i=0;
+			while(line[i]!='>') {
+				i++;
+			}
+			i++;
+			strncpy(newName,line+i,20);
+			strcpy(newName, replaceWord(newName,"&apos;","'"));
+			stripGameName(newName);
+			strcpy(nameWithoutExtension,newName);
+			free(line);
+			fclose(datFile);
+			return nameWithoutExtension;
+		}
+	}
+	if (line) {
+		free(line);
+	}
+	fclose(datFile);
+	return nameWithoutExtension;
 }
 
 void generateError(char *pErrorMessage, int pThereIsACriticalError) {
@@ -71,8 +114,7 @@ void setSectionsState(char *states) {
 		char *endDashToken;
 		char *dashToken = strtok_r(semiColonToken, "-", &endDashToken);
 		int j=0;
-		while (dashToken != NULL)
-		{
+		while (dashToken != NULL) {
 			if (j==0) {
 				menuSections[i].currentPage=atoi(dashToken);
 			} else if (j==1) {
@@ -167,7 +209,11 @@ void loadFavoritesSectionGameList() {
 				FAVORITES_SECTION.totalPages++;
 			}
 		}
-		FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
+		if (strlen(favorites[i].alias)>1) {
+			FAVORITES_SECTION.gameList[page][game] = favorites[i].alias;
+		} else {
+			FAVORITES_SECTION.gameList[page][game] = favorites[i].name;
+		}
 		game++;
 	}
 }
@@ -230,7 +276,33 @@ int compareFavorites(const void *f1, const void *f2)
 {
 	struct Favorite *e1 = (struct Favorite *)f1;
 	struct Favorite *e2 = (struct Favorite *)f2;
-	return genericGameCompare(e1->name, e2->name);
+	char temp1[300]="";
+	char temp2[300]="";
+	if (strlen(e1->alias)>1) {
+		strcpy(temp1,e1->alias);
+	} else {
+		strcpy(temp1,e1->name);
+	}
+	if (strlen(e2->alias)>1) {
+		strcpy(temp2,e2->alias);
+	} else {
+		strcpy(temp2,e2->name);
+	}
+//	if (strlen(e1->alias)>1) {
+//		if (strlen(e2->alias)>1) {
+//			return strcmp(e1->alias, e2->alias);
+//		} else {
+//			return strcmp(e1->alias, e2->name);
+//		}
+//	}
+//	if (strlen(e2->alias)>1) {
+//		if (strlen(e1->alias)>1) {
+//			return strcmp(e1->alias, e2->alias);
+//		} else {
+//			return strcmp(e1->name, e2->alias);
+//		}
+//	}
+	return genericGameCompare(temp1, temp2);
 }
 
 int compareGamesFromGameList (const void *game1, const void *game2) {
@@ -239,11 +311,25 @@ int compareGamesFromGameList (const void *game1, const void *game2) {
 	return genericGameCompare(s1, s2);
 }
 
+int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) {
+	char s1Alias[300];
+	strcpy(s1Alias,(char *)(*(char **)game1));
+	char s2Alias[300];
+	strcpy(s2Alias,(char *)(*(char **)game2));
+	stripGameName(s1Alias);
+	stripGameName(s2Alias);
+	char *temp = getRomRealName(s1Alias);
+	strcpy(s1Alias, temp);
+	temp = getRomRealName(s2Alias);
+	strcpy(s2Alias, getRomRealName(s2Alias));
+	return strcmp(s1Alias, s2Alias);
+}
+
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
 		CURRENT_SECTION.totalPages=0;
-		char *files[8000];
+		char *files[10000];
 		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files, 0);
 		int game = 0;
 		int page = 0;
@@ -274,7 +360,11 @@ void loadGameList(int refresh) {
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
-		qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameList);
+		if (strlen(CURRENT_SECTION.datFileName)>1) {
+			qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
+		} else {
+			qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameList);
+		}
 	}
 }
 

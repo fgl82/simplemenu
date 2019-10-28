@@ -42,10 +42,10 @@ void launchGame() {
 	char fileToBeExecutedwithFullPath[2000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		strcat(fileToBeExecutedwithFullPath,favorite.name);
-		executeCommand(favorite.emulatorFolder,favorite.executable,CURRENT_GAME_NAME);
+//		strcat(fileToBeExecutedwithFullPath,favorite.name);
+		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
+//		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
@@ -218,11 +218,13 @@ void removeFavorite() {
 			strcpy(favorites[i].executable,favorites[i+1].executable);
 			strcpy(favorites[i].filesDirectory,favorites[i+1].filesDirectory);
 			strcpy(favorites[i].name,favorites[i+1].name);
+			strcpy(favorites[i].alias,favorites[i+1].alias);
 		}
 		strcpy(favorites[favoritesSize-1].emulatorFolder,"\0");
 		strcpy(favorites[favoritesSize-1].executable,"\0");
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
 		strcpy(favorites[favoritesSize-1].name,"\0");
+		strcpy(favorites[favoritesSize-1].alias,"\0");
 		favoritesSize--;
 		loadFavoritesSectionGameList();
 	}
@@ -236,6 +238,12 @@ void markAsFavorite() {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
+			if(strlen(CURRENT_SECTION.datFileName)>1) {
+				char temp[300]="";
+				strcpy(temp, CURRENT_GAME_NAME);
+				stripGameName(temp);
+				strcpy(favorites[favoritesSize].alias, getRomRealName(temp));
+			}
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
