@@ -136,7 +136,16 @@ void rewindPage() {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			if(tolower(currentGame[0])==tolower(previousGame[0])) {
+
+			char currentLetter = tolower(currentGame[0]);
+			char previousLetter = tolower(previousGame[0]);
+
+			if (strlen(CURRENT_SECTION.datFileName)>1) {
+				char currentLetter = tolower(getRomRealName(currentGame)[0]);
+				char previousLetter = tolower(getRomRealName(previousGame)[0]);
+			}
+
+			if(currentLetter==previousLetter) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
 					break;
@@ -165,8 +174,17 @@ void rewindPage() {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
-					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
+
+			char currentLetter = tolower(currentGame[0]);
+			char previousLetter = tolower(previousGame[0]);
+
+			if (strlen(CURRENT_SECTION.datFileName)>1) {
+				currentLetter = tolower(getRomRealName(currentGame)[0]);
+				previousLetter = tolower(getRomRealName(previousGame)[0]);
+			}
+
+
+			if ((currentLetter==previousLetter) || (isdigit(currentLetter)&&isdigit(previousLetter))) {
 
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
