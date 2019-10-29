@@ -67,7 +67,11 @@ void showLetter() {
 	char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
 	strcpy(currentGame, CURRENT_GAME_NAME);
 	stripGameName(currentGame);
-	letter[0]=toupper(currentGame[0]);
+	if (strlen(CURRENT_SECTION.datFileName)>1) {
+		letter[0]=toupper(getRomRealName(currentGame)[0]);
+	} else {
+		letter[0]=toupper(currentGame[0]);
+	}
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
 		letter[0]='#';
@@ -151,7 +155,7 @@ void drawGameList() {
 			sprintf(buf,"%s", "");
 			if (strlen(CURRENT_SECTION.datFileName)>1) {
 				strcpy(nameWithoutExtension,getRomRealName(nameWithoutExtension));
-				stripGameName(nameWithoutExtension);
+//				stripGameName(nameWithoutExtension);
 			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {

@@ -31,22 +31,11 @@ char *getRomRealName(char *nameWithoutExtension) {
 	size_t len = 0;
 	ssize_t read;
 	char newName[200]="";
-	char nameAttributeString[200]="";
-	//put together tthe string to be searched
-	strcpy(nameAttributeString,"name=\"");
-	strcat(nameAttributeString,nameWithoutExtension);
-	strcat(nameAttributeString,"\"\0");
 	datFile=getSectionDatFile();
 	while ((read = getline(&line, &len, datFile)) != -1) {
-		if(strstr(line, nameAttributeString) != NULL) {
-			line[strlen(line)-1]='\0';
+		if(strstr(line, nameWithoutExtension) != NULL) {
 			read = getline(&line, &len, datFile);
-			int i=0;
-			while(line[i]!='>') {
-				i++;
-			}
-			i++;
-			strncpy(newName,line+i,20);
+			strncpy(newName,line,strlen(line)+1);
 			strcpy(newName, replaceWord(newName,"&apos;","'"));
 			stripGameName(newName);
 			strcpy(nameWithoutExtension,newName);
@@ -288,20 +277,6 @@ int compareFavorites(const void *f1, const void *f2)
 	} else {
 		strcpy(temp2,e2->name);
 	}
-//	if (strlen(e1->alias)>1) {
-//		if (strlen(e2->alias)>1) {
-//			return strcmp(e1->alias, e2->alias);
-//		} else {
-//			return strcmp(e1->alias, e2->name);
-//		}
-//	}
-//	if (strlen(e2->alias)>1) {
-//		if (strlen(e1->alias)>1) {
-//			return strcmp(e1->alias, e2->alias);
-//		} else {
-//			return strcmp(e1->name, e2->alias);
-//		}
-//	}
 	return genericGameCompare(temp1, temp2);
 }
 
@@ -321,7 +296,7 @@ int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) 
 	char *temp = getRomRealName(s1Alias);
 	strcpy(s1Alias, temp);
 	temp = getRomRealName(s2Alias);
-	strcpy(s2Alias, getRomRealName(s2Alias));
+	strcpy(s2Alias, temp);
 	return strcmp(s1Alias, s2Alias);
 }
 

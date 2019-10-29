@@ -25,7 +25,11 @@ void saveFavorites() {
 			}
 //			favorite=findFavorite(name);
 			fprintf(fp,"%s;",favorite.name);
-			fprintf(fp,"%s;",favorite.alias);
+			if(favorite.alias[0]=='\0') {
+				fprintf(fp," ;");
+			} else {
+				fprintf(fp,"%s;",favorite.alias);
+			}
 			fprintf(fp,"%s;",favorite.emulatorFolder);
 			fprintf(fp,"%s;",favorite.executable);
 			fprintf(fp,"%s",favorite.filesDirectory);
@@ -37,7 +41,6 @@ void saveFavorites() {
 }
 
 void loadFavorites() {
-	printf("START\n");
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
@@ -71,7 +74,6 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
-	printf("DONE\n");
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 
