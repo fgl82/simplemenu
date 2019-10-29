@@ -39,13 +39,10 @@ void showPicture() {
 }
 
 void launchGame() {
-	char fileToBeExecutedwithFullPath[2000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
-		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-//		strcat(fileToBeExecutedwithFullPath,favorite.name);
+		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-//		strcat(fileToBeExecutedwithFullPath,CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
@@ -129,22 +126,17 @@ void rewindPage() {
 		strcpy(currentGame, CURRENT_GAME_NAME);
 		stripGameName(currentGame);
 		char *previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
-
 		int hitStart = 0;
-
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-
 			char currentLetter = tolower(currentGame[0]);
 			char previousLetter = tolower(previousGame[0]);
-
 			if (strlen(CURRENT_SECTION.datFileName)>1) {
-				char currentLetter = tolower(getRomRealName(currentGame)[0]);
-				char previousLetter = tolower(getRomRealName(previousGame)[0]);
+				currentLetter = tolower(getRomRealName(currentGame)[0]);
+				previousLetter = tolower(getRomRealName(previousGame)[0]);
 			}
-
 			if(currentLetter==previousLetter) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -160,7 +152,6 @@ void rewindPage() {
 			} else {
 				break;
 			}
-
 		}
 		if (!hitStart) {
 			scrollUp();
@@ -174,16 +165,12 @@ void rewindPage() {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-
 			char currentLetter = tolower(currentGame[0]);
 			char previousLetter = tolower(previousGame[0]);
-
 			if (strlen(CURRENT_SECTION.datFileName)>1) {
 				currentLetter = tolower(getRomRealName(currentGame)[0]);
 				previousLetter = tolower(getRomRealName(previousGame)[0]);
 			}
-
-
 			if ((currentLetter==previousLetter) || (isdigit(currentLetter)&&isdigit(previousLetter))) {
 
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
@@ -260,13 +247,14 @@ void markAsFavorite() {
 				char temp[300]="";
 				strcpy(temp, CURRENT_GAME_NAME);
 				stripGameName(temp);
-				strcpy(favorites[favoritesSize].alias, getRomRealName(temp));
+				strcpy(temp,getRomRealName(temp));
+				strcpy(favorites[favoritesSize].alias, temp);
 			}
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
-			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
+//			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}
 	}
 }

@@ -19,11 +19,10 @@ void saveFavorites() {
 			if (strlen(favorite.name)==1) {
 				break;
 			}
-			printf("%s\n",favorite.name);
 			if(linesWritten>0) {
 				fprintf(fp,"\n");
 			}
-//			favorite=findFavorite(name);
+//			favorite=findFavorite(favorite.alias);
 			fprintf(fp,"%s;",favorite.name);
 			if(favorite.alias[0]=='\0') {
 				fprintf(fp," ;");

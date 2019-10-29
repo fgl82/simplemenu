@@ -207,8 +207,7 @@ void loadFavoritesSectionGameList() {
 	}
 }
 
-int recursivelyScanDirectory (char *directory, char* files[], int i)
-{
+int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	DIR * d;
 	d = opendir (directory);
 	if (d==NULL) {
