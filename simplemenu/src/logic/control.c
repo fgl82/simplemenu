@@ -114,7 +114,6 @@ void advancePage() {
 }
 
 void rewindPage() {
-	printf("REWINDED!\n");
 	if (CURRENT_GAME_NAME==NULL) {
 		return;
 	}
