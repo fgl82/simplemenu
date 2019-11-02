@@ -9,6 +9,27 @@
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
 
+void loadAliasList() {
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	FILE *datFile=getCurrentSectionDatFile();
+	int counter = 0;
+	while ((read = getline(&line, &len, datFile)) != -1) {
+		int lastChar = strlen(line)-1;
+		line[lastChar]='\0';
+		aliasList[counter]=malloc(strlen(line)+1);
+		strcpy(aliasList[counter],line);
+		counter++;
+	}
+	if (line) {
+		free(line);
+	}
+	counter=0;
+	fclose(datFile);;
+}
+
+
 void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;

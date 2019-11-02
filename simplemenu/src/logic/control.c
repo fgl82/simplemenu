@@ -88,9 +88,8 @@ void advancePage() {
 		if (CURRENT_GAME_NAME==NULL) {
 			return;
 		}
-		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-		strcpy(currentGame, CURRENT_GAME_NAME);
-		stripGameName(currentGame);
+		char *currentGame = malloc(500);
+		strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
@@ -100,9 +99,10 @@ void advancePage() {
 				}
 				scrollDown();
 				free(currentGame);
-				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-				strcpy(currentGame, CURRENT_GAME_NAME);
-				stripGameName(currentGame);
+				currentGame = malloc(500);
+				strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
+//				strcpy(currentGame, CURRENT_GAME_NAME);
+//				stripGameName(currentGame);
 			}
 			free(currentGame);
 		} else {
@@ -126,18 +126,14 @@ void rewindPage() {
 		strcpy(currentGame, CURRENT_GAME_NAME);
 		stripGameName(currentGame);
 		char *previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
+
 		int hitStart = 0;
+
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			char currentLetter = tolower(currentGame[0]);
-			char previousLetter = tolower(previousGame[0]);
-			if (strlen(CURRENT_SECTION.datFileName)>1) {
-				currentLetter = tolower(getRomRealName(currentGame)[0]);
-				previousLetter = tolower(getRomRealName(previousGame)[0]);
-			}
-			if(currentLetter==previousLetter) {
+			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
 					break;
@@ -152,6 +148,7 @@ void rewindPage() {
 			} else {
 				break;
 			}
+
 		}
 		if (!hitStart) {
 			scrollUp();
@@ -165,13 +162,8 @@ void rewindPage() {
 			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 			strcpy(previousGame, PREVIOUS_GAME_NAME);
 			stripGameName(previousGame);
-			char currentLetter = tolower(currentGame[0]);
-			char previousLetter = tolower(previousGame[0]);
-			if (strlen(CURRENT_SECTION.datFileName)>1) {
-				currentLetter = tolower(getRomRealName(currentGame)[0]);
-				previousLetter = tolower(getRomRealName(previousGame)[0]);
-			}
-			if ((currentLetter==previousLetter) || (isdigit(currentLetter)&&isdigit(previousLetter))) {
+			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
+					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -254,7 +246,7 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
 			favoritesSize++;
-//			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
+			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}
 	}
 }

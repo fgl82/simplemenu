@@ -43,7 +43,7 @@ struct MenuSection {
 	char filesDirectory[200];
 	char fileExtensions[50];
 	char consolePicture[100];
-	char datFileName[50];
+	char aliasFileName[50];
 	int hidden;
 	int currentPage;
 	int currentGame;
@@ -58,6 +58,8 @@ struct MenuSection {
 	char *gameList[1000][10];
 };
 struct MenuSection menuSections[50];
+
+char *aliasList[10000];
 
 struct Favorite {
 	char name[300];

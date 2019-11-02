@@ -1,3 +1,5 @@
+#include <bits/types/FILE.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <limits.h>
 #include <stdio.h>
@@ -17,7 +19,7 @@
 
 FILE *datFile;
 
-FILE *getSectionDatFile() {
+FILE *getCurrentSectionDatFile() {
 	FILE *datFile;
 	char datFileWithFullPath[400]="";
 	strcpy(datFileWithFullPath,CURRENT_SECTION.filesDirectory);
@@ -27,28 +29,51 @@ FILE *getSectionDatFile() {
 }
 
 char *getRomRealName(char *nameWithoutExtension) {
-	char * line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char newName[200]="";
-	datFile=getSectionDatFile();
-	while ((read = getline(&line, &len, datFile)) != -1) {
-		if(strstr(line, nameWithoutExtension) != NULL) {
-			read = getline(&line, &len, datFile);
-			strncpy(newName,line,strlen(line)+1);
-			strcpy(newName, replaceWord(newName,"&apos;","'"));
-			stripGameName(newName);
-			strcpy(nameWithoutExtension,newName);
-			free(line);
-			fclose(datFile);
-			return nameWithoutExtension;
+	int counter = 0;
+	char *nameTakenFromAlias=malloc(300);
+	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
+	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
+	stripGameName(strippedNameWithoutExtension);
+	strcat(strippedNameWithoutExtension,"=");
+	while (aliasList[counter]!=NULL) {
+//		printf("SEARCHING FOR %s IN %s\n",strippedNameWithoutExtension, aliasList[counter]);
+
+		if(
+				(
+						(tolower(aliasList[counter][0])==strippedNameWithoutExtension[0])||
+						(isdigit(strippedNameWithoutExtension[0])&&isdigit(aliasList[counter][0]))
+				)&&strstr(aliasList[counter],strippedNameWithoutExtension)!=NULL) {
+			strcpy(nameTakenFromAlias, strrchr(aliasList[counter], '=')+1);
+			int charNumber=0;
+			while (nameTakenFromAlias[charNumber]) {
+				if (nameTakenFromAlias[charNumber]=='('||charNumber>35) {
+					nameTakenFromAlias[charNumber-1]='\0';
+					break;
+				}
+				charNumber++;
+			}
+//			printf("NAME FROM ALIAS %s\n",nameTakenFromAlias);
+			return nameTakenFromAlias;
+			break;
 		}
+//		if(
+//				!(isdigit(strippedNameWithoutExtension[0])&&isdigit(aliasList[counter][0]))&&
+//				tolower(aliasList[counter][0])>tolower(strippedNameWithoutExtension[0])
+//		) {
+//			break;
+//		}
+		counter++;
 	}
-	if (line) {
-		free(line);
-	}
-	fclose(datFile);
 	return nameWithoutExtension;
+}
+
+char *getFileNameOrAlias(char *romName) {
+	char *alias = getRomRealName(romName);
+	if(strcmp(alias,romName)==0) {
+		stripGameName(alias);
+	}
+	printf("%s\n",CURRENT_GAME_NAME);
+	return alias;
 }
 
 void generateError(char *pErrorMessage, int pThereIsACriticalError) {
@@ -260,6 +285,19 @@ int genericGameCompare(char *game1, char *game2) {
 	return value;
 }
 
+int genericGameCompareWithAlias(char *game1, char *game2) {
+	char* s1 = game1;
+	char* s2 = game2;
+	char *temp1 = malloc(strlen(s1)+1);
+	strcpy(temp1,s1);
+	char *temp2 = malloc(strlen(s2)+1);
+	strcpy(temp2,s2);
+	temp1[0]=tolower(temp1[0]);
+	temp2[0]=tolower(temp2[0]);
+	int value = strcmp(temp1, temp2);
+	return value;
+}
+
 int compareFavorites(const void *f1, const void *f2)
 {
 	struct Favorite *e1 = (struct Favorite *)f1;
@@ -276,13 +314,13 @@ int compareFavorites(const void *f1, const void *f2)
 	} else {
 		strcpy(temp2,e2->name);
 	}
-	return genericGameCompare(temp1, temp2);
+	return strcmp(temp1, temp2);
 }
 
 int compareGamesFromGameList (const void *game1, const void *game2) {
 	char* s1 = (char *)(*(char **)game1);
 	char* s2 = (char *)(*(char **)game2);
-	return genericGameCompare(s1, s2);
+	return genericGameCompareWithAlias(s1, s2);
 }
 
 int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) {
@@ -296,12 +334,15 @@ int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) 
 	strcpy(s1Alias, temp);
 	temp = getRomRealName(s2Alias);
 	strcpy(s2Alias, temp);
-	return strcmp(s1Alias, s2Alias);
+	return genericGameCompareWithAlias(s1Alias, s2Alias);
 }
 
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
+		if (strlen(CURRENT_SECTION.datFileName)>1) {
+			loadAliasList();
+		}
 		CURRENT_SECTION.totalPages=0;
 		char *files[10000];
 		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files, 0);
@@ -334,6 +375,7 @@ void loadGameList(int refresh) {
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
+
 		if (strlen(CURRENT_SECTION.datFileName)>1) {
 			qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
 		} else {

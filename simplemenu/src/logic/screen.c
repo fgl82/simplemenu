@@ -64,14 +64,9 @@ void showLetter() {
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5), borderColor);
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
 	char letter[2]="";
-	char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-	strcpy(currentGame, CURRENT_GAME_NAME);
-	stripGameName(currentGame);
-	if (strlen(CURRENT_SECTION.datFileName)>1) {
-		letter[0]=toupper(getRomRealName(currentGame)[0]);
-	} else {
-		letter[0]=toupper(currentGame[0]);
-	}
+	char *currentGame = malloc(500);
+	strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
+	letter[0]=toupper(currentGame[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
 		letter[0]='#';
@@ -151,12 +146,11 @@ void drawGameList() {
 			gamesInPage++;
 			char nameWithoutExtension[200];
 			strcpy(nameWithoutExtension,CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
-			stripGameName(nameWithoutExtension);
+//			stripGameName(nameWithoutExtension);
 			sprintf(buf,"%s", "");
-			if (strlen(CURRENT_SECTION.datFileName)>1) {
-				strcpy(nameWithoutExtension,getRomRealName(nameWithoutExtension));
-//				stripGameName(nameWithoutExtension);
-			}
+//			if (strlen(CURRENT_SECTION.datFileName)>1) {
+				strcpy(nameWithoutExtension,getFileNameOrAlias(nameWithoutExtension));
+//			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
 				drawShadedGameNameOnScreen(buf, nextLine);
