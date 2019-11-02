@@ -88,9 +88,8 @@ void advancePage() {
 		if (CURRENT_GAME_NAME==NULL) {
 			return;
 		}
-		char *currentGame = malloc(500);
-		strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
 		if (CURRENT_SECTION.alphabeticalPaging) {
+			char *currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
@@ -99,10 +98,7 @@ void advancePage() {
 				}
 				scrollDown();
 				free(currentGame);
-				currentGame = malloc(500);
-				strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
-//				strcpy(currentGame, CURRENT_GAME_NAME);
-//				stripGameName(currentGame);
+				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
 			}
 			free(currentGame);
 		} else {
@@ -118,12 +114,13 @@ void advancePage() {
 }
 
 void rewindPage() {
+	printf("REWINDED!\n");
 	if (CURRENT_GAME_NAME==NULL) {
 		return;
 	}
 	if (CURRENT_SECTION.alphabeticalPaging) {
 		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-		strcpy(currentGame, CURRENT_GAME_NAME);
+		strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
 		stripGameName(currentGame);
 		char *previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
 
@@ -235,7 +232,7 @@ void markAsFavorite() {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
-			if(strlen(CURRENT_SECTION.datFileName)>1) {
+			if(strlen(CURRENT_SECTION.aliasFileName)>1) {
 				char temp[300]="";
 				strcpy(temp, CURRENT_GAME_NAME);
 				stripGameName(temp);

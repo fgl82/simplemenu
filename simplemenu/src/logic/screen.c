@@ -65,7 +65,7 @@ void showLetter() {
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
 	char letter[2]="";
 	char *currentGame = malloc(500);
-	strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
+	currentGame=getFileNameOrAlias(CURRENT_GAME_NAME);
 	letter[0]=toupper(currentGame[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
@@ -84,26 +84,35 @@ void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
+	char *displayName=malloc(300);
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
 		}
-		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
+		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(pictureWithFullPath, favorite.filesDirectory);
 		tempGameName=getGameName(favorite.name);
+		displayName=favorite.alias;
 	} else {
 		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
 		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
-	strcat(pictureWithFullPath,"/media/");
+	strcat(pictureWithFullPath,"media/");
 	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
+	printf("%s\n",pictureWithFullPath);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
 	stripGameName(tempGameName);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
-	drawPictureTextOnScreen(tempGameName);
+	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
+		char* displayName=getFileNameOrAlias(CURRENT_GAME_NAME);
+		drawPictureTextOnScreen(displayName);
+		free(displayName);
+	} else {
+		drawPictureTextOnScreen(tempGameName);
+	}
 	free(pictureWithFullPath);
 	free(tempGameName);
 }
@@ -141,16 +150,12 @@ void drawGameList() {
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance(29);
+	char *nameWithoutExtension;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
 			gamesInPage++;
-			char nameWithoutExtension[200];
-			strcpy(nameWithoutExtension,CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
-//			stripGameName(nameWithoutExtension);
 			sprintf(buf,"%s", "");
-//			if (strlen(CURRENT_SECTION.datFileName)>1) {
-				strcpy(nameWithoutExtension,getFileNameOrAlias(nameWithoutExtension));
-//			}
+			nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
 				drawShadedGameNameOnScreen(buf, nextLine);
@@ -158,8 +163,10 @@ void drawGameList() {
 				drawNonShadedGameNameOnScreen(buf, nextLine);
 			}
 			nextLine+=calculateProportionalSizeOrDistance(19);
+			free(nameWithoutExtension);
 		}
 	}
+
 }
 
 void drawFooter(char *text) {

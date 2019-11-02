@@ -87,7 +87,9 @@ void loadFavorites() {
 		strcpy(favorites[favoritesSize].executable,configurations[3]);
 		strcpy(favorites[favoritesSize].filesDirectory,configurations[4]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
-		favorites[favoritesSize].filesDirectory[len-1]='\0';
+		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
+			favorites[favoritesSize].filesDirectory[len-1]='\0';
+		}
 		favoritesSize++;
 	}
 	fclose(fp);
@@ -215,9 +217,9 @@ int loadSections() {
 		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
 		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
 		strcpy(aMenuSection.consolePicture,configurations[23]);
-		strcpy(aMenuSection.datFileName,configurations[24]);
-		if (strlen(aMenuSection.datFileName)>1) {
-			aMenuSection.datFileName[strlen(aMenuSection.datFileName)-1]='\0';
+		strcpy(aMenuSection.aliasFileName,configurations[24]);
+		if (strlen(aMenuSection.aliasFileName)>1) {
+			aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
 		}
 		aMenuSection.hidden=0;
 		aMenuSection.currentPage=0;
