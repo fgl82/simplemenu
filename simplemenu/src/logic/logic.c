@@ -32,7 +32,6 @@ char *getRomRealName(char *nameWithoutExtension) {
 	int counter = 0;
 	char *nameTakenFromAlias;
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
-	char *subString;
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
 	strcat(strippedNameWithoutExtension,"=");
@@ -59,7 +58,6 @@ char *getRomRealName(char *nameWithoutExtension) {
 		counter++;
 	}
 	if(strippedNameWithoutExtension != NULL) {
-		printf("FREED 1\n");
 		free(strippedNameWithoutExtension);
 	}
 	nameTakenFromAlias=malloc(strlen(nameWithoutExtension)+1);
