@@ -14,6 +14,7 @@ hashtable_t *ht_create( int size ) {
 
 	/* Allocate the table itself. */
 	if( ( hashtable = malloc( sizeof( hashtable_t ) ) ) == NULL ) {
+		free(hashtable);
 		return NULL;
 	}
 
@@ -33,7 +34,7 @@ hashtable_t *ht_create( int size ) {
 /* Hash a string for a particular hash table. */
 int ht_hash( hashtable_t *hashtable, char *key ) {
 
-	unsigned long int hashval;
+	unsigned long int hashval=5381;
 	int i = 0;
 
 	/* Convert our string to an integer */

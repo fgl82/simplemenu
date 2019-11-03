@@ -59,10 +59,10 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 	char *gameList[1000][10];
+	hashtable_t *aliasHashTable;
 };
 struct MenuSection menuSections[50];
 
-hashtable_t *aliasHashTable;
 
 struct Favorite {
 	char name[300];

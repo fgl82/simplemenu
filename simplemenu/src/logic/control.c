@@ -180,6 +180,8 @@ void showOrHideFavorites() {
 		currentSectionNumber=returnTo;
 		if (returnTo==0) {
 			determineStartingScreen(menuSectionCounter);
+		} else {
+			loadGameList(0);
 		}
 		return;
 	}

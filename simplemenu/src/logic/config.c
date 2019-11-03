@@ -9,22 +9,22 @@
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
 
-void loadAliasList() {
+void loadAliasList(int sectionNumber) {
 	char * line = NULL;
 	size_t len = 0;
 	ssize_t read;
 	FILE *aliasFile=getCurrentSectionAliasFile();
 	if (aliasFile==NULL) {
-		strcpy(CURRENT_SECTION.aliasFileName," ");
+		strcpy(menuSections[sectionNumber].aliasFileName," ");
 		return;
 	}
-	aliasHashTable = ht_create(65536);
+	menuSections[sectionNumber].aliasHashTable = ht_create(10000);
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
-		char *p = strtok(line, "=");
-		char *p1 = strtok(NULL, "=");
-		int lastChar = strlen(p1)-1;
-		p1[lastChar]='\0';
-		ht_set(aliasHashTable, p, p1);
+		char *romName = strtok(line, "=");
+		char *alias = strtok(NULL, "=");
+		int lastChar = strlen(alias)-1;
+		alias[lastChar]='\0';
+		ht_set(menuSections[sectionNumber].aliasHashTable, romName, alias);
 	}
 	if (line) {
 		free(line);

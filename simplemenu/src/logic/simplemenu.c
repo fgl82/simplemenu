@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	#endif
 	determineStartingScreen(sectionCount);
 	updateScreen();
-	enableKeyRepeat(500.180);
+	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){

@@ -60,7 +60,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
-    nameTakenFromAlias=ht_get(aliasHashTable,strippedNameWithoutExtension);
+    nameTakenFromAlias=ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
     if (nameTakenFromAlias!=NULL) {
     	int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
@@ -358,9 +358,7 @@ int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) 
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.gameList[0][0] == NULL||refresh) {
-		if (strlen(CURRENT_SECTION.aliasFileName)>1) {
-			loadAliasList();
-		}
+		loadAliasList(currentSectionNumber);
 		CURRENT_SECTION.totalPages=0;
 		char *files[10000];
 		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files, 0);
