@@ -100,7 +100,6 @@ void displayGamePicture() {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
-	printf("%s\n",pictureWithFullPath);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
 	stripGameName(tempGameName);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);

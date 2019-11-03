@@ -18,19 +18,18 @@ void loadAliasList() {
 		strcpy(CURRENT_SECTION.aliasFileName," ");
 		return;
 	}
-	int counter = 0;
+	aliasHashTable = ht_create(65536);
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
-		int lastChar = strlen(line)-1;
-		line[lastChar]='\0';
-		aliasList[counter]=malloc(strlen(line)+1);
-		strcpy(aliasList[counter],line);
-		counter++;
+		char *p = strtok(line, "=");
+		char *p1 = strtok(NULL, "=");
+		int lastChar = strlen(p1)-1;
+		p1[lastChar]='\0';
+		ht_set(aliasHashTable, p, p1);
 	}
 	if (line) {
 		free(line);
 	}
-	counter=0;
-	fclose(aliasFile);;
+	fclose(aliasFile);
 }
 
 

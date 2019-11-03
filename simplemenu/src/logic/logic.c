@@ -56,36 +56,23 @@ char *search(char* arr[], int n, char *x)
 }
 
 char *getRomRealName(char *nameWithoutExtension) {
-	int counter = 0;
 	char *nameTakenFromAlias;
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
-//	strcat(strippedNameWithoutExtension,"=");
-    int n = sizeof(aliasList) / sizeof(aliasList[0]);
-	while (aliasList[counter]!=NULL) {
-//		printf("%s",search(aliasList,n,aliasList[counter]));
-		char *subString=strstr(aliasList[counter],strippedNameWithoutExtension);
-		if(
-				(
-						(tolower(aliasList[counter][0])==strippedNameWithoutExtension[0])||
-						(isdigit(strippedNameWithoutExtension[0])&&isdigit(aliasList[counter][0]))
-				)&&subString!=NULL) {
-			nameTakenFromAlias=strrchr(aliasList[counter], '=')+1;
-			int charNumber=0;
-			while (nameTakenFromAlias[charNumber]) {
-				if (nameTakenFromAlias[charNumber]=='('||charNumber>35) {
-					nameTakenFromAlias[charNumber-1]='\0';
-					break;
-				}
-				charNumber++;
+    nameTakenFromAlias=ht_get(aliasHashTable,strippedNameWithoutExtension);
+    if (nameTakenFromAlias!=NULL) {
+    	int charNumber=0;
+		while (nameTakenFromAlias[charNumber]) {
+			if (nameTakenFromAlias[charNumber]=='('||charNumber>35) {
+				nameTakenFromAlias[charNumber-1]='\0';
+				break;
 			}
-			free(strippedNameWithoutExtension);
-			return(nameTakenFromAlias);
-			break;
+			charNumber++;
 		}
-		counter++;
-	}
+		free(strippedNameWithoutExtension);
+		return(nameTakenFromAlias);
+    }
 	if(strippedNameWithoutExtension != NULL) {
 		free(strippedNameWithoutExtension);
 	}

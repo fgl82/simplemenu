@@ -3,6 +3,7 @@
 
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
+#include "../headers/hashtable.h"
 
 int running;
 
@@ -61,7 +62,7 @@ struct MenuSection {
 };
 struct MenuSection menuSections[50];
 
-char *aliasList[10000];
+hashtable_t *aliasHashTable;
 
 struct Favorite {
 	char name[300];
