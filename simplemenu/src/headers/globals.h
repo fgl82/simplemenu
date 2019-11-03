@@ -46,7 +46,7 @@ struct MenuSection {
 	char filesDirectory[200];
 	char fileExtensions[50];
 	char consolePicture[100];
-	char aliasFileName[50];
+	char aliasFileName[300];
 	int hidden;
 	int currentPage;
 	int currentGame;

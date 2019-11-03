@@ -27,10 +27,7 @@ void writeLog (char *line) {
 
 FILE *getCurrentSectionAliasFile() {
 	FILE *aliasFile;
-	char aliasFileWithFullPath[400]="";
-	strcpy(aliasFileWithFullPath,CURRENT_SECTION.filesDirectory);
-	strcat(aliasFileWithFullPath,CURRENT_SECTION.aliasFileName);
-	aliasFile = fopen(aliasFileWithFullPath, "r");
+	aliasFile = fopen(CURRENT_SECTION.aliasFileName, "r");
 	return aliasFile;
 }
 
