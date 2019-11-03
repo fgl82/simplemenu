@@ -36,6 +36,8 @@ int isSuspended;
 int isUSBMode;
 int backlightValue;
 
+char logLine[500];
+
 struct MenuSection {
 	char sectionName[25];
 	char emulatorFolder[200];

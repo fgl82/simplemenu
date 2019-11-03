@@ -118,17 +118,11 @@ void rewindPage() {
 		return;
 	}
 	if (CURRENT_SECTION.alphabeticalPaging) {
-		char *currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-		strcpy(currentGame, getFileNameOrAlias(CURRENT_GAME_NAME));
-		stripGameName(currentGame);
-		char *previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
-
+		char *currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+		char *previousGame;
 		int hitStart = 0;
-
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
-			strcpy(previousGame, PREVIOUS_GAME_NAME);
-			stripGameName(previousGame);
+			previousGame = getFileNameOrAlias(PREVIOUS_GAME_NAME);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -138,9 +132,7 @@ void rewindPage() {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-				strcpy(currentGame, CURRENT_GAME_NAME);
-				stripGameName(currentGame);
+				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
 			} else {
 				break;
 			}
@@ -151,13 +143,9 @@ void rewindPage() {
 		}
 		hitStart=0;
 		free(currentGame);
-		currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-		strcpy(currentGame, CURRENT_GAME_NAME);
-		stripGameName(currentGame);
+		currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = malloc(strlen(PREVIOUS_GAME_NAME)+1);
-			strcpy(previousGame, PREVIOUS_GAME_NAME);
-			stripGameName(previousGame);
+			previousGame = getFileNameOrAlias(PREVIOUS_GAME_NAME);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 
@@ -169,9 +157,7 @@ void rewindPage() {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = malloc(strlen(CURRENT_GAME_NAME)+1);
-				strcpy(currentGame, CURRENT_GAME_NAME);
-				stripGameName(currentGame);
+				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
 			} else {
 				break;
 			}

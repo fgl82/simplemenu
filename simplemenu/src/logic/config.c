@@ -13,9 +13,13 @@ void loadAliasList() {
 	char * line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	FILE *datFile=getCurrentSectionDatFile();
+	FILE *aliasFile=getCurrentSectionAliasFile();
+	if (aliasFile==NULL) {
+		strcpy(CURRENT_SECTION.aliasFileName," ");
+		return;
+	}
 	int counter = 0;
-	while ((read = getline(&line, &len, datFile)) != -1) {
+	while ((read = getline(&line, &len, aliasFile)) != -1) {
 		int lastChar = strlen(line)-1;
 		line[lastChar]='\0';
 		aliasList[counter]=malloc(strlen(line)+1);
@@ -26,7 +30,7 @@ void loadAliasList() {
 		free(line);
 	}
 	counter=0;
-	fclose(datFile);;
+	fclose(aliasFile);;
 }
 
 

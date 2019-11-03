@@ -1,4 +1,3 @@
-#include <bits/types/FILE.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <limits.h>
@@ -17,15 +16,43 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 
-FILE *datFile;
+void writeLog (char *line) {
+	#ifdef LOG_ON
+	FILE *f;
+	f = fopen("log.txt", "a");
+	fprintf(f, "%s\n", line);
+	fclose(f);
+	#endif
+}
 
-FILE *getCurrentSectionDatFile() {
-	FILE *datFile;
-	char datFileWithFullPath[400]="";
-	strcpy(datFileWithFullPath,CURRENT_SECTION.filesDirectory);
-	strcat(datFileWithFullPath,CURRENT_SECTION.aliasFileName);
-	datFile = fopen(datFileWithFullPath, "r");
-	return datFile;
+FILE *getCurrentSectionAliasFile() {
+	FILE *aliasFile;
+	char aliasFileWithFullPath[400]="";
+	strcpy(aliasFileWithFullPath,CURRENT_SECTION.filesDirectory);
+	strcat(aliasFileWithFullPath,CURRENT_SECTION.aliasFileName);
+	aliasFile = fopen(aliasFileWithFullPath, "r");
+	return aliasFile;
+}
+
+
+char *search(char* arr[], int n, char *x)
+{
+
+    if (strcmp(arr[n - 1],x)==0)
+        return "Found";
+
+    char *backup = arr[n - 1];
+    arr[n - 1] = x;
+
+    for (int i = 0;; i++) {
+        if (strcmp(arr[i],x)==0) {
+            arr[n - 1] = backup;
+            if (i < n - 1)
+                return "Found";
+            return "Not Found";
+        }
+    }
+    return "Not Found";
 }
 
 char *getRomRealName(char *nameWithoutExtension) {
@@ -34,8 +61,10 @@ char *getRomRealName(char *nameWithoutExtension) {
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
-	strcat(strippedNameWithoutExtension,"=");
+//	strcat(strippedNameWithoutExtension,"=");
+    int n = sizeof(aliasList) / sizeof(aliasList[0]);
 	while (aliasList[counter]!=NULL) {
+//		printf("%s",search(aliasList,n,aliasList[counter]));
 		char *subString=strstr(aliasList[counter],strippedNameWithoutExtension);
 		if(
 				(
@@ -371,13 +400,13 @@ void loadGameList(int refresh) {
 				game++;
 			}
 		}
-		if (loadedFiles==0) {
-			CURRENT_SECTION.hidden=1;
-		}
 		for (int i=0;i<n;i++){
 			free(files[i]);
 		}
-
+		if (loadedFiles==0) {
+			CURRENT_SECTION.hidden=1;
+			return;
+		}
 		if (strlen(CURRENT_SECTION.aliasFileName)>1) {
 			qsort(menuSections[currentSectionNumber].gameList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
 		} else {

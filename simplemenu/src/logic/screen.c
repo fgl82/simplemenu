@@ -84,7 +84,6 @@ void displayGamePicture() {
 	int rgbColor[] = {21, 18, 26};
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
-	char *displayName=malloc(300);
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
@@ -92,7 +91,6 @@ void displayGamePicture() {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(pictureWithFullPath, favorite.filesDirectory);
 		tempGameName=getGameName(favorite.name);
-		displayName=favorite.alias;
 	} else {
 		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
 		tempGameName=getGameName(CURRENT_GAME_NAME);
@@ -166,7 +164,6 @@ void drawGameList() {
 			free(nameWithoutExtension);
 		}
 	}
-
 }
 
 void drawFooter(char *text) {
