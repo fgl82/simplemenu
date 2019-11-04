@@ -225,7 +225,9 @@ void markAsFavorite() {
 //				stripGameName(temp);
 //				strcpy(temp,getRomRealName(temp));
 //				printf("%s\n",temp);
-				strcpy(favorites[favoritesSize].alias, temp);
+				if(strcmp(temp,favorites[favoritesSize].name)!=0) {
+					strcpy(favorites[favoritesSize].alias, temp);
+				}
 			}
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);

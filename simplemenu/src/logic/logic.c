@@ -77,6 +77,14 @@ char *getRomRealName(char *nameWithoutExtension) {
 			}
 			charNumber++;
 		}
+    	charNumber=0;
+		while (nameTakenFromAlias[charNumber]) {
+			if (nameTakenFromAlias[charNumber]=='/'||charNumber>35) {
+				nameTakenFromAlias[charNumber-1]='\0';
+				break;
+			}
+			charNumber++;
+		}
 		free(strippedNameWithoutExtension);
 		return(nameTakenFromAlias);
     }
@@ -300,10 +308,13 @@ int genericGameCompare(char *game1, char *game2) {
 	strcpy(temp1,s1);
 	char *temp2 = malloc(strlen(s2)+1);
 	strcpy(temp2,s2);
-	temp1[0]=tolower(temp1[0]);
-	temp2[0]=tolower(temp2[0]);
-	int value = strcmp(temp1, temp2);
-	return value;
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	for(int i=0;temp2[i]; i++) {
+		temp2[i] = tolower(temp2[i]);
+	}
+	return strcmp(temp1, temp2);;
 }
 
 int genericGameCompareWithAlias(char *game1, char *game2) {
@@ -313,10 +324,13 @@ int genericGameCompareWithAlias(char *game1, char *game2) {
 	strcpy(temp1,s1);
 	char *temp2 = malloc(strlen(s2)+1);
 	strcpy(temp2,s2);
-	temp1[0]=tolower(temp1[0]);
-	temp2[0]=tolower(temp2[0]);
-	int value = strcmp(temp1, temp2);
-	return value;
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	for(int i=0;temp2[i]; i++) {
+		temp2[i] = tolower(temp2[i]);
+	}
+	return strcmp(temp1, temp2);;
 }
 
 int compareFavorites(const void *f1, const void *f2)
@@ -329,12 +343,22 @@ int compareFavorites(const void *f1, const void *f2)
 		strcpy(temp1,e1->alias);
 	} else {
 		strcpy(temp1,e1->name);
+		stripGameName(temp1);
 	}
 	if (strlen(e2->alias)>1) {
 		strcpy(temp2,e2->alias);
 	} else {
 		strcpy(temp2,e2->name);
+		stripGameName(temp2);
 	}
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	for(int i=0;temp2[i]; i++) {
+		temp2[i] = tolower(temp2[i]);
+	}
+//	temp1[0]=tolower(temp1[0]);
+//	temp2[0]=tolower(temp2[0]);
 	return strcmp(temp1, temp2);
 }
 
