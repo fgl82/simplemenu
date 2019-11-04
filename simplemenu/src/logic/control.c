@@ -221,9 +221,10 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
 			if(strlen(CURRENT_SECTION.aliasFileName)>1) {
 				char temp[300]="";
-				strcpy(temp, CURRENT_GAME_NAME);
-				stripGameName(temp);
-				strcpy(temp,getRomRealName(temp));
+				strcpy(temp, getRomRealName(CURRENT_GAME_NAME));
+//				stripGameName(temp);
+//				strcpy(temp,getRomRealName(temp));
+//				printf("%s\n",temp);
 				strcpy(favorites[favoritesSize].alias, temp);
 			}
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);

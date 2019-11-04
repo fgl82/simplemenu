@@ -31,6 +31,16 @@ FILE *getCurrentSectionAliasFile() {
 	return aliasFile;
 }
 
+struct Favorite findFavorite(char *name) {
+	struct Favorite favorite;
+	for (int i=0; i<favoritesSize;i++) {
+		favorite = favorites[i];
+		if (strcmp(favorite.name, name)==0) {
+			return favorite;
+		}
+	}
+	return favorite;
+}
 
 char *search(char* arr[], int n, char *x)
 {
@@ -85,8 +95,15 @@ char *getFileNameOrAlias(char *romName) {
 	} else {
 		strcpy(alias, romName);
 	}
-	if(strcmp(alias,romName)==0) {
-		stripGameName(alias);
+	if(strcmp(alias, romName)==0) {
+		if(currentSectionNumber==favoritesSectionNumber) {
+			struct Favorite favorite = findFavorite(alias);
+			if (strlen(favorite.alias)<2) {
+				stripGameName(alias);
+			}
+		} else {
+			stripGameName(alias);
+		}
 	}
 	return alias;
 }
@@ -112,17 +129,6 @@ void quit() {
 	saveFavorites();
 	clearTimer();
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
-}
-
-struct Favorite findFavorite(char *name) {
-	struct Favorite favorite;
-	for (int i=0; i<favoritesSize;i++) {
-		favorite = favorites[i];
-		if (strcmp(favorite.name, name)==0) {
-			return favorite;
-		}
-	}
-	return favorite;
 }
 
 int doesFavoriteExist(char *name) {
