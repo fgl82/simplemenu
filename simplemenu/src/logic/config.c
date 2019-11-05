@@ -231,7 +231,7 @@ int loadSections() {
 		menuSections[menuSectionCounter].hidden=0;
 		menuSectionCounter++;
 	}
-	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;0;92;9;1;252;0;1;252;0;0;92;9;0;92;9;1;252;");
+	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;27;27;17;110;217;59;59;71;0;215;8;192;15;6;241;206;42;none;");
 	int i=0;
 	char *ptr = strtok(line, ";");
 	while(ptr != NULL) {

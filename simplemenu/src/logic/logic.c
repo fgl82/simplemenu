@@ -199,7 +199,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-	if (checkIfEmulatorExists(emulatorFolder,executable)) {
+	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"./SCRIPTS/")==0) {
 		freeResources();
 		execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	} else {
