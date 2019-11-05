@@ -1,7 +1,7 @@
 # Software Name
 TARGET = simplemenu.elf
-PLATFORM = BITTBOY
-#PLATFORM = PC
+#PLATFORM = BITTBOY
+PLATFORM = PC
 
 # Compiler
 
@@ -14,7 +14,7 @@ else ifeq ($(PROFILE), RS97)
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 else
 	CC = gcc
-	LINKER   = gcc
+	LINKER = gcc
 	CFLAGS = -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
 endif
 

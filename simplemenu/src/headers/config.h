@@ -6,4 +6,5 @@ void saveFavorites();
 void loadFavorites();
 int loadSections();
 int loadConfig();
+void loadAliasList(int sectionNumber);
 #endif

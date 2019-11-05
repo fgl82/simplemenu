@@ -3,6 +3,7 @@
 
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
+#include "../headers/hashtable.h"
 
 int running;
 
@@ -43,6 +44,7 @@ struct MenuSection {
 	char filesDirectory[200];
 	char fileExtensions[50];
 	char consolePicture[100];
+	char aliasFileName[300];	
 	int hidden;
 	int currentPage;
 	int currentGame;
@@ -55,11 +57,13 @@ struct MenuSection {
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
 	char *gameList[1000][10];
+	hashtable_t *aliasHashTable;
 };
 struct MenuSection menuSections[50];
 
 struct Favorite {
 	char name[300];
+	char alias[300];	
 	char emulatorFolder[200];
 	char executable[200];
 	char filesDirectory[200];

@@ -16,6 +16,7 @@ TTF_Font *footerFont = NULL;
 
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;
+//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
 int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor) {
