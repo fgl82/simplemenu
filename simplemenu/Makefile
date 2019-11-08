@@ -1,7 +1,8 @@
 # Software Name
 TARGET = simplemenu.elf
 #PLATFORM = BITTBOY
-PLATFORM = RS97
+#PLATFORM = RG-300
+PLATFORM = RG-350
 #PLATFORM = PC
 
 # Compiler
@@ -11,11 +12,16 @@ ifeq ($(PLATFORM), BITTBOY)
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz
-else ifeq ($(PLATFORM), RS97)
+else ifeq ($(PLATFORM), RG-300)
 	CC = /opt/rs97-toolchain/bin/mipsel-linux-gcc
 	LINKER = /opt/rs97-toolchain/bin/mipsel-linux-gcc
 	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lbz2
+else ifeq ($(PLATFORM), RG-350)
+	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
+	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
+	CFLAGS = -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lbz2	
 else
 	CC = gcc
 	LINKER   = gcc

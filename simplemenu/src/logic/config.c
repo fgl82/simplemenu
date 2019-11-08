@@ -1,5 +1,6 @@
-#include <stddef.h>
+#define _GNU_SOURCE
 #include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -19,6 +20,7 @@ void loadAliasList(int sectionNumber) {
 		return;
 	}
 	menuSections[sectionNumber].aliasHashTable = ht_create(10000);
+	printf("papa\n");
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
 		char *romName = strtok(line, "=");
 		char *alias = strtok(NULL, "=");
