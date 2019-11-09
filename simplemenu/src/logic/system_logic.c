@@ -41,6 +41,14 @@ void setBacklight(int level) {
 	system(buf);
 }
 
+void turnScreenOnOrOff(int state) {
+	const char *path = "/sys/class/graphics/fb0/blank";
+	const char *blank = state ? "0" : "1";
+	int fd = open(path, O_RDWR);
+	ssize_t written = write(fd, blank, strlen(blank));
+	close(fd);
+}
+
 void clearTimer() {
 	if (timeoutTimer != NULL) {
 		SDL_RemoveTimer(timeoutTimer);
@@ -51,9 +59,10 @@ void clearTimer() {
 uint32_t suspend(uint32_t interval, void *param) {
 	if (!isUSBMode) {
 		clearTimer();
-		backlightValue = getBacklight();
+//		backlightValue = getBacklight();
 		oldCPU=currentCPU;
-		setBacklight(0);
+		turnScreenOnOrOff(0);
+//		setBacklight(0);
 		setCPU(OC_SLEEP);
 		isSuspended=1;
 	} else {
@@ -65,7 +74,8 @@ uint32_t suspend(uint32_t interval, void *param) {
 void resetTimeoutTimer() {
 	if(isSuspended) {
 		setCPU(oldCPU);
-		setBacklight(backlightValue);
+		turnScreenOnOrOff(1);
+//		setBacklight(backlightValue);
 		currentCPU=oldCPU;
 		isSuspended=0;
 	}

@@ -362,6 +362,10 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
+			freeResources();
+			saveLastState();
+			saveFavorites();
+			exit(0);
 			running=0;
 			return 0;
 		}

@@ -23,7 +23,7 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	#ifndef TARGET_PC
-	backlightValue = getBacklight();
+//	backlightValue = getBacklight();
 	#endif
 	srand(time(0));
 }
