@@ -27,7 +27,12 @@ void initializeGlobals() {
 	srand(time(0));
 }
 
+void resetFrameBuffer () {
+	system("/usr/sbin/unlockvt > /dev/null");
+}
+
 int main(int argc, char* argv[]) {
+	resetFrameBuffer();
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();
