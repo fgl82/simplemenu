@@ -203,7 +203,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
 	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"./scripts/")==0) {
 		freeResources();
-		execlp("./invoker.elf","invoker.elf", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+		execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	} else {
 		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
 	}
