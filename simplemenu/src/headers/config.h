@@ -7,4 +7,5 @@ void loadFavorites();
 int loadSections();
 int loadConfig();
 void loadAliasList(int sectionNumber);
+void createConfigFilesInHomeIfTheyDontExist();
 #endif

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <sys/stat.h>
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/logic.h"
@@ -20,7 +20,6 @@ void loadAliasList(int sectionNumber) {
 		return;
 	}
 	menuSections[sectionNumber].aliasHashTable = ht_create(10000);
-	printf("papa\n");
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
 		char *romName = strtok(line, "=");
 		char *alias = strtok(NULL, "=");
@@ -34,11 +33,23 @@ void loadAliasList(int sectionNumber) {
 	fclose(aliasFile);
 }
 
+void createConfigFilesInHomeIfTheyDontExist() {
+	char pathToConfigFiles[300];
+	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",getenv("HOME"));
+	int directoryExists=mkdir(pathToConfigFiles,0700);
+	if (!directoryExists) {
+		char copyCommand[300];
+		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",getenv("HOME"));
+		system(copyCommand);
+	}
+}
 
 void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;
-		fp = fopen("./config/favorites.sav", "w");
+		char pathToFavoritesFilePlusFileName[300];
+		snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",getenv("HOME"));
+		fp = fopen(pathToFavoritesFilePlusFileName, "w");
 		int linesWritten=0;
 		for (int j=0;j<favoritesSize;j++) {
 			struct Favorite favorite = favorites[j];
@@ -70,7 +81,9 @@ void loadFavorites() {
 	char * line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	fp = fopen("./config/favorites.sav", "r");
+	char pathToFavoritesFilePlusFileName[300];
+	snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",getenv("HOME"));
+	fp = fopen(pathToFavoritesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
@@ -106,7 +119,9 @@ void loadFavorites() {
 
 void saveLastState() {
 	FILE * fp;
-	fp = fopen("./config/last_state.cfg", "w");
+	char pathToStatesFilePlusFileName[300];
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
 		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
@@ -119,7 +134,9 @@ void loadLastState() {
 	char * line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	fp = fopen("./config/last_state.cfg", "r");
+	char pathToStatesFilePlusFileName[300];
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
@@ -156,7 +173,9 @@ void loadConfig() {
 	char * line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	fp = fopen("./config/config.cfg", "r");
+	char pathToConfigFilePlusFileName[300];
+	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.cfg",getenv("HOME"));
+	fp = fopen(pathToConfigFilePlusFileName, "r");
 	int i=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		if(line[0]=='#') {
@@ -185,7 +204,9 @@ int loadSections() {
 	FILE * fp;
 	char line[500];
 	char *configurations[25];
-	fp = fopen("./config/sections.cfg", "r");
+	char pathToSectionsFilePlusFileName[300];
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
+	fp = fopen(pathToSectionsFilePlusFileName, "r");
 	if (fp==NULL) {
 		return -1;
 	}

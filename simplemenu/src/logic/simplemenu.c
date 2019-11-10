@@ -23,15 +23,15 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	pictureMode=0;
 	#ifndef TARGET_PC
-//	backlightValue = getBacklight();
 	#endif
 	srand(time(0));
 }
 
 int main(int argc, char* argv[]) {
+	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();
-	HW_Init();
+//	HW_Init();
 	setupDisplay();
 	int sectionCount=loadSections();
 	loadFavorites();

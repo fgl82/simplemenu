@@ -222,9 +222,6 @@ void markAsFavorite() {
 			if(strlen(CURRENT_SECTION.aliasFileName)>1) {
 				char temp[300]="";
 				strcpy(temp, getRomRealName(CURRENT_GAME_NAME));
-//				stripGameName(temp);
-//				strcpy(temp,getRomRealName(temp));
-//				printf("%s\n",temp);
 				if(strcmp(temp,favorites[favoritesSize].name)!=0) {
 					strcpy(favorites[favoritesSize].alias, temp);
 				}
@@ -337,7 +334,7 @@ int performAction() {
 	}
 
 	if (!hotKeyPressed&&!leftOrRightPressed&&!isUSBMode) {
-		if(keys[BTN_LB]) {
+		if(keys[BTN_L1]) {
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
@@ -349,7 +346,7 @@ int performAction() {
 			}
 			return 0;
 		}
-		if(keys[BTN_RB]) {
+		if(keys[BTN_R1]) {
 			hotKeyPressed=0;
 			int advanced = advanceSection();
 			if(advanced) {
@@ -378,7 +375,7 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_START]) {
-			cycleFrequencies();
+//			cycleFrequencies();
 			return 0;
 		}
 		if (keys[BTN_R]) {
@@ -417,7 +414,7 @@ int performAction() {
 			scrollDown();
 			return 1;
 		}
-		if(keys[BTN_UP]) {
+		if(keys[BTN_UP]||keys[JOY_UP]) {
 			scrollUp();
 			return 1;
 		}

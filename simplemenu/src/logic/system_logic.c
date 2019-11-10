@@ -24,28 +24,11 @@ void setCPU(uint32_t mhz)
     }
 }
 
-int getBacklight()
-{
-	char buf[32] = "-1";
-	FILE *f = fopen("/proc/jz/lcd_backlight", "r");
-	if (f) {
-		fgets(buf, sizeof(buf), f);
-	}
-	fclose(f);
-	return atoi(buf);
-}
-
-void setBacklight(int level) {
-	char buf[200] = {0};
-	sprintf(buf, "echo %d > /proc/jz/lcd_backlight", level);
-	system(buf);
-}
-
 void turnScreenOnOrOff(int state) {
 	const char *path = "/sys/class/graphics/fb0/blank";
 	const char *blank = state ? "0" : "1";
 	int fd = open(path, O_RDWR);
-	ssize_t written = write(fd, blank, strlen(blank));
+	write(fd, blank, strlen(blank));
 	close(fd);
 }
 
@@ -59,11 +42,9 @@ void clearTimer() {
 uint32_t suspend(uint32_t interval, void *param) {
 	if (!isUSBMode) {
 		clearTimer();
-//		backlightValue = getBacklight();
 		oldCPU=currentCPU;
 		turnScreenOnOrOff(0);
-//		setBacklight(0);
-		setCPU(OC_SLEEP);
+//		setCPU(OC_SLEEP);
 		isSuspended=1;
 	} else {
 		resetTimeoutTimer();
@@ -73,9 +54,8 @@ uint32_t suspend(uint32_t interval, void *param) {
 
 void resetTimeoutTimer() {
 	if(isSuspended) {
-		setCPU(oldCPU);
+//		setCPU(oldCPU);
 		turnScreenOnOrOff(1);
-//		setBacklight(backlightValue);
 		currentCPU=oldCPU;
 		isSuspended=0;
 	}

@@ -73,7 +73,7 @@ char *getRomRealName(char *nameWithoutExtension) {
     if (nameTakenFromAlias!=NULL) {
     	int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='('||charNumber>35) {
+			if (nameTakenFromAlias[charNumber]=='(') {
 				nameTakenFromAlias[charNumber-1]='\0';
 				break;
 			}
@@ -81,7 +81,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 		}
     	charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='/'||charNumber>35) {
+			if (nameTakenFromAlias[charNumber]=='/') {
 				nameTakenFromAlias[charNumber-1]='\0';
 				break;
 			}

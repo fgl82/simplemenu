@@ -12,8 +12,8 @@ VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
 int calculateProportionalSizeOrDistance(int number);
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor);
-int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align);
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align, SDL_Color backgroundColor);
+int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align);
 void drawShadedGameNameOnScreen(char *buf, int position);
 void drawNonShadedGameNameOnScreen(char *buf, int position);
 void drawPictureTextOnScreen(char *buf);

@@ -1,9 +1,11 @@
 #ifndef GLOBALS_DEFINED
 #define GLOBALS_DEFINED
 
+#include <SDL/SDL_joystick.h>
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
 #include "../headers/hashtable.h"
+
 
 int running;
 
@@ -76,4 +78,5 @@ struct Favorite {
 struct Favorite favorites[2000];
 
 uint8_t *keys;
+SDL_Joystick *joystick;
 #endif

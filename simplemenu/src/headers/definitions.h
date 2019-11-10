@@ -8,13 +8,21 @@
 #define BTN_Y			SDLK_LSHIFT
 #define BTN_START		SDLK_RETURN
 #define BTN_SELECT		SDLK_ESCAPE
-#define BTN_R  		    SDLK_END
+#define BTN_R  		    SDLK_PAGEUP
+#define BTN_L1			SDLK_TAB
+#define BTN_R1			SDLK_BACKSPACE
+#define BTN_L2			SDLK_PAGEUP
+#define BTN_R2			SDLK_PAGEDOWN
 #define BTN_UP			SDLK_UP
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define BTN_LB			SDLK_TAB
-#define BTN_RB			SDLK_BACKSPACE
+#define JOY_UP			SDL_HAT_UP
+#define JOY_DOWN		SDL_HAT_DOWN
+#define JOY_LEFT		SDL_HAT_LEFT
+#define JOY_RIGHT		SDL_HAT_RIGHT
+
+
 #define FAVORITES_SIZE 2000
 #define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
 #define CURRENT_FAVORITE_NAME_IN_FAVORITES_LIST favorites[CURRENT_GAME_NUMBER]
