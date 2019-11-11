@@ -219,7 +219,11 @@ void markAsFavorite() {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
-			if(strlen(CURRENT_SECTION.aliasFileName)>1) {
+			if(strcmp(getExtension(CURRENT_GAME_NAME),".opk")==0) {
+				char *name = getOPKName(CURRENT_GAME_NAME);
+				strcpy(favorites[favoritesSize].alias, name);
+				free(name);
+			} else if(strlen(CURRENT_SECTION.aliasFileName)>1) {
 				char temp[300]="";
 				strcpy(temp, getRomRealName(CURRENT_GAME_NAME));
 				if(strcmp(temp,favorites[favoritesSize].name)!=0) {

@@ -20,12 +20,12 @@
 #include "../headers/opk.h"
 
 void writeLog (char *line) {
-	#ifdef LOG_ON
+#ifdef LOG_ON
 	FILE *f;
 	f = fopen("log.txt", "a");
 	fprintf(f, "%s\n", line);
 	fclose(f);
-	#endif
+#endif
 }
 
 FILE *getCurrentSectionAliasFile() {
@@ -48,21 +48,21 @@ struct Favorite findFavorite(char *name) {
 char *search(char* arr[], int n, char *x)
 {
 
-    if (strcmp(arr[n - 1],x)==0)
-        return "Found";
+	if (strcmp(arr[n - 1],x)==0)
+		return "Found";
 
-    char *backup = arr[n - 1];
-    arr[n - 1] = x;
+	char *backup = arr[n - 1];
+	arr[n - 1] = x;
 
-    for (int i = 0;; i++) {
-        if (strcmp(arr[i],x)==0) {
-            arr[n - 1] = backup;
-            if (i < n - 1)
-                return "Found";
-            return "Not Found";
-        }
-    }
-    return "Not Found";
+	for (int i = 0;; i++) {
+		if (strcmp(arr[i],x)==0) {
+			arr[n - 1] = backup;
+			if (i < n - 1)
+				return "Found";
+			return "Not Found";
+		}
+	}
+	return "Not Found";
 }
 
 char *getRomRealName(char *nameWithoutExtension) {
@@ -70,9 +70,9 @@ char *getRomRealName(char *nameWithoutExtension) {
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
-    nameTakenFromAlias=ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
-    if (nameTakenFromAlias!=NULL) {
-    	int charNumber=0;
+	nameTakenFromAlias=ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
+	if (nameTakenFromAlias!=NULL) {
+		int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
 			if (nameTakenFromAlias[charNumber]=='(') {
 				nameTakenFromAlias[charNumber-1]='\0';
@@ -80,7 +80,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 			}
 			charNumber++;
 		}
-    	charNumber=0;
+		charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
 			if (nameTakenFromAlias[charNumber]=='/') {
 				nameTakenFromAlias[charNumber-1]='\0';
@@ -90,7 +90,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 		}
 		free(strippedNameWithoutExtension);
 		return(nameTakenFromAlias);
-    }
+	}
 	if(strippedNameWithoutExtension != NULL) {
 		free(strippedNameWithoutExtension);
 	}
@@ -100,59 +100,40 @@ char *getRomRealName(char *nameWithoutExtension) {
 }
 
 char *getOPKName(char *package_path) {
-
 	struct OPK *opk = opk_open(package_path);
 	char *name;
-	while (1) {
-		const char *metadata_name;
-		if (opk_open_metadata(opk, &metadata_name) <= 0)
-			break;
-
-		const char *key, *val;
-		size_t skey, sval;
-		while(opk_read_pair(opk, &key, &skey, &val, &sval) && key) {
-			if (!strncmp(key, "Name", skey)) {
-//				name = val;
-				name=malloc(sval+1);
-				strncpy(name, val, sval);
-				printf("%s\n",name);
-			}
-			if (!strncmp(key, "Category", skey)) {
-//				name = val;
-				name=malloc(sval+1);
-				strncpy(name, val, sval);
-				printf("%s\n",name);
-			}
-//			printf("%.*s: %.*s\n", (int) skey, key, (int) sval, val);
+	const char *metadata_name;
+	opk_open_metadata(opk, &metadata_name);
+	const char *key, *val;
+	size_t skey, sval;
+	while(opk_read_pair(opk, &key, &skey, &val, &sval) && key) {
+		if (!strncmp(key, "Name", skey)) {
+			name=malloc((int)sval+1);
+			strncpy(name,val,(int)sval);
+			name[sval]='\0';
 		}
 	}
-
 	opk_close(opk);
+	return name;
+}
 
-	printf("\n");
-return NULL;
-//	printf("1\n");
-//	struct OPK *opk = opk_open(package_path);
-//	if(opk==NULL) {
-//		printf("ASDASSDA\n");
-//	}
-//	char *name=malloc(20);
-//	strcpy(name,"papa");
-//	const char *key, *val;
-//	size_t skey, sval;
-//	while(opk_read_pair(opk, &key, &skey, &val, &sval) && key);
-//		printf("%.*s: %.*s\n", (int) skey, key, (int) sval, val);
-//	while(opk_read_pair(opk, &key, &skey, &val, &sval)) {
-//		printf("3\n");
-//		char buf[sval + 1];
-//		sprintf(buf, "%.*s", sval, val);
-//		if (!strncmp(key, "Name", skey)) {
-//			name = buf;
-//			break;
-//		}
-//	}
-//	opk_close(opk);
-//	return name;
+char *getOPKCategory(char *package_path) {
+	struct OPK *opk = opk_open(package_path);
+	char *name;
+	const char *metadata_name;
+	opk_open_metadata(opk, &metadata_name);
+	const char *key, *val;
+	size_t skey, sval;
+	while(opk_read_pair(opk, &key, &skey, &val, &sval) && key) {
+		if (!strncmp(key, "Categories", skey)) {
+			name=malloc((int)sval+1);
+			strncpy(name,val,(int)sval);
+			name[sval-1]='\0';
+			printf("%s\n",name);
+		}
+	}
+	opk_close(opk);
+	return name;
 }
 
 char *getFileNameOrAlias(char *romName) {
@@ -172,9 +153,7 @@ char *getFileNameOrAlias(char *romName) {
 			char *ext = getExtension(romName);
 			if (strcmp(ext,".opk")==0) {
 				const char *opkName = getOPKName(romName);
-//				printf("%s\n", opkName);
 				strcpy (alias, opkName);
-//				free(opkName);
 			}
 			stripGameName(alias);
 		}
@@ -423,8 +402,8 @@ int compareFavorites(const void *f1, const void *f2)
 	for(int i=0;temp2[i]; i++) {
 		temp2[i] = tolower(temp2[i]);
 	}
-//	temp1[0]=tolower(temp1[0]);
-//	temp2[0]=tolower(temp2[0]);
+	//	temp1[0]=tolower(temp1[0]);
+	//	temp2[0]=tolower(temp2[0]);
 	return strcmp(temp1, temp2);
 }
 
@@ -463,6 +442,12 @@ void loadGameList(int refresh) {
 					strcmp((files[i]),".")!=0 &&
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
+				if(strcmp(ext,".opk")==0) {
+					char *category = getOPKCategory(files[i]);
+					if(strcmp(category,"emulators")==0) {
+						continue;
+					}
+				}
 				int size = strlen(files[i])+1;
 				CURRENT_SECTION.gameList[page][game]=malloc(size);
 				if (game==ITEMS_PER_PAGE) {

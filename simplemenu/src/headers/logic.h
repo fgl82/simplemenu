@@ -20,4 +20,6 @@ int compareFavorites(const void *s1, const void *s2);
 FILE *getCurrentSectionAliasFile();
 char *getRomRealName(char *nameWithoutExtension);
 char *getFileNameOrAlias(char *romName);
+char *getOPKName(char *package_path);
+char *getOPKCategory(char *package_path);
 #endif

@@ -11,6 +11,7 @@
 #include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
+#include "../headers/opk.h"
 
 char buf[300];
 
