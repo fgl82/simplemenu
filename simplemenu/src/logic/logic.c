@@ -17,6 +17,7 @@
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
+#include "../headers/opk.h"
 
 void writeLog (char *line) {
 	#ifdef LOG_ON
@@ -98,6 +99,62 @@ char *getRomRealName(char *nameWithoutExtension) {
 	return(nameTakenFromAlias);
 }
 
+char *getOPKName(char *package_path) {
+
+	struct OPK *opk = opk_open(package_path);
+	char *name;
+	while (1) {
+		const char *metadata_name;
+		if (opk_open_metadata(opk, &metadata_name) <= 0)
+			break;
+
+		const char *key, *val;
+		size_t skey, sval;
+		while(opk_read_pair(opk, &key, &skey, &val, &sval) && key) {
+			if (!strncmp(key, "Name", skey)) {
+//				name = val;
+				name=malloc(sval+1);
+				strncpy(name, val, sval);
+				printf("%s\n",name);
+			}
+			if (!strncmp(key, "Category", skey)) {
+//				name = val;
+				name=malloc(sval+1);
+				strncpy(name, val, sval);
+				printf("%s\n",name);
+			}
+//			printf("%.*s: %.*s\n", (int) skey, key, (int) sval, val);
+		}
+	}
+
+	opk_close(opk);
+
+	printf("\n");
+return NULL;
+//	printf("1\n");
+//	struct OPK *opk = opk_open(package_path);
+//	if(opk==NULL) {
+//		printf("ASDASSDA\n");
+//	}
+//	char *name=malloc(20);
+//	strcpy(name,"papa");
+//	const char *key, *val;
+//	size_t skey, sval;
+//	while(opk_read_pair(opk, &key, &skey, &val, &sval) && key);
+//		printf("%.*s: %.*s\n", (int) skey, key, (int) sval, val);
+//	while(opk_read_pair(opk, &key, &skey, &val, &sval)) {
+//		printf("3\n");
+//		char buf[sval + 1];
+//		sprintf(buf, "%.*s", sval, val);
+//		if (!strncmp(key, "Name", skey)) {
+//			name = buf;
+//			break;
+//		}
+//	}
+//	opk_close(opk);
+//	return name;
+}
+
 char *getFileNameOrAlias(char *romName) {
 	char *alias = malloc(500);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1) {
@@ -112,6 +169,13 @@ char *getFileNameOrAlias(char *romName) {
 				stripGameName(alias);
 			}
 		} else {
+			char *ext = getExtension(romName);
+			if (strcmp(ext,".opk")==0) {
+				const char *opkName = getOPKName(romName);
+//				printf("%s\n", opkName);
+				strcpy (alias, opkName);
+//				free(opkName);
+			}
 			stripGameName(alias);
 		}
 	}
@@ -201,7 +265,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"./scripts/")==0) {
+	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
 		freeResources();
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	} else {
