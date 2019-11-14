@@ -150,10 +150,10 @@ void drawGameList() {
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	char *nameWithoutExtension;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]!=NULL) {
+		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL) {
 			gamesInPage++;
 			sprintf(buf,"%s", "");
-			nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][i]);
+			nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name);
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
 				drawShadedGameNameOnScreen(buf, nextLine);

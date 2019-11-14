@@ -148,7 +148,6 @@ void rewindPage() {
 			previousGame = getFileNameOrAlias(PREVIOUS_GAME_NAME);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
-
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
 					break;

@@ -60,11 +60,17 @@ struct MenuSection {
 	SDL_Color bodySelectedTextBackgroundColor;
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
-	char *gameList[1000][10];
+//	char *gameList[1000][10];
+	struct Rom *romList[1000][10];
 	hashtable_t *aliasHashTable;
 };
 struct MenuSection menuSections[50];
 
+
+struct OPK {
+	char name[300];
+	char category[300];
+};
 
 struct Favorite {
 	char name[300];
@@ -72,7 +78,11 @@ struct Favorite {
 	char emulatorFolder[200];
 	char executable[200];
 	char filesDirectory[200];
-    struct Favorite *next;
+};
+
+struct Rom {
+	char *name;
+	char *alias;
 };
 
 struct Favorite favorites[2000];

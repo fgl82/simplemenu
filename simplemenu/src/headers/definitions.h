@@ -29,7 +29,8 @@
 #define CURRENT_SECTION menuSections[currentSectionNumber]
 #define FAVORITES_SECTION menuSections[favoritesSectionNumber]
 #define NEXT_SECTION menuSections[currentSectionNumber+1]
-#define CURRENT_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame]
-#define PREVIOUS_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame-1]
-#define NEXT_GAME_NAME CURRENT_SECTION.gameList[menuSections[currentSectionNumber].currentPage][menuSections[currentSectionNumber].currentGame+1]
+#define CURRENT_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]
+#define CURRENT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]->name
+#define PREVIOUS_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame-1]->name
+#define NEXT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame+1]->name
 #endif
