@@ -66,12 +66,6 @@ struct MenuSection {
 };
 struct MenuSection menuSections[50];
 
-
-struct OPK {
-	char name[300];
-	char category[300];
-};
-
 struct Favorite {
 	char name[300];
 	char alias[300];
