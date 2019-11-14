@@ -60,7 +60,6 @@ struct MenuSection {
 	SDL_Color bodySelectedTextBackgroundColor;
 	SDL_Color bodySelectedTextForegroundColor;
 	SDL_Color bodyBackgroundColor;
-//	char *gameList[1000][10];
 	struct Rom *romList[1000][10];
 	hashtable_t *aliasHashTable;
 };

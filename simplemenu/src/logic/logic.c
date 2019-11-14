@@ -276,7 +276,7 @@ int countGamesInSection() {
 	int gamesCounter=0;
 	for (int i=0;i<=CURRENT_SECTION.totalPages;i++) {
 		for (int j=0;j<ITEMS_PER_PAGE;j++) {
-			if (CURRENT_SECTION.romList[i][j]!=NULL&&CURRENT_SECTION.romList[i][j]->name!=NULL) {
+			if (CURRENT_SECTION.romList[i][j]!=NULL&&strlen(CURRENT_SECTION.romList[i][j]->name)>0) {
 				gamesCounter++;
 			}
 		}
@@ -290,7 +290,14 @@ void loadFavoritesSectionGameList() {
 	FAVORITES_SECTION.totalPages=0;
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
-			FAVORITES_SECTION.romList[i][j]->name=NULL;
+			if(FAVORITES_SECTION.romList[i][j]->name!=NULL) {
+//				free(FAVORITES_SECTION.romList[i][j]->name);
+//				free(FAVORITES_SECTION.romList[i][j]);
+//				if (FAVORITES_SECTION.romList[i][j]->name!=NULL) {
+//					strcpy(FAVORITES_SECTION.romList[i][j]->name,"\0");
+//					FAVORITES_SECTION.romList[i][j]->name=NULL;;
+//				}
+			}
 		}
 	}
 	for (int i=0;i<favoritesSize;i++){
@@ -304,6 +311,9 @@ void loadFavoritesSectionGameList() {
 		if (strlen(favorites[i].alias)>1) {
 			FAVORITES_SECTION.romList[page][game]->name = favorites[i].alias;
 		} else {
+			if (FAVORITES_SECTION.romList[page][game]==NULL) {
+				FAVORITES_SECTION.romList[page][game]= malloc(sizeof(struct Rom));
+			}
 			FAVORITES_SECTION.romList[page][game]->name = favorites[i].name;
 		}
 		game++;
@@ -502,7 +512,9 @@ void loadGameList(int refresh) {
 int countGamesInPage() {
 	int gamesCounter=0;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL) {
+		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL
+				&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL
+				&&strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name)>1) {
 			gamesCounter++;
 		}
 	}

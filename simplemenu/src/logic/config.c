@@ -114,6 +114,7 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
+	printf("%d",favoritesSize);
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 

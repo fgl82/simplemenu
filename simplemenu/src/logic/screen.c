@@ -156,9 +156,17 @@ void drawGameList() {
 			nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name);
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
+				printf("trying shaded %s\n",buf);
+				if(strlen(buf)>1) {
 				drawShadedGameNameOnScreen(buf, nextLine);
+				}
+				printf("shaded\n");
 			} else {
+				printf("trying non shaded %s\n",buf);
+				if(strlen(buf)>1) {
 				drawNonShadedGameNameOnScreen(buf, nextLine);
+				}
+				printf("non shaded\n");
 			}
 			nextLine+=calculateProportionalSizeOrDistance(19);
 			free(nameWithoutExtension);
@@ -175,7 +183,7 @@ void drawFooter(char *text) {
 void setupDecorations() {
 	drawHeader();
 	char tempString[200];
-	if (CURRENT_GAME_NAME==NULL) {
+	if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+10*CURRENT_SECTION.currentPage, countGamesInSection());
 	} else {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+1+10*CURRENT_SECTION.currentPage, countGamesInSection());

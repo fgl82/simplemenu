@@ -67,7 +67,7 @@ void scrollUp() {
 
 void scrollDown() {
 	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
-		if (NEXT_GAME_NAME!=NULL) {
+		if (strlen(NEXT_GAME_NAME)>0) {
 			CURRENT_SECTION.currentGame++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
@@ -85,7 +85,7 @@ void scrollDown() {
 
 void advancePage() {
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
-		if (CURRENT_GAME_NAME==NULL) {
+		if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 			return;
 		}
 		if (CURRENT_SECTION.alphabeticalPaging) {
@@ -114,7 +114,7 @@ void advancePage() {
 }
 
 void rewindPage() {
-	if (CURRENT_GAME_NAME==NULL) {
+	if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		return;
 	}
 	if (CURRENT_SECTION.alphabeticalPaging) {
@@ -174,6 +174,7 @@ void rewindPage() {
 }
 
 void showOrHideFavorites() {
+	printf("ADSASD\n");
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
@@ -205,10 +206,11 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
+		CURRENT_GAME=NULL;
 		favoritesSize--;
 		loadFavoritesSectionGameList();
 	}
-	if(CURRENT_GAME_NAME==NULL) {
+	if(CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		scrollUp();
 	}
 }
