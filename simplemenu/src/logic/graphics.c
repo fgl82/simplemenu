@@ -19,9 +19,19 @@ int calculateProportionalSizeOrDistance(int number) {
 //	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align, SDL_Color backgroundColor) {
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align, SDL_Color backgroundColor) {
 	SDL_Surface *msg;
-	msg = TTF_RenderText_Shaded(font, buf, txtColor, backgroundColor);
+	char bufCopy[300];
+	strcpy(bufCopy,buf);
+	msg = TTF_RenderText_Shaded(font, bufCopy, txtColor, backgroundColor);
+	int len=strlen(buf);
+	while (msg->w>300) {
+		bufCopy[len]='\0';
+		SDL_FreeSurface(msg);
+		msg = TTF_RenderText_Shaded(font, bufCopy, txtColor, backgroundColor);
+		len--;
+	}
+
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
 	} else if (align & HAlignRight) {
@@ -42,9 +52,18 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL
 	return msg->w;
 }
 
-int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[64], SDL_Color txtColor, int align) {
+int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align) {
 	SDL_Surface *msg;
-	msg = TTF_RenderText_Blended(font, buf, txtColor);
+	char bufCopy[300];
+	strcpy(bufCopy,buf);
+	msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
+	int len=strlen(buf);
+	while (msg->w>300) {
+		bufCopy[len]='\0';
+		SDL_FreeSurface(msg);
+		msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
+		len--;
+	}
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
 	} else if (align & HAlignRight) {

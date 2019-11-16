@@ -87,7 +87,7 @@ void stripGameName(char *gameName) {
 	strcpy(gameName,getNameWithoutPath(gameName));
 	int charNumber = 0;
 	while (gameName[charNumber]) {
-		if (gameName[charNumber]=='('||charNumber>35) {
+		if (gameName[charNumber]=='(') {
 			gameName[charNumber-1]='\0';
 			break;
 		}

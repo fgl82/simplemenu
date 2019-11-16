@@ -137,6 +137,9 @@ void loadLastState() {
 			first=atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
+			if(strlen(CURRENT_SECTION.sectionName)<1) {
+				continue;
+			}
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
 			CURRENT_SECTION.currentGame=atoi(configurations[2]);
 			CURRENT_SECTION.alphabeticalPaging=0;
@@ -188,6 +191,9 @@ int loadSections() {
 		return -1;
 	}
 	while (fgets(line, sizeof(line), fp) != NULL) {
+		if(strlen(line)<2) {
+			continue;
+		}
 		int i=0;
 		char *ptr = strtok(line, ";");
 		while(ptr != NULL) {

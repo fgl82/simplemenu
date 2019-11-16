@@ -71,7 +71,7 @@ char *getRomRealName(char *nameWithoutExtension) {
     if (nameTakenFromAlias!=NULL) {
     	int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='('||charNumber>35) {
+			if (nameTakenFromAlias[charNumber]=='(') {
 				nameTakenFromAlias[charNumber-1]='\0';
 				break;
 			}
@@ -79,7 +79,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 		}
     	charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='/'||charNumber>35) {
+			if (nameTakenFromAlias[charNumber]=='/') {
 				nameTakenFromAlias[charNumber-1]='\0';
 				break;
 			}
@@ -178,7 +178,8 @@ int checkIfEmulatorExists(char *path, char *executable) {
 	strcpy(executableWithFullPath,path);
 	strcat(executableWithFullPath,executable);
 	FILE * fp;
-	fp = fopen(executableWithFullPath, "r");
+	char* exec=strtok(executableWithFullPath," ");
+	fp = fopen(exec, "r");
 	if (fp==NULL) {
 		return 0;
 	}
