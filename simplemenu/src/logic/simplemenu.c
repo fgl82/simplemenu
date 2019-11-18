@@ -29,12 +29,14 @@ void initializeGlobals() {
 
 void resetFrameBuffer () {
 	system("/usr/sbin/unlockvt > /dev/null");
-	system("/usr/bin/reset");
-	system("echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind");
+//	system("/usr/bin/reset");
+//	system("echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind");
 }
 
 int main(int argc, char* argv[]) {
+	#ifndef TARGET_PC
 	resetFrameBuffer();
+	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();

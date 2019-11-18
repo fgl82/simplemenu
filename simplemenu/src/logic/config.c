@@ -114,7 +114,6 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
-	printf("%d",favoritesSize);
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 
@@ -157,6 +156,9 @@ void loadLastState() {
 			first=atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
+			if(strlen(CURRENT_SECTION.sectionName)<1) {
+				continue;
+			}			
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
 			CURRENT_SECTION.currentGame=atoi(configurations[2]);
 			CURRENT_SECTION.alphabeticalPaging=0;
@@ -212,6 +214,9 @@ int loadSections() {
 		return -1;
 	}
 	while (fgets(line, sizeof(line), fp) != NULL) {
+		if(strlen(line)<2) {
+			continue;
+		}	
 		int i=0;
 		char *ptr = strtok(line, ";");
 		while(ptr != NULL) {
@@ -255,7 +260,7 @@ int loadSections() {
 		menuSections[menuSectionCounter].hidden=0;
 		menuSectionCounter++;
 	}
-	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;27;27;17;110;217;59;59;71;0;215;8;192;15;6;241;206;42;none;");
+	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;31;34;231;109;62;49;58;66;152;157;152;248;85;41;27;33;42;none;");
 	int i=0;
 	char *ptr = strtok(line, ";");
 	while(ptr != NULL) {

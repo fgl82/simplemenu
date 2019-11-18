@@ -39,8 +39,6 @@ int isSuspended;
 int isUSBMode;
 int backlightValue;
 
-char logLine[500];
-
 struct MenuSection {
 	char sectionName[25];
 	char emulatorFolder[200];
@@ -76,6 +74,13 @@ struct Favorite {
 struct Rom {
 	char *name;
 	char *alias;
+};
+
+struct OPKDesktopFile {
+	char parentOPK[200];
+	char name[200];
+	char displayName[200];
+	char category[200];
 };
 
 struct Favorite favorites[2000];

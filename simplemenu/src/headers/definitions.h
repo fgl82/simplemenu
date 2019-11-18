@@ -31,6 +31,7 @@
 #define NEXT_SECTION menuSections[currentSectionNumber+1]
 #define CURRENT_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]
 #define CURRENT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]->name
+#define PREVIOUS_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame-1]
 #define PREVIOUS_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame-1]->name
 #define NEXT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame+1]->name
 #endif

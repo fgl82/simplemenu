@@ -66,7 +66,7 @@ void showLetter() {
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
 	char letter[2]="";
 	char *currentGame = malloc(500);
-	currentGame=getFileNameOrAlias(CURRENT_GAME_NAME);
+	currentGame=getFileNameOrAlias(CURRENT_GAME);
 	letter[0]=toupper(currentGame[0]);
 	letter[1]='\0';
 	if(isdigit(letter[0])) {
@@ -105,7 +105,7 @@ void displayGamePicture() {
 	stripGameName(tempGameName);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
-		char* displayName=getFileNameOrAlias(CURRENT_GAME_NAME);
+		char* displayName=getFileNameOrAlias(CURRENT_GAME);
 		drawPictureTextOnScreen(displayName);
 		free(displayName);
 	} else {
@@ -153,20 +153,22 @@ void drawGameList() {
 		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL) {
 			gamesInPage++;
 			sprintf(buf,"%s", "");
-			nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name);
+			if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias!=NULL) {
+				nameWithoutExtension=malloc(strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias)+1);
+				strcpy(nameWithoutExtension,CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias);
+				strcat(nameWithoutExtension,"\0");
+			} else {
+				nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]);
+			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
-				printf("trying shaded %s\n",buf);
 				if(strlen(buf)>1) {
-				drawShadedGameNameOnScreen(buf, nextLine);
+					drawShadedGameNameOnScreen(buf, nextLine);
 				}
-				printf("shaded\n");
 			} else {
-				printf("trying non shaded %s\n",buf);
 				if(strlen(buf)>1) {
-				drawNonShadedGameNameOnScreen(buf, nextLine);
+					drawNonShadedGameNameOnScreen(buf, nextLine);
 				}
-				printf("non shaded\n");
 			}
 			nextLine+=calculateProportionalSizeOrDistance(19);
 			free(nameWithoutExtension);

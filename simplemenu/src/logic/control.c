@@ -89,7 +89,7 @@ void advancePage() {
 			return;
 		}
 		if (CURRENT_SECTION.alphabeticalPaging) {
-			char *currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+			char *currentGame = getFileNameOrAlias(CURRENT_GAME);
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
@@ -98,7 +98,7 @@ void advancePage() {
 				}
 				scrollDown();
 				free(currentGame);
-				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+				currentGame = getFileNameOrAlias(CURRENT_GAME);
 			}
 			free(currentGame);
 		} else {
@@ -118,11 +118,11 @@ void rewindPage() {
 		return;
 	}
 	if (CURRENT_SECTION.alphabeticalPaging) {
-		char *currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+		char *currentGame = getFileNameOrAlias(CURRENT_GAME);
 		char *previousGame;
 		int hitStart = 0;
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = getFileNameOrAlias(PREVIOUS_GAME_NAME);
+			previousGame = getFileNameOrAlias(PREVIOUS_GAME);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -132,7 +132,7 @@ void rewindPage() {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+				currentGame = getFileNameOrAlias(CURRENT_GAME);
 			} else {
 				break;
 			}
@@ -143,9 +143,9 @@ void rewindPage() {
 		}
 		hitStart=0;
 		free(currentGame);
-		currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+		currentGame = getFileNameOrAlias(CURRENT_GAME);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = getFileNameOrAlias(PREVIOUS_GAME_NAME);
+			previousGame = getFileNameOrAlias(PREVIOUS_GAME);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
@@ -156,7 +156,7 @@ void rewindPage() {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(CURRENT_GAME_NAME);
+				currentGame = getFileNameOrAlias(CURRENT_GAME);
 			} else {
 				break;
 			}
@@ -174,7 +174,6 @@ void rewindPage() {
 }
 
 void showOrHideFavorites() {
-	printf("ADSASD\n");
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
@@ -221,9 +220,7 @@ void markAsFavorite() {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
 			if(strcmp(getExtension(CURRENT_GAME_NAME),".opk")==0) {
-				char *name = getOPKName(CURRENT_GAME_NAME);
-				strcpy(favorites[favoritesSize].alias, name);
-				free(name);
+				strcpy(favorites[favoritesSize].alias, CURRENT_GAME->alias);
 			} else if(strlen(CURRENT_SECTION.aliasFileName)>1) {
 				char temp[300]="";
 				strcpy(temp, getRomRealName(CURRENT_GAME_NAME));
