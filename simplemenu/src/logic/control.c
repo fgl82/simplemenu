@@ -219,14 +219,8 @@ void markAsFavorite() {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
-			if(strcmp(getExtension(CURRENT_GAME_NAME),".opk")==0) {
+			if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, CURRENT_GAME->alias);
-			} else if(strlen(CURRENT_SECTION.aliasFileName)>1) {
-				char temp[300]="";
-				strcpy(temp, getRomRealName(CURRENT_GAME_NAME));
-				if(strcmp(temp,favorites[favoritesSize].name)!=0) {
-					strcpy(favorites[favoritesSize].alias, temp);
-				}
 			}
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);

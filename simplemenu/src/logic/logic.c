@@ -443,15 +443,17 @@ int compareGamesFromGameList (const void *game1, const void *game2) {
 
 int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) {
 	char s1Alias[300];
-	strcpy(s1Alias,(char *)(*(struct Rom **)game1)->name);
+	if((char *)(*(struct Rom **)game1)->alias!=NULL&&strlen((char *)(*(struct Rom **)game1)->alias)>2) {
+		strcpy(s1Alias,(char *)(*(struct Rom **)game1)->alias);
+	} else {
+		strcpy(s1Alias,(char *)(*(struct Rom **)game1)->name);
+	}
 	char s2Alias[300];
-	strcpy(s2Alias,(char *)(*(struct Rom **)game2)->name);
-	stripGameName(s1Alias);
-	stripGameName(s2Alias);
-	char *temp = getRomRealName(s1Alias);
-	strcpy(s1Alias, temp);
-	temp = getRomRealName(s2Alias);
-	strcpy(s2Alias, temp);
+	if((char *)(*(struct Rom **)game2)->alias!=NULL&&strlen((char *)(*(struct Rom **)game2)->alias)>2) {
+		strcpy(s2Alias,(char *)(*(struct Rom **)game2)->alias);
+	} else {
+		strcpy(s2Alias,(char *)(*(struct Rom **)game2)->name);
+	}
 	return genericGameCompareWithAlias(s1Alias, s2Alias);
 }
 
@@ -489,7 +491,6 @@ void loadGameList(int refresh) {
 							printf("%s WAS AN EMULATOR\n",desktopFiles[desktopCounter].parentOPK);
 							break;
 						} else {
-
 							realItemCount++;
 							int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen(" -m ")+strlen(desktopFiles[desktopCounter].name)+1;// " -m "
 							int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
@@ -547,11 +548,7 @@ void loadGameList(int refresh) {
 			CURRENT_SECTION.hidden=1;
 			return;
 		}
-		if (strlen(CURRENT_SECTION.aliasFileName)>1) {
-			qsort(menuSections[currentSectionNumber].romList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
-		} else {
-			qsort(menuSections[currentSectionNumber].romList, countGamesInSection(), sizeof(char *), compareGamesFromGameList);
-		}
+		qsort(menuSections[currentSectionNumber].romList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
 	}
 	printf("end\n");
 }
