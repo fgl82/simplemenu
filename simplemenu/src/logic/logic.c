@@ -161,21 +161,16 @@ char *getAlias(char *romName) {
 }
 
 char *getFileNameOrAlias(struct Rom *rom) {
-	char *displayName = malloc(500);
-	if(CURRENT_GAME->alias!=NULL) {
+	char *displayName = malloc(300);
+	printf("FER: %s\n",rom->name);
+	if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 		strcpy(displayName, rom->alias);
 	} else {
+		printf("ONLY NAME\n");
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
-		if(currentSectionNumber==favoritesSectionNumber) {
-			struct Favorite favorite = findFavorite(displayName);
-			if (strlen(favorite.alias)<2) {
-				stripGameName(displayName);
-			}
-		} else {
-			stripGameName(displayName);
-		}
+		stripGameName(displayName);
 	}
 	return displayName;
 }
@@ -305,14 +300,15 @@ void loadFavoritesSectionGameList() {
 	FAVORITES_SECTION.totalPages=0;
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
-			if(FAVORITES_SECTION.romList[i][j]->name!=NULL) {
-//				free(FAVORITES_SECTION.romList[i][j]->name);
-//				free(FAVORITES_SECTION.romList[i][j]);
-//				if (FAVORITES_SECTION.romList[i][j]->name!=NULL) {
-//					strcpy(FAVORITES_SECTION.romList[i][j]->name,"\0");
-//					FAVORITES_SECTION.romList[i][j]->name=NULL;;
-//				}
-			}
+			FAVORITES_SECTION.romList[i][j]=NULL;
+			//			if(FAVORITES_SECTION.romList[i][j]->name!=NULL) {
+			//				free(FAVORITES_SECTION.romList[i][j]->name);
+			//				free(FAVORITES_SECTION.romList[i][j]);
+			//				if (FAVORITES_SECTION.romList[i][j]->name!=NULL) {
+			//					strcpy(FAVORITES_SECTION.romList[i][j]->name,"\0");
+			//					FAVORITES_SECTION.romList[i][j]->name=NULL;;
+			//				}
+			//			}
 		}
 	}
 	for (int i=0;i<favoritesSize;i++){
@@ -323,14 +319,17 @@ void loadFavoritesSectionGameList() {
 				FAVORITES_SECTION.totalPages++;
 			}
 		}
-		if (strlen(favorites[i].alias)>1) {
-			FAVORITES_SECTION.romList[page][game]->name = favorites[i].alias;
-		} else {
-			if (FAVORITES_SECTION.romList[page][game]==NULL) {
-				FAVORITES_SECTION.romList[page][game]= malloc(sizeof(struct Rom));
-			}
-			FAVORITES_SECTION.romList[page][game]->name = favorites[i].name;
+		if (FAVORITES_SECTION.romList[page][game]==NULL) {
+			FAVORITES_SECTION.romList[page][game]= malloc(sizeof(struct Rom));
+			FAVORITES_SECTION.romList[page][game]->name=malloc(300);
+			FAVORITES_SECTION.romList[page][game]->alias=malloc(300);
 		}
+//		if (strlen(favorites[i].alias)>1) {
+		strcpy(FAVORITES_SECTION.romList[page][game]->alias, favorites[i].alias);
+//		} else {
+//			FAVORITES_SECTION.romList[page][game]->alias = " ";
+//		}
+		strcpy(FAVORITES_SECTION.romList[page][game]->name, favorites[i].name);
 		game++;
 	}
 }

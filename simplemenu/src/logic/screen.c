@@ -150,15 +150,21 @@ void drawGameList() {
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	char *nameWithoutExtension;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL) {
+		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&
+			CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name!=NULL) {
 			gamesInPage++;
 			sprintf(buf,"%s", "");
-			if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias!=NULL) {
+			if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&
+			    CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias!=NULL&&
+				(strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias)>2)) {
 				nameWithoutExtension=malloc(strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias)+1);
 				strcpy(nameWithoutExtension,CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->alias);
 				strcat(nameWithoutExtension,"\0");
 			} else {
-				nameWithoutExtension=getFileNameOrAlias(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]);
+				nameWithoutExtension=malloc(strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name)+1);
+				strcpy(nameWithoutExtension,CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name);
+				strcat(nameWithoutExtension,"\0");
+				stripGameName(nameWithoutExtension);
 			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {

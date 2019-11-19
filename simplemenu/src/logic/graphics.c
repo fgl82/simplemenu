@@ -31,7 +31,6 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SD
 		msg = TTF_RenderText_Shaded(font, bufCopy, txtColor, backgroundColor);
 		len--;
 	}
-
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
 	} else if (align & HAlignRight) {
