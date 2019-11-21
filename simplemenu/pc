@@ -1,0 +1,5 @@
+#!/bin/sh
+make PLATFORM=PC
+cd output
+./simplemenu.dge
+cd ..

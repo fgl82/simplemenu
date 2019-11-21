@@ -52,6 +52,7 @@ struct MenuSection {
 	int currentGame;
 	int alphabeticalPaging;
 	int totalPages;
+	int initialized;
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;

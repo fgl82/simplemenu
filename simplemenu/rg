@@ -1,0 +1,6 @@
+#!/bin/sh
+make clean
+make PLATFORM=RG-350
+cd output
+./make_opk.sh
+scp simplemenu.opk root@10.1.1.2:/media/data/apps

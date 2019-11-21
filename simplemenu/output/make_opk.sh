@@ -12,7 +12,7 @@ Comment=A sensible launcher
 Exec=simplemenu.dge
 Terminal=false
 Type=Application
-StartupNotify=true
+StartupNotify=false
 Icon=smenu
 Categories=applications;
 EOF

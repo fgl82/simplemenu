@@ -67,24 +67,35 @@ char *getNameWithoutExtension(char *fileName) {
 
 char *getNameWithoutPath(char *fileName) {
 	char *e;
+	char *result;
 	e = strrchr(fileName, '/');
 	if (e==NULL) {
-		return fileName;
+		result=malloc(strlen(fileName)+1);
+		strcpy(result,fileName);
+		return result;
 	} else {
-		return e+1;
+		result=malloc(strlen(e+1)+1);
+		strcpy(result,e+1);
+		return result;
 	}
 }
 
 char *getGameName(char *gameName) {
 	char *tempGameName=malloc(strlen(gameName)+1);
-	strcpy(tempGameName,getNameWithoutExtension(gameName));
-	strcpy(tempGameName,getNameWithoutPath(gameName));
+	char *nameWithoutExtension=getNameWithoutExtension(gameName);
+	char *nameWithoutPath=getNameWithoutPath(gameName);
+	strcpy(tempGameName,nameWithoutExtension);
+	strcpy(tempGameName,nameWithoutPath);
+	free(nameWithoutExtension);
+	free(nameWithoutPath);
 	return tempGameName;
 }
 
 void stripGameName(char *gameName) {
-	strcpy(gameName,getNameWithoutExtension(gameName));
-	strcpy(gameName,getNameWithoutPath(gameName));
+	char *nameWithoutExtension=getNameWithoutExtension(gameName);
+	char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+	strcpy(gameName,nameWithoutExtension);
+	strcpy(gameName,nameWithoutPath);
 	int charNumber = 0;
 	while (gameName[charNumber]) {
 		if (gameName[charNumber]=='(') {
@@ -93,6 +104,8 @@ void stripGameName(char *gameName) {
 		}
 		charNumber++;
 	}
+	free(nameWithoutExtension);
+	free(nameWithoutPath);
 }
 
 int positionWhereGameNameStartsInFullPath (char* string) {

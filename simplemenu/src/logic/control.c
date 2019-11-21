@@ -251,19 +251,26 @@ int performAction() {
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
-	if(keys[BTN_B]) {
-		if (keys[BTN_X]&&!leftOrRightPressed&&currentSectionNumber!=favoritesSectionNumber) {
+	if (keys[BTN_R1]&&!leftOrRightPressed) {
+		printf("deleting\n");
+		if (!favoritesSectionSelected) {
 			deleteCurrentGame(CURRENT_GAME_NAME);
 			loadGameList(1);
-			if(CURRENT_GAME_NAME==NULL) {
-				scrollUp();
-			}
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
 				loadGameList(0);
 			}
+			if(CURRENT_GAME_NAME==NULL) {
+				scrollUp();
+			}
 			setupDecorations();
+		} else {
+			generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
+			return 1;
 		}
+	}
+	if(keys[BTN_B]) {
+
 		if (keys[BTN_START]&&!leftOrRightPressed) {
 			hotKeyPressed=0;
 			int returnedValue = system("./usb_mode_on.sh");

@@ -71,10 +71,8 @@ char *getRomRealName(char *nameWithoutExtension) {
 	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
 	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
 	stripGameName(strippedNameWithoutExtension);
-	printf("%s\n",strippedNameWithoutExtension);
 	nameTakenFromAlias=ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
 	if (nameTakenFromAlias!=NULL) {
-		printf("alias was %s\n",nameTakenFromAlias);
 		int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
 			if (nameTakenFromAlias[charNumber]=='(') {
@@ -92,7 +90,6 @@ char *getRomRealName(char *nameWithoutExtension) {
 			charNumber++;
 		}
 		free(strippedNameWithoutExtension);
-		printf("passed\n");
 		return(nameTakenFromAlias);
 	}
 	if(strippedNameWithoutExtension != NULL) {
@@ -137,7 +134,7 @@ int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 }
 
 char *getAlias(char *romName) {
-	char *alias = malloc(500);
+	char *alias = malloc(300);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1) {
 		strcpy(alias, getRomRealName(romName));
 	} else {
@@ -162,11 +159,9 @@ char *getAlias(char *romName) {
 
 char *getFileNameOrAlias(struct Rom *rom) {
 	char *displayName = malloc(300);
-	printf("FER: %s\n",rom->name);
 	if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 		strcpy(displayName, rom->alias);
 	} else {
-		printf("ONLY NAME\n");
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
@@ -258,12 +253,13 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
+//	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
 		freeResources();
+//		printf("%s %s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-	} else {
-		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
-	}
+//	} else {
+//		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
+//	}
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
@@ -458,22 +454,34 @@ int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) 
 }
 
 void loadGameList(int refresh) {
-	printf("start\n");
 	int loadedFiles=0;
-	if (CURRENT_SECTION.romList[0][0] == NULL||refresh) {
-		for (int i=0;i<1000;i++) {
-			for (int j=0;j<10;j++) {
-				CURRENT_SECTION.romList[i][j]=NULL;
+	if (CURRENT_SECTION.initialized==0||refresh) {
+		CURRENT_SECTION.initialized=1;
+		if (!refresh) {
+			loadAliasList(currentSectionNumber);
+			for (int i=0;i<1000;i++) {
+				for (int j=0;j<10;j++) {
+					CURRENT_SECTION.romList[i][j]=NULL;
+				}
+			}
+		} else {
+			for (int i=0;i<1000;i++) {
+				for (int j=0;j<10;j++) {
+					if (CURRENT_SECTION.romList[i][j]!=NULL) {
+						free(CURRENT_SECTION.romList[i][j]->name);
+						free(CURRENT_SECTION.romList[i][j]->alias);
+						free(CURRENT_SECTION.romList[i][j]);
+						CURRENT_SECTION.romList[i][j]=NULL;
+					}
+				}
 			}
 		}
-		loadAliasList(currentSectionNumber);
 		CURRENT_SECTION.totalPages=0;
 		char *files[10000];
 		int n = recursivelyScanDirectory(CURRENT_SECTION.filesDirectory, files, 0);
 		int realItemCount = n;
 		int game = 0;
 		int page = 0;
-		printf("starting loop\n");
 		for (int i=0;i<n;i++){
 			char *ext = getExtension(files[i]);
 			if (ext&&strcmp((files[i]),"..")!=0 &&
@@ -481,18 +489,15 @@ void loadGameList(int refresh) {
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 				if(strcmp(ext,".opk")==0) {
-					printf("%s was an opk\n",files[i]);
 					struct OPKDesktopFile desktopFiles[10];
 					int desktopFilesCount=getOPK(files[i], desktopFiles);
 					int desktopCounter=0;
-					printf("desktop counter is %d\n",desktopCounter);
 					while(desktopCounter<desktopFilesCount) {
 						if(strstr(desktopFiles[desktopCounter].category,"emulators")!=NULL) {
-							printf("%s WAS AN EMULATOR\n",desktopFiles[desktopCounter].parentOPK);
 							break;
 						} else {
 							realItemCount++;
-							int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen(" -m ")+strlen(desktopFiles[desktopCounter].name)+1;// " -m "
+							int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen(" -m ")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 							int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
 							CURRENT_SECTION.romList[page][game]=malloc(sizeof(struct Rom));
 							CURRENT_SECTION.romList[page][game]->name=malloc(size);
@@ -504,17 +509,22 @@ void loadGameList(int refresh) {
 									game = 0;
 								}
 							}
-							strcpy(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
-							strcat(CURRENT_SECTION.romList[page][game]->name," -m ");
-							strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].name);
-							strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+							if (strcmp("default.gcw0.desktop",desktopFiles[desktopCounter].name)!=0) {
+								strcpy(CURRENT_SECTION.romList[page][game]->name,"-m ");
+								strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].name);
+								strcat(CURRENT_SECTION.romList[page][game]->name," ");
+								strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
+								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+							} else {
+								strcpy(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
+								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+							}
 							strcpy(CURRENT_SECTION.romList[page][game]->alias,desktopFiles[desktopCounter].displayName);
 							strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
 							game++;
 						}
 						desktopCounter++;
 					}
-					printf("counted %d\n",desktopCounter);
 					loadedFiles++;
 				} else {
 					int size = strlen(files[i])+1;
@@ -524,8 +534,10 @@ void loadGameList(int refresh) {
 					strcpy(CURRENT_SECTION.romList[page][game]->name,files[i]);
 					strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
 					if(strlen(CURRENT_SECTION.aliasFileName)>2) {
-						strcpy(CURRENT_SECTION.romList[page][game]->alias, getAlias(CURRENT_SECTION.romList[page][game]->name));
+						char *temp=getAlias(CURRENT_SECTION.romList[page][game]->name);
+						strcpy(CURRENT_SECTION.romList[page][game]->alias, temp);
 						strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
+						free(temp);
 					} else {
 						CURRENT_SECTION.romList[page][game]->alias=NULL;
 					}
@@ -550,7 +562,6 @@ void loadGameList(int refresh) {
 		}
 		qsort(menuSections[currentSectionNumber].romList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
 	}
-	printf("end\n");
 }
 
 int countGamesInPage() {
@@ -629,25 +640,19 @@ void determineStartingScreen(int sectionCount) {
 void deleteCurrentGame() {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
-	system(command);
-	CURRENT_SECTION.romList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]->name=NULL;
+//	system(command);
+//	CURRENT_SECTION.romList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]->name=NULL;
 	char *pictureWithFullPath=malloc(600);
-	char *tempGameName=malloc(300);
-	if (favoritesSectionSelected) {
-		if (favoritesSize == 0) {
-			return;
-		}
-		struct Favorite favorite = findFavorite(CURRENT_GAME_NAME);
-		strcpy(pictureWithFullPath, favorite.filesDirectory);
-		tempGameName=getGameName(favorite.name);
-	} else {
-		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
-		tempGameName=getGameName(CURRENT_GAME_NAME);
-	}
+	char *tempGameName;
+	char *tempGameName1;
+	strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
+	tempGameName=getGameName(CURRENT_GAME_NAME);
 	strcat(pictureWithFullPath,"media/");
-	tempGameName=getNameWithoutExtension(tempGameName);
+	tempGameName1=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	snprintf(command,sizeof(command),"rm \"%s\";",pictureWithFullPath);
-	system(command);
+	free(tempGameName);
+	free(tempGameName1);
+//	system(command);
 }

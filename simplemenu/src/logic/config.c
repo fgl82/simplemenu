@@ -214,7 +214,7 @@ int loadSections() {
 		return -1;
 	}
 	while (fgets(line, sizeof(line), fp) != NULL) {
-		if(strlen(line)<2) {
+		if(line[0]=='#'||strlen(line)<2) {
 			continue;
 		}	
 		int i=0;
