@@ -640,8 +640,7 @@ void determineStartingScreen(int sectionCount) {
 void deleteCurrentGame() {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
-//	system(command);
-//	CURRENT_SECTION.romList[CURRENT_SECTION.totalPages][countGamesInSpecificPage(CURRENT_SECTION.totalPages)-1]->name=NULL;
+	system(command);
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName;
 	char *tempGameName1;
@@ -654,5 +653,6 @@ void deleteCurrentGame() {
 	snprintf(command,sizeof(command),"rm \"%s\";",pictureWithFullPath);
 	free(tempGameName);
 	free(tempGameName1);
-//	system(command);
+	free(pictureWithFullPath);
+	system(command);
 }
