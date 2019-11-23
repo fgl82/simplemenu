@@ -196,11 +196,13 @@ void removeFavorite() {
 	if (favoritesSize>0) {
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
+			strcpy(favorites[i].section,favorites[i+1].section);
 			strcpy(favorites[i].executable,favorites[i+1].executable);
 			strcpy(favorites[i].filesDirectory,favorites[i+1].filesDirectory);
 			strcpy(favorites[i].name,favorites[i+1].name);
 			strcpy(favorites[i].alias,favorites[i+1].alias);
 		}
+		strcpy(favorites[favoritesSize-1].section,"\0");
 		strcpy(favorites[favoritesSize-1].emulatorFolder,"\0");
 		strcpy(favorites[favoritesSize-1].executable,"\0");
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
@@ -223,6 +225,7 @@ void markAsFavorite() {
 			if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, CURRENT_GAME->alias);
 			}
+			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);

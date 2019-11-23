@@ -60,6 +60,7 @@ void saveFavorites() {
 				fprintf(fp,"\n");
 			}
 //			favorite=findFavorite(favorite.alias);
+			fprintf(fp,"%s;",favorite.section);
 			fprintf(fp,"%s;",favorite.name);
 			if(favorite.alias[0]=='\0') {
 				fprintf(fp," ;");
@@ -88,7 +89,7 @@ void loadFavorites() {
 		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
 	}
-	char *configurations[5];
+	char *configurations[6];
 	char *ptr;
 	favoritesSize=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -99,11 +100,12 @@ void loadFavorites() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		strcpy(favorites[favoritesSize].name,configurations[0]);
-		strcpy(favorites[favoritesSize].alias,configurations[1]);
-		strcpy(favorites[favoritesSize].emulatorFolder,configurations[2]);
-		strcpy(favorites[favoritesSize].executable,configurations[3]);
-		strcpy(favorites[favoritesSize].filesDirectory,configurations[4]);
+		strcpy(favorites[favoritesSize].section,configurations[0]);
+		strcpy(favorites[favoritesSize].name,configurations[1]);
+		strcpy(favorites[favoritesSize].alias,configurations[2]);
+		strcpy(favorites[favoritesSize].emulatorFolder,configurations[3]);
+		strcpy(favorites[favoritesSize].executable,configurations[4]);
+		strcpy(favorites[favoritesSize].filesDirectory,configurations[5]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';

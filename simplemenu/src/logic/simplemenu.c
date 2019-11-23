@@ -75,7 +75,6 @@ int main(int argc, char* argv[]) {
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					performAction();
-					updateScreen();
 				}
 				#ifndef TARGET_PC
 				resetTimeoutTimer();
@@ -84,7 +83,6 @@ int main(int argc, char* argv[]) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
 					leftOrRightPressed=0;
-					updateScreen();
 				}
 			}
 //			else {
@@ -96,6 +94,7 @@ int main(int argc, char* argv[]) {
 //			    }
 //			}
 		}
+		updateScreen();
 	}
 	quit();
 }

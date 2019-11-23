@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <SDL/SDL_video.h>
 
 #include "../headers/constants.h"
@@ -121,6 +122,8 @@ void displayBackgroundPicture() {
 
 void drawHeader() {
 	char finalString [100];
+	char timeString[50];
+
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==OC_UC) {
@@ -128,12 +131,26 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," -");
 	} else if (currentCPU==OC_NO) {
-		strcpy(finalString,menuSections[currentSectionNumber].sectionName);
+		if(currentSectionNumber==favoritesSectionNumber) {
+			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
+		} else{
+			strcpy(finalString,menuSections[currentSectionNumber].sectionName);
+		}
 	} else {
 		strcpy(finalString,"+ ");
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
+
+	  time_t rawtime;
+	  struct tm * timeinfo;
+
+	  time ( &rawtime );
+	  timeinfo = localtime ( &rawtime );
+//	  printf ( "Current local time and date: %s", asctime (timeinfo) );
+	strcpy( timeString,(asctime(timeinfo))+11);
+	timeString[strlen(timeString)-9]='\0';
+	drawTimeOnHeader(timeString);
 	drawTextOnHeader(finalString);
 }
 

@@ -123,6 +123,10 @@ void drawTextOnHeader(char *text) {
 	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
+void drawTimeOnHeader(char *text) {
+	drawTextOnScreen(font,calculateProportionalSizeOrDistance(280), calculateProportionalSizeOrDistance(19), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignLeft);
+}
+
 void drawCurrentLetter(char *letter, SDL_Color textColor) {
 	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
