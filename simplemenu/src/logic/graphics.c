@@ -204,7 +204,7 @@ void drawUSBScreen() {
 }
 
 void initializeDisplay() {
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 }
@@ -228,6 +228,6 @@ void freeResources() {
 	headerFont = NULL;
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
-	SDL_Quit();
 	TTF_Quit();
+	SDL_Quit();
 }

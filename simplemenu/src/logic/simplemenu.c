@@ -1,7 +1,9 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
-
+#include <unistd.h>
 #include "../headers/config.h"
 #include "../headers/control.h"
 #include "../headers/definitions.h"
@@ -30,10 +32,20 @@ void initializeGlobals() {
 void resetFrameBuffer () {
 	system("/usr/sbin/unlockvt > /dev/null");
 	system("/usr/bin/reset");
-//	system("echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind");
+	system("echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind");
+	system("echo 0 > /sys/devices/platform/linkdev/alt_key_map");
 }
 
+//void sig_term_handler(int signum, siginfo_t *info, void *ptr)
+//{
+//	drawShutDownScreen();
+//    quit();
+//}
+
+
+
 int main(int argc, char* argv[]) {
+//	signal(SIGTERM, &sig_term_handler);
 	#ifndef TARGET_PC
 	resetFrameBuffer();
 	#endif
@@ -41,7 +53,7 @@ int main(int argc, char* argv[]) {
 	loadConfig();
 	initializeGlobals();
 //	HW_Init();
-	setupDisplay();
+	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 	loadFavorites();
 	if (argv[1]!=NULL) {
@@ -75,6 +87,14 @@ int main(int argc, char* argv[]) {
 					updateScreen();
 				}
 			}
+//			else {
+//			    if (getEventType()==SDL_JOYAXISMOTION&&isUp()) {
+//					performAction();
+//					updateScreen();
+////					exit();
+//
+//			    }
+//			}
 		}
 	}
 	quit();

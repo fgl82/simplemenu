@@ -219,9 +219,9 @@ void updateScreen() {
 	refreshScreen();
 }
 
-void setupDisplay() {
-	pumpEvents();
-	initializeKeys();
+void setupDisplayAndKeys() {
+//	pumpEvents();
 	initializeFonts();
 	initializeDisplay();
+	initializeKeys();
 }

@@ -17,11 +17,6 @@
 #define BTN_DOWN		SDLK_DOWN
 #define BTN_LEFT		SDLK_LEFT
 #define BTN_RIGHT		SDLK_RIGHT
-#define JOY_UP			SDL_HAT_UP
-#define JOY_DOWN		SDL_HAT_DOWN
-#define JOY_LEFT		SDL_HAT_LEFT
-#define JOY_RIGHT		SDL_HAT_RIGHT
-
 
 #define FAVORITES_SIZE 2000
 #define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame

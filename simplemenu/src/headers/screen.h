@@ -4,7 +4,7 @@ void updateScreen();
 void drawHeader();
 void drawGameList();
 void drawFooter();
-void setupDisplay();
+void setupDisplayAndKeys();
 void setupDecorations();
 void freeResources();
 void displayGamePicture();

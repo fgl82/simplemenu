@@ -186,10 +186,12 @@ char *getCurrentGameName() {
 void quit() {
 	drawShutDownScreen();
 	refreshScreen();
-	//	freeResources();
 	saveLastState();
 	saveFavorites();
 	clearTimer();
+//	freeResources();
+//	printf("quit!!!\n");
+//	exit(0);
 	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
@@ -253,6 +255,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
+//	printf("%s\n", fileToBeExecutedWithFullPath);
 //	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
 		freeResources();
 //		printf("%s %s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
@@ -497,7 +500,7 @@ void loadGameList(int refresh) {
 							break;
 						} else {
 							realItemCount++;
-							int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen(" -m ")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
+							int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m;")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 							int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
 							CURRENT_SECTION.romList[page][game]=malloc(sizeof(struct Rom));
 							CURRENT_SECTION.romList[page][game]->name=malloc(size);
@@ -510,9 +513,9 @@ void loadGameList(int refresh) {
 								}
 							}
 							if (strcmp("default.gcw0.desktop",desktopFiles[desktopCounter].name)!=0) {
-								strcpy(CURRENT_SECTION.romList[page][game]->name,"-m ");
+								strcpy(CURRENT_SECTION.romList[page][game]->name,"-m;");
 								strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].name);
-								strcat(CURRENT_SECTION.romList[page][game]->name," ");
+								strcat(CURRENT_SECTION.romList[page][game]->name,";");
 								strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
 								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
 							} else {

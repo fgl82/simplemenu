@@ -43,6 +43,7 @@ void launchGame() {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
+		printf("%s\n",CURRENT_GAME_NAME);
 		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
 	}
 }
@@ -237,10 +238,11 @@ int isSelectPressed() {
 
 int performAction() {
 	if (keys[BTN_R] && keys[BTN_START]) {
-		freeResources();
-		saveLastState();
-		saveFavorites();
-		exit(0);
+//		freeResources();
+//		saveLastState();
+//		saveFavorites();
+//		exit(0);
+		quit();
 	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;
@@ -415,7 +417,7 @@ int performAction() {
 			scrollDown();
 			return 1;
 		}
-		if(keys[BTN_UP]||keys[JOY_UP]) {
+		if(keys[BTN_UP]) {
 			scrollUp();
 			return 1;
 		}
