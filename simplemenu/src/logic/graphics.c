@@ -242,7 +242,9 @@ void freeResources() {
 	TTF_Quit();
 	#ifndef TARGET_PC
 	Shake_Stop(device, effect_id);
+	Shake_Stop(device, effect_id1);
 	Shake_EraseEffect(device, effect_id);
+	Shake_EraseEffect(device, effect_id1);
 	Shake_Close(device);
 	Shake_Quit();
 	#endif
