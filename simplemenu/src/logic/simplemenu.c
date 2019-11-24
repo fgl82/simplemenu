@@ -101,8 +101,8 @@ int main(int argc, char* argv[]) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
 					leftOrRightPressed=0;
+					updateScreen();
 				}
-				updateScreen();
 			}
 		}
 	}
