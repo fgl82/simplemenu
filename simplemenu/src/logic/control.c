@@ -236,7 +236,7 @@ void markAsFavorite() {
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
-			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_SECTION.filesDirectory);
+			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_GAME->directory);
 			favoritesSize++;
 			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}

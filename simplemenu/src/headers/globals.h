@@ -45,7 +45,7 @@ struct MenuSection {
 	char sectionName[25];
 	char emulatorFolder[200];
 	char executable[200];
-	char filesDirectory[200];
+	char filesDirectories[400];
 	char fileExtensions[50];
 	char consolePicture[100];
 	char aliasFileName[300];
@@ -72,12 +72,13 @@ struct Favorite {
 	char alias[300];
 	char emulatorFolder[200];
 	char executable[200];
-	char filesDirectory[200];
+	char filesDirectory[400];
 };
 
 struct Rom {
 	char *name;
 	char *alias;
+	char *directory;
 };
 
 struct OPKDesktopFile {

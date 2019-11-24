@@ -207,7 +207,7 @@ void loadConfig() {
 
 int loadSections() {
 	FILE * fp;
-	char line[500];
+	char line[1500];
 	char *configurations[25];
 	char pathToSectionsFilePlusFileName[300];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
@@ -230,7 +230,7 @@ int loadSections() {
 		strcpy(aMenuSection.sectionName,configurations[0]);
 		strcpy(aMenuSection.emulatorFolder,configurations[1]);
 		strcpy(aMenuSection.executable,configurations[2]);
-		strcpy(aMenuSection.filesDirectory,configurations[3]);
+		strcpy(aMenuSection.filesDirectories,configurations[3]);
 		strcpy(aMenuSection.fileExtensions,configurations[4]);
 		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
 		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
@@ -274,7 +274,7 @@ int loadSections() {
 	strcpy(aMenuSection.sectionName,configurations[0]);
 	strcpy(aMenuSection.emulatorFolder,configurations[1]);
 	strcpy(aMenuSection.executable,configurations[2]);
-	strcpy(aMenuSection.filesDirectory,configurations[3]);
+	strcpy(aMenuSection.filesDirectories,configurations[3]);
 	strcpy(aMenuSection.fileExtensions,configurations[4]);
 	aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
 	aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);

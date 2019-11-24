@@ -94,7 +94,7 @@ void displayGamePicture() {
 		strcpy(pictureWithFullPath, favorite.filesDirectory);
 		tempGameName=getGameName(favorite.name);
 	} else {
-		strcpy(pictureWithFullPath, CURRENT_SECTION.filesDirectory);
+		strcpy(pictureWithFullPath, CURRENT_GAME->directory);
 		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
 	strcat(pictureWithFullPath,"media/");
