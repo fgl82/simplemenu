@@ -197,6 +197,9 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
+		#ifndef TARGET_PC
+		Shake_Play(device, effect_id);
+		#endif
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
 			strcpy(favorites[i].section,favorites[i+1].section);
@@ -224,6 +227,9 @@ void markAsFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
+			#ifndef TARGET_PC
+			Shake_Play(device, effect_id);
+			#endif
 			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
 			if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, CURRENT_GAME->alias);
@@ -373,9 +379,6 @@ int performAction() {
 		}
 		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
-				#ifndef TARGET_PC
-				Shake_Play(device, effect_id);
-				#endif
 				markAsFavorite();
 			} else {
 				removeFavorite();

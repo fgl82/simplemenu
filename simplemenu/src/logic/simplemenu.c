@@ -5,7 +5,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <shake.h>
 #include "../headers/config.h"
 #include "../headers/control.h"
 #include "../headers/definitions.h"

@@ -123,7 +123,6 @@ void displayBackgroundPicture() {
 void drawHeader() {
 	char finalString [100];
 	char timeString[150];
-
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==OC_UC) {
@@ -132,7 +131,11 @@ void drawHeader() {
 		strcat(finalString," -");
 	} else if (currentCPU==OC_NO) {
 		if(currentSectionNumber==favoritesSectionNumber) {
-			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
+			if(CURRENT_GAME!=NULL) {
+				strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
+			} else {
+				strcpy(finalString,CURRENT_SECTION.sectionName);
+			}
 		} else{
 			strcpy(finalString,menuSections[currentSectionNumber].sectionName);
 		}
@@ -141,11 +144,6 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-
-
-	//	  printf ( "Current local time and date: %s", asctime (timeinfo) );
-//	time ( &rawtime );
-//	lastTime=localtime ( &rawtime );
 	strcpy(timeString,(asctime(currTime))+11);
 	timeString[strlen(timeString)-9]='\0';
 	drawTimeOnFooter(timeString);
