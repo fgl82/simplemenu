@@ -10,6 +10,11 @@
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
 
+#ifndef TARGET_PC
+#include <shake.h>
+#endif
+
+
 volatile uint32_t *memregs;
 int32_t memdev = 0;
 int oldCPU;
@@ -70,27 +75,54 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-    uint32_t soundDev = open("/dev/mixer", O_RDWR);
-    int32_t vol = (100 << 8) | 100;
-
-    /* Init memory registers, pretty much required for anthing RS-97 specific */
-    memdev = open("/dev/mem", O_RDWR);
-    if (memdev > 0)
-    {
-        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
-        if (memregs == MAP_FAILED)
-        {
-            printf("Could not mmap hardware registers!\n");
-            close(memdev);
-        }
-    }
-
-    /* Setting Volume to max, that will avoid issues, i think */
-    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
-    close(soundDev);
-
-    /* Set CPU clock to its default */
-    setCPU(OC_NO);
+//	Shake_Init();
+//	device = Shake_Open(0);
+//	Shake_InitEffect(&effect, SHAKE_EFFECT_RUMBLE);
+//	effect.u.rumble.strongMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX;
+//	effect.u.rumble.weakMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX*0.9;
+//	effect.length = 380;
+//	effect.delay = 0;
+//	effect_id = Shake_UploadEffect(device, &effect);
+	#ifndef TARGET_PC
+	Shake_Init();
+	if (Shake_NumOfDevices() > 0)
+	{
+		device = Shake_Open(0);
+		Shake_InitEffect(&effect, SHAKE_EFFECT_PERIODIC);
+		effect.u.periodic.waveform		= SHAKE_PERIODIC_SINE;
+		effect.u.periodic.period		= 0.1*0x100;
+		effect.u.periodic.magnitude		= 0x6000;
+		effect.u.periodic.envelope.attackLength	= 0x100;
+		effect.u.periodic.envelope.attackLevel	= 0;
+		effect.u.periodic.envelope.fadeLength	= 0x100;
+		effect.u.periodic.envelope.fadeLevel	= 0;
+		effect.direction			= 0x4000;
+		effect.length				= 2000;
+		effect.delay				= 0;
+		effect_id = Shake_UploadEffect(device, &effect);
+	}
+	#endif
+//    uint32_t soundDev = open("/dev/mixer", O_RDWR);
+//    int32_t vol = (100 << 8) | 100;
+//
+//    /* Init memory registers, pretty much required for anthing RS-97 specific */
+//    memdev = open("/dev/mem", O_RDWR);
+//    if (memdev > 0)
+//    {
+//        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
+//        if (memregs == MAP_FAILED)
+//        {
+//            printf("Could not mmap hardware registers!\n");
+//            close(memdev);
+//        }
+//    }
+//
+//    /* Setting Volume to max, that will avoid issues, i think */
+//    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
+//    close(soundDev);
+//
+//    /* Set CPU clock to its default */
+//    setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
@@ -100,5 +132,30 @@ void cycleFrequencies() {
 		setCPU(OC_OC);
 	} else {
 		setCPU(OC_UC);
+	}
+}
+
+void rumble() {
+
+}
+
+int getBatteryLevel() {
+	FILE *f = fopen("/sys/class/power_supply/usb/online", "r");
+	int online;
+	fscanf(f, "%i", &online);
+	fclose(f);
+	if (online) {
+		return -1;
+	} else {
+		FILE *f = fopen("/sys/class/power_supply/battery/capacity", "r");
+		int battery_level;
+		fscanf(f, "%i", &battery_level);
+		fclose(f);
+//		if (battery_level >= 100) return 5;
+//		else if (battery_level > 80) return 4;
+//		else if (battery_level > 60) return 3;
+//		else if (battery_level > 40) return 2;
+//		else if (battery_level > 20) return 1;
+		return battery_level;
 	}
 }

@@ -5,7 +5,9 @@
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
 #include "../headers/hashtable.h"
-
+#ifndef TARGET_PC
+#include <shake.h>
+#endif
 
 int running;
 
@@ -85,8 +87,24 @@ struct OPKDesktopFile {
 	char category[200];
 };
 
+struct StolenGMenuFile {
+	char title[200];
+	char exec[200];
+};
+
 struct Favorite favorites[2000];
 
 uint8_t *keys;
 SDL_Joystick *joystick;
+
+#ifndef TARGET_PC
+Shake_Device *device;
+Shake_Effect effect;
+int effect_id;
+#endif
+
+
+time_t currRawtime;
+struct tm * currTime;
+int lastMin;
 #endif

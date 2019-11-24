@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "../headers/config.h"
 #include "../headers/control.h"
 #include "../headers/definitions.h"
@@ -43,16 +44,34 @@ void resetFrameBuffer () {
 //}
 
 
+void *checkClock(void *x_void_ptr) {
+	while (1) {
+		time ( &currRawtime );
+		currTime = localtime ( &currRawtime );
+		if(currTime->tm_min!=lastMin) {
+			setupDecorations();
+			updateScreen();
+			lastMin=currTime->tm_min;
+		}
+	}
+}
+
 
 int main(int argc, char* argv[]) {
-//	signal(SIGTERM, &sig_term_handler);
+	pthread_t clockThread;
+	time ( &currRawtime );
+	currTime = localtime ( &currRawtime );
+	lastMin=currTime->tm_min;
+	pthread_create(&clockThread, NULL, checkClock,NULL);
+	//	signal(SIGTERM, &sig_term_handler);
 	#ifndef TARGET_PC
+	HW_Init();
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();
-//	HW_Init();
+
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 	loadFavorites();
@@ -79,11 +98,13 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetTimeoutTimer();
 				#endif
+				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
 					leftOrRightPressed=0;
 				}
+				updateScreen();
 			}
 //			else {
 //			    if (getEventType()==SDL_JOYAXISMOTION&&isUp()) {
@@ -94,7 +115,6 @@ int main(int argc, char* argv[]) {
 //			    }
 //			}
 		}
-		updateScreen();
 	}
 	quit();
 }

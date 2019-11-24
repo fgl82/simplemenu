@@ -4,6 +4,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mouse.h>
+#ifndef TARGET_PC
+#include <shake.h>
+#endif
 
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
@@ -108,7 +111,7 @@ void drawImgFallbackTextOnScreen(char *fallBackText) {
 }
 
 void drawTextOnFooter(const char text[64]) {
-	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawShutDownText(const char text[64]) {
@@ -123,8 +126,12 @@ void drawTextOnHeader(char *text) {
 	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
 }
 
-void drawTimeOnHeader(char *text) {
-	drawTextOnScreen(font,calculateProportionalSizeOrDistance(280), calculateProportionalSizeOrDistance(19), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignLeft);
+void drawTimeOnFooter(char *text) {
+	drawTextOnScreen(font,calculateProportionalSizeOrDistance(316), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignRight);
+}
+
+void drawBatteryOnFooter(char *text) {
+	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignLeft);
 }
 
 void drawCurrentLetter(char *letter, SDL_Color textColor) {
@@ -220,7 +227,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(36));
+	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));
 }
@@ -233,5 +240,11 @@ void freeResources() {
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
 	TTF_Quit();
+	#ifndef TARGET_PC
+	Shake_Stop(device, effect_id);
+	Shake_EraseEffect(device, effect_id);
+	Shake_Close(device);
+	Shake_Quit();
+	#endif
 	SDL_Quit();
 }

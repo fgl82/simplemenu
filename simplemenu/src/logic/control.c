@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef TARGET_PC
+#include <shake.h>
+#endif
 
 #include "../headers/config.h"
 #include "../headers/definitions.h"
@@ -245,7 +248,7 @@ int performAction() {
 //		saveLastState();
 //		saveFavorites();
 //		exit(0);
-		quit();
+		running=0;
 	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;
@@ -365,15 +368,14 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_SELECT] && keys[BTN_START]) {
-			freeResources();
-			saveLastState();
-			saveFavorites();
-			exit(0);
 			running=0;
 			return 0;
 		}
 		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
+				#ifndef TARGET_PC
+				Shake_Play(device, effect_id);
+				#endif
 				markAsFavorite();
 			} else {
 				removeFavorite();
@@ -392,7 +394,7 @@ int performAction() {
 			if(itsStoppedBecauseOfAnError) {
 				if(thereIsACriticalError) {
 					#ifndef TARGET_PC
-					quit();
+					running=0;
 					#else
 					freeResources();
 					saveLastState();

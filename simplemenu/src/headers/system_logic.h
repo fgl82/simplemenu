@@ -11,4 +11,6 @@ void setBacklight(int level);
 int getBacklight();
 void resetTimeoutTimer();
 uint32_t suspend(uint32_t interval, void *param);
+int getBatteryLevel();
+void rumble();
 #endif
