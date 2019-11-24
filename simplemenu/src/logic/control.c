@@ -255,6 +255,9 @@ int performAction() {
 //		exit(0);
 		running=0;
 	}
+	if (keys[BTN_R2]) {
+		loadGameList(1);
+	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;
 		isUSBMode=0;

@@ -119,12 +119,14 @@ int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 				strncpy(name,val,(int)sval);
 				name[sval]='\0';
 				strcpy(desktopFiles[i].displayName,name);
+				free(name);
 			}
 			if (!strncmp(key, "Categories", skey)) {
 				category=malloc((int)sval+1);
 				strncpy(category,val,(int)sval);
 				category[sval]='\0';
 				strcpy(desktopFiles[i].category,category);
+				free(category);
 			}
 		}
 		i++;
@@ -192,7 +194,7 @@ void quit() {
 	sleep(2);
 	freeResources();
 	exit(0);
-//	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+	//	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 }
 
 int doesFavoriteExist(char *name) {
@@ -255,12 +257,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-//	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
-		freeResources();
-		execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-//	} else {
-//		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
-//	}
+	//	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
+	freeResources();
+	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+	//	} else {
+	//		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
+	//	}
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
@@ -298,14 +300,6 @@ void loadFavoritesSectionGameList() {
 	for (int i=0;i<1000;i++) {
 		for (int j=0;j<10;j++) {
 			FAVORITES_SECTION.romList[i][j]=NULL;
-			//			if(FAVORITES_SECTION.romList[i][j]->name!=NULL) {
-			//				free(FAVORITES_SECTION.romList[i][j]->name);
-			//				free(FAVORITES_SECTION.romList[i][j]);
-			//				if (FAVORITES_SECTION.romList[i][j]->name!=NULL) {
-			//					strcpy(FAVORITES_SECTION.romList[i][j]->name,"\0");
-			//					FAVORITES_SECTION.romList[i][j]->name=NULL;;
-			//				}
-			//			}
 		}
 	}
 	for (int i=0;i<favoritesSize;i++){
@@ -321,11 +315,7 @@ void loadFavoritesSectionGameList() {
 			FAVORITES_SECTION.romList[page][game]->name=malloc(300);
 			FAVORITES_SECTION.romList[page][game]->alias=malloc(300);
 		}
-//		if (strlen(favorites[i].alias)>1) {
 		strcpy(FAVORITES_SECTION.romList[page][game]->alias, favorites[i].alias);
-//		} else {
-//			FAVORITES_SECTION.romList[page][game]->alias = " ";
-//		}
 		strcpy(FAVORITES_SECTION.romList[page][game]->name, favorites[i].name);
 		game++;
 	}
@@ -388,19 +378,19 @@ int genericGameCompare(char *game1, char *game2) {
 }
 
 int genericGameCompareWithAlias(char *game1, char *game2) {
-	char* s1 = game1;
-	char* s2 = game2;
-	char *temp1 = malloc(strlen(s1)+1);
-	strcpy(temp1,s1);
-	char *temp2 = malloc(strlen(s2)+1);
-	strcpy(temp2,s2);
+	char temp1[300];
+	strcpy(temp1,game1);
+	char temp2[300];
+	strcpy(temp2,game2);
 	for(int i=0;temp1[i]; i++) {
 		temp1[i] = tolower(temp1[i]);
 	}
 	for(int i=0;temp2[i]; i++) {
 		temp2[i] = tolower(temp2[i]);
 	}
-	return strcmp(temp1, temp2);;
+//	free(temp1);
+//	free(temp2);
+	return(strcmp(temp1, temp2));
 }
 
 int compareFavorites(const void *f1, const void *f2)
@@ -482,6 +472,7 @@ void loadGameList(int refresh) {
 	if (CURRENT_SECTION.initialized==0||refresh) {
 		CURRENT_SECTION.initialized=1;
 		if (!refresh) {
+			printf("Initializing\n");
 			loadAliasList(currentSectionNumber);
 			for (int i=0;i<1000;i++) {
 				for (int j=0;j<10;j++) {
@@ -489,13 +480,13 @@ void loadGameList(int refresh) {
 				}
 			}
 		} else {
+			printf("Just refreshing\n");
 			for (int i=0;i<1000;i++) {
 				for (int j=0;j<10;j++) {
 					if (CURRENT_SECTION.romList[i][j]!=NULL) {
 						free(CURRENT_SECTION.romList[i][j]->name);
 						free(CURRENT_SECTION.romList[i][j]->alias);
 						free(CURRENT_SECTION.romList[i][j]);
-						CURRENT_SECTION.romList[i][j]=NULL;
 					}
 				}
 			}
@@ -552,24 +543,27 @@ void loadGameList(int refresh) {
 					loadedFiles++;
 				}
 				else {
+//					printf("rom: %s page: %d game: %d\n", files[i], page, game);
 					int size = strlen(files[i])+1;
 					CURRENT_SECTION.romList[page][game]=malloc(sizeof(struct Rom));
 					CURRENT_SECTION.romList[page][game]->name=malloc(size);
-					CURRENT_SECTION.romList[page][game]->alias=malloc(300);
 					if(strcmp(ext,".fgl")==0) {
 						struct StolenGMenuFile stolenFile;
 						fillUpStolenGMenuFile(&stolenFile, files[i]);
 						strcpy(CURRENT_SECTION.romList[page][game]->name,stolenFile.exec);
-						strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+//						strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+						CURRENT_SECTION.romList[page][game]->alias=malloc(strlen(stolenFile.title)+1);
 						strcpy(CURRENT_SECTION.romList[page][game]->alias, stolenFile.title);
-						strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
+//						strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
 					} else {
 						strcpy(CURRENT_SECTION.romList[page][game]->name,files[i]);
-						strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+//						strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
 						if(strlen(CURRENT_SECTION.aliasFileName)>2) {
 							char *temp=getAlias(CURRENT_SECTION.romList[page][game]->name);
+//							char *temp="PEPE";
+							CURRENT_SECTION.romList[page][game]->alias=malloc(strlen(temp)+1);
 							strcpy(CURRENT_SECTION.romList[page][game]->alias, temp);
-							strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
+//							strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
 							free(temp);
 						} else {
 							CURRENT_SECTION.romList[page][game]->alias=NULL;
