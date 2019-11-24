@@ -1,3 +1,4 @@
 /libini.c
 /libopk.c
 /unsqfs.c
+/leak_detector.c
