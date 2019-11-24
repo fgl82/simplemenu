@@ -471,7 +471,6 @@ void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.initialized==0||refresh) {
 		CURRENT_SECTION.initialized=1;
-		printf("%s\n","START");
 		if (!refresh) {
 			loadAliasList(currentSectionNumber);
 			for (int i=0;i<1000;i++) {
@@ -487,6 +486,7 @@ void loadGameList(int refresh) {
 						free(CURRENT_SECTION.romList[i][j]->alias);
 						free(CURRENT_SECTION.romList[i][j]->directory);
 						free(CURRENT_SECTION.romList[i][j]);
+						CURRENT_SECTION.romList[i][j]=NULL;
 					}
 				}
 			}
@@ -505,9 +505,7 @@ void loadGameList(int refresh) {
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
-		printf("%s\n",CURRENT_SECTION.sectionName);
 		for(int k=0;k<dirCounter;k++) {
-			printf("IN FIRST FOR\n");
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
@@ -518,13 +516,11 @@ void loadGameList(int refresh) {
 						isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {
-						printf("LOADING %s\n",files[i]);
 						struct OPKDesktopFile desktopFiles[10];
 						int desktopFilesCount=getOPK(files[i], desktopFiles);
 						int desktopCounter=0;
 						while(desktopCounter<desktopFilesCount) {
 							if(strstr(desktopFiles[desktopCounter].category,"emulators")!=NULL) {
-								printf("IS EMU, SKIPPING\n");
 								break;
 							} else {
 								realItemCount++;
@@ -563,7 +559,6 @@ void loadGameList(int refresh) {
 					}
 					//it's not an opk
 					else {
-						printf("IS NOT OPK\n");
 						int size = strlen(files[i])+1;
 						CURRENT_SECTION.romList[page][game]=malloc(sizeof(struct Rom));
 
@@ -575,7 +570,6 @@ void loadGameList(int refresh) {
 
 						//it's a custom link
 						if(strcmp(ext,".fgl")==0) {
-							printf("IS FGL\n");
 							struct StolenGMenuFile stolenFile;
 							fillUpStolenGMenuFile(&stolenFile, files[i]);
 							strcpy(CURRENT_SECTION.romList[page][game]->name,stolenFile.exec);
@@ -618,12 +612,10 @@ void loadGameList(int refresh) {
 				return;
 			}
 		}
-		printf("FREEING\n");
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
 		qsort(menuSections[currentSectionNumber].romList, countGamesInSection(), sizeof(char *), compareGamesFromGameListBasedOnAlias);
-		printf("OUT\n");
 	}
 }
 
