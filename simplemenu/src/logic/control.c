@@ -375,7 +375,6 @@ int performAction() {
 			if (!favoritesSectionSelected) {
 				#ifndef TARGET_PC
 				Shake_Play(device, effect_id);
-				Shake_Play(device, effect_id1);
 				#endif
 				markAsFavorite();
 			} else {

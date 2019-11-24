@@ -5,6 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <shake.h>
 #include "../headers/config.h"
 #include "../headers/control.h"
 #include "../headers/definitions.h"
@@ -56,7 +57,6 @@ void *checkClock(void *x_void_ptr) {
 	}
 }
 
-
 int main(int argc, char* argv[]) {
 	pthread_t clockThread;
 	time ( &currRawtime );
@@ -65,13 +65,12 @@ int main(int argc, char* argv[]) {
 	pthread_create(&clockThread, NULL, checkClock,NULL);
 	//	signal(SIGTERM, &sig_term_handler);
 	#ifndef TARGET_PC
-	HW_Init();
 	resetFrameBuffer();
+	HW_Init();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();
-
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 	loadFavorites();
@@ -106,14 +105,6 @@ int main(int argc, char* argv[]) {
 				}
 				updateScreen();
 			}
-//			else {
-//			    if (getEventType()==SDL_JOYAXISMOTION&&isUp()) {
-//					performAction();
-//					updateScreen();
-////					exit();
-//
-//			    }
-//			}
 		}
 	}
 	quit();

@@ -101,8 +101,6 @@ SDL_Joystick *joystick;
 Shake_Device *device;
 Shake_Effect effect;
 int effect_id;
-Shake_Effect effect1;
-int effect_id1;
 #endif
 
 time_t currRawtime;

@@ -79,23 +79,18 @@ void HW_Init()
 	#ifndef TARGET_PC
 	Shake_Init();
 	device = Shake_Open(0);
+	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SINE, 0.5, 0.0, 0.15, 0.0);
+	effect_id=Shake_UploadEffect(device, &effect);
+	Shake_Play(device, effect_id);
+	sleep(1);
+	Shake_Play(device, effect_id);
+	sleep(1);
+	Shake_Play(device, effect_id);
+	sleep(1);
+	Shake_Play(device, effect_id);
+	sleep(1);
+	Shake_Play(device, effect_id);
 
-	Shake_InitEffect(&effect, SHAKE_EFFECT_RUMBLE);
-	effect.u.rumble.strongMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX;
-	effect.u.rumble.weakMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX*0.9;
-	effect.length = 380;
-	effect.delay = 0;
-	effect_id = Shake_UploadEffect(device, &effect);
-
-	Shake_InitEffect(&effect1, SHAKE_EFFECT_RUMBLE);
-	effect1.u.rumble.strongMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX;
-	effect1.u.rumble.weakMagnitude = SHAKE_RUMBLE_STRONG_MAGNITUDE_MAX*0.9;
-	effect1.length = 380;
-	effect1.delay = 0;
-	effect_id1 = Shake_UploadEffect(device, &effect1);
-
-	printf("Uploaded #%d\n", effect_id);
-	sleep(3);
 //	Shake_Init();
 //	if (Shake_NumOfDevices() > 0)
 //	{
