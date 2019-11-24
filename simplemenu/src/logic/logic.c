@@ -498,7 +498,9 @@ void loadGameList(int refresh) {
 		int dirCounter;
 		char *dirs[10];
 		char* ptr;
-		ptr = strtok(CURRENT_SECTION.filesDirectories, ",");
+		char dirsCopy[1000];
+		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+		ptr = strtok(dirsCopy, ",");
 		while (ptr!=NULL) {
 			dirs[dirCounter]=malloc(strlen(ptr)+1);
 			strcpy(dirs[dirCounter],ptr);
