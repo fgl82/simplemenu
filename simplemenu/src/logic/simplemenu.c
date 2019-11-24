@@ -13,7 +13,6 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/system_logic.h"
-#include "../headers/leak_detector.h"
 
 void initializeGlobals() {
 	running=1;
@@ -107,6 +106,5 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}
-	atexit(report_mem_leak);
 	quit();
 }
