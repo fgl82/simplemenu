@@ -189,7 +189,6 @@ void quit() {
 	saveLastState();
 	saveFavorites();
 	clearTimer();
-//	printf("quit!!!\n");
 	sleep(2);
 	freeResources();
 	exit(0);
@@ -256,10 +255,8 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-//	printf("%s\n", fileToBeExecutedWithFullPath);
 //	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
 		freeResources();
-//		printf("%s %s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 //	} else {
 //		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
@@ -548,7 +545,6 @@ void loadGameList(int refresh) {
 							}
 							strcpy(CURRENT_SECTION.romList[page][game]->alias,desktopFiles[desktopCounter].displayName);
 							strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
-							printf("yes, an opk in page %d and game %d\n", page, game);
 							game++;
 						}
 						desktopCounter++;
@@ -556,7 +552,6 @@ void loadGameList(int refresh) {
 					loadedFiles++;
 				}
 				else {
-					printf("not an opk in page %d and game %d\n", page, game);
 					int size = strlen(files[i])+1;
 					CURRENT_SECTION.romList[page][game]=malloc(sizeof(struct Rom));
 					CURRENT_SECTION.romList[page][game]->name=malloc(size);
