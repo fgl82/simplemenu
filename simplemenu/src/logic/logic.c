@@ -480,7 +480,6 @@ void loadGameList(int refresh) {
 				}
 			}
 		} else {
-			printf("Just refreshing\n");
 			for (int i=0;i<1000;i++) {
 				for (int j=0;j<10;j++) {
 					if (CURRENT_SECTION.romList[i][j]!=NULL) {
