@@ -55,6 +55,7 @@ struct MenuSection {
 	int alphabeticalPaging;
 	int totalPages;
 	int initialized;
+	int onlyFileNamesNoExtension;
 	SDL_Color headerAndFooterTextBackgroundColor;
 	SDL_Color headerAndFooterTextForegroundColor;
 	SDL_Color bodyTextForegroundColor;
@@ -107,4 +108,5 @@ int effect_id;
 time_t currRawtime;
 struct tm * currTime;
 int lastMin;
+int lastChargeLevel;
 #endif

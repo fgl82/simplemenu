@@ -193,7 +193,7 @@ void quit() {
 	saveLastState();
 	saveFavorites();
 	clearTimer();
-	sleep(2);
+	sleep(1.5);
 	freeResources();
 	exit(0);
 	//	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
@@ -260,8 +260,15 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
 	//	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
+	#ifndef TARGET_PC
+	saveLastState();
+	saveFavorites();
+	clearTimer();
 	freeResources();
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+	#else
+	printf("%s\n",fileToBeExecutedWithFullPath);
+	#endif
 	//	} else {
 	//		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
 	//	}

@@ -119,6 +119,7 @@ void rumble() {
 }
 
 int getBatteryLevel() {
+	#ifndef TARGET_PC
 	FILE *f = fopen("/sys/class/power_supply/usb/online", "r");
 	int online;
 	fscanf(f, "%i", &online);
@@ -137,4 +138,7 @@ int getBatteryLevel() {
 //		else if (battery_level > 20) return 1;
 		return battery_level;
 	}
+	#else
+	return -1;
+	#endif
 }

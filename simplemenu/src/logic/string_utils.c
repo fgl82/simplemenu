@@ -83,11 +83,11 @@ char *getNameWithoutPath(char *fileName) {
 char *getGameName(char *gameName) {
 	char *tempGameName=malloc(strlen(gameName)+1);
 	char *nameWithoutExtension=getNameWithoutExtension(gameName);
-	char *nameWithoutPath=getNameWithoutPath(gameName);
-	strcpy(tempGameName,nameWithoutExtension);
+	char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+//	strcpy(tempGameName,nameWithoutExtension);
 	strcpy(tempGameName,nameWithoutPath);
-	free(nameWithoutExtension);
-	free(nameWithoutPath);
+//	free(nameWithoutExtension);
+//	free(nameWithoutPath);
 	return tempGameName;
 }
 

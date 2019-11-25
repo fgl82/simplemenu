@@ -35,12 +35,18 @@ void loadAliasList(int sectionNumber) {
 
 void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToConfigFiles[300];
+	char pathToScriptFiles[300];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",getenv("HOME"));
+	snprintf(pathToScriptFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/scripts",getenv("HOME"));
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[300];
 		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",getenv("HOME"));
 		system(copyCommand);
+		char copyScriptsCommand[300];
+		mkdir(pathToScriptFiles,0700);
+		snprintf(copyScriptsCommand,sizeof(copyScriptsCommand),"cp ./scripts/* %s/.simplemenu/scripts",getenv("HOME"));
+		system(copyScriptsCommand);
 	}
 }
 
@@ -227,7 +233,13 @@ int loadSections() {
 			i++;
 		}
 		struct MenuSection aMenuSection;
-		strcpy(aMenuSection.sectionName,configurations[0]);
+		if(configurations[0][0]=='*') {
+			aMenuSection.onlyFileNamesNoExtension=1;
+			strcpy(aMenuSection.sectionName,configurations[0]+1);
+		} else {
+			aMenuSection.onlyFileNamesNoExtension=0;
+			strcpy(aMenuSection.sectionName,configurations[0]);
+		}
 		strcpy(aMenuSection.emulatorFolder,configurations[1]);
 		strcpy(aMenuSection.executable,configurations[2]);
 		strcpy(aMenuSection.filesDirectories,configurations[3]);

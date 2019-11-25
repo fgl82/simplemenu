@@ -48,15 +48,19 @@ void *checkClock(void *x_void_ptr) {
 	while (1) {
 		time ( &currRawtime );
 		currTime = localtime ( &currRawtime );
-		if(currTime->tm_min!=lastMin) {
-			setupDecorations();
-			updateScreen();
+		if(lastChargeLevel != getBatteryLevel()||currTime->tm_min!=lastMin) {
+			lastChargeLevel = getBatteryLevel();
+			if(!isSuspended&&!leftOrRightPressed&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
+				setupDecorations();
+				updateScreen();
+			}
 			lastMin=currTime->tm_min;
 		}
 	}
 }
 
 int main(int argc, char* argv[]) {
+	lastChargeLevel = getBatteryLevel();
 	pthread_t clockThread;
 	time ( &currRawtime );
 	currTime = localtime ( &currRawtime );

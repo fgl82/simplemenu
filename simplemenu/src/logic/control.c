@@ -46,7 +46,15 @@ void launchGame() {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
-		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
+		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
+//			printf("NO EXT!!!\n");
+//			sleep(1);
+			executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,getGameName(CURRENT_GAME_NAME));
+		} else {
+//			printf("EXT!!!\n");
+//			sleep(1);
+			executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
+		}
 	}
 }
 

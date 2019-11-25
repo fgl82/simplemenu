@@ -1,4 +1,9 @@
 #!/bin/sh
+cd /home/bittboy/git/invoker/invoker
+make clean
+make PLATFORM=RG-350
+cp /home/bittboy/git/invoker/invoker/invoker.dge /home/bittboy/git/simplemenu/simplemenu/output/invoker.dge
+cd /home/bittboy/git/simplemenu/simplemenu/
 make clean
 make PLATFORM=RG-350
 cd output

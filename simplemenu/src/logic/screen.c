@@ -147,18 +147,13 @@ void drawHeader() {
 	strcpy(timeString,(asctime(currTime))+11);
 	timeString[strlen(timeString)-9]='\0';
 	drawTimeOnFooter(timeString);
-	#ifndef TARGET_PC
 	char str[20];
-	int level = getBatteryLevel();
-	if (level==-1) {
+	if (lastChargeLevel==-1) {
 		sprintf(str, "%s", "CHARGING");
 	} else {
-		sprintf(str, "%d%%", level);
+		sprintf(str, "%d%%", lastChargeLevel);
 	}
 	drawBatteryOnFooter(str);
-	#else
-	drawBatteryOnFooter("100");
-	#endif
 	drawTextOnHeader(finalString);
 }
 
