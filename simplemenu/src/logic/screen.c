@@ -98,12 +98,12 @@ void displayGamePicture() {
 		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
 	strcat(pictureWithFullPath,"media/");
-	tempGameName=getNameWithoutExtension(tempGameName);
+//	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
-	stripGameName(tempGameName);
+	stripGameNameLeaveExtension(tempGameName);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 		char* displayName=getFileNameOrAlias(CURRENT_GAME);
@@ -144,16 +144,16 @@ void drawHeader() {
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
 		strcat(finalString," +");
 	}
-	strcpy(timeString,(asctime(currTime))+11);
-	timeString[strlen(timeString)-9]='\0';
-	drawTimeOnFooter(timeString);
-	char str[20];
-	if (lastChargeLevel==-1) {
-		sprintf(str, "%s", "CHARGING");
-	} else {
-		sprintf(str, "%d%%", lastChargeLevel);
-	}
-	drawBatteryOnFooter(str);
+//	strcpy(timeString,(asctime(currTime))+11);
+//	timeString[strlen(timeString)-9]='\0';
+//	drawTimeOnFooter(timeString);
+//	char str[20];
+//	if (lastChargeLevel==-1) {
+//		sprintf(str, "%s", "CHARGING");
+//	} else {
+//		sprintf(str, "%d%%", lastChargeLevel);
+//	}
+//	drawBatteryOnFooter(str);
 	drawTextOnHeader(finalString);
 }
 
@@ -220,6 +220,7 @@ void setupDecorations() {
 }
 
 void updateScreen() {
+//    pthread_mutex_lock(&lock);
 	if (!leftOrRightPressed&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		drawGameList();
 		setupDecorations();
@@ -237,6 +238,7 @@ void updateScreen() {
 		showErrorMessage(errorMessage);
 	}
 	refreshScreen();
+//    pthread_mutex_unlock(&lock);
 }
 
 void setupDisplayAndKeys() {

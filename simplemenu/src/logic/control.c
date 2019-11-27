@@ -237,9 +237,19 @@ void markAsFavorite() {
 			#ifndef TARGET_PC
 			Shake_Play(device, effect_id);
 			#endif
-			strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
+			if (CURRENT_SECTION.onlyFileNamesNoExtension) {
+				strcpy(favorites[favoritesSize].name, getGameName(CURRENT_GAME_NAME));
+			} else {
+				strcpy(favorites[favoritesSize].name, CURRENT_GAME_NAME);
+			}
 			if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, CURRENT_GAME->alias);
+			} else {
+//				favorites[favoritesSize].alias[0]='\0';
+				char tmp[300];
+				strcpy(tmp, CURRENT_GAME->name);
+				stripGameName(tmp);
+				strcpy(favorites[favoritesSize].alias, tmp);
 			}
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
@@ -257,14 +267,12 @@ int isSelectPressed() {
 
 int performAction() {
 	if (keys[BTN_R] && keys[BTN_START]) {
-//		freeResources();
-//		saveLastState();
-//		saveFavorites();
-//		exit(0);
 		running=0;
 	}
 	if (keys[BTN_R2]) {
-		loadGameList(1);
+		if(currentSectionNumber!=favoritesSectionNumber) {
+			loadGameList(1);
+		}
 	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;

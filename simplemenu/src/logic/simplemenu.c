@@ -31,42 +31,42 @@ void initializeGlobals() {
 }
 
 void resetFrameBuffer () {
-	system("/usr/sbin/unlockvt > /dev/null");
-	system("/usr/bin/reset");
-	system("echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind");
-	system("echo 0 > /sys/devices/platform/linkdev/alt_key_map");
+	system("./frontend_start");
 }
 
-//void sig_term_handler(int signum, siginfo_t *info, void *ptr)
-//{
-//	drawShutDownScreen();
-//    quit();
+void sig_term_handler(int signum)
+{
+    running=0;
+}
+
+
+//void *checkClock(void *x_void_ptr) {
+//	while (1) {
+//		currRawtime = time (NULL);
+//		currTime = localtime(&currRawtime);
+//		if(currTime->tm_sec>lastSec) {
+//			lastSec=currTime->tm_sec;
+//			if(!isSuspended&&!leftOrRightPressed&&!isUSBMode) {
+//				printf("iupdate last\n");
+//				lastChargeLevel = getBatteryLevel();
+//				updateScreen();
+//			}
+//		}
+//		free (currTime);
+//	}
+//	printf("pepe\n");
 //}
 
-
-void *checkClock(void *x_void_ptr) {
-	while (1) {
-		time ( &currRawtime );
-		currTime = localtime ( &currRawtime );
-		if(lastChargeLevel != getBatteryLevel()||currTime->tm_min!=lastMin) {
-			lastChargeLevel = getBatteryLevel();
-			if(!isSuspended&&!leftOrRightPressed&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-				setupDecorations();
-				updateScreen();
-			}
-			lastMin=currTime->tm_min;
-		}
-	}
-}
-
 int main(int argc, char* argv[]) {
-	lastChargeLevel = getBatteryLevel();
-	pthread_t clockThread;
-	time ( &currRawtime );
-	currTime = localtime ( &currRawtime );
-	lastMin=currTime->tm_min;
-	pthread_create(&clockThread, NULL, checkClock,NULL);
-	//	signal(SIGTERM, &sig_term_handler);
+//	printf("getBatt\n");
+//	lastChargeLevel = getBatteryLevel();
+//	printf("%d\n", lastChargeLevel);
+//	currRawtime = time(NULL);
+//	currTime = localtime(&currRawtime);
+//	lastSec=currTime->tm_sec;
+//	pthread_mutex_init(&lock, NULL);
+//	pthread_create(&clockThread, NULL, checkClock,NULL);
+	signal(SIGQUIT, &sig_term_handler);
 	#ifndef TARGET_PC
 	resetFrameBuffer();
 	HW_Init();

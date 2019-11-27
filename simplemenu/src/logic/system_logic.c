@@ -131,11 +131,6 @@ int getBatteryLevel() {
 		int battery_level;
 		fscanf(f, "%i", &battery_level);
 		fclose(f);
-//		if (battery_level >= 100) return 5;
-//		else if (battery_level > 80) return 4;
-//		else if (battery_level > 60) return 3;
-//		else if (battery_level > 40) return 2;
-//		else if (battery_level > 20) return 1;
 		return battery_level;
 	}
 	#else

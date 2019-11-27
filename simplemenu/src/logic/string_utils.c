@@ -94,7 +94,7 @@ char *getGameName(char *gameName) {
 void stripGameName(char *gameName) {
 	char *nameWithoutExtension=getNameWithoutExtension(gameName);
 	char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
-	strcpy(gameName,nameWithoutExtension);
+//	strcpy(gameName,nameWithoutExtension);
 	strcpy(gameName,nameWithoutPath);
 	int charNumber = 0;
 	while (gameName[charNumber]) {
@@ -105,6 +105,20 @@ void stripGameName(char *gameName) {
 		charNumber++;
 	}
 	free(nameWithoutExtension);
+	free(nameWithoutPath);
+}
+
+void stripGameNameLeaveExtension(char *gameName) {
+	char *nameWithoutPath=getNameWithoutPath(gameName);
+	strcpy(gameName,nameWithoutPath);
+	int charNumber = 0;
+	while (gameName[charNumber]) {
+		if (gameName[charNumber]=='(') {
+			gameName[charNumber-1]='\0';
+			break;
+		}
+		charNumber++;
+	}
 	free(nameWithoutPath);
 }
 

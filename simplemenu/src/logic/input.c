@@ -58,12 +58,12 @@ void enableKeyRepeat() {
 
 void initializeKeys() {
 	keys = SDL_GetKeyState(NULL);
-	SDL_JoystickEventState(SDL_ENABLE);
-	for (int i = 0; i < SDL_NumJoysticks(); i++)
-	{
-		if (strcmp(SDL_JoystickName(i), "linkdev device (Analog 2-axis 8-button 2-hat)") == 0)
-			joystick = SDL_JoystickOpen(i);
-	}
+//	SDL_JoystickEventState(SDL_ENABLE);
+//	for (int i = 0; i < SDL_NumJoysticks(); i++)
+//	{
+//		if (strcmp(SDL_JoystickName(i), "linkdev device (Analog 2-axis 8-button 2-hat)") == 0)
+//			joystick = SDL_JoystickOpen(i);
+//	}
 }
 
 void pumpEvents() {

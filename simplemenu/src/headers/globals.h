@@ -1,10 +1,12 @@
 #ifndef GLOBALS_DEFINED
 #define GLOBALS_DEFINED
 
+#include <pthread.h>
 #include <SDL/SDL_joystick.h>
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
 #include "../headers/hashtable.h"
+
 #ifndef TARGET_PC
 #include <shake.h>
 #endif
@@ -107,6 +109,9 @@ int effect_id;
 
 time_t currRawtime;
 struct tm * currTime;
-int lastMin;
+int lastSec;
 int lastChargeLevel;
+pthread_t clockThread;
+pthread_mutex_t lock;
+
 #endif
