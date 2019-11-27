@@ -58,6 +58,15 @@ void launchGame() {
 	}
 }
 
+void launchEmulator() {
+	if (favoritesSectionSelected && favoritesSize > 0) {
+		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
+		executeCommand(favorite.emulatorFolder,favorite.executable,"*");
+	} else if (CURRENT_GAME_NAME!=NULL) {
+		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,"*");
+	}
+}
+
 void scrollUp() {
 	if(CURRENT_SECTION.currentGame == 0) {
 		if (CURRENT_SECTION.currentPage >0) {
@@ -284,6 +293,9 @@ int performAction() {
 		return(0);
 	}
 	if(keys[BTN_B]) {
+		if (keys[BTN_A]&&!leftOrRightPressed) {
+			launchEmulator();
+		}
 		if (keys[BTN_X]&&!leftOrRightPressed) {
 			if (!favoritesSectionSelected) {
 				deleteCurrentGame(CURRENT_GAME_NAME);

@@ -58,15 +58,13 @@ void sig_term_handler(int signum)
 //}
 
 int main(int argc, char* argv[]) {
-//	printf("getBatt\n");
 //	lastChargeLevel = getBatteryLevel();
-//	printf("%d\n", lastChargeLevel);
 //	currRawtime = time(NULL);
 //	currTime = localtime(&currRawtime);
 //	lastSec=currTime->tm_sec;
 //	pthread_mutex_init(&lock, NULL);
 //	pthread_create(&clockThread, NULL, checkClock,NULL);
-	signal(SIGQUIT, &sig_term_handler);
+	signal(SIGTERM, &sig_term_handler);
 	#ifndef TARGET_PC
 	resetFrameBuffer();
 	HW_Init();

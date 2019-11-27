@@ -20,6 +20,7 @@ EOF
 # create opk
 FLIST="simplemenu.dge"
 FLIST="${FLIST} invoker.dge"
+FLIST="${FLIST} frontend_start"
 FLIST="${FLIST} usb_mode_on.sh"
 FLIST="${FLIST} usb_mode_off.sh"
 FLIST="${FLIST} resources"
