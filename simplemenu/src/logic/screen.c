@@ -77,6 +77,40 @@ void showLetter() {
 	free(currentGame);
 }
 
+void showCurrentEmulator() {
+	int height = 30;
+	int filling[3];
+	int borderColor[3];
+	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
+	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
+	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+	if (pictureMode) {
+		filling[0] = 21;
+		filling[1] = 18;
+		filling[2] = 26;
+		borderColor[0]=255;
+		borderColor[1]=255;
+		borderColor[2]=255;
+		textColor.r=255;
+		textColor.g=255;
+		textColor.b=255;
+	}
+//	char *tempString = malloc(strlen(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory])+strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
+	char *tempString = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
+//	strcpy(tempString,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+	strcpy(tempString,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+	strcat(tempString,"\0");
+	int width = strlen(tempString)*11;
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)                                         , filling);
+	drawCurrentExecutable(tempString, textColor);
+	free(tempString);
+}
+
 
 void showConsole() {
 	displayImageOnScreen(CURRENT_SECTION.consolePicture, "PICTURE NOT FOUND");
@@ -221,11 +255,14 @@ void setupDecorations() {
 
 void updateScreen() {
 //    pthread_mutex_lock(&lock);
-	if (!leftOrRightPressed&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
+	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		drawGameList();
 		setupDecorations();
 		if (pictureMode) {
 			displayGamePicture();
+		}
+		if (currentlyChoosingEmulator) {
+			showCurrentEmulator();
 		}
 		if (hotKeyPressed) {
 			if (CURRENT_GAME_NAME!=NULL) {

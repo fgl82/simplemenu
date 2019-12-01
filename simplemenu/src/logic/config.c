@@ -42,11 +42,17 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	if (!directoryExists) {
 		char copyCommand[300];
 		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",getenv("HOME"));
-		system(copyCommand);
+		int ret = system(copyCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
 		char copyScriptsCommand[300];
 		mkdir(pathToScriptFiles,0700);
 		snprintf(copyScriptsCommand,sizeof(copyScriptsCommand),"cp ./scripts/* %s/.simplemenu/scripts",getenv("HOME"));
-		system(copyScriptsCommand);
+		ret = system(copyScriptsCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
 	}
 }
 
@@ -240,8 +246,63 @@ int loadSections() {
 			aMenuSection.onlyFileNamesNoExtension=0;
 			strcpy(aMenuSection.sectionName,configurations[0]);
 		}
-		strcpy(aMenuSection.emulatorFolder,configurations[1]);
-		strcpy(aMenuSection.executable,configurations[2]);
+
+		int dirCounter=0;
+		for (int i=0;i<10;i++) {
+			aMenuSection.emulatorDirectories[dirCounter]=NULL;
+		}
+		dirCounter=0;
+		char* currentDir = strtok(configurations[1],",");
+		while(currentDir!=NULL) {
+			aMenuSection.emulatorDirectories[dirCounter]=malloc(strlen(currentDir));
+			strcpy(aMenuSection.emulatorDirectories[dirCounter],currentDir);
+			strcat(aMenuSection.emulatorDirectories[dirCounter],"\0");
+			currentDir = strtok(NULL,",");
+			dirCounter++;
+		}
+		free (currentDir);
+		if(dirCounter>0) {
+			aMenuSection.emulatorDirectories[dirCounter]=NULL;
+		}
+		aMenuSection.activeEmulatorDirectory=0;
+
+		int execCounter=0;
+		for (int i=0;i<10;i++) {
+			aMenuSection.executables[execCounter]=NULL;
+		}
+		execCounter=0;
+		char* currentExec = strtok(configurations[2],",");
+		while(currentExec!=NULL) {
+			aMenuSection.executables[execCounter]=malloc(strlen(currentExec));
+			strcpy(aMenuSection.executables[execCounter],currentExec);
+			strcat(aMenuSection.executables[execCounter],"\0");
+			currentExec = strtok(NULL,",");
+			execCounter++;
+		}
+		free (currentExec);
+		if(execCounter>0) {
+			aMenuSection.executables[execCounter]=NULL;
+		}
+		aMenuSection.activeExecutable=0;
+
+//		if(aMenuSection.executables[1]!=NULL) {
+//			printf("--------------\n");
+//			printf("%s\n",aMenuSection.sectionName);
+//			execCounter=0;
+//			while(aMenuSection.executables[execCounter]!=NULL) {
+//				printf("%s\n",aMenuSection.executables[execCounter]);
+//				execCounter++;
+//			}
+//			execCounter=0;
+//			while(aMenuSection.emulatorDirectories[execCounter]!=NULL) {
+//				printf("%s\n",aMenuSection.emulatorDirectories[execCounter]);
+//				execCounter++;
+//			}
+//			printf("%d\n",aMenuSection.activeExecutable);
+//			printf("%d\n",aMenuSection.activeEmulatorDirectory);
+//			printf("--------------\n");
+//		}
+
 		strcpy(aMenuSection.filesDirectories,configurations[3]);
 		strcpy(aMenuSection.fileExtensions,configurations[4]);
 		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
@@ -284,8 +345,10 @@ int loadSections() {
 	}
 	struct MenuSection aMenuSection;
 	strcpy(aMenuSection.sectionName,configurations[0]);
-	strcpy(aMenuSection.emulatorFolder,configurations[1]);
-	strcpy(aMenuSection.executable,configurations[2]);
+	aMenuSection.emulatorDirectories[0]=strtok(configurations[1],",");
+	aMenuSection.emulatorDirectories[1]=NULL;
+	aMenuSection.executables[0]=strtok(configurations[2],",");
+	aMenuSection.executables[1]=NULL;
 	strcpy(aMenuSection.filesDirectories,configurations[3]);
 	strcpy(aMenuSection.fileExtensions,configurations[4]);
 	aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);

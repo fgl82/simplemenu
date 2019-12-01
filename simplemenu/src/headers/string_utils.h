@@ -8,5 +8,6 @@ char *getNameWithoutPath(char *fileName);
 char *getRomPath (char *fileName);
 char *getExtension (char *stringWithExtension);
 void stripGameName(char *gameName);
+void stripGameNameLeaveExtension(char *gameName);
 char *getGameName(char *gameName);
 #endif

@@ -704,7 +704,10 @@ void determineStartingScreen(int sectionCount) {
 void deleteCurrentGame() {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",CURRENT_GAME_NAME);
-	system(command);
+	int ret = system(command);
+	if (ret==-1) {
+		generateError("FATAL ERROR", 1);
+	}
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName;
 	char *tempGameName1;
@@ -718,5 +721,8 @@ void deleteCurrentGame() {
 	free(tempGameName);
 	free(tempGameName1);
 	free(pictureWithFullPath);
-	system(command);
+	ret = system(command);
+	if (ret==-1) {
+		generateError("FATAL ERROR", 1);
+	}
 }

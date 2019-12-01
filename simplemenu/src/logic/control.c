@@ -49,11 +49,11 @@ void launchGame() {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 //			printf("NO EXT!!!\n");
 //			sleep(1);
-			executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,getGameName(CURRENT_GAME_NAME));
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(CURRENT_GAME_NAME));
 		} else {
 //			printf("EXT!!!\n");
 //			sleep(1);
-			executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,CURRENT_GAME_NAME);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],CURRENT_GAME_NAME);
 		}
 	}
 }
@@ -63,7 +63,7 @@ void launchEmulator() {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*");
 	} else if (CURRENT_GAME_NAME!=NULL) {
-		executeCommand(CURRENT_SECTION.emulatorFolder, CURRENT_SECTION.executable,"*");
+		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
 	}
 }
 
@@ -261,8 +261,8 @@ void markAsFavorite() {
 				strcpy(favorites[favoritesSize].alias, tmp);
 			}
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
-			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorFolder);
-			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executable);
+			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 			strcpy(favorites[favoritesSize].filesDirectory,CURRENT_GAME->directory);
 			favoritesSize++;
 			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
@@ -274,29 +274,73 @@ int isSelectPressed() {
 	return keys[BTN_SELECT];
 }
 
+void performChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(CURRENT_SECTION.activeExecutable>0) {
+			CURRENT_SECTION.activeExecutable--;
+			CURRENT_SECTION.activeEmulatorDirectory--;
+		} else {
+			CURRENT_SECTION.activeExecutable=sizeof(CURRENT_SECTION.executables)/sizeof(CURRENT_SECTION.executables[0])-1;
+			printf("%d\n",CURRENT_SECTION.activeExecutable);
+			while (CURRENT_SECTION.activeExecutable>0&&CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]==NULL) {
+				CURRENT_SECTION.activeExecutable--;
+				printf("%d\n",CURRENT_SECTION.activeExecutable);
+				CURRENT_SECTION.activeEmulatorDirectory--;
+			}
+		}
+		return;
+	}
+	if (keys[BTN_DOWN]) {
+		if(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable+1]!=NULL) {
+			CURRENT_SECTION.activeExecutable++;
+			CURRENT_SECTION.activeEmulatorDirectory++;
+		} else {
+			CURRENT_SECTION.activeExecutable=0;
+			CURRENT_SECTION.activeEmulatorDirectory=0;
+		}
+		return;
+	}
+	if (keys[BTN_A]) {
+		if (currentlyChoosingEmulator) {
+			currentlyChoosingEmulator=0;
+			return;
+		}
+	}
+}
+
+
 int performAction() {
-	if (keys[BTN_R] && keys[BTN_START]) {
+	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
+		return 0;
+	}
+	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_START]&&!favoritesSectionSelected) {
+		currentlyChoosingEmulator=1;
+		return 0;
 	}
 	if (keys[BTN_R2]) {
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			loadGameList(1);
+			return(1);
 		}
 	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;
 		isUSBMode=0;
-		system("./usb_mode_off.sh");
+		int ret = system("./usb_mode_off.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
 		return 0;
 	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
 	if(keys[BTN_B]) {
-		if (keys[BTN_A]&&!leftOrRightPressed) {
+		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
 		}
-		if (keys[BTN_X]&&!leftOrRightPressed) {
+		if (keys[BTN_X]&&!currentlySectionSwitching) {
 			if (!favoritesSectionSelected) {
 				deleteCurrentGame(CURRENT_GAME_NAME);
 				loadGameList(1);
@@ -313,7 +357,7 @@ int performAction() {
 				return 1;
 			}
 		}
-		if (keys[BTN_START]&&!leftOrRightPressed) {
+		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
 			int returnedValue = system("./usb_mode_on.sh");
 			if (returnedValue==0) {
@@ -322,7 +366,7 @@ int performAction() {
 				generateError("USB MODE  NOT AVAILABLE",0);
 			}
 		}
-		if (keys[BTN_SELECT]&&!leftOrRightPressed) {
+		if (keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
 				updateScreen();
@@ -330,14 +374,14 @@ int performAction() {
 			saveFavorites();
 			launchGame();
 		}	
-		if (keys[BTN_DOWN]&&!leftOrRightPressed) {
+		if (keys[BTN_DOWN]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
-		if (keys[BTN_UP]&&!leftOrRightPressed) {
+		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
@@ -348,7 +392,7 @@ int performAction() {
 			hotKeyPressed=0;
 			int advanced = advanceSection();
 			if(advanced) {
-				leftOrRightPressed=1;
+				currentlySectionSwitching=1;
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
@@ -364,7 +408,7 @@ int performAction() {
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
-				leftOrRightPressed=1;
+				currentlySectionSwitching=1;
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
@@ -378,7 +422,7 @@ int performAction() {
 		}
 	}
 
-	if (!hotKeyPressed&&!leftOrRightPressed&&!isUSBMode) {
+	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if(keys[BTN_L1]) {
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
@@ -401,10 +445,6 @@ int performAction() {
 					loadGameList(0);
 				}
 			}
-			return 0;
-		}
-		if (keys[BTN_SELECT] && keys[BTN_START]) {
-			running=0;
 			return 0;
 		}
 		if (keys[BTN_X]) {

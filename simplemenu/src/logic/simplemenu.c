@@ -31,7 +31,10 @@ void initializeGlobals() {
 }
 
 void resetFrameBuffer () {
-	system("./frontend_start");
+	int ret = system("./frontend_start");
+	if (ret==-1) {
+		generateError("FATAL ERROR", 1);
+	}
 }
 
 void sig_term_handler(int signum)
@@ -93,7 +96,11 @@ int main(int argc, char* argv[]) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
-					performAction();
+					if (!currentlyChoosingEmulator) {
+						performAction();
+					} else {
+						performChoosingAction();
+					}
 				}
 				#ifndef TARGET_PC
 				resetTimeoutTimer();
@@ -102,7 +109,7 @@ int main(int argc, char* argv[]) {
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
-					leftOrRightPressed=0;
+					currentlySectionSwitching=0;
 					updateScreen();
 				}
 			}

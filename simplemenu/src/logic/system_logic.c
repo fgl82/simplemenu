@@ -7,6 +7,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <stdint.h>
+#include "../headers/logic.h"
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
 
@@ -33,7 +34,10 @@ void turnScreenOnOrOff(int state) {
 	const char *path = "/sys/class/graphics/fb0/blank";
 	const char *blank = state ? "0" : "1";
 	int fd = open(path, O_RDWR);
-	write(fd, blank, strlen(blank));
+	int ret = write(fd, blank, strlen(blank));
+	if (ret==-1) {
+		generateError("FATAL ERROR", 1);
+	}
 	close(fd);
 }
 

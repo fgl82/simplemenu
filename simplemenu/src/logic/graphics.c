@@ -138,6 +138,10 @@ void drawCurrentLetter(char *letter, SDL_Color textColor) {
 	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
+void drawCurrentExecutable(char *executable, SDL_Color textColor) {
+	drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), executable, textColor, VAlignMiddle | HAlignCenter);
+}
+
 void drawError(char *errorMessage, SDL_Color textColor) {
 	if(strchr(errorMessage,'-')==NULL) {
 		drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);

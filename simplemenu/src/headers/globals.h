@@ -30,7 +30,8 @@ int gamesInPage;
 int currentCPU;
 int pictureMode;
 int hotKeyPressed;
-int leftOrRightPressed;
+int currentlySectionSwitching;
+int currentlyChoosingEmulator;
 
 int OC_UC;
 int OC_NO;
@@ -45,8 +46,8 @@ int backlightValue;
 
 struct MenuSection {
 	char sectionName[25];
-	char emulatorFolder[200];
-	char executable[200];
+	char *emulatorDirectories[10];
+	char *executables[10];
 	char filesDirectories[400];
 	char fileExtensions[50];
 	char consolePicture[100];
@@ -66,6 +67,8 @@ struct MenuSection {
 	SDL_Color bodyBackgroundColor;
 	struct Rom *romList[1000][10];
 	hashtable_t *aliasHashTable;
+	int activeExecutable;
+	int activeEmulatorDirectory;
 };
 struct MenuSection menuSections[50];
 

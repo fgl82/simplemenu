@@ -1,3 +1,4 @@
+#include "../headers/globals.h"
 #ifndef LOGIC
 #define LOGIC
 void generateError(char *pErrorMessage, int pThereIsACriticalError);
