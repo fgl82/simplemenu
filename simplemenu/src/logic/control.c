@@ -47,12 +47,8 @@ void launchGame() {
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
-//			printf("NO EXT!!!\n");
-//			sleep(1);
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(CURRENT_GAME_NAME));
 		} else {
-//			printf("EXT!!!\n");
-//			sleep(1);
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],CURRENT_GAME_NAME);
 		}
 	}
@@ -281,10 +277,8 @@ void performChoosingAction() {
 			CURRENT_SECTION.activeEmulatorDirectory--;
 		} else {
 			CURRENT_SECTION.activeExecutable=sizeof(CURRENT_SECTION.executables)/sizeof(CURRENT_SECTION.executables[0])-1;
-			printf("%d\n",CURRENT_SECTION.activeExecutable);
 			while (CURRENT_SECTION.activeExecutable>0&&CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]==NULL) {
 				CURRENT_SECTION.activeExecutable--;
-				printf("%d\n",CURRENT_SECTION.activeExecutable);
 				CURRENT_SECTION.activeEmulatorDirectory--;
 			}
 		}

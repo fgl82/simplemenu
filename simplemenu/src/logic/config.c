@@ -254,7 +254,7 @@ int loadSections() {
 		dirCounter=0;
 		char* currentDir = strtok(configurations[1],",");
 		while(currentDir!=NULL) {
-			aMenuSection.emulatorDirectories[dirCounter]=malloc(strlen(currentDir));
+			aMenuSection.emulatorDirectories[dirCounter]=malloc(strlen(currentDir)+1);
 			strcpy(aMenuSection.emulatorDirectories[dirCounter],currentDir);
 			strcat(aMenuSection.emulatorDirectories[dirCounter],"\0");
 			currentDir = strtok(NULL,",");
@@ -273,16 +273,16 @@ int loadSections() {
 		execCounter=0;
 		char* currentExec = strtok(configurations[2],",");
 		while(currentExec!=NULL) {
-			aMenuSection.executables[execCounter]=malloc(strlen(currentExec));
+			aMenuSection.executables[execCounter]=malloc(strlen(currentExec)+1);
 			strcpy(aMenuSection.executables[execCounter],currentExec);
-			strcat(aMenuSection.executables[execCounter],"\0");
+//			aMenuSection.executables[execCounter][strlen(aMenuSection.executables[execCounter])]='\0';
+//			printf("%s\n",aMenuSection.executables[execCounter]);
+//			sleep(2);
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
 		free (currentExec);
-		if(execCounter>0) {
-			aMenuSection.executables[execCounter]=NULL;
-		}
+		aMenuSection.executables[execCounter]=NULL;
 		aMenuSection.activeExecutable=0;
 
 //		if(aMenuSection.executables[1]!=NULL) {
