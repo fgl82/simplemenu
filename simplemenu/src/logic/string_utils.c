@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../headers/globals.h"
 
 char *replaceWord(const char *s, const char *oldW, const char *newW) {
     char *result;
@@ -82,8 +83,11 @@ char *getNameWithoutPath(char *fileName) {
 
 char *getGameName(char *gameName) {
 	char *tempGameName=malloc(strlen(gameName)+1);
-	char *nameWithoutExtension=getNameWithoutExtension(gameName);
-	char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+	char *nameWithoutPath;
+	char *nameWithoutExtension;
+	nameWithoutExtension=getNameWithoutExtension(gameName);
+	nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+	nameWithoutPath=getNameWithoutPath(gameName);
 //	strcpy(tempGameName,nameWithoutExtension);
 	strcpy(tempGameName,nameWithoutPath);
 //	free(nameWithoutExtension);

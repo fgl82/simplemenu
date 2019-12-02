@@ -169,7 +169,14 @@ char *getFileNameOrAlias(struct Rom *rom) {
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
+//		if(stripGames) {
 		stripGameName(displayName);
+//		} else {
+//			char tmp[300];
+//			strcpy(tmp, getNameWithoutPath(displayName));
+//			strcpy(displayName, tmp);
+//			printf("returning %s\n",displayName);
+//		}
 	}
 	return displayName;
 }

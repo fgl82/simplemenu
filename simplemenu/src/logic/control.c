@@ -253,8 +253,12 @@ void markAsFavorite() {
 //				favorites[favoritesSize].alias[0]='\0';
 				char tmp[300];
 				strcpy(tmp, CURRENT_GAME->name);
-				stripGameName(tmp);
-				strcpy(favorites[favoritesSize].alias, tmp);
+//				if(stripGames) {
+//					stripGameName(tmp);
+//					strcpy(favorites[favoritesSize].alias, tmp);
+//				} else {
+					strcpy(tmp,getNameWithoutPath(tmp));
+//				}
 			}
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);

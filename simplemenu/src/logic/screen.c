@@ -132,7 +132,7 @@ void displayGamePicture() {
 		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
 	strcat(pictureWithFullPath,"media/");
-//	tempGameName=getNameWithoutExtension(tempGameName);
+	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
@@ -141,10 +141,28 @@ void displayGamePicture() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 		char* displayName=getFileNameOrAlias(CURRENT_GAME);
-		drawPictureTextOnScreen(displayName);
+		if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
+			drawPictureTextOnScreen(displayName);
+		} else {
+			if (currentSectionNumber==favoritesSectionNumber) {
+				if (strlen(CURRENT_GAME->alias)<2) {
+					char tmp[300];
+					strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+					drawPictureTextOnScreen(tmp);
+				} else {
+					drawPictureTextOnScreen(CURRENT_GAME->alias);
+				}
+			}
+		}
 		free(displayName);
 	} else {
-		drawPictureTextOnScreen(tempGameName);
+		if (stripGames) {
+			drawPictureTextOnScreen(tempGameName);
+		} else {
+			char tmp[300];
+			strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+			drawPictureTextOnScreen(tmp);
+		}
 	}
 	free(pictureWithFullPath);
 	free(tempGameName);
@@ -218,7 +236,13 @@ void drawGameList() {
 				nameWithoutExtension=malloc(strlen(CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name)+1);
 				strcpy(nameWithoutExtension,CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]->name);
 				strcat(nameWithoutExtension,"\0");
-				stripGameName(nameWithoutExtension);
+				if(stripGames) {
+					stripGameName(nameWithoutExtension);
+				} else {
+					char *tempGame=getNameWithoutPath(nameWithoutExtension);
+					strcpy(nameWithoutExtension,tempGame);
+					free(tempGame);
+				}
 			}
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {

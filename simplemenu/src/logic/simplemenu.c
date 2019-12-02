@@ -25,6 +25,7 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
+	stripGames=1;
 	#ifndef TARGET_PC
 	#endif
 	srand(time(0));
@@ -110,6 +111,14 @@ int main(int argc, char* argv[]) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
 					currentlySectionSwitching=0;
+					updateScreen();
+				}
+				if(getPressedKey()==BTN_SELECT) {
+					if (stripGames) {
+						stripGames=0;
+					} else {
+						stripGames=1;
+					}
 					updateScreen();
 				}
 			}

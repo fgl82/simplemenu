@@ -32,6 +32,7 @@ int pictureMode;
 int hotKeyPressed;
 int currentlySectionSwitching;
 int currentlyChoosingEmulator;
+int stripGames;
 
 int OC_UC;
 int OC_NO;
