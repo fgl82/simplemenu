@@ -224,7 +224,7 @@ void loadConfig() {
 int loadSections() {
 	FILE * fp;
 	char line[1500];
-	char *configurations[25];
+	char *configurations[26];
 	char pathToSectionsFilePlusFileName[300];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
 	fp = fopen(pathToSectionsFilePlusFileName, "r");
@@ -279,56 +279,35 @@ int loadSections() {
 		while(currentExec!=NULL) {
 			aMenuSection.executables[execCounter]=malloc(strlen(currentExec)+1);
 			strcpy(aMenuSection.executables[execCounter],currentExec);
-//			aMenuSection.executables[execCounter][strlen(aMenuSection.executables[execCounter])]='\0';
-//			printf("%s\n",aMenuSection.executables[execCounter]);
-//			sleep(2);
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
 		free (currentExec);
 		aMenuSection.executables[execCounter]=NULL;
 		aMenuSection.activeExecutable=0;
-
-//		if(aMenuSection.executables[1]!=NULL) {
-//			printf("--------------\n");
-//			printf("%s\n",aMenuSection.sectionName);
-//			execCounter=0;
-//			while(aMenuSection.executables[execCounter]!=NULL) {
-//				printf("%s\n",aMenuSection.executables[execCounter]);
-//				execCounter++;
-//			}
-//			execCounter=0;
-//			while(aMenuSection.emulatorDirectories[execCounter]!=NULL) {
-//				printf("%s\n",aMenuSection.emulatorDirectories[execCounter]);
-//				execCounter++;
-//			}
-//			printf("%d\n",aMenuSection.activeExecutable);
-//			printf("%d\n",aMenuSection.activeEmulatorDirectory);
-//			printf("--------------\n");
-//		}
-
 		strcpy(aMenuSection.filesDirectories,configurations[3]);
 		strcpy(aMenuSection.fileExtensions,configurations[4]);
-		aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
-		aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
-		aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
-		aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[8]);
-		aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[9]);
-		aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[10]);
+		aMenuSection.headerAndFooterBackgroundColor.r=atoi(configurations[5]);
+		aMenuSection.headerAndFooterBackgroundColor.g=atoi(configurations[6]);
+		aMenuSection.headerAndFooterBackgroundColor.b=atoi(configurations[7]);
+		aMenuSection.headerAndFooterTextColor.r=atoi(configurations[8]);
+		aMenuSection.headerAndFooterTextColor.g=atoi(configurations[9]);
+		aMenuSection.headerAndFooterTextColor.b=atoi(configurations[10]);
 		aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
 		aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
 		aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
-		aMenuSection.bodyTextForegroundColor.r=atoi(configurations[14]);
-		aMenuSection.bodyTextForegroundColor.g=atoi(configurations[15]);
-		aMenuSection.bodyTextForegroundColor.b=atoi(configurations[16]);
+		aMenuSection.bodyTextColor.r=atoi(configurations[14]);
+		aMenuSection.bodyTextColor.g=atoi(configurations[15]);
+		aMenuSection.bodyTextColor.b=atoi(configurations[16]);
 		aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
 		aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
 		aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
-		aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
-		aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
-		aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
+		aMenuSection.bodySelectedTextTextColor.r=atoi(configurations[20]);
+		aMenuSection.bodySelectedTextTextColor.g=atoi(configurations[21]);
+		aMenuSection.bodySelectedTextTextColor.b=atoi(configurations[22]);
 		strcpy(aMenuSection.consolePicture,configurations[23]);
 		strcpy(aMenuSection.aliasFileName,configurations[24]);
+		strcpy(aMenuSection.category,configurations[25]);
 		if (strlen(aMenuSection.aliasFileName)>1) {
 			aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
 		}
@@ -339,7 +318,7 @@ int loadSections() {
 		menuSections[menuSectionCounter].hidden=0;
 		menuSectionCounter++;
 	}
-	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;31;34;231;109;62;49;58;66;152;157;152;248;85;41;27;33;42;none;");
+	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;31;34;231;109;62;49;58;66;152;157;152;248;85;41;27;33;42;none;;");
 	int i=0;
 	char *ptr = strtok(line, ";");
 	while(ptr != NULL) {
@@ -355,24 +334,24 @@ int loadSections() {
 	aMenuSection.executables[1]=NULL;
 	strcpy(aMenuSection.filesDirectories,configurations[3]);
 	strcpy(aMenuSection.fileExtensions,configurations[4]);
-	aMenuSection.headerAndFooterTextBackgroundColor.r=atoi(configurations[5]);
-	aMenuSection.headerAndFooterTextBackgroundColor.g=atoi(configurations[6]);
-	aMenuSection.headerAndFooterTextBackgroundColor.b=atoi(configurations[7]);
-	aMenuSection.headerAndFooterTextForegroundColor.r=atoi(configurations[8]);
-	aMenuSection.headerAndFooterTextForegroundColor.g=atoi(configurations[9]);
-	aMenuSection.headerAndFooterTextForegroundColor.b=atoi(configurations[10]);
+	aMenuSection.headerAndFooterBackgroundColor.r=atoi(configurations[5]);
+	aMenuSection.headerAndFooterBackgroundColor.g=atoi(configurations[6]);
+	aMenuSection.headerAndFooterBackgroundColor.b=atoi(configurations[7]);
+	aMenuSection.headerAndFooterTextColor.r=atoi(configurations[8]);
+	aMenuSection.headerAndFooterTextColor.g=atoi(configurations[9]);
+	aMenuSection.headerAndFooterTextColor.b=atoi(configurations[10]);
 	aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
 	aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
 	aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
-	aMenuSection.bodyTextForegroundColor.r=atoi(configurations[14]);
-	aMenuSection.bodyTextForegroundColor.g=atoi(configurations[15]);
-	aMenuSection.bodyTextForegroundColor.b=atoi(configurations[16]);
+	aMenuSection.bodyTextColor.r=atoi(configurations[14]);
+	aMenuSection.bodyTextColor.g=atoi(configurations[15]);
+	aMenuSection.bodyTextColor.b=atoi(configurations[16]);
 	aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
 	aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
 	aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
-	aMenuSection.bodySelectedTextForegroundColor.r=atoi(configurations[20]);
-	aMenuSection.bodySelectedTextForegroundColor.g=atoi(configurations[21]);
-	aMenuSection.bodySelectedTextForegroundColor.b=atoi(configurations[22]);
+	aMenuSection.bodySelectedTextTextColor.r=atoi(configurations[20]);
+	aMenuSection.bodySelectedTextTextColor.g=atoi(configurations[21]);
+	aMenuSection.bodySelectedTextTextColor.b=atoi(configurations[22]);
 	strcpy(aMenuSection.consolePicture,configurations[23]);
 	strcpy(aMenuSection.aliasFileName,configurations[24]);
 	if (strlen(aMenuSection.aliasFileName)>1) {

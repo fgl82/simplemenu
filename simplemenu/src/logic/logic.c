@@ -128,6 +128,7 @@ int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 				strncpy(category,val,(int)sval);
 				category[sval]='\0';
 				strcpy(desktopFiles[i].category,category);
+				printf("%s\n",category);
 				free(category);
 			}
 		}
@@ -545,7 +546,7 @@ void loadGameList(int refresh) {
 						int desktopFilesCount=getOPK(files[i], desktopFiles);
 						int desktopCounter=0;
 						while(desktopCounter<desktopFilesCount) {
-							if(strstr(desktopFiles[desktopCounter].category,"emulators")!=NULL) {
+							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL) {
 								break;
 							} else {
 								realItemCount++;

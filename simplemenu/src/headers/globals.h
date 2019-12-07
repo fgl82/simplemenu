@@ -61,16 +61,17 @@ struct MenuSection {
 	int totalPages;
 	int initialized;
 	int onlyFileNamesNoExtension;
-	SDL_Color headerAndFooterTextBackgroundColor;
-	SDL_Color headerAndFooterTextForegroundColor;
-	SDL_Color bodyTextForegroundColor;
-	SDL_Color bodySelectedTextBackgroundColor;
-	SDL_Color bodySelectedTextForegroundColor;
+	SDL_Color headerAndFooterBackgroundColor;
+	SDL_Color headerAndFooterTextColor;
 	SDL_Color bodyBackgroundColor;
+	SDL_Color bodyTextColor;
+	SDL_Color bodySelectedTextBackgroundColor;
+	SDL_Color bodySelectedTextTextColor;
 	struct Rom *romList[1000][10];
 	hashtable_t *aliasHashTable;
 	int activeExecutable;
 	int activeEmulatorDirectory;
+	char category[100];
 };
 struct MenuSection menuSections[50];
 

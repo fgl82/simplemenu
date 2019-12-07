@@ -45,13 +45,13 @@ void showLetter() {
 	int width = 80;
 	int filling[3];
 	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
-	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
-	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
-	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
-	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
-	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
-	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.r+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.g+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.b+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r;
+	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g;
+	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b;
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextColor;
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -81,13 +81,13 @@ void showCurrentEmulator() {
 	int height = 30;
 	int filling[3];
 	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.r+45;
-	borderColor[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.g+45;
-	borderColor[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterTextBackgroundColor.b+45;
-	filling[0]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.r;
-	filling[1]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.g;
-	filling[2]=CURRENT_SECTION.headerAndFooterTextBackgroundColor.b;
-	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextForegroundColor;
+	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.r+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.g+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.b+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r;
+	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g;
+	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b;
+	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextColor;
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -177,7 +177,7 @@ void displayBackgroundPicture() {
 void drawHeader() {
 	char finalString [100];
 	char timeString[150];
-	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==OC_UC) {
 		strcpy(finalString,"- ");
@@ -264,7 +264,7 @@ void drawGameList() {
 }
 
 void drawFooter(char *text) {
-	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterTextBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	drawTextOnFooter(text);
 }

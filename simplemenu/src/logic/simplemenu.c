@@ -25,8 +25,8 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-	#ifndef TARGET_PC
-	#endif
+#ifndef TARGET_PC
+#endif
 	srand(time(0));
 }
 
@@ -39,7 +39,7 @@ void resetFrameBuffer () {
 
 void sig_term_handler(int signum)
 {
-    running=0;
+	running=0;
 }
 
 
@@ -60,23 +60,194 @@ void sig_term_handler(int signum)
 //	printf("pepe\n");
 //}
 
+/**
+ * hex2int
+ * take a hex string and convert it to a 32bit number (max 8 hex digits)
+ */
+uint32_t hex2int(char *hex) {
+	char *hexCopy = malloc(strlen(hex)+1);
+	strcpy(hexCopy,hex);
+	uint32_t val = 0;
+	while (*hexCopy) {
+		// get current character then increment
+		uint8_t byte = *hexCopy++;
+		// transform hex character to the 4bit equivalent number, using the ascii table indexes
+		if (byte >= '0' && byte <= '9') byte = byte - '0';
+		else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
+		else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;
+		// shift 4 to make space for new digit, and add the 4 bits of the new digit
+		val = (val << 4) | (byte & 0xF);
+	}
+	return val;
+}
+
+//Uint8 hex2int(char *hex) {
+//    return 255;
+//}
+
+int testSectionLoad() {
+	FILE * fp;
+	char line[1500];
+	char *configurations[26];
+	char pathToSectionsFilePlusFileName[300];
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sectionsTest.cfg",getenv("HOME"));
+	fp = fopen(pathToSectionsFilePlusFileName, "r");
+	if (fp==NULL) {
+		return -1;
+	}
+	char lineNumber=0;
+	struct MenuSection aMenuSection;
+	char r[3];
+	char g[3];
+	char b[3];
+	while (fgets(line, sizeof(line), fp) != NULL) {
+		int dirCounter=0;
+		int execCounter=0;
+		if(line[0]=='#'||strlen(line)<2) {
+			continue;
+		}
+		line[strlen(line)-1]='\0';
+		char *value = strtok(line, "=");
+		value = strtok(NULL, "=");
+		if (value!=NULL) {
+			r[0]=value[0];
+			r[1]=value[1];
+			r[2]='\0';
+			g[0]=value[2];
+			g[1]=value[3];
+			g[2]='\0';
+			b[0]=value[4];
+			b[1]=value[5];
+			b[2]='\0';
+		}
+		switch (lineNumber) {
+		case 0:
+			strcpy(aMenuSection.sectionName,value);
+			break;
+		case 1:
+			for (int i=0;i<10;i++) {
+				aMenuSection.emulatorDirectories[dirCounter]=NULL;
+			}
+			dirCounter=0;
+			char* currentDir = strtok(value,",");
+			while(currentDir!=NULL) {
+				aMenuSection.emulatorDirectories[dirCounter]=malloc(strlen(currentDir)+1);
+				strcpy(aMenuSection.emulatorDirectories[dirCounter],currentDir);
+				strcat(aMenuSection.emulatorDirectories[dirCounter],"\0");
+				currentDir = strtok(NULL,",");
+				dirCounter++;
+			}
+			free (currentDir);
+			if(dirCounter>0) {
+				aMenuSection.emulatorDirectories[dirCounter]=NULL;
+			}
+			aMenuSection.activeEmulatorDirectory=0;
+			break;
+		case 2:
+			for (int i=0;i<10;i++) {
+				aMenuSection.executables[execCounter]=NULL;
+			}
+			execCounter=0;
+			char* currentExec = strtok(value,",");
+			while(currentExec!=NULL) {
+				aMenuSection.executables[execCounter]=malloc(strlen(currentExec)+1);
+				strcpy(aMenuSection.executables[execCounter],currentExec);
+				currentExec = strtok(NULL,",");
+				execCounter++;
+			}
+			free (currentExec);
+			aMenuSection.executables[execCounter]=NULL;
+			aMenuSection.activeExecutable=0;
+			break;
+		case 3:
+			strcpy(aMenuSection.filesDirectories,value);
+			break;
+		case 4:
+			strcpy(aMenuSection.fileExtensions,value);
+			break;
+		case 5:
+			aMenuSection.headerAndFooterBackgroundColor.r=hex2int(r);
+			aMenuSection.headerAndFooterBackgroundColor.g=hex2int(g);
+			aMenuSection.headerAndFooterBackgroundColor.b=hex2int(b);
+			break;
+		case 6:
+			aMenuSection.headerAndFooterTextColor.r=hex2int(r);
+			aMenuSection.headerAndFooterTextColor.g=hex2int(g);
+			aMenuSection.headerAndFooterTextColor.b=hex2int(b);
+			break;
+		case 7:
+			aMenuSection.bodyBackgroundColor.r=hex2int(r);
+			aMenuSection.bodyBackgroundColor.g=hex2int(g);
+			aMenuSection.bodyBackgroundColor.b=hex2int(b);
+			break;
+		case 8:
+			aMenuSection.bodyTextColor.r=hex2int(r);
+			aMenuSection.bodyTextColor.g=hex2int(g);
+			aMenuSection.bodyTextColor.b=hex2int(b);
+			break;
+		case 9:
+			aMenuSection.bodySelectedTextBackgroundColor.r=hex2int(r);
+			aMenuSection.bodySelectedTextBackgroundColor.g=hex2int(g);
+			aMenuSection.bodySelectedTextBackgroundColor.b=hex2int(b);
+			break;
+		case 10:
+			aMenuSection.bodySelectedTextTextColor.r=hex2int(r);
+			aMenuSection.bodySelectedTextTextColor.g=hex2int(g);
+			aMenuSection.bodySelectedTextTextColor.b=hex2int(b);
+			break;
+		case 11:
+			strcpy(aMenuSection.consolePicture,value);
+			break;
+		case 12:
+			if(value!=NULL) {
+				strcpy(aMenuSection.aliasFileName,value);
+			}
+			break;
+		case 13:
+			strcpy(aMenuSection.category,value);
+			break;
+		case 14:
+			if(strcmp("yes",value)==0) {
+				aMenuSection.onlyFileNamesNoExtension=1;
+			}
+			if (strlen(aMenuSection.aliasFileName)>1) {
+				aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
+			}
+			aMenuSection.hidden=0;
+			aMenuSection.currentPage=0;
+			aMenuSection.currentGame=0;
+			menuSections[menuSectionCounter]=aMenuSection;
+			menuSectionCounter++;
+			lineNumber=0;
+			continue;
+		}
+		lineNumber++;
+	}
+	favoritesSectionNumber=menuSectionCounter-1;
+	fclose(fp);
+	return menuSectionCounter;
+}
+
 int main(int argc, char* argv[]) {
-//	lastChargeLevel = getBatteryLevel();
-//	currRawtime = time(NULL);
-//	currTime = localtime(&currRawtime);
-//	lastSec=currTime->tm_sec;
-//	pthread_mutex_init(&lock, NULL);
-//	pthread_create(&clockThread, NULL, checkClock,NULL);
+	//	testSectionLoad();
+	//	exit(0);
+	//	lastChargeLevel = getBatteryLevel();
+	//	currRawtime = time(NULL);
+	//	currTime = localtime(&currRawtime);
+	//	lastSec=currTime->tm_sec;
+	//	pthread_mutex_init(&lock, NULL);
+	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#ifndef TARGET_PC
+#ifndef TARGET_PC
 	resetFrameBuffer();
 	HW_Init();
-	#endif
+#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();
 	setupDisplayAndKeys();
-	int sectionCount=loadSections();
+	//	int sectionCount=loadSections();
+	int sectionCount=testSectionLoad();
 	loadFavorites();
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);
@@ -86,9 +257,9 @@ int main(int argc, char* argv[]) {
 	} else {
 		loadLastState();
 	}
-	#ifndef TARGET_PC
+#ifndef TARGET_PC
 	initSuspendTimer();
-	#endif
+#endif
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();
@@ -102,9 +273,9 @@ int main(int argc, char* argv[]) {
 						performChoosingAction();
 					}
 				}
-				#ifndef TARGET_PC
+#ifndef TARGET_PC
 				resetTimeoutTimer();
-				#endif
+#endif
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
@@ -114,7 +285,6 @@ int main(int argc, char* argv[]) {
 				}
 				if(getPressedKey()==BTN_SELECT) {
 					if (stripGames) {
-						printf("1\n");
 						stripGames=0;
 					} else {
 						stripGames=1;

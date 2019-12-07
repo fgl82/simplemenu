@@ -87,11 +87,11 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Colo
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
-	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextForegroundColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 }
 
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
-	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodyTextForegroundColor, VAlignBottom | HAlignCenter);
+	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
 }
 
 void drawPictureTextOnScreen(char *buf) {
@@ -111,7 +111,7 @@ void drawImgFallbackTextOnScreen(char *fallBackText) {
 }
 
 void drawTextOnFooter(const char text[64]) {
-	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawShutDownText(const char text[64]) {
@@ -123,15 +123,15 @@ void drawShutDownText(const char text[64]) {
 }
 
 void drawTextOnHeader(char *text) {
-	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignTop | HAlignCenter);
+	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignTop | HAlignCenter);
 }
 
 void drawTimeOnFooter(char *text) {
-	drawTextOnScreen(font,calculateProportionalSizeOrDistance(316), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignRight);
+	drawTextOnScreen(font,calculateProportionalSizeOrDistance(316), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignRight);
 }
 
 void drawBatteryOnFooter(char *text) {
-	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextForegroundColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignLeft);
 }
 
 void drawCurrentLetter(char *letter, SDL_Color textColor) {
