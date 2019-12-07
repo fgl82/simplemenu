@@ -164,7 +164,12 @@ char *getAlias(char *romName) {
 char *getFileNameOrAlias(struct Rom *rom) {
 	char *displayName = malloc(300);
 	if(CURRENT_GAME->alias!=NULL&&strlen(CURRENT_GAME->alias)>2) {
-		strcpy(displayName, rom->alias);
+		//this is a favorite with no alias
+		if(strcmp(rom->alias, " ")!=0) {
+			strcpy(displayName, rom->alias);
+		} else {
+			strcpy(displayName, rom->name);
+		}
 	} else {
 		strcpy(displayName, rom->name);
 	}

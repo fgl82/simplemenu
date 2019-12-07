@@ -240,6 +240,7 @@ void drawGameList() {
 					stripGameName(nameWithoutExtension);
 				} else {
 					char *tempGame=getNameWithoutPath(nameWithoutExtension);
+					strcpy(tempGame,getNameWithoutExtension(tempGame));
 					strcpy(nameWithoutExtension,tempGame);
 					free(tempGame);
 				}
