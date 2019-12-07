@@ -75,7 +75,7 @@ char *getRomRealName(char *nameWithoutExtension) {
 	if (nameTakenFromAlias!=NULL) {
 		int charNumber=0;
 		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='(') {
+			if (nameTakenFromAlias[charNumber]=='('||nameTakenFromAlias[charNumber]=='[') {
 				nameTakenFromAlias[charNumber-1]='\0';
 				break;
 			}
@@ -207,8 +207,11 @@ void quit() {
 	clearTimer();
 	sleep(1.5);
 	freeResources();
-	exit(0);
-	//	execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+	if (shutDownEnabled) {
+		execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+	} else {
+		exit(0);
+	}
 }
 
 int doesFavoriteExist(char *name) {

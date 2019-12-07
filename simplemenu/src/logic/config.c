@@ -206,8 +206,12 @@ void loadConfig() {
 			OC_OC=atoi(line);
 		} else if (i==3){
 			timeoutValue=atoi(line);
-		} else {
+		} else if (i==4){
 			OC_SLEEP=atoi(line);
+		}  else if (i==5){
+			stripGames=atoi(line);
+		} else {
+			shutDownEnabled=atoi(line);
 		}
 		i++;
 	}

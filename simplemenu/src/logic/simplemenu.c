@@ -25,7 +25,6 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
-	stripGames=1;
 	#ifndef TARGET_PC
 	#endif
 	srand(time(0));
@@ -115,6 +114,7 @@ int main(int argc, char* argv[]) {
 				}
 				if(getPressedKey()==BTN_SELECT) {
 					if (stripGames) {
+						printf("1\n");
 						stripGames=0;
 					} else {
 						stripGames=1;

@@ -148,6 +148,7 @@ void displayGamePicture() {
 				if (strlen(CURRENT_GAME->alias)<2) {
 					char tmp[300];
 					strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+					strcpy(tmp,getNameWithoutExtension(tmp));
 					drawPictureTextOnScreen(tmp);
 				} else {
 					drawPictureTextOnScreen(CURRENT_GAME->alias);
@@ -161,6 +162,7 @@ void displayGamePicture() {
 		} else {
 			char tmp[300];
 			strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+			strcpy(tmp,getNameWithoutExtension(tmp));
 			drawPictureTextOnScreen(tmp);
 		}
 	}
