@@ -83,7 +83,7 @@ void scrollUp() {
 
 void scrollDown() {
 	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
-		if (strlen(NEXT_GAME_NAME)>0) {
+		if (NEXT_GAME!=NULL&&strlen(NEXT_GAME_NAME)>0) {
 			CURRENT_SECTION.currentGame++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
@@ -109,7 +109,9 @@ void advancePage() {
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
+					printf("1\n");
 					scrollDown();
+					printf("2\n");
 					break;
 				}
 				scrollDown();
