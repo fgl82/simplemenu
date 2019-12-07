@@ -109,9 +109,7 @@ void advancePage() {
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
-					printf("1\n");
 					scrollDown();
-					printf("2\n");
 					break;
 				}
 				scrollDown();

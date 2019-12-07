@@ -213,7 +213,8 @@ void quit() {
 
 int doesFavoriteExist(char *name) {
 	for(int i=0;i<favoritesSize;i++) {
-		if (strcmp(favorites[i].name,name)==0) {
+		printf("%s vs %s\n",favorites[i].name,name);
+		if (strstr(name,favorites[i].name)) {
 			return 1;
 		}
 	}

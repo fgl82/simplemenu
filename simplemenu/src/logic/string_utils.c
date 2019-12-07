@@ -102,7 +102,7 @@ void stripGameName(char *gameName) {
 	strcpy(gameName,nameWithoutPath);
 	int charNumber = 0;
 	while (gameName[charNumber]) {
-		if (gameName[charNumber]=='(') {
+		if (gameName[charNumber]=='('||gameName[charNumber]=='[') {
 			gameName[charNumber-1]='\0';
 			break;
 		}
