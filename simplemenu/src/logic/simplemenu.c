@@ -60,10 +60,6 @@ void sig_term_handler(int signum)
 //	printf("pepe\n");
 //}
 
-/**
- * hex2int
- * take a hex string and convert it to a 32bit number (max 8 hex digits)
- */
 uint32_t hex2int(char *hex) {
 	char *hexCopy = malloc(strlen(hex)+1);
 	strcpy(hexCopy,hex);
@@ -80,10 +76,6 @@ uint32_t hex2int(char *hex) {
 	}
 	return val;
 }
-
-//Uint8 hex2int(char *hex) {
-//    return 255;
-//}
 
 int testSectionLoad() {
 	FILE * fp;
@@ -220,7 +212,32 @@ int testSectionLoad() {
 		}
 		lineNumber++;
 	}
-	favoritesSectionNumber=menuSectionCounter-1;
+	strcpy(aMenuSection.emulatorDirectories,"/some/folder/");
+	strcpy(aMenuSection.executables,"favs");
+	strcpy(aMenuSection.filesDirectories,"/some/folder");
+	strcpy(aMenuSection.fileExtensions,".zzz");
+	aMenuSection.headerAndFooterBackgroundColor.r=27;
+	aMenuSection.headerAndFooterBackgroundColor.g=31;
+	aMenuSection.headerAndFooterBackgroundColor.b=34;
+	aMenuSection.headerAndFooterTextColor.r=231;
+	aMenuSection.headerAndFooterTextColor.g=109;
+	aMenuSection.headerAndFooterTextColor.b=62;
+	aMenuSection.bodyBackgroundColor.r=49;
+	aMenuSection.bodyBackgroundColor.g=58;
+	aMenuSection.bodyBackgroundColor.b=66;
+	aMenuSection.bodyTextColor.r=152;
+	aMenuSection.bodyTextColor.g=157;
+	aMenuSection.bodyTextColor.b=152;
+	aMenuSection.bodySelectedTextBackgroundColor.r=248;
+	aMenuSection.bodySelectedTextBackgroundColor.g=85;
+	aMenuSection.bodySelectedTextBackgroundColor.b=41;
+	aMenuSection.bodySelectedTextTextColor.r=27;
+	aMenuSection.bodySelectedTextTextColor.g=33;
+	aMenuSection.bodySelectedTextTextColor.b=42;
+	strcpy(aMenuSection.category, "all");
+	aMenuSection.onlyFileNamesNoExtension=0;
+	menuSections[menuSectionCounter]=aMenuSection;
+	favoritesSectionNumber=menuSectionCounter;
 	fclose(fp);
 	return menuSectionCounter;
 }
@@ -235,10 +252,10 @@ int main(int argc, char* argv[]) {
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	signal(SIGTERM, &sig_term_handler);
-#ifndef TARGET_PC
+	#ifndef TARGET_PC
 	resetFrameBuffer();
 	HW_Init();
-#endif
+	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeGlobals();

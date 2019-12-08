@@ -128,7 +128,6 @@ int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 				strncpy(category,val,(int)sval);
 				category[sval]='\0';
 				strcpy(desktopFiles[i].category,category);
-				printf("%s\n",category);
 				free(category);
 			}
 		}
@@ -217,7 +216,6 @@ void quit() {
 
 int doesFavoriteExist(char *name) {
 	for(int i=0;i<favoritesSize;i++) {
-		printf("%s vs %s\n",favorites[i].name,name);
 		if (strstr(name,favorites[i].name)) {
 			return 1;
 		}
