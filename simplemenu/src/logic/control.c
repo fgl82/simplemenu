@@ -47,6 +47,7 @@ void launchGame() {
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (CURRENT_GAME_NAME!=NULL) {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
+			printf("ONLY FILE\n");
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(CURRENT_GAME_NAME));
 		} else {
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],CURRENT_GAME_NAME);

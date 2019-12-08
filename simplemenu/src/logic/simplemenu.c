@@ -193,12 +193,15 @@ int testSectionLoad() {
 		case 12:
 			if(value!=NULL) {
 				strcpy(aMenuSection.aliasFileName,value);
+			} else {
+				strcpy(aMenuSection.aliasFileName,"\0");
 			}
 			break;
 		case 13:
 			strcpy(aMenuSection.category,value);
 			break;
 		case 14:
+			aMenuSection.onlyFileNamesNoExtension=0;
 			if(strcmp("yes",value)==0) {
 				aMenuSection.onlyFileNamesNoExtension=1;
 			}
@@ -212,8 +215,16 @@ int testSectionLoad() {
 		}
 		lineNumber++;
 	}
-	strcpy(aMenuSection.emulatorDirectories,"/some/folder/");
-	strcpy(aMenuSection.executables,"favs");
+
+	strcpy(aMenuSection.sectionName,"FAVORITES");
+	aMenuSection.emulatorDirectories[0]=malloc(strlen("/some/folder/")+1);
+	strcpy(aMenuSection.emulatorDirectories[0],"/some/folder/");
+	strcat(aMenuSection.emulatorDirectories[0],"\0");
+	aMenuSection.activeEmulatorDirectory=0;
+	aMenuSection.executables[0]=NULL;
+	aMenuSection.executables[0]=malloc(strlen("favs")+1);
+	strcpy(aMenuSection.executables[0],"favs");
+	aMenuSection.activeExecutable=0;
 	strcpy(aMenuSection.filesDirectories,"/some/folder");
 	strcpy(aMenuSection.fileExtensions,".zzz");
 	aMenuSection.headerAndFooterBackgroundColor.r=27;
@@ -236,8 +247,12 @@ int testSectionLoad() {
 	aMenuSection.bodySelectedTextTextColor.b=42;
 	strcpy(aMenuSection.category, "all");
 	aMenuSection.onlyFileNamesNoExtension=0;
+	aMenuSection.hidden=0;
+	aMenuSection.currentPage=0;
+	aMenuSection.currentGame=0;
 	menuSections[menuSectionCounter]=aMenuSection;
-	favoritesSectionNumber=menuSectionCounter;
+	menuSectionCounter++;
+	favoritesSectionNumber=menuSectionCounter-1;
 	fclose(fp);
 	return menuSectionCounter;
 }
@@ -260,7 +275,7 @@ int main(int argc, char* argv[]) {
 	loadConfig();
 	initializeGlobals();
 	setupDisplayAndKeys();
-	//	int sectionCount=loadSections();
+	//int sectionCount=loadSections();
 	int sectionCount=testSectionLoad();
 	loadFavorites();
 	if (argv[1]!=NULL) {
@@ -271,9 +286,9 @@ int main(int argc, char* argv[]) {
 	} else {
 		loadLastState();
 	}
-#ifndef TARGET_PC
+	#ifndef TARGET_PC
 	initSuspendTimer();
-#endif
+	#endif
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();

@@ -544,7 +544,7 @@ void loadGameList(int refresh) {
 						int desktopFilesCount=getOPK(files[i], desktopFiles);
 						int desktopCounter=0;
 						while(desktopCounter<desktopFilesCount) {
-							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL) {
+							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 								break;
 							} else {
 								realItemCount++;
