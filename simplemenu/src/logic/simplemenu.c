@@ -210,9 +210,6 @@ int testSectionLoad() {
 			if(strcmp("yes",value)==0) {
 				aMenuSection.onlyFileNamesNoExtension=1;
 			}
-			if (strlen(aMenuSection.aliasFileName)>1) {
-				aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
-			}
 			aMenuSection.hidden=0;
 			aMenuSection.currentPage=0;
 			aMenuSection.currentGame=0;
