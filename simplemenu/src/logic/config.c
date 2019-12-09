@@ -9,6 +9,7 @@
 #include "../headers/globals.h"
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
+#include "../headers/ini2.h"
 
 void loadAliasList(int sectionNumber) {
 	char * line = NULL;
@@ -221,149 +222,185 @@ void loadConfig() {
 	}
 }
 
+uint32_t hex2int(char *hex) {
+	char *hexCopy = malloc(strlen(hex)+1);
+	strcpy(hexCopy,hex);
+	uint32_t val = 0;
+	while (*hexCopy) {
+		// get current character then increment
+		uint8_t byte = *hexCopy++;
+		// transform hex character to the 4bit equivalent number, using the ascii table indexes
+		if (byte >= '0' && byte <= '9') byte = byte - '0';
+		else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
+		else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;
+		// shift 4 to make space for new digit, and add the 4 bits of the new digit
+		val = (val << 4) | (byte & 0xF);
+	}
+	return val;
+}
+
 int loadSections() {
-	FILE * fp;
-	char line[1500];
-	char *configurations[26];
 	char pathToSectionsFilePlusFileName[300];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
-	fp = fopen(pathToSectionsFilePlusFileName, "r");
-	if (fp==NULL) {
-		return -1;
+	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
+	char *consoles = ini_get(config, "CONSOLES", "consoleList");
+	char r[3];
+	char g[3];
+	char b[3];
+
+	char*sectionNames[100];
+	int sectionCounter=0;
+	char* tokenizedSectionName=strtok(consoles,",");
+
+	while(tokenizedSectionName!=NULL) {
+		sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
+		strcpy(sectionNames[sectionCounter], tokenizedSectionName);
+		tokenizedSectionName=strtok(NULL,",");
+		sectionCounter++;
 	}
-	while (fgets(line, sizeof(line), fp) != NULL) {
-		if(line[0]=='#'||strlen(line)<2) {
-			continue;
-		}	
-		int i=0;
-		char *ptr = strtok(line, ";");
-		while(ptr != NULL) {
-			configurations[i]=ptr;
-			ptr = strtok(NULL, ";");
-			i++;
-		}
-		struct MenuSection aMenuSection;
-		if(configurations[0][0]=='*') {
-			aMenuSection.onlyFileNamesNoExtension=1;
-			strcpy(aMenuSection.sectionName,configurations[0]+1);
-		} else {
-			aMenuSection.onlyFileNamesNoExtension=0;
-			strcpy(aMenuSection.sectionName,configurations[0]);
-		}
+
+	while(menuSectionCounter<sectionCounter) {
+		char *sectionName = sectionNames[menuSectionCounter];
+		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
 
 		int dirCounter=0;
 		for (int i=0;i<10;i++) {
-			aMenuSection.emulatorDirectories[dirCounter]=NULL;
+			menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=NULL;
 		}
-		dirCounter=0;
-		char* currentDir = strtok(configurations[1],",");
+
+		char *value = ini_get(config, sectionName, "execDirs");
+		char *value1 = malloc(3000);
+		strcpy(value1,value);
+		char *currentDir = strtok(value1,",");
 		while(currentDir!=NULL) {
-			aMenuSection.emulatorDirectories[dirCounter]=malloc(strlen(currentDir)+1);
-			strcpy(aMenuSection.emulatorDirectories[dirCounter],currentDir);
-			strcat(aMenuSection.emulatorDirectories[dirCounter],"\0");
+			menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=malloc(strlen(currentDir)+1);
+			strcpy(menuSections[menuSectionCounter].emulatorDirectories[dirCounter],currentDir);
+			strcat(menuSections[menuSectionCounter].emulatorDirectories[dirCounter],"\0");
 			currentDir = strtok(NULL,",");
 			dirCounter++;
 		}
 		free (currentDir);
-		if(dirCounter>0) {
-			aMenuSection.emulatorDirectories[dirCounter]=NULL;
-		}
-		aMenuSection.activeEmulatorDirectory=0;
+		menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=NULL;
+		menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 
 		int execCounter=0;
+		value = ini_get(config, sectionName, "execs");
+		char *value2 = malloc(3000);
+		strcpy(value2,value);
 		for (int i=0;i<10;i++) {
-			aMenuSection.executables[execCounter]=NULL;
+			menuSections[menuSectionCounter].executables[execCounter]=NULL;
 		}
-		execCounter=0;
-		char* currentExec = strtok(configurations[2],",");
+
+		char* currentExec = strtok(value2,",");
 		while(currentExec!=NULL) {
-			aMenuSection.executables[execCounter]=malloc(strlen(currentExec)+1);
-			strcpy(aMenuSection.executables[execCounter],currentExec);
+			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(currentExec)+1);
+			strcpy(menuSections[menuSectionCounter].executables[execCounter],currentExec);
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
 		free (currentExec);
-		aMenuSection.executables[execCounter]=NULL;
-		aMenuSection.activeExecutable=0;
-		strcpy(aMenuSection.filesDirectories,configurations[3]);
-		strcpy(aMenuSection.fileExtensions,configurations[4]);
-		aMenuSection.headerAndFooterBackgroundColor.r=atoi(configurations[5]);
-		aMenuSection.headerAndFooterBackgroundColor.g=atoi(configurations[6]);
-		aMenuSection.headerAndFooterBackgroundColor.b=atoi(configurations[7]);
-		aMenuSection.headerAndFooterTextColor.r=atoi(configurations[8]);
-		aMenuSection.headerAndFooterTextColor.g=atoi(configurations[9]);
-		aMenuSection.headerAndFooterTextColor.b=atoi(configurations[10]);
-		aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
-		aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
-		aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
-		aMenuSection.bodyTextColor.r=atoi(configurations[14]);
-		aMenuSection.bodyTextColor.g=atoi(configurations[15]);
-		aMenuSection.bodyTextColor.b=atoi(configurations[16]);
-		aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
-		aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
-		aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
-		aMenuSection.bodySelectedTextTextColor.r=atoi(configurations[20]);
-		aMenuSection.bodySelectedTextTextColor.g=atoi(configurations[21]);
-		aMenuSection.bodySelectedTextTextColor.b=atoi(configurations[22]);
-		strcpy(aMenuSection.consolePicture,configurations[23]);
-		strcpy(aMenuSection.aliasFileName,configurations[24]);
-		strcpy(aMenuSection.category,configurations[25]);
-		if (strlen(aMenuSection.aliasFileName)>1) {
-			aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
+		menuSections[menuSectionCounter].executables[execCounter]=NULL;
+		menuSections[menuSectionCounter].activeExecutable=0;
+
+		value = ini_get(config, sectionName, "romDirs");
+		strcpy(menuSections[menuSectionCounter].filesDirectories,value);
+
+		value = ini_get(config, sectionName, "romExts");
+		strcpy(menuSections[menuSectionCounter].fileExtensions,value);
+
+		value = ini_get(config, sectionName, "headerBackGround");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].headerAndFooterBackgroundColor.r=hex2int(r);
+		menuSections[menuSectionCounter].headerAndFooterBackgroundColor.g=hex2int(g);
+		menuSections[menuSectionCounter].headerAndFooterBackgroundColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "headerFont");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].headerAndFooterTextColor.r=hex2int(r);
+		menuSections[menuSectionCounter].headerAndFooterTextColor.g=hex2int(g);
+		menuSections[menuSectionCounter].headerAndFooterTextColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "bodyBackground");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].bodyBackgroundColor.r=hex2int(r);
+		menuSections[menuSectionCounter].bodyBackgroundColor.g=hex2int(g);
+		menuSections[menuSectionCounter].bodyBackgroundColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "bodyFont");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].bodyTextColor.r=hex2int(r);
+		menuSections[menuSectionCounter].bodyTextColor.g=hex2int(g);
+		menuSections[menuSectionCounter].bodyTextColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "selectedItemBackground");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.r=hex2int(r);
+		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.g=hex2int(g);
+		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "selectedItemFont");
+		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
+		menuSections[menuSectionCounter].bodySelectedTextTextColor.r=hex2int(r);
+		menuSections[menuSectionCounter].bodySelectedTextTextColor.g=hex2int(g);
+		menuSections[menuSectionCounter].bodySelectedTextTextColor.b=hex2int(b);
+
+		value = ini_get(config, sectionName, "logo");
+		strcpy(menuSections[menuSectionCounter].consolePicture,value);
+
+		value = ini_get(config, sectionName, "aliasFile");
+		if(value!=NULL) {
+			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
+		} else {
+			strcpy(menuSections[menuSectionCounter].aliasFileName,"\0");
 		}
-		aMenuSection.hidden=0;
-		aMenuSection.currentPage=0;
-		aMenuSection.currentGame=0;
-		menuSections[menuSectionCounter]=aMenuSection;
+
+		value = ini_get(config, sectionName, "category");
+		strcpy(menuSections[menuSectionCounter].category,value);
+
+		value = ini_get(config, sectionName, "onlyFileNamesNoPathOrExtension");
+		if(strcmp("yes",value)==0) {
+			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
+		}
 		menuSections[menuSectionCounter].hidden=0;
+		menuSections[menuSectionCounter].currentPage=0;
+		menuSections[menuSectionCounter].currentGame=0;
 		menuSectionCounter++;
 	}
-	strcpy(line,"FAVORITES;/some/folder/;favs;/some/folder/;.zzz;27;31;34;231;109;62;49;58;66;152;157;152;248;85;41;27;33;42;none;;");
-	int i=0;
-	char *ptr = strtok(line, ";");
-	while(ptr != NULL) {
-		configurations[i]=ptr;
-		ptr = strtok(NULL, ";");
-		i++;
-	}
-	struct MenuSection aMenuSection;
-	strcpy(aMenuSection.sectionName,configurations[0]);
-	aMenuSection.emulatorDirectories[0]=strtok(configurations[1],",");
-	aMenuSection.emulatorDirectories[1]=NULL;
-	aMenuSection.executables[0]=strtok(configurations[2],",");
-	aMenuSection.executables[1]=NULL;
-	strcpy(aMenuSection.filesDirectories,configurations[3]);
-	strcpy(aMenuSection.fileExtensions,configurations[4]);
-	aMenuSection.headerAndFooterBackgroundColor.r=atoi(configurations[5]);
-	aMenuSection.headerAndFooterBackgroundColor.g=atoi(configurations[6]);
-	aMenuSection.headerAndFooterBackgroundColor.b=atoi(configurations[7]);
-	aMenuSection.headerAndFooterTextColor.r=atoi(configurations[8]);
-	aMenuSection.headerAndFooterTextColor.g=atoi(configurations[9]);
-	aMenuSection.headerAndFooterTextColor.b=atoi(configurations[10]);
-	aMenuSection.bodyBackgroundColor.r=atoi(configurations[11]);
-	aMenuSection.bodyBackgroundColor.g=atoi(configurations[12]);
-	aMenuSection.bodyBackgroundColor.b=atoi(configurations[13]);
-	aMenuSection.bodyTextColor.r=atoi(configurations[14]);
-	aMenuSection.bodyTextColor.g=atoi(configurations[15]);
-	aMenuSection.bodyTextColor.b=atoi(configurations[16]);
-	aMenuSection.bodySelectedTextBackgroundColor.r=atoi(configurations[17]);
-	aMenuSection.bodySelectedTextBackgroundColor.g=atoi(configurations[18]);
-	aMenuSection.bodySelectedTextBackgroundColor.b=atoi(configurations[19]);
-	aMenuSection.bodySelectedTextTextColor.r=atoi(configurations[20]);
-	aMenuSection.bodySelectedTextTextColor.g=atoi(configurations[21]);
-	aMenuSection.bodySelectedTextTextColor.b=atoi(configurations[22]);
-	strcpy(aMenuSection.consolePicture,configurations[23]);
-	strcpy(aMenuSection.aliasFileName,configurations[24]);
-	if (strlen(aMenuSection.aliasFileName)>1) {
-		aMenuSection.aliasFileName[strlen(aMenuSection.aliasFileName)-1]='\0';
-	}
-	aMenuSection.hidden=0;
-	aMenuSection.currentPage=0;
-	aMenuSection.currentGame=0;
-	menuSections[menuSectionCounter]=aMenuSection;
+	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
+	menuSections[menuSectionCounter].emulatorDirectories[0]=malloc(strlen("/some/folder/")+1);
+	strcpy(menuSections[menuSectionCounter].emulatorDirectories[0],"/some/folder/");
+	strcat(menuSections[menuSectionCounter].emulatorDirectories[0],"\0");
+	menuSections[menuSectionCounter].activeEmulatorDirectory=0;
+	menuSections[menuSectionCounter].executables[0]=NULL;
+	menuSections[menuSectionCounter].executables[0]=malloc(strlen("favs")+1);
+	strcpy(menuSections[menuSectionCounter].executables[0],"favs");
+	menuSections[menuSectionCounter].activeExecutable=0;
+	strcpy(menuSections[menuSectionCounter].filesDirectories,"/some/folder");
+	strcpy(menuSections[menuSectionCounter].fileExtensions,".zzz");
+	menuSections[menuSectionCounter].headerAndFooterBackgroundColor.r=27;
+	menuSections[menuSectionCounter].headerAndFooterBackgroundColor.g=31;
+	menuSections[menuSectionCounter].headerAndFooterBackgroundColor.b=34;
+	menuSections[menuSectionCounter].headerAndFooterTextColor.r=231;
+	menuSections[menuSectionCounter].headerAndFooterTextColor.g=109;
+	menuSections[menuSectionCounter].headerAndFooterTextColor.b=62;
+	menuSections[menuSectionCounter].bodyBackgroundColor.r=49;
+	menuSections[menuSectionCounter].bodyBackgroundColor.g=58;
+	menuSections[menuSectionCounter].bodyBackgroundColor.b=66;
+	menuSections[menuSectionCounter].bodyTextColor.r=152;
+	menuSections[menuSectionCounter].bodyTextColor.g=157;
+	menuSections[menuSectionCounter].bodyTextColor.b=152;
+	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.r=248;
+	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.g=85;
+	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor.b=41;
+	menuSections[menuSectionCounter].bodySelectedTextTextColor.r=27;
+	menuSections[menuSectionCounter].bodySelectedTextTextColor.g=33;
+	menuSections[menuSectionCounter].bodySelectedTextTextColor.b=42;
+	strcpy(menuSections[menuSectionCounter].category, "all");
+	menuSections[menuSectionCounter].onlyFileNamesNoExtension=0;
 	menuSections[menuSectionCounter].hidden=0;
+	menuSections[menuSectionCounter].currentPage=0;
+	menuSections[menuSectionCounter].currentGame=0;
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
-	fclose(fp);
 	return menuSectionCounter;
 }

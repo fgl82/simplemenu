@@ -280,6 +280,8 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	saveFavorites();
 	clearTimer();
 	freeResources();
+//	printf("%s\n",fileToBeExecutedWithFullPath);
+//	sleep(1);
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	#else
 	printf("%s\n",fileToBeExecutedWithFullPath);
@@ -459,7 +461,7 @@ int compareGamesFromGameListBasedOnAlias (const void *game1, const void *game2) 
 	} else {
 		strcpy(s2Alias,(char *)(*(struct Rom **)game2)->name);
 	}
-	return genericGameCompareWithAlias(s1Alias, s2Alias);
+	return genericGameCompareWithAlias(getNameWithoutPath(s1Alias), getNameWithoutPath(s2Alias));
 }
 
 void fillUpStolenGMenuFile(struct StolenGMenuFile* stolenFile, char* fileName) {
@@ -563,16 +565,21 @@ void loadGameList(int refresh) {
 										game = 0;
 									}
 								}
-								if (strcmp("default.gcw0.desktop",desktopFiles[desktopCounter].name)!=0) {
+//								if (strcmp("default.gcw0.desktop",desktopFiles[desktopCounter].name)!=0) {
+//									strcpy(CURRENT_SECTION.romList[page][game]->name,"-m|");
+//									strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].name);
+//									strcat(CURRENT_SECTION.romList[page][game]->name,"|");
+//									strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
+//									//								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
+//								} else {
 									strcpy(CURRENT_SECTION.romList[page][game]->name,"-m|");
 									strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].name);
+//									printf("%s\n",desktopFiles[desktopCounter].name);
 									strcat(CURRENT_SECTION.romList[page][game]->name,"|");
 									strcat(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
+//									strcpy(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
 									//								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
-								} else {
-									strcpy(CURRENT_SECTION.romList[page][game]->name,desktopFiles[desktopCounter].parentOPK);
-									//								strcat(CURRENT_SECTION.romList[page][game]->name,"\0");
-								}
+//								}
 								strcpy(CURRENT_SECTION.romList[page][game]->alias,desktopFiles[desktopCounter].displayName);
 								//							strcat(CURRENT_SECTION.romList[page][game]->alias,"\0");
 								game++;

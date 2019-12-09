@@ -158,12 +158,20 @@ void displayGamePicture() {
 		free(displayName);
 	} else {
 		if (stripGames) {
-			drawPictureTextOnScreen(tempGameName);
+			if (strlen(CURRENT_GAME->alias)<2) {
+				drawPictureTextOnScreen(tempGameName);
+			} else {
+				drawPictureTextOnScreen(CURRENT_GAME->alias);
+			}
 		} else {
-			char tmp[300];
-			strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
-			strcpy(tmp,getNameWithoutExtension(tmp));
-			drawPictureTextOnScreen(tmp);
+			if (strlen(CURRENT_GAME->alias)<2) {
+				char tmp[300];
+				strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+				strcpy(tmp,getNameWithoutExtension(tmp));
+				drawPictureTextOnScreen(tmp);
+			} else {
+				drawPictureTextOnScreen(CURRENT_GAME->alias);
+			}
 		}
 	}
 	free(pictureWithFullPath);
