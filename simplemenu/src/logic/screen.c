@@ -158,13 +158,15 @@ void displayGamePicture() {
 		free(displayName);
 	} else {
 		if (stripGames) {
-			if (strlen(CURRENT_GAME->alias)<2) {
+			if(CURRENT_GAME->alias==NULL)
+				printf("1\n");
+			if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
 				drawPictureTextOnScreen(tempGameName);
 			} else {
 				drawPictureTextOnScreen(CURRENT_GAME->alias);
 			}
 		} else {
-			if (strlen(CURRENT_GAME->alias)<2) {
+			if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
 				char tmp[300];
 				strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
 				strcpy(tmp,getNameWithoutExtension(tmp));
