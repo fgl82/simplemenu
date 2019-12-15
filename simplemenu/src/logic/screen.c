@@ -158,8 +158,6 @@ void displayGamePicture() {
 		free(displayName);
 	} else {
 		if (stripGames) {
-			if(CURRENT_GAME->alias==NULL)
-				printf("1\n");
 			if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
 				drawPictureTextOnScreen(tempGameName);
 			} else {
