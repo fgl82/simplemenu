@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef TARGET_PC
+#ifdef TARGET_RG350
 #include <shake.h>
 #endif
 
@@ -210,7 +210,7 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		#ifndef TARGET_PC
+		#ifdef TARGET_RG350
 		Shake_Play(device, effect_id);
 		#endif
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
@@ -240,7 +240,7 @@ void markAsFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
-			#ifndef TARGET_PC
+			#ifdef TARGET_RG350
 			Shake_Play(device, effect_id);
 			#endif
 			if (CURRENT_SECTION.onlyFileNamesNoExtension) {

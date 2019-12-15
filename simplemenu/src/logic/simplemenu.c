@@ -70,8 +70,10 @@ int main(int argc, char* argv[]) {
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#ifndef TARGET_PC
+	#ifdef TARGET_RG350
 	resetFrameBuffer();
+	#endif
+	#ifndef TARGET_PC
 	HW_Init();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
@@ -91,7 +93,7 @@ int main(int argc, char* argv[]) {
 	} else {
 		loadLastState();
 	}
-	#ifndef TARGET_PC
+	#ifdef TARGET_RG350
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);

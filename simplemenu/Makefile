@@ -2,7 +2,8 @@
 TARGET = simplemenu.dge
 #PLATFORM = BITTBOY
 #PLATFORM = RG-300
-PLATFORM = RG-350
+#PLATFORM = RG-350
+PLATFORM = RFW2
 #PLATFORM = PC
 
 # Compiler
@@ -21,7 +22,12 @@ else ifeq ($(PLATFORM), RG-350)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	CFLAGS = -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lshake -lpthread -lfreetype -lz -lbz2	
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lshake -lpthread -lfreetype -lz -lbz2
+else ifeq ($(PLATFORM), RFW2)
+	CC = /opt/rfw2-toolchain/usr/bin/mipsel-linux-gcc
+	LINKER = /opt/rfw2-toolchain/usr/bin/mipsel-linux-gcc
+	CFLAGS = -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lpthread -lfreetype -lz -lbz2		
 else
 	CC = gcc
 	LINKER   = gcc

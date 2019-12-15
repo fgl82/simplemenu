@@ -7,7 +7,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/hashtable.h"
 
-#ifndef TARGET_PC
+#ifdef TARGET_RG350
 #include <shake.h>
 #endif
 
@@ -107,7 +107,7 @@ struct Favorite favorites[2000];
 uint8_t *keys;
 SDL_Joystick *joystick;
 
-#ifndef TARGET_PC
+#ifdef TARGET_RG350
 Shake_Device *device;
 Shake_Effect effect;
 int effect_id;

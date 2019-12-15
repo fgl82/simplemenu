@@ -11,7 +11,7 @@
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
 
-#ifndef TARGET_PC
+#ifdef TARGET_RG350
 #include <shake.h>
 #endif
 
@@ -79,7 +79,7 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-	#ifndef TARGET_PC
+	#ifdef TARGET_RG350
 	Shake_Init();
 	device = Shake_Open(0);
 	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SINE, 0.5, 0.0, 0.15, 0.0);

@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mouse.h>
-#ifndef TARGET_PC
+#ifdef TARGET_RG350
 #include <shake.h>
 #endif
 
@@ -246,7 +246,7 @@ void freeResources() {
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
 	TTF_Quit();
-	#ifndef TARGET_PC
+	#ifdef TARGET_RG350
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
