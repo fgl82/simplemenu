@@ -247,11 +247,11 @@ int loadSections() {
 	char r[3];
 	char g[3];
 	char b[3];
-
-	char*sectionNames[100];
+	char *consoles1 = strdup(consoles);
+	char *sectionNames[100];
 	int sectionCounter=0;
-	char* tokenizedSectionName=strtok(consoles,",");
 
+	char* tokenizedSectionName=strtok(consoles1,",");
 	while(tokenizedSectionName!=NULL) {
 		sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
 		strcpy(sectionNames[sectionCounter], tokenizedSectionName);
@@ -263,12 +263,12 @@ int loadSections() {
 		char *sectionName = sectionNames[menuSectionCounter];
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
 
+		//READ DIR
 		int dirCounter=0;
-		for (int i=0;i<10;i++) {
-			menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=NULL;
-		}
-
 		char *value = ini_get(config, sectionName, "execDirs");
+		for (int i=0;i<10;i++) {
+			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
+		}
 		char *value1 = malloc(3000);
 		strcpy(value1,value);
 		char *currentDir = strtok(value1,",");
@@ -283,14 +283,14 @@ int loadSections() {
 		menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=NULL;
 		menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 
+		//READ EXEC
 		int execCounter=0;
 		value = ini_get(config, sectionName, "execs");
 		char *value2 = malloc(3000);
 		strcpy(value2,value);
 		for (int i=0;i<10;i++) {
-			menuSections[menuSectionCounter].executables[execCounter]=NULL;
+			menuSections[menuSectionCounter].executables[i]=NULL;
 		}
-
 		char* currentExec = strtok(value2,",");
 		while(currentExec!=NULL) {
 			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(currentExec)+1);
