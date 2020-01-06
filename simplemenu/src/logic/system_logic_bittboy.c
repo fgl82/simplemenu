@@ -1,12 +1,15 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/mman.h>
+#include <SDL/SDL_timer.h>
 #include <unistd.h>
 
-#include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/system_logic.h"
 
 volatile uint32_t *memregs;
+
+int oldCPU;
 
 uint32_t oc_table[] = {
 		0x00c81802,
@@ -279,6 +282,7 @@ int32_t memdev = 0;
 
 void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
+	#ifndef TARGET_PC
 	uint32_t x, v;
 	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
 	for(x=0; x<total; x++) {
@@ -290,6 +294,61 @@ void setCPU(uint32_t mhz) {
 			break;
 		}
 	}
+	#endif
+}
+
+int getBacklight()
+{
+	char buf[32] = "-1";
+	FILE *f = fopen("/sys/devices/platform/backlight/backlight/backlight/brightness", "r");
+	if (f) {
+		fgets(buf, sizeof(buf), f);
+	}
+	fclose(f);
+	return atoi(buf);
+}
+
+void setBacklight(int level) {
+	char buf[200] = {0};
+	sprintf(buf, "echo %d > /sys/devices/platform/backlight/backlight/backlight/brightness", level);
+	system(buf);
+}
+
+void clearTimer() {
+	if (timeoutTimer != NULL) {
+		SDL_RemoveTimer(timeoutTimer);
+	}
+	timeoutTimer = NULL;
+}
+
+uint32_t suspend(uint32_t interval, void *param) {
+	if (!isUSBMode) {
+		clearTimer();
+		backlightValue = getBacklight();
+		oldCPU=currentCPU;
+		setBacklight(0);
+		setCPU(OC_SLEEP);
+		isSuspended=1;
+	} else {
+		resetTimeoutTimer();
+	}
+	return 0;
+};
+
+void resetTimeoutTimer() {
+	if(isSuspended) {
+		setCPU(oldCPU);
+		setBacklight(backlightValue);
+		currentCPU=oldCPU;
+		isSuspended=0;
+	}
+	clearTimer();
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+}
+
+void initSuspendTimer() {
+	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+	isSuspended=0;
 }
 
 void HW_Init() {

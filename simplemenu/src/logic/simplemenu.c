@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 	} else {
 		loadLastState();
 	}
-	#ifdef TARGET_RG350
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300)
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);

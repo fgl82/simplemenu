@@ -184,7 +184,7 @@ void displayBackgroundPicture() {
 
 void drawHeader() {
 	char finalString [100];
-	char timeString[150];
+//	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	if (currentCPU==OC_UC) {

@@ -10,8 +10,8 @@
 #include <time.h>
 
 #include "../headers/config.h"
-#include "../headers/constants.h"
 #include "../headers/control.h"
+#include "../headers/constants.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/graphics.h"

@@ -1,7 +1,19 @@
 #ifndef CONTROL_DEFINED
 #define CONTROL_DEFINED
 #include <SDL/SDL_events.h>
-int performAction();
 int advanceSection();
 int rewindSection();
+void showPicture();
+void launchGame();
+void launchEmulator();
+void scrollUp();
+void scrollDown();
+void advancePage();
+void rewindPage();
+void showOrHideFavorites();
+void removeFavorite();
+void markAsFavorite();
+int isSelectPressed();
+void performChoosingAction();
+int performAction();
 #endif

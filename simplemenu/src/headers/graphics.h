@@ -32,4 +32,5 @@ void freeResources();
 void drawUSBScreen();
 void drawShutDownText();
 void drawError(char *errorMessage, SDL_Color textColor);
+void drawCurrentExecutable(char *executable, SDL_Color textColor);
 #endif

@@ -1,7 +1,7 @@
 # Software Name
-TARGET = simplemenu.dge
-#PLATFORM = BITTBOY
-PLATFORM = RG-300
+TARGET = simplemenu
+PLATFORM = BITTBOY
+#PLATFORM = RG-300
 #PLATFORM = RG-350
 #PLATFORM = PC
 

@@ -243,7 +243,7 @@ int loadSections() {
 	char pathToSectionsFilePlusFileName[300];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
-	char *consoles = ini_get(config, "CONSOLES", "consoleList");
+	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char r[3];
 	char g[3];
 	char b[3];
@@ -265,7 +265,7 @@ int loadSections() {
 
 		//READ DIR
 		int dirCounter=0;
-		char *value = ini_get(config, sectionName, "execDirs");
+		const char *value = ini_get(config, sectionName, "execDirs");
 		for (int i=0;i<10;i++) {
 			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
 		}

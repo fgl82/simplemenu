@@ -10,7 +10,6 @@
 #include "../headers/logic.h"
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
-
 #ifdef TARGET_RG350
 #include <shake.h>
 #endif
