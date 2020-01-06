@@ -149,7 +149,7 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_START]) {
-//			cycleFrequencies();
+			cycleFrequencies();
 			return 0;
 		}
 		if (keys[BTN_R]) {

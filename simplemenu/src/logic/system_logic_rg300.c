@@ -25,7 +25,7 @@ void setCPU(uint32_t mhz)
 int getBacklight()
 {
 	char buf[32] = "-1";
-	FILE *f = fopen("/proc/jz/lcd_backlight", "r");
+	FILE *f = fopen("/proc/jz/backlight", "r");
 	if (f) {
 		fgets(buf, sizeof(buf), f);
 	}
@@ -35,7 +35,7 @@ int getBacklight()
 
 void setBacklight(int level) {
 	char buf[200] = {0};
-	sprintf(buf, "echo %d > /proc/jz/lcd_backlight", level);
+	sprintf(buf, "echo %d > /proc/jz/backlight", level);
 	system(buf);
 }
 
@@ -52,7 +52,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 		backlightValue = getBacklight();
 		oldCPU=currentCPU;
 		setBacklight(0);
-		setCPU(OC_SLEEP);
+//		setCPU(OC_SLEEP);
 		isSuspended=1;
 	} else {
 		resetTimeoutTimer();
@@ -62,7 +62,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 
 void resetTimeoutTimer() {
 	if(isSuspended) {
-		setCPU(oldCPU);
+//		setCPU(oldCPU);
 		setBacklight(backlightValue);
 		currentCPU=oldCPU;
 		isSuspended=0;
@@ -78,27 +78,27 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-    uint32_t soundDev = open("/dev/mixer", O_RDWR);
-    int32_t vol = (100 << 8) | 100;
+//    uint32_t soundDev = open("/dev/mixer", O_RDWR);
+//    int32_t vol = (100 << 8) | 100;
 
     /* Init memory registers, pretty much required for anthing RS-97 specific */
-    memdev = open("/dev/mem", O_RDWR);
-    if (memdev > 0)
-    {
-        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
-        if (memregs == MAP_FAILED)
-        {
-            printf("Could not mmap hardware registers!\n");
-            close(memdev);
-        }
-    }
+//    memdev = open("/dev/mem", O_RDWR);
+//    if (memdev > 0)
+//    {
+//        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
+//        if (memregs == MAP_FAILED)
+//        {
+//            printf("Could not mmap hardware registers!\n");
+//            close(memdev);
+//        }
+//    }
 
-    /* Setting Volume to max, that will avoid issues, i think */
-    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
-    close(soundDev);
+//    /* Setting Volume to max, that will avoid issues, i think */
+//    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
+//    close(soundDev);
 
     /* Set CPU clock to its default */
-    setCPU(OC_NO);
+//    setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
