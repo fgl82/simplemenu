@@ -73,11 +73,12 @@ int main(int argc, char* argv[]) {
 	#ifdef TARGET_RG350
 	resetFrameBuffer();
 	#endif
-	#ifndef TARGET_PC
-	HW_Init();
-	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300)
+	HW_Init();
+	setCPU(OC_NO);
+	#endif
 	initializeGlobals();
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();

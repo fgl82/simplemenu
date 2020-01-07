@@ -12,18 +12,14 @@ volatile uint32_t *memregs;
 int32_t memdev = 0;
 int oldCPU;
 
-void setCPU(uint32_t mhz)
-{
-	currentCPU = mhz;
-    if (memdev > 0)
-    {
+void setCPU(uint32_t mhz) {
+    if (memdev > 0) {
         uint32_t m = mhz / 6;
         memregs[0x10 >> 2] = (m << 24) | 0x090520;
     }
 }
 
-int getBacklight()
-{
+int getBacklight() {
 	char buf[32] = "-1";
 	FILE *f = fopen("/proc/jz/backlight", "r");
 	if (f) {
@@ -52,7 +48,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 		backlightValue = getBacklight();
 		oldCPU=currentCPU;
 		setBacklight(0);
-//		setCPU(OC_SLEEP);
+		setCPU(OC_SLEEP);
 		isSuspended=1;
 	} else {
 		resetTimeoutTimer();
@@ -62,7 +58,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 
 void resetTimeoutTimer() {
 	if(isSuspended) {
-//		setCPU(oldCPU);
+		setCPU(OC_NO);
 		setBacklight(backlightValue);
 		currentCPU=oldCPU;
 		isSuspended=0;
@@ -76,37 +72,31 @@ void initSuspendTimer() {
 	isSuspended=0;
 }
 
-void HW_Init()
-{
+void HW_Init() {
 //    uint32_t soundDev = open("/dev/mixer", O_RDWR);
 //    int32_t vol = (100 << 8) | 100;
 
     /* Init memory registers, pretty much required for anthing RS-97 specific */
-//    memdev = open("/dev/mem", O_RDWR);
-//    if (memdev > 0)
-//    {
-//        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
-//        if (memregs == MAP_FAILED)
-//        {
-//            printf("Could not mmap hardware registers!\n");
-//            close(memdev);
-//        }
-//    }
+	memdev = open("/dev/mem", O_RDWR);
+
+	if (memdev > 0) {
+	    memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
+	    if (memregs == MAP_FAILED) {
+	        close(memdev);
+	    }
+	}
 
 //    /* Setting Volume to max, that will avoid issues, i think */
 //    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
 //    close(soundDev);
-
-    /* Set CPU clock to its default */
-//    setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
 	if(currentCPU==OC_UC) {
-		setCPU(OC_NO);
+		currentCPU = OC_NO;
 	} else if (currentCPU==OC_NO) {
-		setCPU(OC_OC);
+		currentCPU = OC_OC;
 	} else {
-		setCPU(OC_UC);
+		currentCPU = OC_UC;
 	}
 }

@@ -337,7 +337,7 @@ uint32_t suspend(uint32_t interval, void *param) {
 
 void resetTimeoutTimer() {
 	if(isSuspended) {
-		setCPU(oldCPU);
+		setCPU(OC_NO);
 		setBacklight(backlightValue);
 		currentCPU=oldCPU;
 		isSuspended=0;
@@ -356,19 +356,17 @@ void HW_Init() {
 	if (memdev > 0)	{
 		memregs = (uint32_t*)mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x01c20000);
 		if (memregs == MAP_FAILED) {
-			printf("Could not mmap hardware registers!\n");
 			close(memdev);
 		}
 	}
-	setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
 	if(currentCPU==OC_UC) {
-		setCPU(OC_NO);
+		currentCPU = OC_NO;
 	} else if (currentCPU==OC_NO) {
-		setCPU(OC_OC);
+		currentCPU = OC_OC;
 	} else {
-		setCPU(OC_UC);
+		currentCPU = OC_UC;
 	}
 }
