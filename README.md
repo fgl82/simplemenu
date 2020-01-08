@@ -20,6 +20,8 @@ TriforceX: https://github.com/TriForceX
 
 Vamastah/Szymor: https://github.com/szymor
 
+Pingflood: https://github.com/pingflood
+
 # People who provided excellent suggestions
 Dancero643: https://www.youtube.com/channel/UCM_EKCNx0qwGC7CCOBjhyLg
 
