@@ -555,7 +555,6 @@ void loadGameList(int refresh) {
 									desktopCounter++;
 								}
 								#endif
-								//test
 								realItemCount++;
 								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 								int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
