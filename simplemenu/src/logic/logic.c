@@ -550,6 +550,11 @@ void loadGameList(int refresh) {
 							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 								break;
 							} else {
+								#ifdef TARGET_RG300
+								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
+									desktopCounter++;
+								}
+								#endif
 								realItemCount++;
 								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 								int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;

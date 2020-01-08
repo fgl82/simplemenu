@@ -39,11 +39,11 @@ void showPicture() {
 }
 
 void launchGame() {
-	FILE * fp;
-	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/log.txt",getenv("HOME"));
-	fp = fopen(pathToStatesFilePlusFileName, "w");
-	fprintf(fp, "LAUNCHING\n");
+//	FILE * fp;
+//	char pathToStatesFilePlusFileName[300];
+//	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/log.txt",getenv("HOME"));
+//	fp = fopen(pathToStatesFilePlusFileName, "w");
+//	fprintf(fp, "LAUNCHING\n");
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
@@ -51,8 +51,8 @@ void launchGame() {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(CURRENT_GAME_NAME));
 		} else {
-			fprintf(fp, "HERE?\n");
-			fclose(fp);
+//			fprintf(fp, "HERE?\n");
+//			fclose(fp);
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],CURRENT_GAME_NAME);
 		}
 	}
