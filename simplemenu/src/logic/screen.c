@@ -132,13 +132,16 @@ void displayGamePicture() {
 		tempGameName=getGameName(CURRENT_GAME_NAME);
 	}
 	strcat(pictureWithFullPath,"media/");
-	tempGameName=getNameWithoutExtension(tempGameName);
+//	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
+	if (!isPicModeMenuHidden) {
+		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
+	} else {
 	stripGameNameLeaveExtension(tempGameName);
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, 222, rgbColor);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 		char* displayName=getFileNameOrAlias(CURRENT_GAME);
 		if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
@@ -173,7 +176,7 @@ void displayGamePicture() {
 				drawPictureTextOnScreen(CURRENT_GAME->alias);
 			}
 		}
-	}
+	}}
 	free(pictureWithFullPath);
 	free(tempGameName);
 }
@@ -186,7 +189,9 @@ void drawHeader() {
 	char finalString [100];
 //	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+	if (!pictureMode) {
+		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+	}
 	if (currentCPU==OC_UC) {
 		strcpy(finalString,"- ");
 		strcat(finalString,menuSections[currentSectionNumber].sectionName);
@@ -227,9 +232,14 @@ void drawShutDownScreen() {
 
 void drawGameList() {
 	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor.r,menuSections[currentSectionNumber].bodyBackgroundColor.g,menuSections[currentSectionNumber].bodyBackgroundColor.b};
-	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+	if (!pictureMode) {
+		drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+	}
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance(29);
+	if (pictureMode) {
+		nextLine = calculateProportionalSizeOrDistance(6);
+	}
 	char *nameWithoutExtension;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (CURRENT_SECTION.romList[menuSections[currentSectionNumber].currentPage][i]!=NULL&&
@@ -258,14 +268,30 @@ void drawGameList() {
 			sprintf(buf,"%s", nameWithoutExtension);
 			if (i==menuSections[currentSectionNumber].currentGame) {
 				if(strlen(buf)>1) {
-					drawShadedGameNameOnScreen(buf, nextLine);
+					if(pictureMode) {
+						if(!isPicModeMenuHidden) {
+							drawShadedGameNameOnScreenPicMode(buf, nextLine);
+						}
+					} else {
+						drawShadedGameNameOnScreen(buf, nextLine);
+					}
 				}
 			} else {
 				if(strlen(buf)>1) {
-					drawNonShadedGameNameOnScreen(buf, nextLine);
+					if(pictureMode) {
+						if(!isPicModeMenuHidden) {
+							drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
+						}
+					} else {
+						drawNonShadedGameNameOnScreen(buf, nextLine);
+					}
 				}
 			}
-			nextLine+=calculateProportionalSizeOrDistance(19);
+			if (!pictureMode) {
+				nextLine+=calculateProportionalSizeOrDistance(19);
+			} else {
+				nextLine+=calculateProportionalSizeOrDistance(24);
+			}
 			free(nameWithoutExtension);
 		}
 	}
@@ -276,8 +302,8 @@ void drawFooter(char *text) {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	drawTextOnFooter(text);
 }
-
 void setupDecorations() {
+
 	char tempString[200];
 	if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+10*CURRENT_SECTION.currentPage, countGamesInSection());
@@ -295,6 +321,7 @@ void updateScreen() {
 		setupDecorations();
 		if (pictureMode) {
 			displayGamePicture();
+			drawGameList();
 		}
 		if (currentlyChoosingEmulator) {
 			showCurrentEmulator();
@@ -318,4 +345,28 @@ void setupDisplayAndKeys() {
 	initializeFonts();
 	initializeDisplay();
 	initializeKeys();
+}
+
+void clearPicModeHideMenuTimer() {
+	if (picModeHideMenuTimer != NULL) {
+		SDL_RemoveTimer(picModeHideMenuTimer);
+	}
+	picModeHideMenuTimer = NULL;
+}
+
+uint32_t hidePicModeMenu(uint32_t interval, void *param) {
+	if(!hotKeyPressed) {
+		clearPicModeHideMenuTimer();
+		isPicModeMenuHidden=1;
+		updateScreen();
+	}
+	return 0;
+}
+
+void resetPicModeHideMenuTimer() {
+	if(isPicModeMenuHidden) {
+		isPicModeMenuHidden=0;
+	}
+	clearPicModeHideMenuTimer();
+	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hidePicModeMenu, NULL);
 }

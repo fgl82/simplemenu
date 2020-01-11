@@ -41,7 +41,9 @@ int OC_OC;
 int OC_SLEEP;
 
 SDL_TimerID timeoutTimer;
+SDL_TimerID picModeHideMenuTimer;
 int timeoutValue;
+int isPicModeMenuHidden;
 int isSuspended;
 int isUSBMode;
 int backlightValue;

@@ -211,6 +211,8 @@ void loadConfig() {
 			OC_SLEEP=atoi(line);
 		}  else if (i==5){
 			stripGames=atoi(line);
+		}  else if (i==6){
+			pictureMode=atoi(line);
 		} else {
 			shutDownEnabled=atoi(line);
 		}

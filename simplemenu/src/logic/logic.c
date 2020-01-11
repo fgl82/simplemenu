@@ -1,13 +1,14 @@
+#define _GNU_SOURCE
 #include <ctype.h>
 #include <dirent.h>
 #include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "../headers/config.h"
 #include "../headers/control.h"

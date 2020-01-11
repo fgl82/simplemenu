@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef TARGET_RG350
+#include <shake.h>
+#endif
+
 #include "../headers/config.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
@@ -204,6 +208,9 @@ void showOrHideFavorites() {
 		}
 		return;
 	}
+	if(strlen(favorites[0].name)<2) {
+		return;
+	}
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
@@ -213,6 +220,9 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
+		#ifdef TARGET_RG350
+		Shake_Play(device, effect_id);
+		#endif	
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
 			strcpy(favorites[i].section,favorites[i+1].section);
@@ -240,6 +250,9 @@ void markAsFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(CURRENT_GAME_NAME)) {
+			#ifdef TARGET_RG350
+			Shake_Play(device, effect_id);
+			#endif		
 			if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 				strcpy(favorites[favoritesSize].name, getGameName(CURRENT_GAME_NAME));
 			} else {

@@ -20,6 +20,7 @@ int performAction() {
 		return 0;
 	}
 	if (keys[BTN_R2]) {
+		hidePicModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			loadGameList(1);
 			return(1);
@@ -80,6 +81,9 @@ int performAction() {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 			CURRENT_SECTION.alphabeticalPaging=0;
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			return 0;
 		}
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
@@ -87,6 +91,9 @@ int performAction() {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
 			CURRENT_SECTION.alphabeticalPaging=0;
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			return 0;
 		}
 		if(keys[BTN_RIGHT]) {
@@ -125,6 +132,7 @@ int performAction() {
 
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if(keys[BTN_L1]) {
+			hidePicModeMenu();
 			hotKeyPressed=0;
 			int rewinded = rewindSection();
 			if(rewinded) {
@@ -137,6 +145,7 @@ int performAction() {
 			return 0;
 		}
 		if(keys[BTN_R1]) {
+			hidePicModeMenu();
 			hotKeyPressed=0;
 			int advanced = advanceSection();
 			if(advanced) {
@@ -153,6 +162,10 @@ int performAction() {
 				markAsFavorite();
 			} else {
 				removeFavorite();
+				if(favoritesSize==0) {
+					showOrHideFavorites();
+					hidePicModeMenu();
+				}
 			}
 			return 0;
 		}
@@ -193,18 +206,30 @@ int performAction() {
 			}
 		}
 		if (keys[BTN_DOWN]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			scrollDown();
 			return 1;
 		}
 		if(keys[BTN_UP]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			scrollUp();
 			return 1;
 		}
 		if(keys[BTN_RIGHT]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			advancePage();
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			rewindPage();
 			return 1;
 		}

@@ -13,6 +13,7 @@
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
+TTF_Font *picModeFont = NULL;
 TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
@@ -86,12 +87,27 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Colo
 	return msg->w;
 }
 
+SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b)
+{
+	SDL_Color c= { r, g, b };
+	return c;
+}
+
 void drawShadedGameNameOnScreen(char *buf, int position) {
 	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 }
 
+void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
+//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
+	drawTextOnScreen(headerFont, SCREEN_WIDTH/2, position, buf, make_color(255,255,0), VAlignBottom | HAlignCenter);
+}
+
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
 	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
+}
+
+void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
+	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, position, buf, make_color(255,255,255), VAlignBottom | HAlignCenter);
 }
 
 void drawPictureTextOnScreen(char *buf) {
@@ -231,6 +247,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
+	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));

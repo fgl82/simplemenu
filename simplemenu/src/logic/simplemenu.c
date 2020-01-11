@@ -25,6 +25,7 @@ void initializeGlobals() {
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	pictureMode=0;
+	isPicModeMenuHidden=1;
 #ifndef TARGET_PC
 #endif
 	srand(time(0));
@@ -73,13 +74,13 @@ int main(int argc, char* argv[]) {
 	#ifdef TARGET_RG350
 	resetFrameBuffer();
 	#endif
+	initializeGlobals();
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	HW_Init();
 	setCPU(OC_NO);
 	#endif
-	initializeGlobals();
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 //	int sectionCount=testSectionLoad();
@@ -94,9 +95,10 @@ int main(int argc, char* argv[]) {
 	} else {
 		loadLastState();
 	}
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();
 	#endif
+//	initPicModeHideMenuTimer();
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();
@@ -117,7 +119,11 @@ int main(int argc, char* argv[]) {
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
+					if(pictureMode&&!currentlySectionSwitching&&CURRENT_SECTION.alphabeticalPaging==1) {
+						resetPicModeHideMenuTimer();
+					}
 					currentlySectionSwitching=0;
+//					hidePicModeMenu();
 					updateScreen();
 				}
 				if(getPressedKey()==BTN_SELECT) {
