@@ -24,7 +24,7 @@ void initializeGlobals() {
 	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
-	pictureMode=0;
+//	pictureMode=0;
 	isPicModeMenuHidden=1;
 #ifndef TARGET_PC
 #endif
@@ -32,7 +32,7 @@ void initializeGlobals() {
 }
 
 void resetFrameBuffer () {
-	int ret = system("./frontend_start");
+	int ret = system("./scripts/reset_fb");
 	if (ret==-1) {
 		generateError("FATAL ERROR", 1);
 	}
@@ -74,13 +74,13 @@ int main(int argc, char* argv[]) {
 	#ifdef TARGET_RG350
 	resetFrameBuffer();
 	#endif
-	initializeGlobals();
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	HW_Init();
 	setCPU(OC_NO);
 	#endif
+	initializeGlobals();
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 //	int sectionCount=testSectionLoad();

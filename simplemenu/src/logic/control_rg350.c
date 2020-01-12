@@ -159,6 +159,9 @@ int performAction() {
 		}
 		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
+				if(!isPicModeMenuHidden) {
+					resetPicModeHideMenuTimer();
+				}
 				markAsFavorite();
 			} else {
 				removeFavorite();

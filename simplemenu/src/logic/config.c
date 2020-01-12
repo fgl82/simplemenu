@@ -38,7 +38,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToConfigFiles[300];
 	char pathToScriptFiles[300];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",getenv("HOME"));
-	snprintf(pathToScriptFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/scripts",getenv("HOME"));
+	snprintf(pathToScriptFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",getenv("HOME"));
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[300];
@@ -49,11 +49,16 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		}
 		char copyScriptsCommand[300];
 		mkdir(pathToScriptFiles,0700);
-		snprintf(copyScriptsCommand,sizeof(copyScriptsCommand),"cp ./scripts/* %s/.simplemenu/scripts",getenv("HOME"));
+		snprintf(copyScriptsCommand,sizeof(copyScriptsCommand),"cp ./apps/* %s/.simplemenu/apps",getenv("HOME"));
 		ret = system(copyScriptsCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
+		char deleteDirectoriesCommand[300];
+		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./apps");
+		ret = system(deleteDirectoriesCommand);
+		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./config");
+		ret = system(deleteDirectoriesCommand);
 	}
 }
 
