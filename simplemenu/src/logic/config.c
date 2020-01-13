@@ -36,9 +36,11 @@ void loadAliasList(int sectionNumber) {
 
 void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToConfigFiles[300];
-	char pathToScriptFiles[300];
+	char pathToAppFiles[300];
+	char pathToGameFiles[300];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",getenv("HOME"));
-	snprintf(pathToScriptFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",getenv("HOME"));
+	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",getenv("HOME"));
+	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",getenv("HOME"));
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[300];
@@ -47,15 +49,24 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		char copyScriptsCommand[300];
-		mkdir(pathToScriptFiles,0700);
-		snprintf(copyScriptsCommand,sizeof(copyScriptsCommand),"cp ./apps/* %s/.simplemenu/apps",getenv("HOME"));
-		ret = system(copyScriptsCommand);
+		char copyAppsCommand[300];
+		mkdir(pathToAppFiles,0700);
+		snprintf(copyAppsCommand,sizeof(copyAppsCommand),"cp ./apps/* %s/.simplemenu/apps",getenv("HOME"));
+		ret = system(copyAppsCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		char copyGamesCommand[300];
+		mkdir(pathToGameFiles,0700);
+		snprintf(copyGamesCommand,sizeof(copyGamesCommand),"cp ./games/* %s/.simplemenu/games",getenv("HOME"));
+		ret = system(copyGamesCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		char deleteDirectoriesCommand[300];
 		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./apps");
+		ret = system(deleteDirectoriesCommand);
+		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./games");
 		ret = system(deleteDirectoriesCommand);
 		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./config");
 		ret = system(deleteDirectoriesCommand);

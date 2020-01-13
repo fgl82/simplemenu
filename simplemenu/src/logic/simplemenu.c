@@ -26,8 +26,6 @@ void initializeGlobals() {
 	favoritesChanged=0;
 //	pictureMode=0;
 	isPicModeMenuHidden=1;
-#ifndef TARGET_PC
-#endif
 	srand(time(0));
 }
 
@@ -98,7 +96,6 @@ int main(int argc, char* argv[]) {
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();
 	#endif
-//	initPicModeHideMenuTimer();
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();
@@ -119,11 +116,16 @@ int main(int argc, char* argv[]) {
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
-					if(pictureMode&&!currentlySectionSwitching&&CURRENT_SECTION.alphabeticalPaging==1) {
-						resetPicModeHideMenuTimer();
+					if(pictureMode) {
+						if(currentlySectionSwitching) {
+							hidePicModeMenu();
+						} else if (CURRENT_SECTION.alphabeticalPaging) {
+							resetPicModeHideMenuTimer();
+						} else {
+							resetPicModeHideMenuTimer();
+						}
 					}
 					currentlySectionSwitching=0;
-//					hidePicModeMenu();
 					updateScreen();
 				}
 				if(getPressedKey()==BTN_SELECT) {

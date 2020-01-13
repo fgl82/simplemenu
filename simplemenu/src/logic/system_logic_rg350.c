@@ -22,11 +22,13 @@ int oldCPU;
 void setCPU(uint32_t mhz)
 {
 	currentCPU = mhz;
+	#ifndef TARGET_PC
     if (memdev > 0)
     {
         uint32_t m = mhz / 6;
         memregs[0x10 >> 2] = (m << 24) | 0x090520;
     }
+	#endif
 }
 
 void turnScreenOnOrOff(int state) {

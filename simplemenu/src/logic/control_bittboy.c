@@ -6,6 +6,7 @@
 #include "../headers/graphics.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/system_logic.h"
 
 int performAction() {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
@@ -35,6 +36,9 @@ int performAction() {
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
 			if (!favoritesSectionSelected) {
+				if(!isPicModeMenuHidden) {
+					resetPicModeHideMenuTimer();
+				}
 				deleteCurrentGame(CURRENT_GAME_NAME);
 				loadGameList(1);
 				while(CURRENT_SECTION.hidden) {
@@ -72,6 +76,9 @@ int performAction() {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 			CURRENT_SECTION.alphabeticalPaging=0;
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			return 0;
 		}
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
@@ -79,6 +86,9 @@ int performAction() {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
 			CURRENT_SECTION.alphabeticalPaging=0;
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			return 0;
 		}
 		if(keys[BTN_RIGHT]) {
@@ -141,10 +151,17 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_X]) {
+			if(!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
+			}
 			if (!favoritesSectionSelected) {
 				markAsFavorite();
 			} else {
 				removeFavorite();
+				if(favoritesSize==0) {
+					showOrHideFavorites();
+					hidePicModeMenu();
+				}
 			}
 			return 0;
 		}
@@ -185,18 +202,30 @@ int performAction() {
 			}
 		}
 		if (keys[BTN_DOWN]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			scrollDown();
 			return 1;
 		}
 		if(keys[BTN_UP]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			scrollUp();
 			return 1;
 		}
 		if(keys[BTN_RIGHT]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			advancePage();
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
+			if(pictureMode) {
+				resetPicModeHideMenuTimer();
+			}
 			rewindPage();
 			return 1;
 		}

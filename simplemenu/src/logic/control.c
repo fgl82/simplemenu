@@ -198,6 +198,7 @@ void rewindPage() {
 }
 
 void showOrHideFavorites() {
+	hidePicModeMenu();
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;

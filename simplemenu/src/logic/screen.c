@@ -317,12 +317,12 @@ void setupDecorations() {
 void updateScreen() {
 //    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		drawGameList();
 		setupDecorations();
 		if (pictureMode) {
 			displayGamePicture();
-			drawGameList();
+//			drawGameList();
 		}
+		drawGameList();
 		if (currentlyChoosingEmulator) {
 			showCurrentEmulator();
 		}
@@ -364,9 +364,7 @@ uint32_t hidePicModeMenu(uint32_t interval, void *param) {
 }
 
 void resetPicModeHideMenuTimer() {
-	if(isPicModeMenuHidden) {
-		isPicModeMenuHidden=0;
-	}
+	isPicModeMenuHidden=0;
 	clearPicModeHideMenuTimer();
 	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hidePicModeMenu, NULL);
 }

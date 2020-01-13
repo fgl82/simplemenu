@@ -158,10 +158,10 @@ int performAction() {
 			return 0;
 		}
 		if (keys[BTN_X]) {
+			if(!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
+			}
 			if (!favoritesSectionSelected) {
-				if(!isPicModeMenuHidden) {
-					resetPicModeHideMenuTimer();
-				}
 				markAsFavorite();
 			} else {
 				removeFavorite();
@@ -176,7 +176,7 @@ int performAction() {
 //			cycleFrequencies();
 			return 0;
 		}
-		if (keys[BTN_R]) {
+		if (keys[BTN_L2]) {
 			showOrHideFavorites();
 			return 0;
 		}
