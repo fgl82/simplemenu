@@ -2,7 +2,8 @@
 TARGET = simplemenu
 #PLATFORM = BITTBOY
 #PLATFORM = RG-300
-PLATFORM = RG-350
+#PLATFORM = RG-350
+PLATFORM = NPG
 #PLATFORM = PC
 
 # Compiler
@@ -22,6 +23,11 @@ else ifeq ($(PLATFORM), RG-350)
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	CFLAGS = -DTARGET_RG350 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lshake -lpthread -lfreetype -lz -lbz2
+else ifeq ($(PLATFORM), NPG)
+	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
+	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
+	CFLAGS = -DTARGET_NPG -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lshake -lpthread -lfreetype -lz -lbz2	
 else
 	CC = gcc
 	LINKER   = gcc
@@ -54,11 +60,16 @@ else ifeq ($(PLATFORM), RG-300)
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rg350.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))		
-else ifeq ($(PLATFORM), RG-350)
+else ifeq ($(PLATFORM), RG-350)  
 	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+else ifeq ($(PLATFORM), NPG)  
+	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
 else
 	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))

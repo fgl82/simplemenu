@@ -69,12 +69,12 @@ int main(int argc, char* argv[]) {
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#ifdef TARGET_RG350
+	#if defined(TARGET_NPG) || defined(TARGET_RG350)
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
 	HW_Init();
 	setCPU(OC_NO);
 	#endif
