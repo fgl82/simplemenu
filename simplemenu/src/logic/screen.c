@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <SDL/SDL_video.h>
 
 #include "../headers/constants.h"
 #include "../headers/definitions.h"
@@ -31,10 +30,7 @@ void showErrorMessage(char *errorMessage) {
 	filling[0]=100;
 	filling[1]=0;
 	filling[2]=0;
-	SDL_Color textColor;
-	textColor.r=255;
-	textColor.g=0;
-	textColor.b=0;
+	int textColor[3]={255, 255, 255};
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
 	drawError(errorMessage, textColor);
@@ -45,13 +41,13 @@ void showLetter() {
 	int width = 80;
 	int filling[3];
 	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.r+45;
-	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.g+45;
-	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.b+45;
-	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r;
-	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g;
-	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b;
-	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextColor;
+	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0];
+	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1];
+	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2];
+	int textColor[3] = {CURRENT_SECTION.headerAndFooterTextColor[0], CURRENT_SECTION.headerAndFooterTextColor[1], CURRENT_SECTION.headerAndFooterTextColor[2]};
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -59,9 +55,9 @@ void showLetter() {
 		borderColor[0]=255;
 		borderColor[1]=255;
 		borderColor[2]=255;
-		textColor.r=255;
-		textColor.g=255;
-		textColor.b=255;
+		textColor[0]=255;
+		textColor[1]=255;
+		textColor[2]=255;
 	}
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(width+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5), borderColor);
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(width), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(width/2), filling);
@@ -81,13 +77,13 @@ void showCurrentEmulator() {
 	int height = 30;
 	int filling[3];
 	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.r+45;
-	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.g+45;
-	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor.b+45;
-	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor.r;
-	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor.g;
-	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor.b;
-	SDL_Color textColor = CURRENT_SECTION.headerAndFooterTextColor;
+	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45;
+	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45;
+	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45;
+	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0];
+	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1];
+	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2];
+	int textColor[3]= {CURRENT_SECTION.headerAndFooterTextColor[0], CURRENT_SECTION.headerAndFooterTextColor[1], CURRENT_SECTION.headerAndFooterTextColor[2]};
 	if (pictureMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -95,9 +91,9 @@ void showCurrentEmulator() {
 		borderColor[0]=255;
 		borderColor[1]=255;
 		borderColor[2]=255;
-		textColor.r=255;
-		textColor.g=255;
-		textColor.b=255;
+		textColor[0]=255;
+		textColor[1]=255;
+		textColor[2]=255;
 	}
 //	char *tempString = malloc(strlen(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory])+strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
 	char *tempString = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
@@ -188,7 +184,7 @@ void displayBackgroundPicture() {
 void drawHeader() {
 	char finalString [100];
 //	char timeString[150];
-	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if (!pictureMode) {
 		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 	}
@@ -231,7 +227,7 @@ void drawShutDownScreen() {
 }
 
 void drawGameList() {
-	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor.r,menuSections[currentSectionNumber].bodyBackgroundColor.g,menuSections[currentSectionNumber].bodyBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 	if (!pictureMode) {
 		drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 	}
@@ -298,7 +294,7 @@ void drawGameList() {
 }
 
 void drawFooter(char *text) {
-	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor.r,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.g,menuSections[currentSectionNumber].headerAndFooterBackgroundColor.b};
+	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	drawTextOnFooter(text);
 }

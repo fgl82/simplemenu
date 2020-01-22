@@ -2,7 +2,6 @@
 #define GRAPHICS_DEFINED
 
 #include <SDL/SDL_ttf.h>
-#include <SDL/SDL_video.h>
 
 static const int
 HAlignLeft = 1,
@@ -12,15 +11,15 @@ VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
 int calculateProportionalSizeOrDistance(int number);
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align, SDL_Color backgroundColor);
-int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align);
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]);
+int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align);
 void drawShadedGameNameOnScreen(char *buf, int position);
 void drawNonShadedGameNameOnScreen(char *buf, int position);
 void drawPictureTextOnScreen(char *buf);
 void drawImgFallbackTextOnScreen( char *fallBackText);
 void drawTextOnFooter(const char text[64]);
 void drawTextOnHeader(char *text);
-void drawCurrentLetter(char *letter, SDL_Color textColor);
+void drawCurrentLetter(char *letter, int textColor[]);
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]);
 SDL_Surface *loadImage (char *fileName);
 void displayBackGroundImage(char *fileName, SDL_Surface *surface);
@@ -31,8 +30,8 @@ void initializeFonts();
 void freeResources();
 void drawUSBScreen();
 void drawShutDownText();
-void drawError(char *errorMessage, SDL_Color textColor);
-void drawCurrentExecutable(char *executable, SDL_Color textColor);
+void drawError(char *errorMessage, int textColor[]);
+void drawCurrentExecutable(char *executable, int textColor[]);
 void drawShadedGameNameOnScreenPicMode(char *buf, int position);
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position);
 #endif
