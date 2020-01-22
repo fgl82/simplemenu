@@ -2,7 +2,6 @@
 #define GLOBALS_DEFINED
 
 #include <pthread.h>
-#include <SDL/SDL_joystick.h>
 #include <SDL/SDL_timer.h>
 #include "../headers/hashtable.h"
 
