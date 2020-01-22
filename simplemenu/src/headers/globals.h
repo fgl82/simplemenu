@@ -105,7 +105,7 @@ struct StolenGMenuFile {
 struct Favorite favorites[2000];
 
 uint8_t *keys;
-SDL_Joystick *joystick;
+//SDL_Joystick *joystick;
 
 #ifdef TARGET_RG350
 Shake_Device *device;

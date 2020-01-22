@@ -31,6 +31,22 @@
 	#define BTN_RIGHT		SDLK_RIGHT
 	#define BTN_L1			SDLK_TAB
 	#define BTN_R1			SDLK_BACKSPACE
+#elif defined(TARGET_NPG)
+	#define BTN_X			SDLK_SPACE
+	#define BTN_A			SDLK_LCTRL
+	#define BTN_B			SDLK_LALT
+	#define BTN_Y			SDLK_LSHIFT
+	#define BTN_START		SDLK_RETURN
+	#define BTN_SELECT		SDLK_ESCAPE
+	#define BTN_R  		    SDLK_PAGEUP
+	#define BTN_L1			SDLK_TAB
+	#define BTN_R1			SDLK_BACKSPACE
+	#define BTN_L2			SDLK_RSHIFT
+	#define BTN_R2			SDLK_PAGEDOWN
+	#define BTN_UP			SDLK_UP
+	#define BTN_DOWN		SDLK_DOWN
+	#define BTN_LEFT		SDLK_LEFT
+	#define BTN_RIGHT		SDLK_RIGHT
 #else
 	#define BTN_X			SDLK_SPACE
 	#define BTN_A			SDLK_LCTRL
