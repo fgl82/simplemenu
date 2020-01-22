@@ -61,7 +61,7 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Colo
 	strcpy(bufCopy,buf);
 	msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
 	int len=strlen(buf);
-	while (msg->w>300) {
+	while (msg->w>calculateProportionalSizeOrDistance(300)) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
 		msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
