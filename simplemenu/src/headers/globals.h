@@ -2,9 +2,7 @@
 #define GLOBALS_DEFINED
 
 #include <pthread.h>
-#include <SDL/SDL_joystick.h>
 #include <SDL/SDL_timer.h>
-#include <SDL/SDL_video.h>
 #include "../headers/hashtable.h"
 
 #ifdef TARGET_RG350
@@ -63,12 +61,12 @@ struct MenuSection {
 	int totalPages;
 	int initialized;
 	int onlyFileNamesNoExtension;
-	SDL_Color headerAndFooterBackgroundColor;
-	SDL_Color headerAndFooterTextColor;
-	SDL_Color bodyBackgroundColor;
-	SDL_Color bodyTextColor;
-	SDL_Color bodySelectedTextBackgroundColor;
-	SDL_Color bodySelectedTextTextColor;
+	int headerAndFooterBackgroundColor[3];
+	int headerAndFooterTextColor[3];
+	int bodyBackgroundColor[3];
+	int bodyTextColor[3];
+	int bodySelectedTextBackgroundColor[3];
+	int bodySelectedTextTextColor[3];
 	struct Rom *romList[1000][10];
 	hashtable_t *aliasHashTable;
 	int activeExecutable;

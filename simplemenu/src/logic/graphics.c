@@ -1,9 +1,12 @@
 #include "../headers/graphics.h"
 
-#include <stdio.h>
+#include <string.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mouse.h>
+#include <SDL/SDL_stdinc.h>
+#include <SDL/SDL_video.h>
+
 #ifdef TARGET_RG350
 #include <shake.h>
 #endif
@@ -18,21 +21,26 @@ TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *footerFont = NULL;
 
+SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
+	SDL_Color c= { r, g, b };
+	return c;
+}
+
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;
 //	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align, SDL_Color backgroundColor) {
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
 	SDL_Surface *msg;
 	char bufCopy[300];
 	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Shaded(font, bufCopy, txtColor, backgroundColor);
+	msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	int len=strlen(buf);
 	while (msg->w>300) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Shaded(font, bufCopy, txtColor, backgroundColor);
+		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		len--;
 	}
 	if (align & HAlignCenter) {
@@ -55,16 +63,16 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SD
 	return msg->w;
 }
 
-int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Color txtColor, int align) {
+int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align) {
 	SDL_Surface *msg;
 	char bufCopy[300];
 	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
+	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 	int len=strlen(buf);
-	while (msg->w>300) {
+	while (msg->w>calculateProportionalSizeOrDistance(300)) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Blended(font, bufCopy, txtColor);
+		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		len--;
 	}
 	if (align & HAlignCenter) {
@@ -85,12 +93,6 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], SDL_Colo
 	SDL_BlitSurface(msg, NULL, screen, &rect);
 	SDL_FreeSurface(msg);
 	return msg->w;
-}
-
-SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b)
-{
-	SDL_Color c= { r, g, b };
-	return c;
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
@@ -99,7 +101,8 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 //	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
-	drawTextOnScreen(headerFont, SCREEN_WIDTH/2, position, buf, make_color(255,255,0), VAlignBottom | HAlignCenter);
+	int color[3] = {255,255,0};
+	drawTextOnScreen(headerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
 }
 
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
@@ -107,22 +110,17 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 }
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
-	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, position, buf, make_color(255,255,255), VAlignBottom | HAlignCenter);
+	int color[3] = {255,255,255};
+	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
 }
 
 void drawPictureTextOnScreen(char *buf) {
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
+	int white[3]={255, 255, 255};
 	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
+	int white[3]={255, 255, 255};
 	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, white, VAlignTop | HAlignCenter);
 }
 
@@ -131,10 +129,7 @@ void drawTextOnFooter(const char text[64]) {
 }
 
 void drawShutDownText(const char text[64]) {
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
+	int white[3]={255, 255, 255};
 	drawTextOnScreen(BIGFont, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
 }
 
@@ -150,15 +145,15 @@ void drawBatteryOnFooter(char *text) {
 	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignLeft);
 }
 
-void drawCurrentLetter(char *letter, SDL_Color textColor) {
+void drawCurrentLetter(char *letter, int textColor[]) {
 	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
-void drawCurrentExecutable(char *executable, SDL_Color textColor) {
+void drawCurrentExecutable(char *executable, int textColor[]) {
 	drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), executable, textColor, VAlignMiddle | HAlignCenter);
 }
 
-void drawError(char *errorMessage, SDL_Color textColor) {
+void drawError(char *errorMessage, int textColor[]) {
 	if(strchr(errorMessage,'-')==NULL) {
 		drawTextOnScreen(footerFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);
 	} else {
@@ -217,14 +212,8 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 }
 
 void drawUSBScreen() {
-	SDL_Color white;
-	white.r=255;
-	white.g=255;
-	white.b=255;
-	SDL_Color black;
-	black.r=0;
-	black.g=0;
-	black.b=0;
+	int white[3]={255, 255, 255};
+	int black[3]={0, 0, 0};
 	displayImageOnScreen("./resources/usb.png","");
 	drawTextOnScreen(headerFont,163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,163,215,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
