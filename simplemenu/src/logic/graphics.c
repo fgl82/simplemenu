@@ -117,8 +117,9 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void drawPictureTextOnScreen(char *buf) {
-	int white[3]={255, 255, 255};
-	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+	int white[3]={255, 255, 0};
+	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+//	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
@@ -198,62 +199,35 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
-int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent)
-{
+int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent) {
 	SDL_Surface *image;
-
 	image=IMG_Load(filename);
-
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
 	double zoomy = newheight / (float)image->h;
-
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, SMOOTHING_OFF );
-
-
-
+	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, SMOOTHING_ON);
 	// If the original had an alpha color key, give it to the new one.
-	if( image->flags & SDL_SRCCOLORKEY )
-	{
+	if( image->flags & SDL_SRCCOLORKEY ) {
 		// Acquire the original Key
 		Uint32 colorkey = image->format->colorkey;
-
 		// Set to the new image
 		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
 	}
-
-
-
 	// The original picture is no longer needed.
-	SDL_FreeSurface( image );
-
+	SDL_FreeSurface(image);
 	// Set it instead to the new image.
 	image =  sized;
-
-
-
 	SDL_Rect src, dest;
 	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
 	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
-
-	if(transparent == 1 )
-	{
-
+	if(transparent == 1 ) {
 		//Set the color as transparent
 		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
-
 	}
-
-	else {
-
-	}
-
-
 	SDL_BlitSurface(image, &src, display, &dest);
-	SDL_FreeSurface( image );
-//	SDL_FreeSurface( sized );
+	SDL_FreeSurface(image);
 	return 1;
 }
 
@@ -261,34 +235,26 @@ int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx,
 
 void displayImageOnScreen(char *fileName, char *fallBackText) {
 	SDL_Surface *img = IMG_Load(fileName);
-
 	if (img==NULL) {
 		drawImgFallbackTextOnScreen(fallBackText);
 	} else {
 		double w = img->w;
 		double h = img->h;
-
 		double ratio = 0;  // Used for aspect ratio
-
 		ratio = w / h;   // get ratio for scaling image
-
 		h = SCREEN_HEIGHT;
 		w = h*ratio;
-
 		if (w>SCREEN_WIDTH) {
 			ratio = h / w;   // get ratio for scaling image
-
 			w = SCREEN_WIDTH;
 			h = w*ratio;
-
 		}
-
-		if (strstr(fileName,"logo")) {
-			w=w-calculateProportionalSizeOrDistance(20);
+		if (strstr(fileName,"resources")) {
+			w=calculateProportionalSizeOrDistance(img->w);
 			h=w*ratio;
 		}
-
-		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, NULL, NULL, w, h,0);
+		printf("%dx%d vs %lfx%lf\n", img->w, img->h, w, h);
+		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h,0);
 	}
 	SDL_FreeSurface(img);
 }
