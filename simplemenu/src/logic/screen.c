@@ -301,7 +301,6 @@ void drawFooter(char *text) {
 	drawTextOnFooter(text);
 }
 void setupDecorations() {
-
 	char tempString[200];
 	if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+10*CURRENT_SECTION.currentPage, countGamesInSection());

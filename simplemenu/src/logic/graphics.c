@@ -199,7 +199,7 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
-int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent) {
+int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	SDL_Surface *image;
 	image=IMG_Load(filename);
 	// Zoom function uses doubles for rates of scaling, rather than
@@ -207,7 +207,7 @@ int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx,
 	double zoomx = newwidth  / (float)image->w;
 	double zoomy = newheight / (float)image->h;
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, SMOOTHING_ON);
+	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, smoothing);
 	// If the original had an alpha color key, give it to the new one.
 	if( image->flags & SDL_SRCCOLORKEY ) {
 		// Acquire the original Key
@@ -241,6 +241,7 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 		double w = img->w;
 		double h = img->h;
 		double ratio = 0;  // Used for aspect ratio
+		int smoothing = 0;
 		ratio = w / h;   // get ratio for scaling image
 		h = SCREEN_HEIGHT;
 		w = h*ratio;
@@ -253,8 +254,10 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 			w=calculateProportionalSizeOrDistance(img->w);
 			h=w*ratio;
 		}
-		printf("%dx%d vs %lfx%lf\n", img->w, img->h, w, h);
-		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h,0);
+		if ((int)h!=(int)img->h) {
+			smoothing = 1;
+		}
+		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h,0,smoothing);
 	}
 	SDL_FreeSurface(img);
 }
