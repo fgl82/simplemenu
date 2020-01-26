@@ -130,33 +130,67 @@ int performAction() {
 		}
 	}
 
-	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
-		if(keys[BTN_L1]) {
-			hidePicModeMenu();
-			hotKeyPressed=0;
-			int rewinded = rewindSection();
-			if(rewinded) {
-				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-			}
-			return 0;
+	if(keys[BTN_L1]) {
+		hidePicModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode) {
+			resetPicModeHideLogoTimer();
+//			if (!currentlySectionSwitching) {
+//					hidePicModeLogo();
+//					hotKeyPressed=1;
+				currentlySectionSwitching=1;
+//			}
 		}
-		if(keys[BTN_R1]) {
-			hidePicModeMenu();
-			hotKeyPressed=0;
-			int advanced = advanceSection();
-			if(advanced) {
+		int rewinded = rewindSection();
+		if(rewinded) {
+			loadGameList(0);
+			while(CURRENT_SECTION.hidden) {
+				rewindSection();
 				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					advanceSection();
-					loadGameList(0);
-				}
 			}
-			return 0;
+			if (pictureMode) {
+				displayBackgroundPicture();
+				showConsole();
+			}
+			refreshScreen();
 		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+	if(keys[BTN_R1]) {
+		hidePicModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode) {
+			resetPicModeHideLogoTimer();
+//			if (!currentlySectionSwitching) {
+//					hidePicModeLogo();
+//					hotKeyPressed=1;
+				currentlySectionSwitching=1;
+//			}
+		}
+		int advanced = advanceSection();
+		if(advanced) {
+			loadGameList(0);
+			while(CURRENT_SECTION.hidden) {
+				advanceSection();
+				loadGameList(0);
+			}
+			if (pictureMode) {
+				displayBackgroundPicture();
+				showConsole();
+				refreshScreen();
+			}
+		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+
+	if (!currentlySectionSwitching&&!hotKeyPressed&&!isUSBMode) {
+
 		if (keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {
 				resetPicModeHideMenuTimer();

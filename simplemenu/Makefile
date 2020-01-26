@@ -31,7 +31,7 @@ else ifeq ($(PLATFORM), NPG)
 else
 	CC = gcc
 	LINKER   = gcc
-	CFLAGS = -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
+	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
 	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lpthread -lfreetype -lz	
 endif
 

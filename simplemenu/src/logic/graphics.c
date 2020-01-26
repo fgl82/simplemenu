@@ -15,7 +15,6 @@
 #include "../headers/globals.h"
 #include "../headers/SDL_rotozoom.h"
 
-
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
 TTF_Font *picModeFont = NULL;
@@ -102,7 +101,7 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
-  //	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
+	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
 	drawTextOnScreen(headerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
 }
@@ -117,7 +116,7 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void drawPictureTextOnScreen(char *buf) {
-	int white[3]={255, 255, 0};
+	int white[3]={255, 255, 255};
 	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 //	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
@@ -231,38 +230,43 @@ int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx,
 	return 1;
 }
 
-
-
 void displayImageOnScreen(char *fileName, char *fallBackText) {
 	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
 		drawImgFallbackTextOnScreen(fallBackText);
 	} else {
-		double w = img->w;
-		double h = img->h;
-		double ratio = 0;  // Used for aspect ratio
-		int smoothing = 0;
-		ratio = w / h;   // get ratio for scaling image
-		h = SCREEN_HEIGHT;
-		w = h*ratio;
-		if (w>SCREEN_WIDTH) {
-			ratio = h / w;   // get ratio for scaling image
-			w = SCREEN_WIDTH;
-			h = w*ratio;
+		if (img->h==SCREEN_HEIGHT || img->w==SCREEN_WIDTH) {
+			SDL_Rect rectangleDest;
+			rectangleDest.w = 0;
+			rectangleDest.h = 0;
+			rectangleDest.x = SCREEN_WIDTH/2-img->w/2;
+			rectangleDest.y = ((SCREEN_HEIGHT)/2-img->h/2);
+			SDL_BlitSurface(img, NULL, screen, &rectangleDest);
+		} else {
+			double w = img->w;
+			double h = img->h;
+			double ratio = 0;  // Used for aspect ratio
+			int smoothing = 0;
+			ratio = w / h;   // get ratio for scaling image
+			h = SCREEN_HEIGHT;
+			w = h*ratio;
+			if (w>SCREEN_WIDTH) {
+				ratio = h / w;   // get ratio for scaling image
+				w = SCREEN_WIDTH;
+				h = w*ratio;
+			}
+			if (strstr(fileName,CURRENT_SECTION.consolePicture)) {
+				w=calculateProportionalSizeOrDistance(img->w);
+				h=w*ratio;
+			}
+			if ((int)h!=(int)img->h) {
+				smoothing = 1;
+			}
+			drawImage(screen, fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 		}
-		if (strstr(fileName,"resources")) {
-			w=calculateProportionalSizeOrDistance(img->w);
-			h=w*ratio;
-		}
-		if ((int)h!=(int)img->h) {
-			smoothing = 1;
-		}
-		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h,0,smoothing);
 	}
 	SDL_FreeSurface(img);
 }
-
-
 
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};

@@ -136,17 +136,36 @@ void displayGamePicture() {
 	if (!isPicModeMenuHidden) {
 		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
 	} else {
-	stripGameNameLeaveExtension(tempGameName);
-//	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
-	displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
+		stripGameNameLeaveExtension(tempGameName);
+	//	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
+		displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
 
-	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
-		char* displayName=getFileNameOrAlias(CURRENT_GAME);
-		if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
-			drawPictureTextOnScreen(displayName);
+		if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
+			char* displayName=getFileNameOrAlias(CURRENT_GAME);
+			if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
+				drawPictureTextOnScreen(displayName);
+			} else {
+				if (currentSectionNumber==favoritesSectionNumber) {
+					if (strlen(CURRENT_GAME->alias)<2) {
+						char tmp[300];
+						strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
+						strcpy(tmp,getNameWithoutExtension(tmp));
+						drawPictureTextOnScreen(tmp);
+					} else {
+						drawPictureTextOnScreen(CURRENT_GAME->alias);
+					}
+				}
+			}
+			free(displayName);
 		} else {
-			if (currentSectionNumber==favoritesSectionNumber) {
-				if (strlen(CURRENT_GAME->alias)<2) {
+			if (stripGames) {
+				if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
+					drawPictureTextOnScreen(tempGameName);
+				} else {
+					drawPictureTextOnScreen(CURRENT_GAME->alias);
+				}
+			} else {
+				if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
 					char tmp[300];
 					strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
 					strcpy(tmp,getNameWithoutExtension(tmp));
@@ -156,25 +175,7 @@ void displayGamePicture() {
 				}
 			}
 		}
-		free(displayName);
-	} else {
-		if (stripGames) {
-			if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
-				drawPictureTextOnScreen(tempGameName);
-			} else {
-				drawPictureTextOnScreen(CURRENT_GAME->alias);
-			}
-		} else {
-			if (CURRENT_GAME->alias==NULL||strlen(CURRENT_GAME->alias)<2) {
-				char tmp[300];
-				strcpy(tmp,getNameWithoutPath(CURRENT_GAME_NAME));
-				strcpy(tmp,getNameWithoutExtension(tmp));
-				drawPictureTextOnScreen(tmp);
-			} else {
-				drawPictureTextOnScreen(CURRENT_GAME->alias);
-			}
-		}
-	}}
+	}
 	free(pictureWithFullPath);
 	free(tempGameName);
 }
@@ -364,4 +365,25 @@ void resetPicModeHideMenuTimer() {
 	isPicModeMenuHidden=0;
 	clearPicModeHideMenuTimer();
 	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hidePicModeMenu, NULL);
+}
+
+void clearPicModeHideLogoTimer() {
+	if (picModeHideLogoTimer != NULL) {
+		SDL_RemoveTimer(picModeHideLogoTimer);
+	}
+	picModeHideLogoTimer = NULL;
+}
+
+uint32_t hidePicModeLogo(uint32_t interval, void *param) {
+	printf("done\n");
+	clearPicModeHideLogoTimer();
+	currentlySectionSwitching=0;
+	hotKeyPressed=0;
+	updateScreen();
+	return 0;
+}
+
+void resetPicModeHideLogoTimer() {
+//	clearPicModeHideLogoTimer();
+	picModeHideMenuTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
 }

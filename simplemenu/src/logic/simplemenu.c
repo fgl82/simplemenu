@@ -81,9 +81,6 @@ int main(int argc, char* argv[]) {
 	initializeGlobals();
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
-//	int sectionCount=testSectionLoad();
-//	int sectionCount=testSectionLoad2();
-//	int sectionCount=1;
 	loadFavorites();
 	if (argv[1]!=NULL) {
 		setSectionsState(argv[1]);
