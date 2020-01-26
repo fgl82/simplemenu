@@ -366,3 +366,24 @@ void resetPicModeHideMenuTimer() {
 	clearPicModeHideMenuTimer();
 	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hidePicModeMenu, NULL);
 }
+
+void clearPicModeHideLogoTimer() {
+	if (picModeHideLogoTimer != NULL) {
+		SDL_RemoveTimer(picModeHideLogoTimer);
+	}
+	picModeHideLogoTimer = NULL;
+}
+
+uint32_t hidePicModeLogo(uint32_t interval, void *param) {
+	printf("done\n");
+	clearPicModeHideLogoTimer();
+	currentlySectionSwitching=0;
+	hotKeyPressed=0;
+	updateScreen();
+	return 0;
+}
+
+void resetPicModeHideLogoTimer() {
+//	clearPicModeHideLogoTimer();
+	picModeHideMenuTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
+}

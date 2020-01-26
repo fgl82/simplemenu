@@ -15,7 +15,6 @@
 #include "../headers/globals.h"
 #include "../headers/SDL_rotozoom.h"
 
-
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
 TTF_Font *picModeFont = NULL;
@@ -231,8 +230,6 @@ int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx,
 	return 1;
 }
 
-
-
 void displayImageOnScreen(char *fileName, char *fallBackText) {
 	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
@@ -270,8 +267,6 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 	}
 	SDL_FreeSurface(img);
 }
-
-
 
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};

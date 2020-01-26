@@ -40,6 +40,7 @@ int OC_SLEEP;
 
 SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
+SDL_TimerID picModeHideLogoTimer;
 int timeoutValue;
 int isPicModeMenuHidden;
 int isSuspended;

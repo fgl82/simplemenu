@@ -1,8 +1,11 @@
 #ifndef DEFINITIONS_DEFINED
 #define DEFINITIONS_DEFINED
 #define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
-#define SCREEN_HEIGHT   600
-
+#ifdef TARGET_PC
+#define SCREEN_HEIGHT   900
+#else
+#define SCREEN_HEIGHT   240
+#endif
 #if defined(TARGET_BITTBOY)
 	#define BTN_Y			SDLK_SPACE
 	#define BTN_B			SDLK_LCTRL
