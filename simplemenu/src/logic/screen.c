@@ -113,7 +113,7 @@ void showConsole() {
 }
 
 void displayGamePicture() {
-	int rgbColor[] = {21, 18, 26};
+	int rgbColor[] = {0, 0, 0};
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	if (favoritesSectionSelected) {
@@ -137,7 +137,9 @@ void displayGamePicture() {
 		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
 	} else {
 	stripGameNameLeaveExtension(tempGameName);
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
+//	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
+	displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
+
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 		char* displayName=getFileNameOrAlias(CURRENT_GAME);
 		if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
@@ -299,7 +301,6 @@ void drawFooter(char *text) {
 	drawTextOnFooter(text);
 }
 void setupDecorations() {
-
 	char tempString[200];
 	if (CURRENT_GAME==NULL||CURRENT_GAME_NAME==NULL) {
 		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+10*CURRENT_SECTION.currentPage, countGamesInSection());

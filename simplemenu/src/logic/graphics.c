@@ -13,6 +13,8 @@
 
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/SDL_rotozoom.h"
+
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
@@ -28,7 +30,7 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;
-//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
+	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
 int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
@@ -37,7 +39,7 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 	strcpy(bufCopy,buf);
 	msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	int len=strlen(buf);
-	while (msg->w>300) {
+	while (msg->w>calculateProportionalSizeOrDistance(300)) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
@@ -100,7 +102,7 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
-//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
+  //	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
 	drawTextOnScreen(headerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
 }
@@ -115,8 +117,9 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void drawPictureTextOnScreen(char *buf) {
-	int white[3]={255, 255, 255};
-	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+	int white[3]={255, 255, 0};
+	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+//	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
@@ -196,20 +199,70 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
+int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+	SDL_Surface *image;
+	image=IMG_Load(filename);
+	// Zoom function uses doubles for rates of scaling, rather than
+	// exact size values. This is how we get around that:
+	double zoomx = newwidth  / (float)image->w;
+	double zoomy = newheight / (float)image->h;
+	// This function assumes no smoothing, so that any colorkeys wont bleed.
+	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, smoothing);
+	// If the original had an alpha color key, give it to the new one.
+	if( image->flags & SDL_SRCCOLORKEY ) {
+		// Acquire the original Key
+		Uint32 colorkey = image->format->colorkey;
+		// Set to the new image
+		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
+	}
+	// The original picture is no longer needed.
+	SDL_FreeSurface(image);
+	// Set it instead to the new image.
+	image =  sized;
+	SDL_Rect src, dest;
+	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
+	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
+	if(transparent == 1 ) {
+		//Set the color as transparent
+		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
+	}
+	SDL_BlitSurface(image, &src, display, &dest);
+	SDL_FreeSurface(image);
+	return 1;
+}
+
+
+
 void displayImageOnScreen(char *fileName, char *fallBackText) {
-	SDL_Surface *img = loadImage (fileName);
+	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
 		drawImgFallbackTextOnScreen(fallBackText);
 	} else {
-		SDL_Rect rectangleDest;
-		rectangleDest.w = 0;
-		rectangleDest.h = 0;
-		rectangleDest.x = SCREEN_WIDTH/2-img->w/2;
-		rectangleDest.y = ((SCREEN_HEIGHT)/2-img->h/2);
-		SDL_BlitSurface(img, NULL, screen, &rectangleDest);
+		double w = img->w;
+		double h = img->h;
+		double ratio = 0;  // Used for aspect ratio
+		int smoothing = 0;
+		ratio = w / h;   // get ratio for scaling image
+		h = SCREEN_HEIGHT;
+		w = h*ratio;
+		if (w>SCREEN_WIDTH) {
+			ratio = h / w;   // get ratio for scaling image
+			w = SCREEN_WIDTH;
+			h = w*ratio;
+		}
+		if (strstr(fileName,"resources")) {
+			w=calculateProportionalSizeOrDistance(img->w);
+			h=w*ratio;
+		}
+		if ((int)h!=(int)img->h) {
+			smoothing = 1;
+		}
+		drawImage(screen,fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h,0,smoothing);
 	}
 	SDL_FreeSurface(img);
 }
+
+
 
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};
@@ -243,8 +296,8 @@ void initializeFonts() {
 }
 
 void freeResources() {
-//    pthread_join(clockThread, NULL);
-//    pthread_mutex_destroy(&lock);
+	//    pthread_join(clockThread, NULL);
+	//    pthread_mutex_destroy(&lock);
 	TTF_CloseFont(font);
 	font = NULL;
 	TTF_CloseFont(headerFont);
