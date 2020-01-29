@@ -134,12 +134,13 @@ void displayGamePicture() {
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
 	if (!isPicModeMenuHidden) {
-		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 220);
+//		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
 	} else {
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(19),180);
 		stripGameNameLeaveExtension(tempGameName);
 	//	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
-		displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
-
+//		displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
 		if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 			char* displayName=getFileNameOrAlias(CURRENT_GAME);
 			if (stripGames||strlen(CURRENT_SECTION.aliasFileName)>1) {
@@ -237,7 +238,7 @@ void drawGameList() {
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance(29);
 	if (pictureMode) {
-		nextLine = calculateProportionalSizeOrDistance(6);
+		nextLine = calculateProportionalSizeOrDistance(11);
 	}
 	char *nameWithoutExtension;
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
@@ -289,7 +290,7 @@ void drawGameList() {
 			if (!pictureMode) {
 				nextLine+=calculateProportionalSizeOrDistance(19);
 			} else {
-				nextLine+=calculateProportionalSizeOrDistance(24);
+				nextLine+=calculateProportionalSizeOrDistance(23);
 			}
 			free(nameWithoutExtension);
 		}
