@@ -198,9 +198,20 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
-int drawImage(SDL_Surface* display, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
-	SDL_Surface *image;
-	image=IMG_Load(filename);
+void drawTransparentRectangleToScreen(int w, int h, int x, int y, int transparency) {
+	SDL_Surface *transparentrectangle;
+	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
+	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, transparency); //128 is the amount of transparency or opacity (dont remember)
+	SDL_Rect rectangleDest;
+	rectangleDest.w = w;
+	rectangleDest.h = h;
+	rectangleDest.x = x;
+	rectangleDest.y = y;
+	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
+	SDL_FreeSurface(transparentrectangle);
+}
+
+int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
@@ -242,6 +253,7 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 			rectangleDest.x = SCREEN_WIDTH/2-img->w/2;
 			rectangleDest.y = ((SCREEN_HEIGHT)/2-img->h/2);
 			SDL_BlitSurface(img, NULL, screen, &rectangleDest);
+			SDL_FreeSurface(img);
 		} else {
 			double w = img->w;
 			double h = img->h;
@@ -262,10 +274,9 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 			if ((int)h!=(int)img->h) {
 				smoothing = 1;
 			}
-			drawImage(screen, fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
+			drawImage(screen, img, fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 		}
 	}
-	SDL_FreeSurface(img);
 }
 
 void drawUSBScreen() {
@@ -293,7 +304,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
+	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(19));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
 	footerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));

@@ -13,4 +13,5 @@ void showConsole();
 void drawShutDownScreen();
 uint32_t hidePicModeMenu();
 void resetPicModeHideMenuTimer();
+void resetPicModeHideLogoTimer();
 #endif
