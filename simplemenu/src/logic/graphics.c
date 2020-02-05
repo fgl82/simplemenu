@@ -236,9 +236,7 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, i
 		//Set the color as transparent
 		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
 	}
-
 	SDL_BlitSurface(image, &src, display, &dest);
-
 	SDL_FreeSurface(image);
 	return 1;
 }
