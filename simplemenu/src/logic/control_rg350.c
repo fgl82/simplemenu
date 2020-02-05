@@ -101,14 +101,24 @@ int performAction() {
 			int advanced = advanceSection();
 			if(advanced) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
+//				displayBackgroundPicture();
+//				showConsole();
+//				refreshScreen();
 			}
 			return 0;
 		}
@@ -117,14 +127,24 @@ int performAction() {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
+//				displayBackgroundPicture();
+//				showConsole();
+//				refreshScreen();
 			}
 			return 0;
 		}
@@ -143,16 +163,25 @@ int performAction() {
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
+			if (pictureMode) {
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
+			}
 			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
+				if (pictureMode) {
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
+				}
 				loadGameList(0);
 			}
-			if (pictureMode) {
-				displayBackgroundPicture();
-				showConsole();
-			}
-			refreshScreen();
 		}
 		if (!pictureMode) {
 			currentlySectionSwitching=0;
@@ -172,15 +201,24 @@ int performAction() {
 		}
 		int advanced = advanceSection();
 		if(advanced) {
+			if (pictureMode) {
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
+			}
 			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
+				if (pictureMode) {
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
+				}
 				loadGameList(0);
-			}
-			if (pictureMode) {
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 			}
 		}
 		if (!pictureMode) {

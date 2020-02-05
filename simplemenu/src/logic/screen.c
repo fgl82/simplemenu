@@ -134,7 +134,7 @@ void displayGamePicture() {
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
 	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
 	if (!isPicModeMenuHidden) {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 220);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 235);
 //		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
 	} else {
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(19),180);

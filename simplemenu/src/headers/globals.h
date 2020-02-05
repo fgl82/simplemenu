@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
 #include "../headers/hashtable.h"
+#include "../headers/constants.h"
 
 #ifdef TARGET_RG350
 #include <shake.h>
@@ -68,7 +69,7 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
-	struct Rom *romList[1000][10];
+	struct Rom *romList[1000][ITEMS_PER_PAGE];
 	hashtable_t *aliasHashTable;
 	int activeExecutable;
 	int activeEmulatorDirectory;

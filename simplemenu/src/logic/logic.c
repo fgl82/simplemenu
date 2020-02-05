@@ -324,7 +324,7 @@ void loadFavoritesSectionGameList() {
 	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
 	for (int i=0;i<1000;i++) {
-		for (int j=0;j<10;j++) {
+		for (int j=0;j<ITEMS_PER_PAGE;j++) {
 			FAVORITES_SECTION.romList[i][j]=NULL;
 		}
 	}
@@ -493,6 +493,35 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile* stolenFile, char* fileName) {
 	}
 }
 
+int theCurrentSectionHasGames() {
+	int dirCounter;
+	char *dirs[10];
+	char* ptr;
+	char dirsCopy[1000];
+	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+	ptr = strtok(dirsCopy, ",");
+	char *files[10000];
+	while (ptr!=NULL) {
+		dirs[dirCounter]=malloc(strlen(ptr)+1);
+		strcpy(dirs[dirCounter],ptr);
+		ptr = strtok(NULL, ",");
+		dirCounter++;
+	}
+	for(int k=0;k<dirCounter;k++) {
+		int n = recursivelyScanDirectory(dirs[k], files, 0);
+		for (int i=0;i<n;i++){
+			char *ext = getExtension(files[i]);
+			if (ext&&strcmp((files[i]),"..")!=0 &&
+					strcmp((files[i]),".")!=0 &&
+					strcmp(ext,".png")!=0&&
+					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.initialized==0||refresh) {
@@ -500,13 +529,13 @@ void loadGameList(int refresh) {
 		if (!refresh) {
 			loadAliasList(currentSectionNumber);
 			for (int i=0;i<1000;i++) {
-				for (int j=0;j<10;j++) {
+				for (int j=0;j<ITEMS_PER_PAGE;j++) {
 					CURRENT_SECTION.romList[i][j]=NULL;
 				}
 			}
 		} else {
 			for (int i=0;i<1000;i++) {
-				for (int j=0;j<10;j++) {
+				for (int j=0;j<ITEMS_PER_PAGE;j++) {
 					if (CURRENT_SECTION.romList[i][j]!=NULL) {
 						free(CURRENT_SECTION.romList[i][j]->name);
 						free(CURRENT_SECTION.romList[i][j]->alias);
