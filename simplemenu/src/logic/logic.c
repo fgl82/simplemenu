@@ -449,6 +449,7 @@ int theCurrentSectionHasGames() {
 	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
 	ptr = strtok(dirsCopy, ",");
 	char *files[10000];
+	int value = 0;
 	while (ptr!=NULL) {
 		dirs[dirCounter]=malloc(strlen(ptr)+1);
 		strcpy(dirs[dirCounter],ptr);
@@ -463,11 +464,21 @@ int theCurrentSectionHasGames() {
 					strcmp((files[i]),".")!=0 &&
 					strcmp(ext,".png")!=0&&
 					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
-				return 1;
+				value = 1;
+				break;
 			}
 		}
+		for (int i=0;i<n;i++){
+			free(files[i]);
+		}
+		if (value==1) {
+			break;
+		}
 	}
-	return 0;
+	for (int i=0;i<dirCounter;i++){
+		free (dirs[i]);
+	}
+	return value;
 }
 
 struct Node *split(struct Node *head)
@@ -680,22 +691,26 @@ void loadGameList(int refresh) {
 			free (dirs[i]);
 		}
 		menuSections[currentSectionNumber].head = mergeSort(menuSections[currentSectionNumber].head);
-		PrintDoublyLinkedRomList();
+		printf("Section %s loaded\n", CURRENT_SECTION.sectionName);
 	}
 }
 
 int countGamesInPage() {
 	int gamesCounter=0;
-	struct Rom *rom;
+	struct Node *node;
 	int number = CURRENT_GAME_NUMBER;
 	while(number%ITEMS_PER_PAGE!=0) {
 		number--;
 	}
+	node = GetNthNode(number);
 	for (int i=number;i<number+ITEMS_PER_PAGE;i++) {
-		rom = GetNthElement(i);
-		if (rom != NULL	&& rom->name!=NULL && strlen(rom->name)>1) {
+		if (node!=NULL&&node->data.name!=NULL && strlen(node->data.name)>1) {
 			gamesCounter++;
 		}
+		if (node->next==NULL) {
+			break;
+		}
+		node=node->next;
 	}
 	return gamesCounter;
 }

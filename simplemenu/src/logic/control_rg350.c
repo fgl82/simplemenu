@@ -117,9 +117,6 @@ int performAction(struct Rom *rom) {
 					}
 					loadGameList(0);
 				}
-//				displayBackgroundPicture();
-//				showConsole();
-//				refreshScreen();
 			}
 			return 0;
 		}

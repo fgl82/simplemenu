@@ -12,6 +12,7 @@
 
 
 struct Rom* GetNthElement(int index);
+struct Node* GetNthNode(int index);
 struct Rom* getCurrentRom();
 void InsertAtTail(struct Rom rom);
 void PrintDoublyLinkedRomList();

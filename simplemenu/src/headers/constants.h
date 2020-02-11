@@ -1,4 +1,4 @@
 #ifndef CONSTANTS_DEFINED
 #define CONSTANTS_DEFINED
-#define ITEMS_PER_PAGE 5
+#define ITEMS_PER_PAGE 10
 #endif
