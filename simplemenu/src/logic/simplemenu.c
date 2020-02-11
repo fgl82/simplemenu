@@ -13,6 +13,8 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/system_logic.h"
+#include "../headers/doubly_linked_rom_list.h"
+
 
 void initializeGlobals() {
 	running=1;
@@ -96,12 +98,14 @@ int main(int argc, char* argv[]) {
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();
+//	head=null;
 	while (running) {
 		while(pollEvent()){
+			struct Rom *rom = GetNthElement(CURRENT_GAME_NUMBER);
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction();
+						performAction(rom);
 					} else {
 						performChoosingAction();
 					}
@@ -136,5 +140,6 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}
+//	PrintDoublyLinkedRomList(CURRENT_SECTION.head);
 	quit();
 }

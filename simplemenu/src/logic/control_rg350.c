@@ -10,7 +10,8 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 
-int performAction() {
+int performAction(struct Rom *rom) {
+
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
 		return 0;
@@ -44,13 +45,13 @@ int performAction() {
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
 			if (!favoritesSectionSelected) {
-				deleteCurrentGame(CURRENT_GAME_NAME);
+				deleteCurrentGame(rom->name);
 				loadGameList(1);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
 					loadGameList(0);
 				}
-				if(CURRENT_GAME_NAME==NULL) {
+				if(rom==NULL) {
 					scrollUp();
 				}
 				setupDecorations();
@@ -74,12 +75,12 @@ int performAction() {
 				updateScreen();
 			}
 			saveFavorites();
-			launchGame();
+			launchGame(rom);
 		}	
 		if (keys[BTN_DOWN]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			advancePage();
+			advancePage(rom);
 			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
@@ -89,7 +90,7 @@ int performAction() {
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			rewindPage();
+			rewindPage(rom);
 			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
@@ -234,9 +235,9 @@ int performAction() {
 				resetPicModeHideMenuTimer();
 			}
 			if (!favoritesSectionSelected) {
-				markAsFavorite();
+				markAsFavorite(rom);
 			} else {
-				removeFavorite();
+				removeFavorite(rom);
 				if(favoritesSize==0) {
 					showOrHideFavorites();
 					hidePicModeMenu();
@@ -269,7 +270,7 @@ int performAction() {
 			}
 			if (countGamesInPage()>0) {
 				saveFavorites();
-				launchGame();
+				launchGame(rom);
 			}
 			return 0;
 		}
@@ -298,14 +299,14 @@ int performAction() {
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
-			advancePage();
+			advancePage(rom);
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
-			rewindPage();
+			rewindPage(rom);
 			return 1;
 		}
 	}

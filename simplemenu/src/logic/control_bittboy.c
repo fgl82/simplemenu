@@ -39,13 +39,13 @@ int performAction() {
 				if(!isPicModeMenuHidden) {
 					resetPicModeHideMenuTimer();
 				}
-				deleteCurrentGame(CURRENT_GAME_NAME);
+				deleteCurrentGame("");
 				loadGameList(1);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
 					loadGameList(0);
 				}
-				if(CURRENT_GAME_NAME==NULL) {
+				if(""==NULL) {
 					scrollUp();
 				}
 				setupDecorations();

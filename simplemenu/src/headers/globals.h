@@ -48,6 +48,27 @@ int isSuspended;
 int isUSBMode;
 int backlightValue;
 
+struct Favorite {
+	char section[300];
+	char name[300];
+	char alias[300];
+	char emulatorFolder[200];
+	char executable[200];
+	char filesDirectory[400];
+};
+
+struct Rom {
+	char *name;
+	char *alias;
+	char *directory;
+};
+
+struct Node  {
+	struct Rom data;
+	struct Node* next;
+	struct Node* prev;
+};
+
 struct MenuSection {
 	char sectionName[25];
 	char *emulatorDirectories[10];
@@ -69,28 +90,17 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
-	struct Rom *romList[1000][ITEMS_PER_PAGE];
+//	struct Rom *romList[1000][ITEMS_PER_PAGE];
+	struct Node *head;
 	hashtable_t *aliasHashTable;
 	int activeExecutable;
 	int activeEmulatorDirectory;
 	char category[100];
 };
+
+//struct Rom* currentGame;
+
 struct MenuSection menuSections[50];
-
-struct Favorite {
-	char section[300];
-	char name[300];
-	char alias[300];
-	char emulatorFolder[200];
-	char executable[200];
-	char filesDirectory[400];
-};
-
-struct Rom {
-	char *name;
-	char *alias;
-	char *directory;
-};
 
 struct OPKDesktopFile {
 	char parentOPK[200];
