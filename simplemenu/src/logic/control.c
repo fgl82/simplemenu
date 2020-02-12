@@ -58,6 +58,7 @@ void launchGame(struct Rom *rom) {
 		} else {
 //			fprintf(fp, "HERE?\n");
 //			fclose(fp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
 		}
 	}
 }

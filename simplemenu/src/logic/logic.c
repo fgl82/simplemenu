@@ -418,7 +418,6 @@ void loadFavoritesSectionGameList() {
 		game++;
 	}
 	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
-	PrintDoublyLinkedRomList();
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {

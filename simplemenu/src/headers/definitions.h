@@ -2,7 +2,7 @@
 #define DEFINITIONS_DEFINED
 #define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
 #ifdef TARGET_PC
-#define SCREEN_HEIGHT   240
+#define SCREEN_HEIGHT   600
 #else
 #define SCREEN_HEIGHT   240
 #endif
