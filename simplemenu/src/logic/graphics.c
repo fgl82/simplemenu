@@ -104,7 +104,7 @@ void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
 //	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
-	drawTextOnScreen(font, 5, position, buf, color, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 }
 
@@ -114,7 +114,7 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 	int color[3] = {255,255,255};
-	drawTextOnScreen(font, 5, position, buf, color, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 }
 
 void drawPictureTextOnScreen(char *buf) {

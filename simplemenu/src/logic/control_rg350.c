@@ -151,7 +151,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_L1]) {
 		hidePicModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode) {
+		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 //			if (!currentlySectionSwitching) {
 //					hidePicModeLogo();
@@ -189,7 +189,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_R1]) {
 		hidePicModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode) {
+		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 //			if (!currentlySectionSwitching) {
 //					hidePicModeLogo();
