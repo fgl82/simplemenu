@@ -274,8 +274,26 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_Y]) {
 			if (pictureMode) {
 				pictureMode=0;
-			} else {
+				int number = CURRENT_GAME_NUMBER;
+				ITEMS_PER_PAGE=10;
+				CURRENT_SECTION.totalPages=countGamesInSection()/ITEMS_PER_PAGE;
+				CURRENT_SECTION.currentGame=0;
+				CURRENT_SECTION.currentPage=0;
+				while (CURRENT_GAME_NUMBER<number) {
+					gamesInPage=countGamesInPage();
+					scrollDown();
+				}
+ 			} else {
 				pictureMode=1;
+				int number = CURRENT_GAME_NUMBER;
+				ITEMS_PER_PAGE=12;
+				CURRENT_SECTION.totalPages=countGamesInSection()/ITEMS_PER_PAGE;
+				CURRENT_SECTION.currentGame=0;
+				CURRENT_SECTION.currentPage=0;
+				while (CURRENT_GAME_NUMBER<number) {
+					gamesInPage=countGamesInPage();
+					scrollDown();
+				}
 			}
 		}
 		if (keys[BTN_DOWN]) {

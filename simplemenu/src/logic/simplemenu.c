@@ -26,8 +26,9 @@ void initializeGlobals() {
 	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
-//	pictureMode=0;
+//	pictureMode=1;
 	isPicModeMenuHidden=1;
+	ITEMS_PER_PAGE=10;
 	srand(time(0));
 }
 

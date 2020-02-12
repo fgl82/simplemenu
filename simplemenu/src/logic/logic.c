@@ -177,14 +177,14 @@ char *getFileNameOrAlias(struct Rom *rom) {
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
-//		if(stripGames) {
+		//		if(stripGames) {
 		stripGameName(displayName);
-//		} else {
-//			char tmp[300];
-//			strcpy(tmp, getNameWithoutPath(displayName));
-//			strcpy(displayName, tmp);
-//			printf("returning %s\n",displayName);
-//		}
+		//		} else {
+		//			char tmp[300];
+		//			strcpy(tmp, getNameWithoutPath(displayName));
+		//			strcpy(displayName, tmp);
+		//			printf("returning %s\n",displayName);
+		//		}
 	}
 	return displayName;
 }
@@ -278,22 +278,16 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-	//	if (checkIfEmulatorExists(emulatorFolder,executable)||strcmp(emulatorFolder,"/usr/bin/")==0) {
-	#ifndef TARGET_PC
+#ifndef TARGET_PC
 	saveLastState();
 	saveFavorites();
 	clearTimer();
 	freeResources();
-//	printf("%s\n",fileToBeExecutedWithFullPath);
-//	sleep(1);
 	setCPU(currentCPU);
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-	#else
+#else
 	printf("%s\n",fileToBeExecutedWithFullPath);
-	#endif
-	//	} else {
-	//		generateError("CONFIGURED EMULATOR NOT FOUND- CHECK SECTIONS.CFG ",0);
-	//	}
+#endif
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
@@ -312,43 +306,43 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 
 int countGamesInSection() {
 	int gamesCounter=0;
-	for (int i=0;i<=CURRENT_SECTION.totalPages;i++) {
-		for (int j=0;j<ITEMS_PER_PAGE;j++) {
-			struct Rom* currentGame = GetNthElement(j+i*ITEMS_PER_PAGE);
-			if (currentGame!=NULL&&strlen(currentGame->name)>0) {
-				gamesCounter++;
-			}
+	for (int i=0;i<=10000;i++) {
+		struct Rom* currentGame = GetNthElement(i);
+		if (currentGame!=NULL&&strlen(currentGame->name)>0) {
+			gamesCounter++;
+		} else {
+			break;
 		}
 	}
 	return gamesCounter;
 }
 
 void loadFavoritesSectionGameList() {
-//	int game = 0;
-//	int page = 0;
+	//	int game = 0;
+	//	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
-//	for (int i=0;i<1000;i++) {
-//		for (int j=0;j<ITEMS_PER_PAGE;j++) {
-//			FAVORITES_SECTION.romList[i][j]=NULL;
-//		}
-//	}
-//	for (int i=0;i<favoritesSize;i++){
-//		if (game==ITEMS_PER_PAGE) {
-//			if(i!=favoritesSize) {
-//				page++;
-//				game = 0;
-//				FAVORITES_SECTION.totalPages++;
-//			}
-//		}
-//		if (FAVORITES_SECTION.romList[page][game]==NULL) {
-//			FAVORITES_SECTION.romList[page][game]= malloc(sizeof(struct Rom));
-//			FAVORITES_SECTION.romList[page][game]->name=malloc(300);
-//			FAVORITES_SECTION.romList[page][game]->alias=malloc(300);
-//		}
-//		strcpy(FAVORITES_SECTION.romList[page][game]->alias, favorites[i].alias);
-//		strcpy(FAVORITES_SECTION.romList[page][game]->name, favorites[i].name);
-//		game++;
-//	}
+	//	for (int i=0;i<1000;i++) {
+	//		for (int j=0;j<ITEMS_PER_PAGE;j++) {
+	//			FAVORITES_SECTION.romList[i][j]=NULL;
+	//		}
+	//	}
+	//	for (int i=0;i<favoritesSize;i++){
+	//		if (game==ITEMS_PER_PAGE) {
+	//			if(i!=favoritesSize) {
+	//				page++;
+	//				game = 0;
+	//				FAVORITES_SECTION.totalPages++;
+	//			}
+	//		}
+	//		if (FAVORITES_SECTION.romList[page][game]==NULL) {
+	//			FAVORITES_SECTION.romList[page][game]= malloc(sizeof(struct Rom));
+	//			FAVORITES_SECTION.romList[page][game]->name=malloc(300);
+	//			FAVORITES_SECTION.romList[page][game]->alias=malloc(300);
+	//		}
+	//		strcpy(FAVORITES_SECTION.romList[page][game]->alias, favorites[i].alias);
+	//		strcpy(FAVORITES_SECTION.romList[page][game]->name, favorites[i].name);
+	//		game++;
+	//	}
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {
@@ -483,26 +477,26 @@ int theCurrentSectionHasGames() {
 
 struct Node *split(struct Node *head)
 {
-    struct Node *fast = head,*slow = head;
-    while (fast->next && fast->next->next)
-    {
-        fast = fast->next->next;
-        slow = slow->next;
-    }
-    struct Node *temp = slow->next;
-    slow->next = NULL;
-    return temp;
+	struct Node *fast = head,*slow = head;
+	while (fast->next && fast->next->next)
+	{
+		fast = fast->next->next;
+		slow = slow->next;
+	}
+	struct Node *temp = slow->next;
+	slow->next = NULL;
+	return temp;
 }
 
 struct Node *merge(struct Node *first, struct Node *second)
 {
-    if (!first) {
-        return second;
-    }
+	if (!first) {
+		return second;
+	}
 
-    if (!second) {
-        return first;
-    }
+	if (!second) {
+		return first;
+	}
 
 	char s1Alias[300];
 	if(first->data.alias!=NULL&&strlen(first->data.alias)>2) {
@@ -517,34 +511,34 @@ struct Node *merge(struct Node *first, struct Node *second)
 		strcpy(s2Alias,second->data.name);
 	}
 
-    if (strcmp(getNameWithoutPath(s1Alias), getNameWithoutPath(s2Alias))<=0)
-    {
-        first->next = merge(first->next,second);
-        first->next->prev = first;
-        first->prev = NULL;
-        return first;
-    }
-    else
-    {
-        second->next = merge(first,second->next);
-        second->next->prev = second;
-        second->prev = NULL;
-        return second;
-    }
+	if (strcmp(getNameWithoutPath(s1Alias), getNameWithoutPath(s2Alias))<=0)
+	{
+		first->next = merge(first->next,second);
+		first->next->prev = first;
+		first->prev = NULL;
+		return first;
+	}
+	else
+	{
+		second->next = merge(first,second->next);
+		second->next->prev = second;
+		second->prev = NULL;
+		return second;
+	}
 }
 
 struct Node *mergeSort(struct Node *head) {
-    if (!head || !head->next) {
-        return head;
-    }
-    struct Node *second = split(head);
+	if (!head || !head->next) {
+		return head;
+	}
+	struct Node *second = split(head);
 
-    // Recur for left and right halves
-    head = mergeSort(head);
-    second = mergeSort(second);
+	// Recur for left and right halves
+	head = mergeSort(head);
+	second = mergeSort(second);
 
-    // Merge the two sorted halves
-    return merge(head,second);
+	// Merge the two sorted halves
+	return merge(head,second);
 }
 
 void loadGameList(int refresh) {
@@ -556,18 +550,18 @@ void loadGameList(int refresh) {
 		if (!refresh) {
 			loadAliasList(currentSectionNumber);
 		} else {
-//			for (int i=0;i<10000;i++) {
-//				struct Rom* currentGame = GetNthElement(i);
-//				if (currentGame!=NULL) {
-//					free(currentGame->name);
-//					free(currentGame->alias);
-//					free(currentGame->directory);
-//					free(currentGame);
-//					currentGame=NULL;
-//				} else {
-//					break;
-//				}
-//			}
+			//			for (int i=0;i<10000;i++) {
+			//				struct Rom* currentGame = GetNthElement(i);
+			//				if (currentGame!=NULL) {
+			//					free(currentGame->name);
+			//					free(currentGame->alias);
+			//					free(currentGame->directory);
+			//					free(currentGame);
+			//					currentGame=NULL;
+			//				} else {
+			//					break;
+			//				}
+			//			}
 		}
 		CURRENT_SECTION.totalPages=0;
 		char *files[10000];
@@ -602,11 +596,11 @@ void loadGameList(int refresh) {
 							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 								break;
 							} else {
-								#ifdef TARGET_RG300
+#ifdef TARGET_RG300
 								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
 									desktopCounter++;
 								}
-								#endif
+#endif
 								realItemCount++;
 								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 								int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;

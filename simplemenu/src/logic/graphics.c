@@ -103,9 +103,9 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
-	TTF_SetFontStyle(footerFont,TTF_STYLE_BOLD);
-	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
-	TTF_SetFontStyle(footerFont,TTF_STYLE_NORMAL);
+//	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
+	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, color, VAlignMiddle | HAlignCenter);
+	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 }
 
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
@@ -114,7 +114,7 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 	int color[3] = {255,255,255};
-	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
+	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, color, VAlignMiddle | HAlignCenter);
 }
 
 void drawPictureTextOnScreen(char *buf) {
@@ -200,10 +200,10 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
-void drawTransparentRectangleToScreen(int w, int h, int x, int y, int transparency) {
+void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int opacity) {
 	SDL_Surface *transparentrectangle;
-	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
-	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, transparency); //128 is the amount of transparency or opacity (dont remember)
+	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, rgbColor[0], rgbColor[1], rgbColor[2], 0);
+	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, opacity); //128 is the amount of transparency or opacity (dont remember)
 	SDL_Rect rectangleDest;
 	rectangleDest.w = w;
 	rectangleDest.h = h;
