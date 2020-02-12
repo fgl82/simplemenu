@@ -26,9 +26,8 @@ void initializeGlobals() {
 	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
-//	pictureMode=1;
-	isPicModeMenuHidden=1;
 	ITEMS_PER_PAGE=10;
+	isPicModeMenuHidden=1;
 	srand(time(0));
 }
 
@@ -90,6 +89,9 @@ int main(int argc, char* argv[]) {
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
 		pictureMode=atoi(argv[4]);
+		if(pictureMode) {
+			ITEMS_PER_PAGE=12;
+		}
 	} else {
 		loadLastState();
 	}
@@ -99,7 +101,6 @@ int main(int argc, char* argv[]) {
 	determineStartingScreen(sectionCount);
 	updateScreen();
 	enableKeyRepeat();
-//	head=null;
 	while (running) {
 		while(pollEvent()){
 			struct Rom *rom = GetNthElement(CURRENT_GAME_NUMBER);
