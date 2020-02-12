@@ -6,7 +6,7 @@
 #include "../headers/definitions.h"
 
 //Creates a new Node and returns pointer to it.
-struct Node* GetNewNode(struct Rom rom) {
+struct Node* GetNewNode(struct Rom *rom) {
 	struct Node* newNode= (struct Node*)malloc(sizeof(struct Node));
 	newNode->data = rom;
 	newNode->prev = NULL;
@@ -27,7 +27,7 @@ struct Node* GetNewNode(struct Rom rom) {
 //}
 
 //Inserts a Node at tail of Doubly linked list
-void InsertAtTail(struct Rom rom) {
+void InsertAtTail(struct Rom *rom) {
 	struct Node* temp = CURRENT_SECTION.head;
 	struct Node* newNode = GetNewNode(rom);
 	if(CURRENT_SECTION.head == NULL) {
@@ -41,11 +41,37 @@ void InsertAtTail(struct Rom rom) {
 	newNode->prev = temp;
 }
 
+void cleanListForSection(struct MenuSection *section) {
+	struct Node *current = NULL;
+	while ((current = section->head)) {
+		section->head = section->head->next;
+		free(current->data->alias);
+		free(current->data->name);
+		free(current->data->directory);
+		free(current->data);
+		free(current);
+	}
+}
+
+void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom) {
+	struct Node* temp = section->head;
+	struct Node* newNode = GetNewNode(rom);
+	if(section->head == NULL) {
+		section->head = newNode;
+		return;
+	}
+	while(temp->next != NULL) {
+		temp = temp->next; // Go To last Node
+	}
+	temp->next = newNode;
+	newNode->prev = temp;
+}
+
 //Prints all the elements in linked list in forward traversal order
 void PrintDoublyLinkedRomList() {
 	struct Node* temp = CURRENT_SECTION.head;
 	while(temp != NULL) {
-		printf("%s \n",temp->data.name);
+		printf("%s \n",temp->data->name);
 		temp = temp->next;
 	}
 	printf("\n");
@@ -60,40 +86,40 @@ struct Rom* GetNthElement(int index)
 
 	struct Node* current = CURRENT_SECTION.head;
 
-    // the index of the
-    // node we're currently
-    // looking at
-    int count = 0;
-    while (current != NULL) {
-        if (count == index) {
-            return(&(current->data));
-        }
-        count++;
-        current = current->next;
-    }
-    return NULL;
-//    /* if we get to this line,
-//    the caller was asking
-//    for a non-existent element
-//    so we assert fail */
-//    assert(0);
+	// the index of the
+	// node we're currently
+	// looking at
+	int count = 0;
+	while (current != NULL) {
+		if (count == index) {
+			return(current->data);
+		}
+		count++;
+		current = current->next;
+	}
+	return NULL;
+	//    /* if we get to this line,
+	//    the caller was asking
+	//    for a non-existent element
+	//    so we assert fail */
+	//    assert(0);
 }
 
 struct Rom* getCurrentRom() {
-	 return GetNthElement(CURRENT_GAME_NUMBER);
+	return GetNthElement(CURRENT_GAME_NUMBER);
 }
 
 struct Node* GetNthNode(int index) {
 	struct Node* current = CURRENT_SECTION.head;
-    int count = 0;
-    while (current != NULL) {
-        if (count == index) {
-            return(current);
-        }
-        count++;
-        current = current->next;
-    }
-    return NULL;
+	int count = 0;
+	while (current != NULL) {
+		if (count == index) {
+			return(current);
+		}
+		count++;
+		current = current->next;
+	}
+	return NULL;
 }
 
 struct Node *getCurrentNode() {

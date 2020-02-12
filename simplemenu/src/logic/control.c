@@ -92,7 +92,7 @@ void scrollUp() {
 void scrollDown() {
 	struct Node *currentNode = getCurrentNode();
 	if (CURRENT_SECTION.currentGame < gamesInPage-1) {
-		if (currentNode->next!=NULL&&strlen(currentNode->next->data.name)>0) {
+		if (currentNode->next!=NULL&&strlen(currentNode->next->data->name)>0) {
 			CURRENT_SECTION.currentGame++;
 		} else {
 			CURRENT_SECTION.currentPage=0;
@@ -115,7 +115,7 @@ void advancePage(struct Rom *rom) {
 			return;
 		}
 		if (CURRENT_SECTION.alphabeticalPaging) {
-			char *currentGame = getFileNameOrAlias(&currentGameNode->data);
+			char *currentGame = getFileNameOrAlias(currentGameNode->data);
 			char currentLetter=tolower(currentGame[0]);
 			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
 				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGame==countGamesInPage()-1) {
@@ -125,7 +125,7 @@ void advancePage(struct Rom *rom) {
 				scrollDown();
 				free(currentGame);
 				currentGameNode=getCurrentNode();
-				currentGame = getFileNameOrAlias(&currentGameNode->data);
+				currentGame = getFileNameOrAlias(currentGameNode->data);
 			}
 			free(currentGame);
 		} else {
@@ -150,7 +150,7 @@ void rewindPage(struct Rom *rom) {
 		char *previousGame;
 		int hitStart = 0;
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = getFileNameOrAlias(&currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
 					hitStart = 1;
@@ -161,7 +161,7 @@ void rewindPage(struct Rom *rom) {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(&currentGameNode->data);
+				currentGame = getFileNameOrAlias(currentGameNode->data);
 			} else {
 				break;
 			}
@@ -173,9 +173,9 @@ void rewindPage(struct Rom *rom) {
 		}
 		hitStart=0;
 		free(currentGame);
-		currentGame = getFileNameOrAlias(&currentGameNode->data);
+		currentGame = getFileNameOrAlias(currentGameNode->data);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0)) {
-			previousGame = getFileNameOrAlias(&currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGame==0) {
@@ -187,7 +187,7 @@ void rewindPage(struct Rom *rom) {
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(&currentGameNode->data);
+				currentGame = getFileNameOrAlias(currentGameNode->data);
 			} else {
 				break;
 			}

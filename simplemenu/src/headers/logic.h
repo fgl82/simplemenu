@@ -21,4 +21,5 @@ FILE *getCurrentSectionAliasFile();
 char *getRomRealName(char *nameWithoutExtension);
 char *getAlias(char *romName);
 char *getFileNameOrAlias(struct Rom *rom);
+int theCurrentSectionHasGames();
 #endif

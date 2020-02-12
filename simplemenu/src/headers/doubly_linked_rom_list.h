@@ -14,9 +14,11 @@
 struct Rom* GetNthElement(int index);
 struct Node* GetNthNode(int index);
 struct Rom* getCurrentRom();
-void InsertAtTail(struct Rom rom);
+void InsertAtTail(struct Rom *rom);
+void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom);
 void PrintDoublyLinkedRomList();
 struct Node *getCurrentNode();
+void cleanListForSection(struct MenuSection *section);
 
 
 #endif /* SRC_HEADERS_DOUBLY_LINKED_ROM_LIST_H_ */

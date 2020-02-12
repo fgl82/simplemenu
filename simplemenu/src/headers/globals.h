@@ -64,9 +64,9 @@ struct Rom {
 };
 
 struct Node  {
-	struct Rom data;
-	struct Node* next;
-	struct Node* prev;
+	struct Rom  *data;
+	struct Node *next;
+	struct Node *prev;
 };
 
 struct MenuSection {
