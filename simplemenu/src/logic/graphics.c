@@ -38,7 +38,11 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 	strcpy(bufCopy,buf);
 	msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	int len=strlen(buf);
-	while (msg->w>calculateProportionalSizeOrDistance(300)) {
+	int width = calculateProportionalSizeOrDistance(300);
+	if (pictureMode) {
+		width = calculateProportionalSizeOrDistance(315);
+	}
+	while (msg->w>width) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
@@ -70,7 +74,11 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtC
 	strcpy(bufCopy,buf);
 	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 	int len=strlen(buf);
-	while (msg->w>calculateProportionalSizeOrDistance(300)) {
+	int width = calculateProportionalSizeOrDistance(300);
+	if (pictureMode) {
+		width = calculateProportionalSizeOrDistance(315);
+	}
+	while (msg->w>width) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
