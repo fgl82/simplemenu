@@ -271,7 +271,8 @@ void drawGameList() {
 			}
 		}
 		if (pictureMode) {
-			sprintf(buf,"%d. %s", i+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage+1, nameWithoutExtension);
+//			sprintf(buf,"%d. %s", i+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage+1, nameWithoutExtension);
+			sprintf(buf,"%s", nameWithoutExtension);
 		} else {
 			sprintf(buf,"%s", nameWithoutExtension);
 		}
