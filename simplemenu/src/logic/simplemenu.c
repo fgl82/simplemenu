@@ -89,11 +89,11 @@ int main(int argc, char* argv[]) {
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
 		pictureMode=atoi(argv[4]);
-		if(pictureMode) {
-			ITEMS_PER_PAGE=12;
-		}
 	} else {
 		loadLastState();
+	}
+	if(pictureMode) {
+		ITEMS_PER_PAGE=12;
 	}
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();

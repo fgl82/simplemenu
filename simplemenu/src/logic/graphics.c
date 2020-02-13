@@ -32,20 +32,34 @@ int calculateProportionalSizeOrDistance(int number) {
 	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
+int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-	char bufCopy[300];
+	SDL_Surface *msg1;
+	char *bufCopy=malloc(300);
+	char *bufCopy1=malloc(300);
 	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+	strcpy(bufCopy1,buf);
+	bufCopy1[1]='\0';
+	if (shaded) {
+		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+	} else {
+		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+//		msg1 = TTF_RenderText_Blended(font, bufCopy1, make_color(255, 0, 0));
+	}
 	int len=strlen(buf);
-	int width = calculateProportionalSizeOrDistance(300);
+	int width = calculateProportionalSizeOrDistance(315);
 	if (pictureMode) {
 		width = calculateProportionalSizeOrDistance(315);
 	}
 	while (msg->w>width) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+		if (shaded) {
+			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+		} else {
+			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+//			msg1 = TTF_RenderText_Blended(font, bufCopy1, make_color(100, txtColor[1], txtColor[2]));
+		}
 		len--;
 	}
 	if (align & HAlignCenter) {
@@ -65,43 +79,18 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 	rect.h = msg->h;
 	SDL_BlitSurface(msg, NULL, screen, &rect);
 	SDL_FreeSurface(msg);
+	SDL_BlitSurface(msg1, NULL, screen, &rect);
+	SDL_FreeSurface(msg1);
+	free(bufCopy);
 	return msg->w;
 }
 
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
+	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, backgroundColor, 1);
+}
+
 int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align) {
-	SDL_Surface *msg;
-	char bufCopy[300];
-	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-	int len=strlen(buf);
-	int width = calculateProportionalSizeOrDistance(300);
-	if (pictureMode) {
-		width = calculateProportionalSizeOrDistance(315);
-	}
-	while (msg->w>width) {
-		bufCopy[len]='\0';
-		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		len--;
-	}
-	if (align & HAlignCenter) {
-		x -= msg->w / 2;
-	} else if (align & HAlignRight) {
-		x -= msg->w;
-	}
-	if (align & VAlignMiddle) {
-		y -= msg->h / 2;
-	} else if (align & VAlignTop) {
-		y -= msg->h;
-	}
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = msg->w;
-	rect.h = msg->h;
-	SDL_BlitSurface(msg, NULL, screen, &rect);
-	SDL_FreeSurface(msg);
-	return msg->w;
+	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
@@ -158,7 +147,11 @@ void drawBatteryOnFooter(char *text) {
 }
 
 void drawCurrentLetter(char *letter, int textColor[]) {
-	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+	if (!pictureMode) {
+		drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+	} else {
+		drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+	}
 }
 
 void drawCurrentExecutable(char *executable, int textColor[]) {

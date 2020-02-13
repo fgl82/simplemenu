@@ -153,6 +153,7 @@ void saveLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "w");
+	fprintf(fp, "%d;\n", pictureMode);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
 		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
@@ -174,7 +175,8 @@ void loadLastState() {
 	}
 	char *configurations[4];
 	char *ptr;
-	int first = -1;
+	int startInSection = -1;
+	int startInPictureMode = -1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -183,8 +185,10 @@ void loadLastState() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (first==-1) {
-			first=atoi(configurations[0]);
+		if (startInPictureMode==-1){
+			startInPictureMode=atoi(configurations[0]);
+		} else if (startInSection==-1) {
+			startInSection=atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
 			if(strlen(CURRENT_SECTION.sectionName)<1) {
@@ -195,7 +199,8 @@ void loadLastState() {
 			CURRENT_SECTION.alphabeticalPaging=0;
 		}
 	}
-	currentSectionNumber=first;
+	currentSectionNumber=startInSection;
+	pictureMode=startInPictureMode;
 	fclose(fp);
 	if (line) {
 		free(line);

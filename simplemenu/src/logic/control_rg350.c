@@ -234,7 +234,7 @@ int performAction(struct Rom *rom) {
 			if (!favoritesSectionSelected) {
 				markAsFavorite(rom);
 			} else {
-				removeFavorite(rom);
+				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
 					hidePicModeMenu();

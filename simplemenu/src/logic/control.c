@@ -79,6 +79,7 @@ void scrollUp() {
 		} else {
 			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		}
+		printf("will count\n");
 		gamesInPage=countGamesInPage();
 		if (gamesInPage>0) {
 			CURRENT_SECTION.currentGame=gamesInPage-1;
@@ -226,7 +227,7 @@ void showOrHideFavorites() {
 	loadFavoritesSectionGameList();
 }
 
-void removeFavorite(struct Rom *rom) {
+void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
 		#ifdef TARGET_RG350
@@ -246,11 +247,10 @@ void removeFavorite(struct Rom *rom) {
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
-		rom=NULL;
 		favoritesSize--;
 		loadFavoritesSectionGameList();
 	}
-	if(rom==NULL||rom->name==NULL) {
+	if(CURRENT_GAME_NUMBER==favoritesSize) {
 		scrollUp();
 	}
 }

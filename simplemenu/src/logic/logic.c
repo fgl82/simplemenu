@@ -417,6 +417,7 @@ void loadFavoritesSectionGameList() {
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
 		game++;
 	}
+	printf("DONE\n");
 	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
 }
 
@@ -695,13 +696,16 @@ int countGamesInPage() {
 	}
 	node = GetNthNode(number);
 	for (int i=number;i<number+ITEMS_PER_PAGE;i++) {
-		if (node!=NULL&&node->data->name!=NULL && strlen(node->data->name)>1) {
-			gamesCounter++;
+		printf("counting %d\n", i);
+		if (node!=NULL) {
+			if (node->data->name!=NULL && strlen(node->data->name)>1) {
+				gamesCounter++;
+			}
+			if (node->next==NULL) {
+				break;
+			}
+			node=node->next;
 		}
-		if (node->next==NULL) {
-			break;
-		}
-		node=node->next;
 	}
 	return gamesCounter;
 }
@@ -717,10 +721,10 @@ int getFirstNonHiddenSection(int sectionCount) {
 
 void selectRandomGame() {
 	int gamesInSection = countGamesInSection();
-	if (gamesInSection%10==0) {
-		CURRENT_SECTION.currentPage = rand() % ((int)gamesInSection/10);
+	if (gamesInSection%ITEMS_PER_PAGE==0) {
+		CURRENT_SECTION.currentPage = rand() % ((int)gamesInSection/ITEMS_PER_PAGE);
 	} else {
-		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/10) +1);
+		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/ITEMS_PER_PAGE) +1);
 	}
 	CURRENT_SECTION.currentGame = rand() % countGamesInPage();
 }
