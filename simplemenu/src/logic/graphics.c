@@ -210,6 +210,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	rectangleDest.h = h;
 	rectangleDest.x = x;
 	rectangleDest.y = y;
+	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
 	SDL_FreeSurface(transparentrectangle);
 }
