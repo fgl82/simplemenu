@@ -57,24 +57,25 @@ void showLetter(struct Rom *rom) {
 	if (pictureMode) {
 		filling[0] = 0;
 		filling[1] = 0;
-		filling[2] = 200;
+		filling[2] = 0;
 		borderColor[0]=255;
 		borderColor[1]=255;
 		borderColor[2]=255;
 		textColor[0]=255;
 		textColor[1]=255;
 		textColor[2]=255;
-		rectangleWidth = 320;
-		rectangleHeight=20;
+		rectangleWidth = calculateProportionalSizeOrDistance(320);
+		rectangleHeight=calculateProportionalSizeOrDistance(20);
 		rectangleX = 0;
-		rectangleY = 220;
+		rectangleY = calculateProportionalSizeOrDistance(220);
 	}
 	if (!pictureMode) {
 		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth+10), calculateProportionalSizeOrDistance(rectangleHeight+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2)-calculateProportionalSizeOrDistance(5), borderColor);
 		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth), calculateProportionalSizeOrDistance(rectangleHeight), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2), filling);
 	} else {
 //		drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height-10), calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
-		drawTransparentRectangleToScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling, 180);
+//		drawTransparentRectangleToScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling, 255);
+		drawRectangleOnScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling);
 
 	}
 	char letter[2]="";
@@ -90,18 +91,62 @@ void showLetter(struct Rom *rom) {
 	}
 	if (pictureMode) {
 //		drawCurrentLetter(letter, textColor, x, y);
-		int x = 0;
-		int y = 230;
+		int x = 1;
+		int y = calculateProportionalSizeOrDistance(231);
 		for (int i=0;i<27;i++) {
 			if (strcmp(letters[i],letter)==0) {
+				textColor[1]=0;
 				textColor[2]=0;
 			}
 			if (strcmp(letters[i],"N")==0) {
-				x+=13;
+				x+=calculateProportionalSizeOrDistance(14);
+			} else if (strcmp(letters[i],"A")==0) {
+				x+=calculateProportionalSizeOrDistance(13);
+			} else if (strcmp(letters[i],"B")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"C")==0) {
+				x+=calculateProportionalSizeOrDistance(11);
+			} else if (strcmp(letters[i],"D")==0) {
+				x+=calculateProportionalSizeOrDistance(11);
+			} else if (strcmp(letters[i],"F")==0) {
+				x+=calculateProportionalSizeOrDistance(10);
+			} else if (strcmp(letters[i],"G")==0) {
+				x+=calculateProportionalSizeOrDistance(10);
+			} else if (strcmp(letters[i],"H")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"I")==0) {
+				x+=calculateProportionalSizeOrDistance(10);
+			} else if (strcmp(letters[i],"J")==0) {
+				x+=calculateProportionalSizeOrDistance(8);
+			} else if (strcmp(letters[i],"K")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"M")==0) {
+				x+=calculateProportionalSizeOrDistance(13);
+			} else if (strcmp(letters[i],"O")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"P")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"Q")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"R")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"S")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"V")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
+			} else if (strcmp(letters[i],"W")==0) {
+				x+=calculateProportionalSizeOrDistance(13);
+			} else if (strcmp(letters[i],"X")==0) {
+				x+=calculateProportionalSizeOrDistance(14);
+			} else if (strcmp(letters[i],"Y")==0) {
+				x+=calculateProportionalSizeOrDistance(11);
+			} else if (strcmp(letters[i],"Z")==0) {
+				x+=calculateProportionalSizeOrDistance(12);
 			} else {
-				x+=11;
+				x+=calculateProportionalSizeOrDistance(11);
 			}
 			drawCurrentLetter(letters[i], textColor, x, y);
+			textColor[1]=255;
 			textColor[2]=255;
 		}
 	} else {

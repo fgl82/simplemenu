@@ -309,7 +309,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	miniFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(13));
+	miniFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
 	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(19));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));

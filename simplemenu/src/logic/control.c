@@ -79,7 +79,6 @@ void scrollUp() {
 		} else {
 			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		}
-		printf("will count\n");
 		gamesInPage=countGamesInPage();
 		if (gamesInPage>0) {
 			CURRENT_SECTION.currentGame=gamesInPage-1;

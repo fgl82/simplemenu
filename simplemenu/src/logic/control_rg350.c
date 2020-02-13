@@ -276,7 +276,14 @@ int performAction(struct Rom *rom) {
 				pictureMode=0;
 				int number = CURRENT_GAME_NUMBER;
 				ITEMS_PER_PAGE=10;
-				CURRENT_SECTION.totalPages=countGamesInSection()/ITEMS_PER_PAGE;
+				int gamesInSection=countGamesInSection();
+				int pages = gamesInSection / ITEMS_PER_PAGE;
+				printf("%d\n",pages);
+				if (gamesInSection%ITEMS_PER_PAGE==0) {
+					pages--;
+				}
+				CURRENT_SECTION.totalPages=pages;
+
 				CURRENT_SECTION.currentGame=0;
 				CURRENT_SECTION.currentPage=0;
 				while (CURRENT_GAME_NUMBER<number) {
@@ -287,7 +294,12 @@ int performAction(struct Rom *rom) {
 				pictureMode=1;
 				int number = CURRENT_GAME_NUMBER;
 				ITEMS_PER_PAGE=12;
-				CURRENT_SECTION.totalPages=countGamesInSection()/ITEMS_PER_PAGE;
+				int gamesInSection=countGamesInSection();
+				int pages = gamesInSection / ITEMS_PER_PAGE;
+				if (gamesInSection%ITEMS_PER_PAGE==0) {
+					pages--;
+				}
+				CURRENT_SECTION.totalPages=pages;
 				CURRENT_SECTION.currentGame=0;
 				CURRENT_SECTION.currentPage=0;
 				while (CURRENT_GAME_NUMBER<number) {

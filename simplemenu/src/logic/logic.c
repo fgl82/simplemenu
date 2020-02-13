@@ -696,7 +696,6 @@ int countGamesInPage() {
 	}
 	node = GetNthNode(number);
 	for (int i=number;i<number+ITEMS_PER_PAGE;i++) {
-		printf("counting %d\n", i);
 		if (node!=NULL) {
 			if (node->data->name!=NULL && strlen(node->data->name)>1) {
 				gamesCounter++;
