@@ -17,6 +17,7 @@
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
+TTF_Font *miniFont = NULL;
 TTF_Font *picModeFont = NULL;
 TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
@@ -146,11 +147,11 @@ void drawBatteryOnFooter(char *text) {
 	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignLeft);
 }
 
-void drawCurrentLetter(char *letter, int textColor[]) {
+void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	if (!pictureMode) {
-		drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 	} else {
-		drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 	}
 }
 
@@ -210,7 +211,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	rectangleDest.h = h;
 	rectangleDest.x = x;
 	rectangleDest.y = y;
-	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+//	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
 	SDL_FreeSurface(transparentrectangle);
 }
@@ -308,6 +309,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
+	miniFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(13));
 	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(19));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
