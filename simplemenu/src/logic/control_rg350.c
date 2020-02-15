@@ -140,9 +140,6 @@ int performAction(struct Rom *rom) {
 					}
 					loadGameList(0);
 				}
-//				displayBackgroundPicture();
-//				showConsole();
-//				refreshScreen();
 			}
 			return 0;
 		}
@@ -153,32 +150,12 @@ int performAction(struct Rom *rom) {
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
-//			if (!currentlySectionSwitching) {
-//					hidePicModeLogo();
-//					hotKeyPressed=1;
-				currentlySectionSwitching=1;
-//			}
+			currentlySectionSwitching=1;
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
-			if (pictureMode) {
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
-			}
-			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
-				if (pictureMode) {
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
-				}
-				loadGameList(0);
 			}
 		}
 		if (!pictureMode) {
@@ -191,32 +168,12 @@ int performAction(struct Rom *rom) {
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
-//			if (!currentlySectionSwitching) {
-//					hidePicModeLogo();
-//					hotKeyPressed=1;
-				currentlySectionSwitching=1;
-//			}
+			currentlySectionSwitching=1;
 		}
 		int advanced = advanceSection();
 		if(advanced) {
-			if (pictureMode) {
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
-			}
-			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
-				if (pictureMode) {
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
-				}
-				loadGameList(0);
 			}
 		}
 		if (!pictureMode) {
@@ -278,13 +235,11 @@ int performAction(struct Rom *rom) {
 				ITEMS_PER_PAGE=10;
 				int gamesInSection=countGamesInSection();
 				int pages = gamesInSection / ITEMS_PER_PAGE;
-				printf("%d\n",pages);
 				if (gamesInSection%ITEMS_PER_PAGE==0) {
 					pages--;
 				}
 				CURRENT_SECTION.totalPages=pages;
-
-				CURRENT_SECTION.currentGame=0;
+				CURRENT_SECTION.currentGameInPage=0;
 				CURRENT_SECTION.currentPage=0;
 				while (CURRENT_GAME_NUMBER<number) {
 					gamesInPage=countGamesInPage();
@@ -300,7 +255,7 @@ int performAction(struct Rom *rom) {
 					pages--;
 				}
 				CURRENT_SECTION.totalPages=pages;
-				CURRENT_SECTION.currentGame=0;
+				CURRENT_SECTION.currentGameInPage=0;
 				CURRENT_SECTION.currentPage=0;
 				while (CURRENT_GAME_NUMBER<number) {
 					gamesInPage=countGamesInPage();

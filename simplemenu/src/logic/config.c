@@ -156,7 +156,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", pictureMode);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
-		fprintf(fp, "%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGame);
+		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGameInPage, CURRENT_SECTION.realCurrentGameNumber);
 	}
 	fclose(fp);
 }
@@ -173,7 +173,7 @@ void loadLastState() {
 		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
 	}
-	char *configurations[4];
+	char *configurations[5];
 	char *ptr;
 	int startInSection = -1;
 	int startInPictureMode = -1;
@@ -195,7 +195,8 @@ void loadLastState() {
 				continue;
 			}			
 			CURRENT_SECTION.currentPage=atoi(configurations[1]);
-			CURRENT_SECTION.currentGame=atoi(configurations[2]);
+			CURRENT_SECTION.currentGameInPage=atoi(configurations[2]);
+			CURRENT_SECTION.realCurrentGameNumber=atoi(configurations[3]);
 			CURRENT_SECTION.alphabeticalPaging=0;
 		}
 	}
@@ -386,7 +387,7 @@ int loadSections() {
 		}
 		menuSections[menuSectionCounter].hidden=0;
 		menuSections[menuSectionCounter].currentPage=0;
-		menuSections[menuSectionCounter].currentGame=0;
+		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
 	}
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
@@ -422,7 +423,7 @@ int loadSections() {
 	menuSections[menuSectionCounter].onlyFileNamesNoExtension=0;
 	menuSections[menuSectionCounter].hidden=0;
 	menuSections[menuSectionCounter].currentPage=0;
-	menuSections[menuSectionCounter].currentGame=0;
+	menuSections[menuSectionCounter].currentGameInPage=0;
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	return menuSectionCounter;

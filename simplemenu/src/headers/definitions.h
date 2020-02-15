@@ -69,7 +69,7 @@
 #endif
 
 #define FAVORITES_SIZE 2000
-#define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*ITEMS_PER_PAGE+menuSections[currentSectionNumber].currentGame
+#define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*ITEMS_PER_PAGE+menuSections[currentSectionNumber].currentGameInPage
 #define CURRENT_FAVORITE_NAME_IN_FAVORITES_LIST favorites[CURRENT_GAME_NUMBER]
 #define CURRENT_SECTION menuSections[currentSectionNumber]
 #define FAVORITES_SECTION menuSections[favoritesSectionNumber]

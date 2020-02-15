@@ -33,6 +33,7 @@ int currentlySectionSwitching;
 int currentlyChoosingEmulator;
 int stripGames;
 int shutDownEnabled;
+int loading;
 
 int OC_UC;
 int OC_NO;
@@ -79,7 +80,8 @@ struct MenuSection {
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;
-	int currentGame;
+	int currentGameInPage;
+	int realCurrentGameNumber;
 	int alphabeticalPaging;
 	int totalPages;
 	int initialized;
@@ -90,7 +92,6 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
-//	struct Rom *romList[1000][ITEMS_PER_PAGE];
 	struct Node *head;
 	hashtable_t *aliasHashTable;
 	int activeExecutable;

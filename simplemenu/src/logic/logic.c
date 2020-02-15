@@ -240,7 +240,7 @@ void setSectionsState(char *states) {
 			if (j==0) {
 				menuSections[i].currentPage=atoi(dashToken);
 			} else if (j==1) {
-				menuSections[i].currentGame=atoi(dashToken);
+				menuSections[i].currentGameInPage=atoi(dashToken);
 			} else {
 				menuSections[i].alphabeticalPaging=atoi(dashToken);
 			}
@@ -269,7 +269,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char states[200]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
 		char tempString[200]="";
-		snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGame,menuSections[i].alphabeticalPaging);
+		snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
 		strcat(states,tempString);
 	}
 	char pReturnTo[3];
@@ -278,8 +278,8 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
-#ifndef TARGET_PC
 	saveLastState();
+#ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
 	freeResources();
@@ -287,6 +287,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
 	printf("%s\n",fileToBeExecutedWithFullPath);
+	loadLastState();
 #endif
 }
 
@@ -569,6 +570,7 @@ void loadGameList(int refresh) {
 		char dirsCopy[1000];
 		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
 		ptr = strtok(dirsCopy, ",");
+		loading=1;
 		while (ptr!=NULL) {
 			dirs[dirCounter]=malloc(strlen(ptr)+1);
 			strcpy(dirs[dirCounter],ptr);
@@ -677,6 +679,7 @@ void loadGameList(int refresh) {
 			}
 			if (loadedFiles==0) {
 				CURRENT_SECTION.hidden=1;
+				loading=0;
 				return;
 			}
 		}
@@ -685,6 +688,7 @@ void loadGameList(int refresh) {
 		}
 		menuSections[currentSectionNumber].head = mergeSort(menuSections[currentSectionNumber].head);
 	}
+	loading=0;
 }
 
 int countGamesInPage() {
@@ -725,7 +729,7 @@ void selectRandomGame() {
 	} else {
 		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/ITEMS_PER_PAGE) +1);
 	}
-	CURRENT_SECTION.currentGame = rand() % countGamesInPage();
+	CURRENT_SECTION.currentGameInPage = rand() % countGamesInPage();
 }
 
 void determineStartingScreen(int sectionCount) {

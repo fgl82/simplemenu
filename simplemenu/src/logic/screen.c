@@ -356,7 +356,7 @@ void drawGameList() {
 		} else {
 			sprintf(buf,"%s", nameWithoutExtension);
 		}
-		if (i==menuSections[currentSectionNumber].currentGame) {
+		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>1) {
 				if(pictureMode) {
 					if(!isPicModeMenuHidden) {
@@ -396,9 +396,9 @@ void drawFooter(char *text) {
 void setupDecorations(struct Rom *rom) {
 	char tempString[200];
 	if (rom==NULL||rom->name==NULL) {
-		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, countGamesInSection());
+		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, countGamesInSection());
 	} else {
-		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGame+1+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, countGamesInSection());
+		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+1+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, countGamesInSection());
 	}
 	drawFooter(tempString);
 	drawHeader(rom);
@@ -467,6 +467,8 @@ void clearPicModeHideLogoTimer() {
 }
 
 uint32_t hidePicModeLogo(uint32_t interval, void *param) {
+	while(loading) {
+	}
 	clearPicModeHideLogoTimer();
 	currentlySectionSwitching=0;
 	hotKeyPressed=0;
@@ -475,6 +477,6 @@ uint32_t hidePicModeLogo(uint32_t interval, void *param) {
 }
 
 void resetPicModeHideLogoTimer() {
-	//	clearPicModeHideLogoTimer();
+//	clearPicModeHideLogoTimer();
 	picModeHideMenuTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
 }
