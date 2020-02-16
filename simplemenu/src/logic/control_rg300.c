@@ -8,7 +8,7 @@
 #include "../headers/system_logic.h"
 #include "../headers/screen.h"
 
-int performAction() {
+int performAction(struct Rom *rom) {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
 		return 0;
@@ -40,21 +40,8 @@ int performAction() {
 			}
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			if (!favoritesSectionSelected) {
-				deleteCurrentGame("");
-				loadGameList(1);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-				if(""==NULL) {
-					scrollUp();
-				}
-				setupDecorations();
-			} else {
-				generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
-				return 1;
-			}
+			callDeleteGame();
+			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
@@ -92,14 +79,21 @@ int performAction() {
 			int advanced = advanceSection();
 			if(advanced) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 			}
 			return 0;
 		}
@@ -108,44 +102,64 @@ int performAction() {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 			}
 			return 0;
 		}
 	}
 
+	if(keys[BTN_L1]) {
+		hidePicModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode&&!favoritesSectionSelected) {
+			resetPicModeHideLogoTimer();
+			currentlySectionSwitching=1;
+		}
+		int rewinded = rewindSection();
+		if(rewinded) {
+			while(CURRENT_SECTION.hidden) {
+				rewindSection();
+			}
+		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+	if(keys[BTN_R1]) {
+		hidePicModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode&&!favoritesSectionSelected) {
+			resetPicModeHideLogoTimer();
+			currentlySectionSwitching=1;
+		}
+		int advanced = advanceSection();
+		if(advanced) {
+			while(CURRENT_SECTION.hidden) {
+				advanceSection();
+			}
+		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
-		if(keys[BTN_L1]) {
-			hotKeyPressed=0;
-			int rewinded = rewindSection();
-			if(rewinded) {
-				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-			}
-			return 0;
-		}
-		if(keys[BTN_R1]) {
-			hotKeyPressed=0;
-			int advanced = advanceSection();
-			if(advanced) {
-				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					advanceSection();
-					loadGameList(0);
-				}
-			}
-			return 0;
-		}
 		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
 				markAsFavorite();

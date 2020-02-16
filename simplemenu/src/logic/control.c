@@ -63,7 +63,6 @@ int advanceSection() {
 		CURRENT_SECTION.currentPage=0;
 		while (CURRENT_GAME_NUMBER<number) {
 			gamesInPage=countGamesInPage();
-			printf("section %d - currentGame %d - real %d \n", currentSectionNumber, CURRENT_GAME_NUMBER, number);
 			scrollDown();
 		}
 		return 1;
@@ -356,5 +355,23 @@ void performChoosingAction() {
 			currentlyChoosingEmulator=0;
 			return;
 		}
+	}
+}
+
+void callDeleteGame(struct Rom *rom) {
+	if (!favoritesSectionSelected) {
+		printf("%s\n", rom->name);
+		deleteGame(rom);
+		loadGameList(1);
+		while(CURRENT_SECTION.hidden) {
+			rewindSection();
+			loadGameList(0);
+		}
+		if(CURRENT_SECTION.currentGameInPage==countGamesInPage()) {
+			scrollUp();
+		}
+		setupDecorations();
+	} else {
+		generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
 	}
 }

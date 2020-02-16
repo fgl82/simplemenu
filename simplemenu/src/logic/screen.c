@@ -467,8 +467,8 @@ void clearPicModeHideLogoTimer() {
 }
 
 uint32_t hidePicModeLogo(uint32_t interval, void *param) {
-	while(loading) {
-	}
+//	while(loading) {
+//	}
 	clearPicModeHideLogoTimer();
 	currentlySectionSwitching=0;
 	hotKeyPressed=0;
@@ -477,6 +477,6 @@ uint32_t hidePicModeLogo(uint32_t interval, void *param) {
 }
 
 void resetPicModeHideLogoTimer() {
-//	clearPicModeHideLogoTimer();
+	clearPicModeHideLogoTimer();
 	picModeHideMenuTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
 }

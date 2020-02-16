@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
 					}
 				}
 				#ifndef TARGET_PC
-				resetTimeoutTimer();
+				resetScreenOffTimer();
 				#endif
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {

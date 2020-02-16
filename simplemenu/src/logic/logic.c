@@ -418,7 +418,6 @@ void loadFavoritesSectionGameList() {
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
 		game++;
 	}
-	printf("DONE\n");
 	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
 }
 
@@ -764,7 +763,7 @@ void determineStartingScreen(int sectionCount) {
 	}
 }
 
-void deleteCurrentGame(struct Rom *rom) {
+void deleteGame(struct Rom *rom) {
 	char command [300];
 	snprintf(command,sizeof(command),"rm \"%s\";",rom->name);
 	int ret = system(command);
@@ -784,8 +783,10 @@ void deleteCurrentGame(struct Rom *rom) {
 	free(tempGameName);
 	free(tempGameName1);
 	free(pictureWithFullPath);
+	printf("2\n");
 	ret = system(command);
 	if (ret==-1) {
 		generateError("FATAL ERROR", 1);
 	}
+	printf("3\n");
 }

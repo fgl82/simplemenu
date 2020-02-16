@@ -42,23 +42,11 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_B]) {
 		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
+			return 1;
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			if (!favoritesSectionSelected) {
-				deleteCurrentGame(rom->name);
-				loadGameList(1);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-				if(rom==NULL) {
-					scrollUp();
-				}
-				setupDecorations();
-			} else {
-				generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
-				return 1;
-			}
+			callDeleteGame();
+			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
