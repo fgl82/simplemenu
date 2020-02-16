@@ -39,6 +39,16 @@ void showErrorMessage(char *errorMessage) {
 	itsStoppedBecauseOfAnError=1;
 }
 
+int letterExistsInGameList(char *letter) {
+	if (strcmp(letter,"A")==0) {
+		return 1;
+	}
+	if (strcmp(letter,"M")==0) {
+		return 1;
+	}
+	return 0;
+}
+
 void showLetter(struct Rom *rom) {
 	int rectangleWidth = 80;
 	int rectangleHeight = 80;
@@ -73,28 +83,35 @@ void showLetter(struct Rom *rom) {
 		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth+10), calculateProportionalSizeOrDistance(rectangleHeight+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2)-calculateProportionalSizeOrDistance(5), borderColor);
 		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth), calculateProportionalSizeOrDistance(rectangleHeight), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2), filling);
 	} else {
-//		drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height-10), calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
-//		drawTransparentRectangleToScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling, 255);
 		drawRectangleOnScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling);
 
 	}
-	char letter[2]="";
+	char currentGameFirstLetter[2]="";
 	char *currentGame = malloc(500);
 	currentGame=getFileNameOrAlias(rom);
-	letter[0]=toupper(currentGame[0]);
-	letter[1]='\0';
+	currentGameFirstLetter[0]=toupper(currentGame[0]);
+	currentGameFirstLetter[1]='\0';
 
 	char *letters[] = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-	if(isdigit(letter[0])) {
-		letter[0]='#';
+	if(isdigit(currentGameFirstLetter[0])) {
+		currentGameFirstLetter[0]='#';
 	}
 	if (pictureMode) {
-//		drawCurrentLetter(letter, textColor, x, y);
-		int x = 1;
+		int x = 0;
 		int y = calculateProportionalSizeOrDistance(231);
 		for (int i=0;i<27;i++) {
-			if (strcmp(letters[i],letter)==0) {
+			if (!letterExistsInGameList(letters[i])) {
+				textColor[0]=50;
+				textColor[1]=50;
+				textColor[2]=50;
+			} else {
+				textColor[0]=255;
+				textColor[1]=255;
+				textColor[2]=255;
+			}
+			if (strcmp(letters[i],currentGameFirstLetter)==0) {
+				textColor[0]=255;
 				textColor[1]=0;
 				textColor[2]=0;
 			}
@@ -146,11 +163,9 @@ void showLetter(struct Rom *rom) {
 				x+=calculateProportionalSizeOrDistance(11);
 			}
 			drawCurrentLetter(letters[i], textColor, x, y);
-			textColor[1]=255;
-			textColor[2]=255;
 		}
 	} else {
-		drawCurrentLetter(letter, textColor, rectangleX, rectangleY);
+		drawCurrentLetter(currentGameFirstLetter, textColor, rectangleX, rectangleY);
 	}
 	free(currentGame);
 }
