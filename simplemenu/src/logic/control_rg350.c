@@ -46,7 +46,6 @@ int performAction(struct Rom *rom) {
 			return 1;
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			resetPicModeHideMenuTimer();
 			callDeleteGame(rom);
 			return 1;
 		}

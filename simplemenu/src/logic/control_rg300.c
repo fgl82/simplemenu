@@ -30,6 +30,7 @@ int performAction(struct Rom *rom) {
 		return(0);
 	}
 	if(keys[BTN_B]) {
+		hotKeyPressed=1;
 		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
 		}
@@ -64,14 +65,14 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if(keys[BTN_RIGHT]) {

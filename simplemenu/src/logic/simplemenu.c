@@ -125,8 +125,6 @@ int main(int argc, char* argv[]) {
 							hidePicModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {
 							resetPicModeHideMenuTimer();
-						} else {
-							resetPicModeHideMenuTimer();
 						}
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
