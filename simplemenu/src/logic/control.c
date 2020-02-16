@@ -365,6 +365,7 @@ void callDeleteGame(struct Rom *rom) {
 		while(CURRENT_SECTION.hidden) {
 			rewindSection();
 			loadGameList(0);
+			hidePicModeMenu();
 		}
 		if(CURRENT_SECTION.currentGameInPage==countGamesInPage()) {
 			scrollUp();

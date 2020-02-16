@@ -783,10 +783,8 @@ void deleteGame(struct Rom *rom) {
 	free(tempGameName);
 	free(tempGameName1);
 	free(pictureWithFullPath);
-	printf("2\n");
 	ret = system(command);
 	if (ret==-1) {
 		generateError("FATAL ERROR", 1);
 	}
-	printf("3\n");
 }
