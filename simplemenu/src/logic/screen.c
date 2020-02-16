@@ -444,7 +444,7 @@ void clearPicModeHideMenuTimer() {
 	picModeHideMenuTimer = NULL;
 }
 
-uint32_t hidePicModeMenu(uint32_t interval, void *param) {
+uint32_t hideFullScreenModeMenu(uint32_t interval, void *param) {
 	if(!hotKeyPressed) {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
@@ -456,7 +456,7 @@ uint32_t hidePicModeMenu(uint32_t interval, void *param) {
 void resetPicModeHideMenuTimer() {
 	isPicModeMenuHidden=0;
 	clearPicModeHideMenuTimer();
-	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hidePicModeMenu, NULL);
+	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hideFullScreenModeMenu, NULL);
 }
 
 void clearPicModeHideLogoTimer() {

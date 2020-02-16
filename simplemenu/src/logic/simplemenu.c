@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
 					hotKeyPressed=0;
 					if(pictureMode) {
 						if(currentlySectionSwitching) {
-							hidePicModeMenu();
+							hideFullScreenModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {
 							resetPicModeHideMenuTimer();
 						}

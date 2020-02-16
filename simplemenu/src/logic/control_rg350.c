@@ -21,7 +21,7 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 	if (keys[BTN_R2]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			loadGameList(1);
 			return(1);
@@ -46,6 +46,9 @@ int performAction(struct Rom *rom) {
 			return 1;
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
+			if (!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
+			}
 			callDeleteGame(rom);
 			return 1;
 		}
@@ -135,7 +138,7 @@ int performAction(struct Rom *rom) {
 	}
 
 	if(keys[BTN_L1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
@@ -153,7 +156,7 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 	if(keys[BTN_R1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
@@ -183,7 +186,7 @@ int performAction(struct Rom *rom) {
 				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
-					hidePicModeMenu();
+					hideFullScreenModeMenu();
 				}
 			}
 			return 0;

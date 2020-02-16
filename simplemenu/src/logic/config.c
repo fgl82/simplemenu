@@ -153,6 +153,7 @@ void saveLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "w");
+	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", pictureMode);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
@@ -177,6 +178,7 @@ void loadLastState() {
 	char *ptr;
 	int startInSection = -1;
 	int startInPictureMode = -1;
+	int stripGamesConfig = -1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -185,10 +187,15 @@ void loadLastState() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (startInPictureMode==-1){
+		if (stripGamesConfig==-1) {
+			stripGamesConfig=atoi(configurations[0]);
+			printf("strip games: %s\n", configurations[0]);
+		} else if (startInPictureMode==-1){
 			startInPictureMode=atoi(configurations[0]);
+			printf("start in pic mode: %s\n", configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
+			printf("start in section: %s\n", configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
 			if(strlen(CURRENT_SECTION.sectionName)<1) {
@@ -200,6 +207,7 @@ void loadLastState() {
 			CURRENT_SECTION.alphabeticalPaging=0;
 		}
 	}
+	stripGames=stripGamesConfig;
 	currentSectionNumber=startInSection;
 	pictureMode=startInPictureMode;
 	fclose(fp);

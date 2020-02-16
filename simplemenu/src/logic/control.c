@@ -247,7 +247,7 @@ void rewindPage(struct Rom *rom) {
 }
 
 void showOrHideFavorites() {
-	hidePicModeMenu();
+	hideFullScreenModeMenu();
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
@@ -365,7 +365,7 @@ void callDeleteGame(struct Rom *rom) {
 		while(CURRENT_SECTION.hidden) {
 			rewindSection();
 			loadGameList(0);
-			hidePicModeMenu();
+			hideFullScreenModeMenu();
 		}
 		if(CURRENT_SECTION.currentGameInPage==countGamesInPage()) {
 			scrollUp();

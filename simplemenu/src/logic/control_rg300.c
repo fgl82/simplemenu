@@ -41,6 +41,9 @@ int performAction(struct Rom *rom) {
 			}
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
+			if (!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
+			}
 			callDeleteGame(rom);
 			return 1;
 		}
@@ -124,7 +127,7 @@ int performAction(struct Rom *rom) {
 	}
 
 	if(keys[BTN_L1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
@@ -142,7 +145,7 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 	if(keys[BTN_R1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
