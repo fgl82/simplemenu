@@ -35,7 +35,7 @@ int performAction(struct Rom *rom) {
 			launchEmulator();
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			callDeleteGame();
+			callDeleteGame(rom);
 			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {

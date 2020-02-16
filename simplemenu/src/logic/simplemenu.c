@@ -129,6 +129,7 @@ int main(int argc, char* argv[]) {
 							resetPicModeHideMenuTimer();
 						}
 					}
+					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
 					updateScreen();
 				}

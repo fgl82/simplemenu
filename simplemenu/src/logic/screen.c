@@ -416,7 +416,7 @@ void updateScreen() {
 		if (currentlyChoosingEmulator) {
 			showCurrentEmulator();
 		}
-		if (hotKeyPressed) {
+		if (CURRENT_SECTION.alphabeticalPaging) {
 			if (rom->name!=NULL) {
 				showLetter(rom);
 			}

@@ -362,7 +362,9 @@ void callDeleteGame(struct Rom *rom) {
 	if (!favoritesSectionSelected) {
 		printf("%s\n", rom->name);
 		deleteGame(rom);
+		printf("%s\n", "deleted");
 		loadGameList(1);
+		printf("%s\n", "list loaded");
 		while(CURRENT_SECTION.hidden) {
 			rewindSection();
 			loadGameList(0);
@@ -371,6 +373,7 @@ void callDeleteGame(struct Rom *rom) {
 			scrollUp();
 		}
 		setupDecorations();
+		printf("%s\n", "decorations set up");
 	} else {
 		generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
 	}

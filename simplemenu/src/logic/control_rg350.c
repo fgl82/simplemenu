@@ -40,12 +40,14 @@ int performAction(struct Rom *rom) {
 		return(0);
 	}
 	if(keys[BTN_B]) {
+		hotKeyPressed=1;
 		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
 			return 1;
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			callDeleteGame();
+			resetPicModeHideMenuTimer();
+			callDeleteGame(rom);
 			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
@@ -69,7 +71,7 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage(rom);
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
@@ -79,7 +81,7 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage(rom);
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
