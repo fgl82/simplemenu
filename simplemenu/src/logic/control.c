@@ -278,6 +278,19 @@ void showOrHideFavorites() {
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
 	loadFavoritesSectionGameList();
+	int number = CURRENT_SECTION.realCurrentGameNumber;
+	int gamesInSection=countGamesInSection();
+	int pages = gamesInSection / ITEMS_PER_PAGE;
+	if (gamesInSection%ITEMS_PER_PAGE==0) {
+		pages--;
+	}
+	CURRENT_SECTION.totalPages=pages;
+	CURRENT_SECTION.currentGameInPage=0;
+	CURRENT_SECTION.currentPage=0;
+	while (CURRENT_GAME_NUMBER<number) {
+		gamesInPage=countGamesInPage();
+		scrollDown();
+	}
 }
 
 void removeFavorite() {
