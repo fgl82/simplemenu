@@ -39,11 +39,8 @@ void showErrorMessage(char *errorMessage) {
 	itsStoppedBecauseOfAnError=1;
 }
 
-int letterExistsInGameList(char *letter) {
-	if (strcmp(letter,"A")==0) {
-		return 1;
-	}
-	if (strcmp(letter,"M")==0) {
+int letterExistsInGameList(char *letter, char* letters) {
+	if (strstr(letters,letter)!=NULL) {
 		return 1;
 	}
 	return 0;
@@ -54,7 +51,6 @@ void showLetter(struct Rom *rom) {
 	int rectangleHeight = 80;
 	int rectangleX = (SCREEN_WIDTH/2);
 	int rectangleY = (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3);
-
 	int filling[3];
 	int borderColor[3];
 	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45;
@@ -93,6 +89,7 @@ void showLetter(struct Rom *rom) {
 	currentGameFirstLetter[1]='\0';
 
 	char *letters[] = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+	char *existingLetters = getCurrentSectionExistingLetters();
 
 	if(isdigit(currentGameFirstLetter[0])) {
 		currentGameFirstLetter[0]='#';
@@ -101,10 +98,10 @@ void showLetter(struct Rom *rom) {
 		int x = 0;
 		int y = calculateProportionalSizeOrDistance(231);
 		for (int i=0;i<27;i++) {
-			if (!letterExistsInGameList(letters[i])) {
-				textColor[0]=50;
-				textColor[1]=50;
-				textColor[2]=50;
+			if (!letterExistsInGameList(letters[i], existingLetters)) {
+				textColor[0]=40;
+				textColor[1]=40;
+				textColor[2]=40;
 			} else {
 				textColor[0]=255;
 				textColor[1]=255;
@@ -167,6 +164,7 @@ void showLetter(struct Rom *rom) {
 	} else {
 		drawCurrentLetter(currentGameFirstLetter, textColor, rectangleX, rectangleY);
 	}
+	free(existingLetters);
 	free(currentGame);
 }
 

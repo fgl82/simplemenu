@@ -1,11 +1,12 @@
-/* Doubly Linked List implementation */
-
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../headers/globals.h"
-#include "../headers/definitions.h"
+#include <string.h>
 
-//Creates a new Node and returns pointer to it.
+#include "../headers/definitions.h"
+#include "../headers/globals.h"
+#include "../headers/logic.h"
+
 struct Node* GetNewNode(struct Rom *rom) {
 	struct Node* newNode= (struct Node*)malloc(sizeof(struct Node));
 	newNode->data = rom;
@@ -14,7 +15,6 @@ struct Node* GetNewNode(struct Rom *rom) {
 	return newNode;
 }
 
-//Inserts a Node at head of doubly linked list
 //void InsertAtHead(struct Rom* rom) {
 //	struct Node* newNode = GetNewNode(rom);
 //	if(CURRENT_SECTION.head == NULL) {
@@ -26,7 +26,6 @@ struct Node* GetNewNode(struct Rom *rom) {
 //	CURRENT_SECTION.head = newNode;
 //}
 
-//Inserts a Node at tail of Doubly linked list
 void InsertAtTail(struct Rom *rom) {
 	struct Node* temp = CURRENT_SECTION.head;
 	struct Node* newNode = GetNewNode(rom);
@@ -67,7 +66,6 @@ void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom) {
 	newNode->prev = temp;
 }
 
-//Prints all the elements in linked list in forward traversal order
 void PrintDoublyLinkedRomList() {
 	struct Node* temp = CURRENT_SECTION.head;
 	while(temp != NULL) {
@@ -77,18 +75,9 @@ void PrintDoublyLinkedRomList() {
 	printf("\n");
 }
 
-// Takes head pointer of
-// the linked list and index
-// as arguments and return
-// data at index
 struct Rom* GetNthElement(int index)
 {
-
 	struct Node* current = CURRENT_SECTION.head;
-
-	// the index of the
-	// node we're currently
-	// looking at
 	int count = 0;
 	while (current != NULL) {
 		if (count == index) {
@@ -98,11 +87,6 @@ struct Rom* GetNthElement(int index)
 		current = current->next;
 	}
 	return NULL;
-	//    /* if we get to this line,
-	//    the caller was asking
-	//    for a non-existent element
-	//    so we assert fail */
-	//    assert(0);
 }
 
 struct Rom* getCurrentRom() {
@@ -126,3 +110,29 @@ struct Node *getCurrentNode() {
 	return GetNthNode(CURRENT_GAME_NUMBER);
 }
 
+char *getCurrentSectionExistingLetters() {
+	char *letters=calloc(29,1);
+	struct Node* temp = CURRENT_SECTION.head;
+	int hadNumbers = 0;
+	while(temp != NULL) {
+		char *name = getFileNameOrAlias(temp->data);
+		char *upperInitialLetter = malloc(2);
+		upperInitialLetter[0]=toupper(name[0]);
+		upperInitialLetter[1]='\0';
+		if (strstr(letters,upperInitialLetter)==NULL) {
+			if(isdigit(upperInitialLetter[0])) {
+				if(!hadNumbers) {
+					strcat(letters,"#");
+				}
+				hadNumbers=1;
+			} else {
+				strcat(letters,upperInitialLetter);
+			}
+		}
+		printf("%s\n", letters);
+		free(name);
+		free(upperInitialLetter);
+		temp = temp->next;
+	}
+	return letters;
+}

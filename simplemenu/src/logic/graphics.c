@@ -35,7 +35,6 @@ int calculateProportionalSizeOrDistance(int number) {
 
 int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-//	SDL_Surface *msg1;
 	char *bufCopy=malloc(300);
 	char *bufCopy1=malloc(300);
 	strcpy(bufCopy,buf);
@@ -45,7 +44,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	} else {
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-//		msg1 = TTF_RenderText_Blended(font, bufCopy1, make_color(255, 0, 0));
 	}
 	int len=strlen(buf);
 	int width = calculateProportionalSizeOrDistance(315);
@@ -59,7 +57,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		} else {
 			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-//			msg1 = TTF_RenderText_Blended(font, bufCopy1, make_color(100, txtColor[1], txtColor[2]));
 		}
 		len--;
 	}
@@ -80,8 +77,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	rect.h = msg->h;
 	SDL_BlitSurface(msg, NULL, screen, &rect);
 	SDL_FreeSurface(msg);
-//	SDL_BlitSurface(msg1, NULL, screen, &rect);
-//	SDL_FreeSurface(msg1);
 	free(bufCopy);
 	return msg->w;
 }
@@ -101,6 +96,11 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
+	if (favoritesSectionSelected) {
+		color[0]= 0;
+		color[1]= 100;
+		color[2]= 255;
+	}
 //	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
 	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);

@@ -189,13 +189,10 @@ void loadLastState() {
 		}
 		if (stripGamesConfig==-1) {
 			stripGamesConfig=atoi(configurations[0]);
-			printf("strip games: %s\n", configurations[0]);
 		} else if (startInPictureMode==-1){
 			startInPictureMode=atoi(configurations[0]);
-			printf("start in pic mode: %s\n", configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
-			printf("start in section: %s\n", configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
 			if(strlen(CURRENT_SECTION.sectionName)<1) {
