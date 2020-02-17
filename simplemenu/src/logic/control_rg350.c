@@ -157,7 +157,7 @@ int performAction(struct Rom *rom) {
 	}
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
-//		hotKeyPressed=0;
+		hotKeyPressed=0;
 		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
