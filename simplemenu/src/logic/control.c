@@ -252,8 +252,23 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		if (returnTo==0) {
+			if (pictureMode) {
+				currentlySectionSwitching=1;
+				resetPicModeHideLogoTimer();
+				currentlySectionSwitching=1;
+				displayBackgroundPicture();
+				showConsole();
+//				refreshScreen();
+			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
+			if (pictureMode) {
+				currentlySectionSwitching=1;
+				resetPicModeHideLogoTimer();
+				displayBackgroundPicture();
+				showConsole();
+//				refreshScreen();
+			}
 			loadGameList(0);
 			int number = CURRENT_SECTION.realCurrentGameNumber;
 			int gamesInSection=countGamesInSection();
@@ -277,6 +292,15 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
+
+	if (pictureMode) {
+		resetPicModeHideLogoTimer();
+		currentlySectionSwitching=1;
+		displayBackgroundPicture();
+		showConsole();
+		refreshScreen();
+	}
+
 	loadFavoritesSectionGameList();
 	int number = CURRENT_SECTION.realCurrentGameNumber;
 	int gamesInSection=countGamesInSection();

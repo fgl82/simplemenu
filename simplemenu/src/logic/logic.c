@@ -427,7 +427,7 @@ void loadFavoritesSectionGameList() {
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
 		game++;
 	}
-	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
+//	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {

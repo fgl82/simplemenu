@@ -429,6 +429,7 @@ int loadSections() {
 	menuSections[menuSectionCounter].hidden=0;
 	menuSections[menuSectionCounter].currentPage=0;
 	menuSections[menuSectionCounter].currentGameInPage=0;
+	strcpy(menuSections[menuSectionCounter].consolePicture,"./resources/favorites/logo.png");
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	return menuSectionCounter;
