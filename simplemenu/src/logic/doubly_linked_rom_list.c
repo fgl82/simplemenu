@@ -129,7 +129,6 @@ char *getCurrentSectionExistingLetters() {
 				strcat(letters,upperInitialLetter);
 			}
 		}
-		printf("%s\n", letters);
 		free(name);
 		free(upperInitialLetter);
 		temp = temp->next;

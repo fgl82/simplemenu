@@ -14,4 +14,6 @@ void drawShutDownScreen();
 uint32_t hideFullScreenModeMenu();
 void resetPicModeHideMenuTimer();
 void resetPicModeHideLogoTimer();
+void clearPicModeHideMenuTimer();
+void clearPicModeHideLogoTimer();
 #endif

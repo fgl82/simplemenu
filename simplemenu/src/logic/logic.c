@@ -209,6 +209,8 @@ void quit() {
 	saveLastState();
 	saveFavorites();
 	clearTimer();
+	clearPicModeHideLogoTimer();
+	clearPicModeHideMenuTimer();
 	sleep(1.5);
 	freeResources();
 	if (shutDownEnabled) {
