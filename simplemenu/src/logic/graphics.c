@@ -17,6 +17,7 @@
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
+TTF_Font *miniFont = NULL;
 TTF_Font *picModeFont = NULL;
 TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
@@ -32,16 +33,31 @@ int calculateProportionalSizeOrDistance(int number) {
 	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
 
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
+int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-	char bufCopy[300];
+	char *bufCopy=malloc(300);
+	char *bufCopy1=malloc(300);
 	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+	strcpy(bufCopy1,buf);
+	bufCopy1[1]='\0';
+	if (shaded) {
+		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+	} else {
+		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+	}
 	int len=strlen(buf);
-	while (msg->w>calculateProportionalSizeOrDistance(300)) {
+	int width = calculateProportionalSizeOrDistance(315);
+	if (pictureMode) {
+		width = calculateProportionalSizeOrDistance(315);
+	}
+	while (msg->w>width) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+		if (shaded) {
+			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+		} else {
+			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		}
 		len--;
 	}
 	if (align & HAlignCenter) {
@@ -61,39 +77,16 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 	rect.h = msg->h;
 	SDL_BlitSurface(msg, NULL, screen, &rect);
 	SDL_FreeSurface(msg);
+	free(bufCopy);
 	return msg->w;
 }
 
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
+	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, backgroundColor, 1);
+}
+
 int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align) {
-	SDL_Surface *msg;
-	char bufCopy[300];
-	strcpy(bufCopy,buf);
-	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-	int len=strlen(buf);
-	while (msg->w>calculateProportionalSizeOrDistance(300)) {
-		bufCopy[len]='\0';
-		SDL_FreeSurface(msg);
-		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		len--;
-	}
-	if (align & HAlignCenter) {
-		x -= msg->w / 2;
-	} else if (align & HAlignRight) {
-		x -= msg->w;
-	}
-	if (align & VAlignMiddle) {
-		y -= msg->h / 2;
-	} else if (align & VAlignTop) {
-		y -= msg->h;
-	}
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = msg->w;
-	rect.h = msg->h;
-	SDL_BlitSurface(msg, NULL, screen, &rect);
-	SDL_FreeSurface(msg);
-	return msg->w;
+	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
@@ -103,7 +96,14 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
 	int color[3] = {255,255,0};
-	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
+	if (favoritesSectionSelected) {
+		color[0]= 0;
+		color[1]= 100;
+		color[2]= 255;
+	}
+//	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
+	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 }
 
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
@@ -112,7 +112,7 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 	int color[3] = {255,255,255};
-	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, color, VAlignBottom | HAlignCenter);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 }
 
 void drawPictureTextOnScreen(char *buf) {
@@ -147,8 +147,12 @@ void drawBatteryOnFooter(char *text) {
 	drawTextOnScreen(font,calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignLeft);
 }
 
-void drawCurrentLetter(char *letter, int textColor[]) {
-	drawTextOnScreen(BIGFont, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), letter, textColor, VAlignMiddle | HAlignCenter);
+void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
+	if (!pictureMode) {
+		drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+	} else {
+		drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+	}
 }
 
 void drawCurrentExecutable(char *executable, int textColor[]) {
@@ -198,15 +202,16 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 	SDL_FreeSurface(img);
 }
 
-void drawTransparentRectangleToScreen(int w, int h, int x, int y, int transparency) {
+void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int opacity) {
 	SDL_Surface *transparentrectangle;
-	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
-	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, transparency); //128 is the amount of transparency or opacity (dont remember)
+	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, rgbColor[0], rgbColor[1], rgbColor[2], 0);
+	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, opacity); //128 is the amount of transparency or opacity (dont remember)
 	SDL_Rect rectangleDest;
 	rectangleDest.w = w;
 	rectangleDest.h = h;
 	rectangleDest.x = x;
 	rectangleDest.y = y;
+//	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
 	SDL_FreeSurface(transparentrectangle);
 }
@@ -304,6 +309,7 @@ void refreshScreen() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
+	miniFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
 	picModeFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(19));
 	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(32));
 	headerFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));

@@ -11,7 +11,9 @@ void displayGamePicture();
 void displayBackgroundPicture();
 void showConsole();
 void drawShutDownScreen();
-uint32_t hidePicModeMenu();
+uint32_t hideFullScreenModeMenu();
 void resetPicModeHideMenuTimer();
 void resetPicModeHideLogoTimer();
+void clearPicModeHideMenuTimer();
+void clearPicModeHideLogoTimer();
 #endif

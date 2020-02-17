@@ -33,6 +33,7 @@ int currentlySectionSwitching;
 int currentlyChoosingEmulator;
 int stripGames;
 int shutDownEnabled;
+int loading;
 
 int OC_UC;
 int OC_NO;
@@ -48,35 +49,6 @@ int isSuspended;
 int isUSBMode;
 int backlightValue;
 
-struct MenuSection {
-	char sectionName[25];
-	char *emulatorDirectories[10];
-	char *executables[10];
-	char filesDirectories[400];
-	char fileExtensions[50];
-	char consolePicture[100];
-	char aliasFileName[300];
-	int hidden;
-	int currentPage;
-	int currentGame;
-	int alphabeticalPaging;
-	int totalPages;
-	int initialized;
-	int onlyFileNamesNoExtension;
-	int headerAndFooterBackgroundColor[3];
-	int headerAndFooterTextColor[3];
-	int bodyBackgroundColor[3];
-	int bodyTextColor[3];
-	int bodySelectedTextBackgroundColor[3];
-	int bodySelectedTextTextColor[3];
-	struct Rom *romList[1000][ITEMS_PER_PAGE];
-	hashtable_t *aliasHashTable;
-	int activeExecutable;
-	int activeEmulatorDirectory;
-	char category[100];
-};
-struct MenuSection menuSections[50];
-
 struct Favorite {
 	char section[300];
 	char name[300];
@@ -91,6 +63,45 @@ struct Rom {
 	char *alias;
 	char *directory;
 };
+
+struct Node  {
+	struct Rom  *data;
+	struct Node *next;
+	struct Node *prev;
+};
+
+struct MenuSection {
+	char sectionName[25];
+	char *emulatorDirectories[10];
+	char *executables[10];
+	char filesDirectories[400];
+	char fileExtensions[50];
+	char consolePicture[100];
+	char aliasFileName[300];
+	int hidden;
+	int currentPage;
+	int currentGameInPage;
+	int realCurrentGameNumber;
+	int alphabeticalPaging;
+	int totalPages;
+	int initialized;
+	int onlyFileNamesNoExtension;
+	int headerAndFooterBackgroundColor[3];
+	int headerAndFooterTextColor[3];
+	int bodyBackgroundColor[3];
+	int bodyTextColor[3];
+	int bodySelectedTextBackgroundColor[3];
+	int bodySelectedTextTextColor[3];
+	struct Node *head;
+	hashtable_t *aliasHashTable;
+	int activeExecutable;
+	int activeEmulatorDirectory;
+	char category[100];
+};
+
+//struct Rom* currentGame;
+
+struct MenuSection menuSections[50];
 
 struct OPKDesktopFile {
 	char parentOPK[200];

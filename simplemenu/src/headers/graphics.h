@@ -19,9 +19,10 @@ void drawPictureTextOnScreen(char *buf);
 void drawImgFallbackTextOnScreen( char *fallBackText);
 void drawTextOnFooter(const char text[64]);
 void drawTextOnHeader(char *text);
-void drawCurrentLetter(char *letter, int textColor[]);
+void drawCurrentLetter(char *letter, int textColor[], int x, int y);
 SDL_Rect drawRectangleOnScreen(int width, int height, int x, int y, int rgbColor[]);
-void drawTransparentRectangleToScreen(int w, int h, int x, int y, int transparency);
+
+void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int transparency);
 SDL_Surface *loadImage (char *fileName);
 void displayBackGroundImage(char *fileName, SDL_Surface *surface);
 void displayImageOnScreen(char *fileName, char *fallBackText);

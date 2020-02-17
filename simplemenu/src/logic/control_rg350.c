@@ -10,7 +10,8 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 
-int performAction() {
+int performAction(struct Rom *rom) {
+
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
 		return 0;
@@ -20,7 +21,7 @@ int performAction() {
 		return 0;
 	}
 	if (keys[BTN_R2]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			loadGameList(1);
 			return(1);
@@ -39,25 +40,17 @@ int performAction() {
 		return(0);
 	}
 	if(keys[BTN_B]) {
+		hotKeyPressed=1;
 		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
+			return 1;
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			if (!favoritesSectionSelected) {
-				deleteCurrentGame(CURRENT_GAME_NAME);
-				loadGameList(1);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-				if(CURRENT_GAME_NAME==NULL) {
-					scrollUp();
-				}
-				setupDecorations();
-			} else {
-				generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
-				return 1;
+			if (!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
 			}
+			callDeleteGame(rom);
+			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
@@ -74,13 +67,13 @@ int performAction() {
 				updateScreen();
 			}
 			saveFavorites();
-			launchGame();
+			launchGame(rom);
 		}	
 		if (keys[BTN_DOWN]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			advancePage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+			advancePage(rom);
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
@@ -89,8 +82,8 @@ int performAction() {
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			rewindPage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+			rewindPage(rom);
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
@@ -116,9 +109,6 @@ int performAction() {
 					}
 					loadGameList(0);
 				}
-//				displayBackgroundPicture();
-//				showConsole();
-//				refreshScreen();
 			}
 			return 0;
 		}
@@ -142,45 +132,22 @@ int performAction() {
 					}
 					loadGameList(0);
 				}
-//				displayBackgroundPicture();
-//				showConsole();
-//				refreshScreen();
 			}
 			return 0;
 		}
 	}
 
 	if(keys[BTN_L1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode) {
+		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
-//			if (!currentlySectionSwitching) {
-//					hidePicModeLogo();
-//					hotKeyPressed=1;
-				currentlySectionSwitching=1;
-//			}
+			currentlySectionSwitching=1;
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
-			if (pictureMode) {
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
-			}
-			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
-				if (pictureMode) {
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
-				}
-				loadGameList(0);
 			}
 		}
 		if (!pictureMode) {
@@ -189,36 +156,16 @@ int performAction() {
 		return 0;
 	}
 	if(keys[BTN_R1]) {
-		hidePicModeMenu();
+		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode) {
+		if (pictureMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
-//			if (!currentlySectionSwitching) {
-//					hidePicModeLogo();
-//					hotKeyPressed=1;
-				currentlySectionSwitching=1;
-//			}
+			currentlySectionSwitching=1;
 		}
 		int advanced = advanceSection();
 		if(advanced) {
-			if (pictureMode) {
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
-			}
-			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
-				if (pictureMode) {
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
-				}
-				loadGameList(0);
 			}
 		}
 		if (!pictureMode) {
@@ -234,12 +181,12 @@ int performAction() {
 				resetPicModeHideMenuTimer();
 			}
 			if (!favoritesSectionSelected) {
-				markAsFavorite();
+				markAsFavorite(rom);
 			} else {
 				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
-					hidePicModeMenu();
+					hideFullScreenModeMenu();
 				}
 			}
 			return 0;
@@ -269,15 +216,43 @@ int performAction() {
 			}
 			if (countGamesInPage()>0) {
 				saveFavorites();
-				launchGame();
+				launchGame(rom);
 			}
 			return 0;
 		}
 		if (keys[BTN_Y]) {
 			if (pictureMode) {
 				pictureMode=0;
-			} else {
+				int number = CURRENT_GAME_NUMBER;
+				ITEMS_PER_PAGE=10;
+				int gamesInSection=countGamesInSection();
+				int pages = gamesInSection / ITEMS_PER_PAGE;
+				if (gamesInSection%ITEMS_PER_PAGE==0) {
+					pages--;
+				}
+				CURRENT_SECTION.totalPages=pages;
+				CURRENT_SECTION.currentGameInPage=0;
+				CURRENT_SECTION.currentPage=0;
+				while (CURRENT_GAME_NUMBER<number) {
+					gamesInPage=countGamesInPage();
+					scrollDown();
+				}
+ 			} else {
 				pictureMode=1;
+				int number = CURRENT_GAME_NUMBER;
+				ITEMS_PER_PAGE=12;
+				int gamesInSection=countGamesInSection();
+				int pages = gamesInSection / ITEMS_PER_PAGE;
+				if (gamesInSection%ITEMS_PER_PAGE==0) {
+					pages--;
+				}
+				CURRENT_SECTION.totalPages=pages;
+				CURRENT_SECTION.currentGameInPage=0;
+				CURRENT_SECTION.currentPage=0;
+				while (CURRENT_GAME_NUMBER<number) {
+					gamesInPage=countGamesInPage();
+					scrollDown();
+				}
 			}
 		}
 		if (keys[BTN_DOWN]) {
@@ -298,14 +273,14 @@ int performAction() {
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
-			advancePage();
+			advancePage(rom);
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
 			if(pictureMode) {
 				resetPicModeHideMenuTimer();
 			}
-			rewindPage();
+			rewindPage(rom);
 			return 1;
 		}
 	}

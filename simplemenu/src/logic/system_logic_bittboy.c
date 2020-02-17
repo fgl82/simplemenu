@@ -330,12 +330,12 @@ uint32_t suspend(uint32_t interval, void *param) {
 		setCPU(OC_SLEEP);
 		isSuspended=1;
 	} else {
-		resetTimeoutTimer();
+		resetScreenOffTimer();
 	}
 	return 0;
 };
 
-void resetTimeoutTimer() {
+void resetScreenOffTimer() {
 	if(isSuspended) {
 		setCPU(OC_NO);
 		setBacklight(backlightValue);

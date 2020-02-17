@@ -2,7 +2,7 @@
 #define DEFINITIONS_DEFINED
 #define SCREEN_WIDTH   (SCREEN_HEIGHT/3)*4
 #ifdef TARGET_PC
-#define SCREEN_HEIGHT   240
+#define SCREEN_HEIGHT   600
 #else
 #define SCREEN_HEIGHT   240
 #endif
@@ -69,15 +69,9 @@
 #endif
 
 #define FAVORITES_SIZE 2000
-#define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*10+menuSections[currentSectionNumber].currentGame
+#define CURRENT_GAME_NUMBER menuSections[currentSectionNumber].currentPage*ITEMS_PER_PAGE+menuSections[currentSectionNumber].currentGameInPage
 #define CURRENT_FAVORITE_NAME_IN_FAVORITES_LIST favorites[CURRENT_GAME_NUMBER]
 #define CURRENT_SECTION menuSections[currentSectionNumber]
 #define FAVORITES_SECTION menuSections[favoritesSectionNumber]
 #define NEXT_SECTION menuSections[currentSectionNumber+1]
-#define CURRENT_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]
-#define CURRENT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame]->name
-#define PREVIOUS_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame-1]
-#define PREVIOUS_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame-1]->name
-#define NEXT_GAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame+1]
-#define NEXT_GAME_NAME CURRENT_SECTION.romList[CURRENT_SECTION.currentPage][CURRENT_SECTION.currentGame+1]->name
 #endif

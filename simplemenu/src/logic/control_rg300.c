@@ -8,7 +8,7 @@
 #include "../headers/system_logic.h"
 #include "../headers/screen.h"
 
-int performAction() {
+int performAction(struct Rom *rom) {
 	if (keys[BTN_SELECT] && keys[BTN_START]) {
 		running=0;
 		return 0;
@@ -30,6 +30,7 @@ int performAction() {
 		return(0);
 	}
 	if(keys[BTN_B]) {
+		hotKeyPressed=1;
 		if (keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator();
 		}
@@ -40,21 +41,11 @@ int performAction() {
 			}
 		}
 		if (keys[BTN_X]&&!currentlySectionSwitching) {
-			if (!favoritesSectionSelected) {
-				deleteCurrentGame(CURRENT_GAME_NAME);
-				loadGameList(1);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-				if(CURRENT_GAME_NAME==NULL) {
-					scrollUp();
-				}
-				setupDecorations();
-			} else {
-				generateError("YOU CAN'T DELETE GAMES-WHILE IN FAVORITES",0);
-				return 1;
+			if (!isPicModeMenuHidden) {
+				resetPicModeHideMenuTimer();
 			}
+			callDeleteGame(rom);
+			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
@@ -77,14 +68,14 @@ int performAction() {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
-			CURRENT_SECTION.alphabeticalPaging=0;
+//			CURRENT_SECTION.alphabeticalPaging=0;
 			return 0;
 		}
 		if(keys[BTN_RIGHT]) {
@@ -92,14 +83,21 @@ int performAction() {
 			int advanced = advanceSection();
 			if(advanced) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 			}
 			return 0;
 		}
@@ -108,44 +106,64 @@ int performAction() {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				currentlySectionSwitching=1;
+				if(theCurrentSectionHasGames()) {
+					displayBackgroundPicture();
+					showConsole();
+					refreshScreen();
+				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
+					if(theCurrentSectionHasGames()) {
+						displayBackgroundPicture();
+						showConsole();
+						refreshScreen();
+					}
 					loadGameList(0);
 				}
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 			}
 			return 0;
 		}
 	}
 
+	if(keys[BTN_L1]) {
+		hideFullScreenModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode&&!favoritesSectionSelected) {
+			resetPicModeHideLogoTimer();
+			currentlySectionSwitching=1;
+		}
+		int rewinded = rewindSection();
+		if(rewinded) {
+			while(CURRENT_SECTION.hidden) {
+				rewindSection();
+			}
+		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+	if(keys[BTN_R1]) {
+		hideFullScreenModeMenu();
+		hotKeyPressed=0;
+		if (pictureMode&&!favoritesSectionSelected) {
+			resetPicModeHideLogoTimer();
+			currentlySectionSwitching=1;
+		}
+		int advanced = advanceSection();
+		if(advanced) {
+			while(CURRENT_SECTION.hidden) {
+				advanceSection();
+			}
+		}
+		if (!pictureMode) {
+			currentlySectionSwitching=0;
+		}
+		return 0;
+	}
+
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
-		if(keys[BTN_L1]) {
-			hotKeyPressed=0;
-			int rewinded = rewindSection();
-			if(rewinded) {
-				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					rewindSection();
-					loadGameList(0);
-				}
-			}
-			return 0;
-		}
-		if(keys[BTN_R1]) {
-			hotKeyPressed=0;
-			int advanced = advanceSection();
-			if(advanced) {
-				loadGameList(0);
-				while(CURRENT_SECTION.hidden) {
-					advanceSection();
-					loadGameList(0);
-				}
-			}
-			return 0;
-		}
 		if (keys[BTN_X]) {
 			if (!favoritesSectionSelected) {
 				markAsFavorite();

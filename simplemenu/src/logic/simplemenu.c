@@ -13,6 +13,8 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/system_logic.h"
+#include "../headers/doubly_linked_rom_list.h"
+
 
 void initializeGlobals() {
 	running=1;
@@ -24,7 +26,7 @@ void initializeGlobals() {
 	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
-//	pictureMode=0;
+	ITEMS_PER_PAGE=10;
 	isPicModeMenuHidden=1;
 	srand(time(0));
 }
@@ -87,8 +89,12 @@ int main(int argc, char* argv[]) {
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
 		pictureMode=atoi(argv[4]);
+		loadLastState();
 	} else {
 		loadLastState();
+	}
+	if(pictureMode) {
+		ITEMS_PER_PAGE=12;
 	}
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();
@@ -98,16 +104,17 @@ int main(int argc, char* argv[]) {
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
+			struct Rom *rom = GetNthElement(CURRENT_GAME_NUMBER);
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction();
+						performAction(rom);
 					} else {
 						performChoosingAction();
 					}
 				}
 				#ifndef TARGET_PC
-				resetTimeoutTimer();
+				resetScreenOffTimer();
 				#endif
 				updateScreen();
 			} else if (getEventType()==getKeyUp()) {
@@ -115,13 +122,12 @@ int main(int argc, char* argv[]) {
 					hotKeyPressed=0;
 					if(pictureMode) {
 						if(currentlySectionSwitching) {
-							hidePicModeMenu();
+							hideFullScreenModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {
-							resetPicModeHideMenuTimer();
-						} else {
 							resetPicModeHideMenuTimer();
 						}
 					}
+					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
 					updateScreen();
 				}
@@ -136,5 +142,6 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}
+//	PrintDoublyLinkedRomList(CURRENT_SECTION.head);
 	quit();
 }
