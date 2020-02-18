@@ -445,8 +445,8 @@ void updateScreen() {
 
 void setupDisplayAndKeys() {
 	//	pumpEvents();
-	initializeFonts();
 	initializeDisplay();
+	initializeFonts();
 	initializeKeys();
 }
 

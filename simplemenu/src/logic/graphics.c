@@ -1,4 +1,5 @@
 #include "../headers/graphics.h"
+#include "../headers/globals.h"
 
 #include <string.h>
 #include <SDL/SDL.h>
@@ -29,6 +30,7 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 int calculateProportionalSizeOrDistance(int number) {
+	printf("%d\n",SCREEN_HEIGHT);
 	return (SCREEN_HEIGHT*number)/240;
 	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
@@ -298,8 +300,13 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
+	SCREEN_HEIGHT = info->current_h;
+	if (SCREEN_HEIGHT>600) {
+		SCREEN_HEIGHT = 600;
+	}
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE | SDL_NOFRAME);
 }
 
 void refreshScreen() {
