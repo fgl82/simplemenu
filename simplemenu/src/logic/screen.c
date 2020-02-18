@@ -445,8 +445,8 @@ void updateScreen() {
 
 void setupDisplayAndKeys() {
 	//	pumpEvents();
-	initializeFonts();
 	initializeDisplay();
+	initializeFonts();
 	initializeKeys();
 }
 
@@ -491,5 +491,5 @@ uint32_t hidePicModeLogo(uint32_t interval, void *param) {
 
 void resetPicModeHideLogoTimer() {
 	clearPicModeHideLogoTimer();
-	picModeHideMenuTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
+	picModeHideLogoTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
 }
