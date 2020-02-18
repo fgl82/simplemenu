@@ -30,7 +30,6 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 int calculateProportionalSizeOrDistance(int number) {
-	printf("%d\n",SCREEN_HEIGHT);
 	return (SCREEN_HEIGHT*number)/240;
 	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
 }
@@ -306,7 +305,7 @@ void initializeDisplay() {
 		SCREEN_HEIGHT = 600;
 	}
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 }
 
 void refreshScreen() {
