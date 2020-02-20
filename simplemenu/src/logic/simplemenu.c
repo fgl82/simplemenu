@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	updateScreen();
+	updateScreen(NULL);
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				updateScreen();
+				updateScreen(rom);
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
-					updateScreen();
+					updateScreen(NULL);
 				}
 				if(getPressedKey()==BTN_SELECT) {
 					if (stripGames) {
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 					} else {
 						stripGames=1;
 					}
-					updateScreen();
+					updateScreen(NULL);
 				}
 			}
 		}

@@ -338,12 +338,14 @@ void drawGameList() {
 		nextLine = calculateProportionalSizeOrDistance(12);
 	}
 	char *nameWithoutExtension;
+	struct Node* currentNode;
+	currentNode = GetNthNode(ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);
+
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
-		struct Rom* rom;
-		rom = GetNthElement(i+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);
-		if (rom==NULL) {
+		if (currentNode==NULL) {
 			break;
 		}
+		struct Rom* rom = currentNode->data;
 		gamesInPage++;
 		sprintf(buf,"%s", "");
 		if (rom->alias!=NULL &&  (strlen(rom->alias)>2)) {
@@ -398,6 +400,7 @@ void drawGameList() {
 			nextLine+=calculateProportionalSizeOrDistance(20);
 		}
 		free(nameWithoutExtension);
+		currentNode = currentNode->next;
 	}
 }
 
@@ -417,8 +420,11 @@ void setupDecorations(struct Rom *rom) {
 	drawHeader(rom);
 }
 
-void updateScreen() {
-	struct Rom* rom = GetNthElement(CURRENT_GAME_NUMBER);
+void updateScreen(struct Rom *rom) {
+	if (rom==NULL) {
+		printf("papa\n");
+		rom = GetNthElement(CURRENT_GAME_NUMBER);
+	}
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		setupDecorations(rom);
@@ -461,7 +467,7 @@ uint32_t hideFullScreenModeMenu(uint32_t interval, void *param) {
 	if(!hotKeyPressed) {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
-		updateScreen();
+		updateScreen(NULL);
 	}
 	return 0;
 }
@@ -485,7 +491,7 @@ uint32_t hidePicModeLogo(uint32_t interval, void *param) {
 	clearPicModeHideLogoTimer();
 	currentlySectionSwitching=0;
 	hotKeyPressed=0;
-	updateScreen();
+	updateScreen(NULL);
 	return 0;
 }
 

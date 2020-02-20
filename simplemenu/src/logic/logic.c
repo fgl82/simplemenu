@@ -309,10 +309,11 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 
 int countGamesInSection() {
 	int gamesCounter=0;
+	struct Node* currentGameNode = CURRENT_SECTION.head;
 	for (int i=0;i<=10000;i++) {
-		struct Rom* currentGame = GetNthElement(i);
-		if (currentGame!=NULL&&strlen(currentGame->name)>0) {
+		if (currentGameNode!=NULL&&strlen(currentGameNode->data->name)>0) {
 			gamesCounter++;
+			currentGameNode = currentGameNode->next;
 		} else {
 			break;
 		}

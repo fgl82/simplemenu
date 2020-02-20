@@ -136,7 +136,7 @@ void scrollUp() {
 		} else {
 			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		}
-		gamesInPage=countGamesInPage();
+//		gamesInPage=countGamesInPage();
 		if (gamesInPage>0) {
 			CURRENT_SECTION.currentGameInPage=gamesInPage-1;
 		}

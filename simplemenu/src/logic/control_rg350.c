@@ -64,7 +64,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
-				updateScreen();
+				updateScreen(rom);
 			}
 			saveFavorites();
 			launchGame(rom);
