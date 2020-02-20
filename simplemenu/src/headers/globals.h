@@ -99,7 +99,7 @@ struct MenuSection {
 	char category[100];
 };
 
-//struct Rom* currentGame;
+struct Node* currentGameNode;
 
 struct MenuSection menuSections[50];
 

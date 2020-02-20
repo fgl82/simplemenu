@@ -18,19 +18,24 @@
 #include "../headers/doubly_linked_rom_list.h"
 
 void scrollDown() {
-	struct Node *currentNode = getCurrentNode();
 	if (CURRENT_SECTION.currentGameInPage < gamesInPage-1) {
-		if (currentNode->next!=NULL&&strlen(currentNode->next->data->name)>0) {
+		if (currentGameNode->next!=NULL&&strlen(currentGameNode->next->data->name)>0) {
 			CURRENT_SECTION.currentGameInPage++;
+			currentGameNode=currentGameNode->next;
 		} else {
 			CURRENT_SECTION.currentPage=0;
 			CURRENT_SECTION.currentGameInPage=0;
+			currentGameNode=CURRENT_SECTION.head;
 		}
 	} else {
 		if (CURRENT_SECTION.currentPage < CURRENT_SECTION.totalPages) {
 			CURRENT_SECTION.currentPage++;
+			if (currentGameNode!=NULL) {
+				currentGameNode = currentGameNode->next;
+			}
 		} else {
 			CURRENT_SECTION.currentPage=0;
+			currentGameNode=CURRENT_SECTION.head;
 		}
 		CURRENT_SECTION.currentGameInPage=0;
 	}
@@ -136,7 +141,7 @@ void scrollUp() {
 		} else {
 			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		}
-//		gamesInPage=countGamesInPage();
+		gamesInPage=countGamesInPage();
 		if (gamesInPage>0) {
 			CURRENT_SECTION.currentGameInPage=gamesInPage-1;
 		}
@@ -149,7 +154,6 @@ void scrollUp() {
 }
 
 void advancePage(struct Rom *rom) {
-	struct Node* currentGameNode = getCurrentNode();
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
 		if (rom==NULL||rom->name==NULL) {
 			return;
@@ -164,15 +168,20 @@ void advancePage(struct Rom *rom) {
 				}
 				scrollDown();
 				free(currentGame);
-				currentGameNode=getCurrentNode();
+				currentGameNode=currentGameNode->next;
 				currentGame = getFileNameOrAlias(currentGameNode->data);
 			}
 			free(currentGame);
 		} else {
 			if(CURRENT_SECTION.currentPage!=CURRENT_SECTION.totalPages) {
 				CURRENT_SECTION.currentPage++;
+				for (int i=CURRENT_SECTION.currentGameInPage;i<ITEMS_PER_PAGE;i++) {
+					currentGameNode=currentGameNode->next;
+				}
+
 			} else {
 				CURRENT_SECTION.currentPage=0;
+				currentGameNode=CURRENT_SECTION.head;
 			}
 			CURRENT_SECTION.currentGameInPage=0;
 		}
