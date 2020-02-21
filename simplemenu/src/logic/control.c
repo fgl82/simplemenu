@@ -52,20 +52,6 @@ int advanceSection() {
 		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
-		loadGameList(0);
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=CURRENT_SECTION.gameCount;
-		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
-			pages--;
-		}
-		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			scrollDown();
-		}
 		return 1;
 	}
 	return 0;
@@ -85,23 +71,6 @@ int rewindSection() {
 		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
-		loadGameList(0);
-		printf("ES: %s\n", "PAPAPA");
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=CURRENT_SECTION.gameCount;
-		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
-			pages--;
-		}
-		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			printf("ES: %s\n", "PAPAPA3");
-			scrollDown();
-		}
-		printf("ES: %s\n", "PAPAPA2");
 		return 1;
 	}
 	return 0;
