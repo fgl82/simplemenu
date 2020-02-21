@@ -146,8 +146,10 @@ int performAction(struct Rom *rom) {
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
+				loadGameList(0);
 			}
 		}
 		if (!fullscreenMode) {
@@ -164,8 +166,10 @@ int performAction(struct Rom *rom) {
 		}
 		int advanced = advanceSection();
 		if(advanced) {
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
+				loadGameList(0);
 			}
 		}
 		if (!fullscreenMode) {

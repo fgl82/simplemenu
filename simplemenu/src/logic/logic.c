@@ -716,7 +716,8 @@ void loadGameList(int refresh) {
 		}
 		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
-		CURRENT_SECTION.currentGameNode=GetNthNode(CURRENT_GAME_NUMBER);
+//		CURRENT_SECTION.currentGameNode=GetNthNode(CURRENT_GAME_NUMBER);
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}
 	loading=0;
 }
