@@ -272,7 +272,7 @@ void showOrHideFavorites() {
 			}
 			loadGameList(0);
 		}
-		scrollToGame(CURRENT_GAME_NUMBER);
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return;
 	}
 	if(strlen(favorites[0].name)<2) {
