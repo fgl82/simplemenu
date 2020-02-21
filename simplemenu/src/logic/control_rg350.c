@@ -110,6 +110,7 @@ int performAction(struct Rom *rom) {
 					loadGameList(0);
 				}
 			}
+			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			return 0;
 		}
 		if(keys[BTN_LEFT]) {
@@ -133,6 +134,7 @@ int performAction(struct Rom *rom) {
 					loadGameList(0);
 				}
 			}
+			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			return 0;
 		}
 	}
@@ -146,6 +148,7 @@ int performAction(struct Rom *rom) {
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
+			currentlySectionSwitching=1;
 			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
@@ -155,6 +158,7 @@ int performAction(struct Rom *rom) {
 		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
 	if(keys[BTN_R1]) {
@@ -166,6 +170,7 @@ int performAction(struct Rom *rom) {
 		}
 		int advanced = advanceSection();
 		if(advanced) {
+			currentlySectionSwitching=1;
 			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
@@ -175,6 +180,7 @@ int performAction(struct Rom *rom) {
 		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
 
