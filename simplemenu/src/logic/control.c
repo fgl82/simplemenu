@@ -17,6 +17,40 @@
 #include "../headers/system_logic.h"
 #include "../headers/doubly_linked_rom_list.h"
 
+void scrollUp() {
+	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->prev;
+	//if at the first item of the first page
+	if (CURRENT_SECTION.currentGameNode==NULL) {
+		//go to the last page
+		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
+		//go to the last game
+		if (CURRENT_SECTION.totalPages==0) {
+			CURRENT_SECTION.currentGameInPage=CURRENT_SECTION.gameCount-1;
+		} else {
+			if (CURRENT_SECTION.gameCount%(ITEMS_PER_PAGE)!=0) {
+				CURRENT_SECTION.currentGameInPage=(CURRENT_SECTION.gameCount%ITEMS_PER_PAGE)-1;
+			} else {
+				CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
+			}
+		}
+		//point to the last node
+		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.tail;
+	} else {
+		//it's a full page and not the first item
+		if (CURRENT_SECTION.currentGameInPage > 0) {
+			//decrease selected game
+			CURRENT_SECTION.currentGameInPage--;
+		} else {
+			//decrease page
+			CURRENT_SECTION.currentPage--;
+			//go to the last ekement of the page
+			CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
+		}
+	}
+	//establish real game number
+	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
+}
+
 void scrollDown() {
 	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->next;
 	// if at the end end of the list
@@ -100,42 +134,6 @@ void launchEmulator(struct Rom *rom) {
 	} else if (rom->name!=NULL) {
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
 	}
-}
-
-void scrollUp() {
-	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->prev;
-	//if at the first item of the first page
-	if (CURRENT_SECTION.currentGameNode==NULL) {
-		//go to the last page
-		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
-		//go to the last game
-		if (CURRENT_SECTION.totalPages==0) {
-			CURRENT_SECTION.currentGameInPage=CURRENT_SECTION.gameCount-1;
-		} else {
-			printf("%d = %d\n",CURRENT_SECTION.gameCount,(ITEMS_PER_PAGE));
-			if (CURRENT_SECTION.gameCount%(ITEMS_PER_PAGE)!=0) {
-				printf("NOT SAME\n");
-				CURRENT_SECTION.currentGameInPage=(CURRENT_SECTION.gameCount%ITEMS_PER_PAGE)-1;
-			} else {
-				CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
-			}
-		}
-		//point to the last node
-		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.tail;
-	} else {
-		//it's a full page and not the first item
-		if (CURRENT_SECTION.currentGameInPage > 0) {
-			//decrease selected game
-			CURRENT_SECTION.currentGameInPage--;
-		} else {
-			//decrease page
-			CURRENT_SECTION.currentPage--;
-			//go to the last ekement of the page
-			CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
-		}
-	}
-	//establish real game number
-	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 }
 
 void advancePage(struct Rom *rom) {
@@ -293,19 +291,19 @@ void showOrHideFavorites() {
 	}
 
 	loadFavoritesSectionGameList();
-	int number = CURRENT_SECTION.realCurrentGameNumber;
-	int gamesInSection=countGamesInSection();
-	int pages = gamesInSection / ITEMS_PER_PAGE;
-	if (gamesInSection%ITEMS_PER_PAGE==0) {
-		pages--;
-	}
-	CURRENT_SECTION.totalPages=pages;
-	CURRENT_SECTION.currentGameInPage=0;
-	CURRENT_SECTION.currentPage=0;
-	while (CURRENT_GAME_NUMBER<number) {
-		gamesInPage=countGamesInPage();
-		scrollDown();
-	}
+//	int number = CURRENT_SECTION.realCurrentGameNumber;
+//	int gamesInSection=countGamesInSection();
+//	int pages = gamesInSection / ITEMS_PER_PAGE;
+//	if (gamesInSection%ITEMS_PER_PAGE==0) {
+//		pages--;
+//	}
+//	CURRENT_SECTION.totalPages=pages;
+//	CURRENT_SECTION.currentGameInPage=0;
+//	CURRENT_SECTION.currentPage=0;
+//	while (CURRENT_GAME_NUMBER<number) {
+//		gamesInPage=countGamesInPage();
+//		scrollDown();
+//	}
 }
 
 void removeFavorite() {

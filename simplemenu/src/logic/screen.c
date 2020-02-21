@@ -420,11 +420,9 @@ void setupDecorations(struct Rom *rom) {
 }
 
 void updateScreen(struct Rom *rom) {
-	if (rom==NULL) {
-		printf("papa\n");
-		rom = GetNthElement(CURRENT_GAME_NUMBER);
-	}
 	//    pthread_mutex_lock(&lock);
+//	if(currentSectionNumber==favoritesSectionNumber) {
+//	}
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		setupDecorations(rom);
 		if (pictureMode) {

@@ -427,6 +427,22 @@ void loadFavoritesSectionGameList() {
 		strcpy(rom->name, favorites[i].name);
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
 		game++;
+		FAVORITES_SECTION.gameCount++;
+	}
+	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount);
+
+	int i=0;
+	FAVORITES_SECTION.currentGameInPage=0;
+	FAVORITES_SECTION.currentPage=0;
+	FAVORITES_SECTION.currentGameNode=FAVORITES_SECTION.head;
+	while (i<FAVORITES_SECTION.realCurrentGameNumber) {
+		FAVORITES_SECTION.currentGameInPage++;
+		if (FAVORITES_SECTION.currentGameInPage%ITEMS_PER_PAGE==0) {
+			FAVORITES_SECTION.currentGameInPage=0;
+			FAVORITES_SECTION.currentPage++;
+		}
+		FAVORITES_SECTION.currentGameNode=FAVORITES_SECTION.currentGameNode->next;
+		i++;
 	}
 //	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
 }
