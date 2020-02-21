@@ -91,9 +91,7 @@ int main(int argc, char* argv[]) {
 		fullscreenMode=atoi(argv[4]);
 		loadLastState();
 	} else {
-		printf("2\n");
 		loadLastState();
-		printf("3\n");
 	}
 	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
