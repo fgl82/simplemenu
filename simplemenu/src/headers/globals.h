@@ -84,6 +84,7 @@ struct MenuSection {
 	int realCurrentGameNumber;
 	int alphabeticalPaging;
 	int totalPages;
+	int gameCount;
 	int initialized;
 	int onlyFileNamesNoExtension;
 	int headerAndFooterBackgroundColor[3];
@@ -92,14 +93,15 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
+	struct Node* currentGameNode;
 	struct Node *head;
+	struct Node *tail;
 	hashtable_t *aliasHashTable;
 	int activeExecutable;
 	int activeEmulatorDirectory;
 	char category[100];
 };
 
-struct Node* currentGameNode;
 
 struct MenuSection menuSections[50];
 

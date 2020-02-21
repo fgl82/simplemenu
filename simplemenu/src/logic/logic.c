@@ -635,6 +635,7 @@ void loadGameList(int refresh) {
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 								InsertAtTail(rom);
 								game++;
+								CURRENT_SECTION.gameCount++;
 							}
 							desktopCounter++;
 						}
@@ -671,6 +672,7 @@ void loadGameList(int refresh) {
 								rom->alias=NULL;
 							}
 						}
+						CURRENT_SECTION.gameCount++;
 						if (game==ITEMS_PER_PAGE) {
 							if(i!=realItemCount) {
 								CURRENT_SECTION.totalPages++;
@@ -696,6 +698,7 @@ void loadGameList(int refresh) {
 			free (dirs[i]);
 		}
 		menuSections[currentSectionNumber].head = mergeSort(menuSections[currentSectionNumber].head);
+		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 	}
 	loading=0;
 }
@@ -707,7 +710,7 @@ int countGamesInPage() {
 	while(number%ITEMS_PER_PAGE!=0) {
 		number--;
 	}
-	node = currentGameNode;
+	node = CURRENT_SECTION.currentGameNode;
 	for (int i=number;i<number+ITEMS_PER_PAGE;i++) {
 		if (node!=NULL) {
 			if (node->data->name!=NULL && strlen(node->data->name)>1) {
@@ -784,7 +787,7 @@ void determineStartingScreen(int sectionCount) {
 			}
 		}
 		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
+		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;

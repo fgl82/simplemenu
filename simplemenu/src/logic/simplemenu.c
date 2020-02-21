@@ -102,13 +102,13 @@ int main(int argc, char* argv[]) {
 	determineStartingScreen(sectionCount);
 	updateScreen(NULL);
 	enableKeyRepeat();
-	currentGameNode = GetNthNode(CURRENT_GAME_NUMBER);
+	CURRENT_SECTION.currentGameNode = GetNthNode(CURRENT_GAME_NUMBER);
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction(currentGameNode->data);
+						performAction(CURRENT_SECTION.currentGameNode->data);
 					} else {
 						performChoosingAction();
 					}
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				updateScreen(currentGameNode->data);
+				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
-					updateScreen(currentGameNode->data);
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				}
 				if(getPressedKey()==BTN_SELECT) {
 					if (stripGames) {
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 					} else {
 						stripGames=1;
 					}
-					updateScreen(currentGameNode->data);
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				}
 			}
 		}
