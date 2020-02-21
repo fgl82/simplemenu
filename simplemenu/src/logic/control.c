@@ -72,13 +72,32 @@ void scrollDown() {
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 }
 
+void scrollToGame(int gameNumber) {
+	if (fullscreenMode) {
+		ITEMS_PER_PAGE=12;
+	} else {
+		ITEMS_PER_PAGE=10;
+	}
+	int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
+	if (CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
+		pages--;
+	}
+	CURRENT_SECTION.totalPages=pages;
+	CURRENT_SECTION.currentGameInPage=0;
+	CURRENT_SECTION.currentPage=0;
+	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
+	while (CURRENT_GAME_NUMBER<gameNumber) {
+		scrollDown();
+	}
+}
+
 int advanceSection() {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-	if (pictureMode) {
+	if (fullscreenMode) {
 		if(theCurrentSectionHasGames()) {
 			displayBackgroundPicture();
 			showConsole();
@@ -97,7 +116,7 @@ int rewindSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-	if (pictureMode) {
+	if (fullscreenMode) {
 		if(theCurrentSectionHasGames()) {
 			displayBackgroundPicture();
 			showConsole();
@@ -241,7 +260,7 @@ void showOrHideFavorites() {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		if (returnTo==0) {
-			if (pictureMode) {
+			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				currentlySectionSwitching=1;
@@ -251,7 +270,7 @@ void showOrHideFavorites() {
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
-			if (pictureMode) {
+			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				displayBackgroundPicture();
@@ -282,7 +301,7 @@ void showOrHideFavorites() {
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
 
-	if (pictureMode) {
+	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
@@ -291,19 +310,6 @@ void showOrHideFavorites() {
 	}
 
 	loadFavoritesSectionGameList();
-//	int number = CURRENT_SECTION.realCurrentGameNumber;
-//	int gamesInSection=countGamesInSection();
-//	int pages = gamesInSection / ITEMS_PER_PAGE;
-//	if (gamesInSection%ITEMS_PER_PAGE==0) {
-//		pages--;
-//	}
-//	CURRENT_SECTION.totalPages=pages;
-//	CURRENT_SECTION.currentGameInPage=0;
-//	CURRENT_SECTION.currentPage=0;
-//	while (CURRENT_GAME_NUMBER<number) {
-//		gamesInPage=countGamesInPage();
-//		scrollDown();
-//	}
 }
 
 void removeFavorite() {

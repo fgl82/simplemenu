@@ -64,7 +64,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -74,7 +74,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -130,7 +130,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_L1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
@@ -140,7 +140,7 @@ int performAction(struct Rom *rom) {
 				rewindSection();
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
 		return 0;
@@ -148,7 +148,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
@@ -158,7 +158,7 @@ int performAction(struct Rom *rom) {
 				advanceSection();
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
 		return 0;
@@ -210,35 +210,35 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_Y]) {
-			if (pictureMode) {
-				pictureMode=0;
+			if (fullscreenMode) {
+				fullscreenMode=0;
 			} else {
-				pictureMode=1;
+				fullscreenMode=1;
 			}
 		}
 		if (keys[BTN_DOWN]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollDown();
 			return 1;
 		}
 		if(keys[BTN_UP]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollUp();
 			return 1;
 		}
 		if(keys[BTN_RIGHT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			advancePage();
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			rewindPage();

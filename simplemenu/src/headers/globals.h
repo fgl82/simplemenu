@@ -27,7 +27,7 @@ int menuSectionCounter;
 int gamesInPage;
 
 int currentCPU;
-int pictureMode;
+int fullscreenMode;
 int hotKeyPressed;
 int currentlySectionSwitching;
 int currentlyChoosingEmulator;

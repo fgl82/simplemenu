@@ -88,12 +88,14 @@ int main(int argc, char* argv[]) {
 		setSectionsState(argv[1]);
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
-		pictureMode=atoi(argv[4]);
+		fullscreenMode=atoi(argv[4]);
 		loadLastState();
 	} else {
+		printf("2\n");
 		loadLastState();
+		printf("3\n");
 	}
-	if(pictureMode) {
+	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
 	}
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
@@ -119,7 +121,7 @@ int main(int argc, char* argv[]) {
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
-					if(pictureMode) {
+					if(fullscreenMode) {
 						if(currentlySectionSwitching) {
 							hideFullScreenModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {

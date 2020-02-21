@@ -9,6 +9,7 @@ void launchGame();
 void launchEmulator();
 void scrollUp();
 void scrollDown();
+void scrollToGame(int gameNumber);
 void advancePage();
 void rewindPage();
 void showOrHideFavorites();

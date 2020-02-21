@@ -279,7 +279,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pSectionNumber[3]="";
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
-	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
+	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
 #ifndef TARGET_PC
 	saveFavorites();
@@ -715,9 +715,6 @@ void loadGameList(int refresh) {
 		}
 		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
-		printf("%d\n",CURRENT_SECTION.realCurrentGameNumber);
-		printf("%d\n",CURRENT_SECTION.currentGameInPage);
-		printf("%d\n",CURRENT_SECTION.currentPage);
 		CURRENT_SECTION.currentGameNode=GetNthNode(CURRENT_GAME_NUMBER);
 	}
 	loading=0;

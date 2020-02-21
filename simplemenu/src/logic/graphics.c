@@ -48,7 +48,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	}
 	int len=strlen(buf);
 	int width = calculateProportionalSizeOrDistance(315);
-	if (pictureMode) {
+	if (fullscreenMode) {
 		width = calculateProportionalSizeOrDistance(315);
 	}
 	while (msg->w>width) {
@@ -149,7 +149,7 @@ void drawBatteryOnFooter(char *text) {
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
-	if (!pictureMode) {
+	if (!fullscreenMode) {
 		drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 	} else {
 		drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);

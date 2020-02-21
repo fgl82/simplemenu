@@ -74,7 +74,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage(rom);
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -84,7 +84,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage(rom);
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -140,7 +140,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_L1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
@@ -150,7 +150,7 @@ int performAction(struct Rom *rom) {
 				rewindSection();
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
 		return 0;
@@ -158,7 +158,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
@@ -168,7 +168,7 @@ int performAction(struct Rom *rom) {
 				advanceSection();
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
 		return 0;
@@ -221,63 +221,37 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_Y]) {
-			if (pictureMode) {
-				pictureMode=0;
-				int number = CURRENT_GAME_NUMBER;
-				ITEMS_PER_PAGE=10;
-				int gamesInSection=countGamesInSection();
-				int pages = gamesInSection / ITEMS_PER_PAGE;
-				if (gamesInSection%ITEMS_PER_PAGE==0) {
-					pages--;
-				}
-				CURRENT_SECTION.totalPages=pages;
-				CURRENT_SECTION.currentGameInPage=0;
-				CURRENT_SECTION.currentPage=0;
-				while (CURRENT_GAME_NUMBER<number) {
-					gamesInPage=countGamesInPage();
-					scrollDown();
-				}
+			if (fullscreenMode) {
+				fullscreenMode=0;
+				scrollToGame(CURRENT_GAME_NUMBER);
  			} else {
-				pictureMode=1;
-				int number = CURRENT_GAME_NUMBER;
-				ITEMS_PER_PAGE=12;
-				int gamesInSection=countGamesInSection();
-				int pages = gamesInSection / ITEMS_PER_PAGE;
-				if (gamesInSection%ITEMS_PER_PAGE==0) {
-					pages--;
-				}
-				CURRENT_SECTION.totalPages=pages;
-				CURRENT_SECTION.currentGameInPage=0;
-				CURRENT_SECTION.currentPage=0;
-				while (CURRENT_GAME_NUMBER<number) {
-					gamesInPage=countGamesInPage();
-					scrollDown();
-				}
+				fullscreenMode=1;
+				scrollToGame(CURRENT_GAME_NUMBER);
 			}
 		}
 		if (keys[BTN_DOWN]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollDown();
 			return 1;
 		}
 		if(keys[BTN_UP]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollUp();
 			return 1;
 		}
 		if(keys[BTN_RIGHT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			advancePage(rom);
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			rewindPage(rom);
