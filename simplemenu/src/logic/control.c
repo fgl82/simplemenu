@@ -66,10 +66,6 @@ int advanceSection() {
 			gamesInPage=countGamesInPage();
 			scrollDown();
 		}
-		//if it's just initialized
-		if (CURRENT_SECTION.currentGameNode==NULL) {
-			CURRENT_SECTION.currentGameNode = GetNthNode(CURRENT_GAME_NUMBER);
-		}
 		return 1;
 	}
 	return 0;
@@ -90,8 +86,9 @@ int rewindSection() {
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		loadGameList(0);
+		printf("ES: %s\n", "PAPAPA");
 		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
+		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
@@ -101,8 +98,10 @@ int rewindSection() {
 		CURRENT_SECTION.currentPage=0;
 		while (CURRENT_GAME_NUMBER<number) {
 			gamesInPage=countGamesInPage();
+			printf("ES: %s\n", "PAPAPA3");
 			scrollDown();
 		}
+		printf("ES: %s\n", "PAPAPA2");
 		return 1;
 	}
 	return 0;
@@ -138,20 +137,22 @@ void scrollUp() {
 	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->prev;
 	//if at the first item of the first page
 	if (CURRENT_SECTION.currentGameNode==NULL) {
-		//go to the last node
-		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.tail;
 		//go to the last page
 		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
 		//go to the last game
 		if (CURRENT_SECTION.totalPages==0) {
 			CURRENT_SECTION.currentGameInPage=CURRENT_SECTION.gameCount-1;
 		} else {
+			printf("%d = %d\n",CURRENT_SECTION.gameCount,(ITEMS_PER_PAGE));
 			if (CURRENT_SECTION.gameCount%(ITEMS_PER_PAGE)!=0) {
+				printf("NOT SAME\n");
 				CURRENT_SECTION.currentGameInPage=(CURRENT_SECTION.gameCount%ITEMS_PER_PAGE)-1;
 			} else {
 				CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
 			}
 		}
+		//point to the last node
+		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.tail;
 	} else {
 		//it's a full page and not the first item
 		if (CURRENT_SECTION.currentGameInPage > 0) {
@@ -183,7 +184,6 @@ void advancePage(struct Rom *rom) {
 				}
 				scrollDown();
 				free(currentGame);
-//				currentGameNode=currentGameNode->next;
 				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			}
 			free(currentGame);
@@ -193,7 +193,6 @@ void advancePage(struct Rom *rom) {
 				for (int i=CURRENT_SECTION.currentGameInPage;i<ITEMS_PER_PAGE;i++) {
 					CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->next;
 				}
-
 			} else {
 				CURRENT_SECTION.currentPage=0;
 				CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
@@ -206,7 +205,7 @@ void advancePage(struct Rom *rom) {
 }
 
 void rewindPage(struct Rom *rom) {
-	struct Node* currentGameNode = getCurrentNode();
+//	struct Node* currentGameNode = getCurrentNode();
 	if (rom==NULL||rom->name==NULL) {
 		return;
 	}
@@ -215,18 +214,17 @@ void rewindPage(struct Rom *rom) {
 		char *previousGame;
 		int hitStart = 0;
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0)) {
-			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->prev->data);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0) {
 					hitStart = 1;
 					break;
 				} else {
 					scrollUp();
-					currentGameNode = getCurrentNode();
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(currentGameNode->data);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			} else {
 				break;
 			}
@@ -234,13 +232,12 @@ void rewindPage(struct Rom *rom) {
 		}
 		if (!hitStart) {
 			scrollUp();
-			currentGameNode = getCurrentNode();
 		}
 		hitStart=0;
 		free(currentGame);
-		currentGame = getFileNameOrAlias(currentGameNode->data);
+		currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0)) {
-			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->prev->data);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0) {
@@ -248,23 +245,24 @@ void rewindPage(struct Rom *rom) {
 					break;
 				} else {
 					scrollUp();
-					currentGameNode = getCurrentNode();
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(currentGameNode->data);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			} else {
 				break;
 			}
 		}
 		free(currentGame);
 	} else if (CURRENT_SECTION.currentPage > 0) {
-		CURRENT_SECTION.currentPage--;
-		CURRENT_SECTION.currentGameInPage=0;
+		int tempCurrentPage = CURRENT_SECTION.currentPage;
+		while (!(CURRENT_SECTION.currentPage==(tempCurrentPage-1)&&CURRENT_SECTION.currentGameInPage==0)) {
+			scrollUp();
+		}
 	} else {
-		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
-		CURRENT_SECTION.currentGameInPage=0;
-
+		while (!(CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGameInPage==0)) {
+			scrollUp();
+		}
 	}
 	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;

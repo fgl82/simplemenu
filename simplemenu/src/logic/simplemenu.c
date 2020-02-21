@@ -100,9 +100,8 @@ int main(int argc, char* argv[]) {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	updateScreen(NULL);
+	updateScreen(CURRENT_SECTION.currentGameNode->data);
 	enableKeyRepeat();
-	CURRENT_SECTION.currentGameNode = GetNthNode(CURRENT_GAME_NUMBER);
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){

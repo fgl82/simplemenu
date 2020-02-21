@@ -340,7 +340,6 @@ void drawGameList() {
 	char *nameWithoutExtension;
 	struct Node* currentNode;
 	currentNode = GetNthNode(ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);
-
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (currentNode==NULL) {
 			break;
@@ -467,7 +466,7 @@ uint32_t hideFullScreenModeMenu(uint32_t interval, void *param) {
 	if(!hotKeyPressed) {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
-		updateScreen(NULL);
+		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	}
 	return 0;
 }
@@ -491,7 +490,7 @@ uint32_t hidePicModeLogo(uint32_t interval, void *param) {
 	clearPicModeHideLogoTimer();
 	currentlySectionSwitching=0;
 	hotKeyPressed=0;
-	updateScreen(NULL);
+	updateScreen(CURRENT_SECTION.currentGameNode->data);
 	return 0;
 }
 
