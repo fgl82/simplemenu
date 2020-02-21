@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
 					currentlySectionSwitching=0;
 					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				}
-				if(getPressedKey()==BTN_SELECT) {
+				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
 						stripGames=0;
 					} else {

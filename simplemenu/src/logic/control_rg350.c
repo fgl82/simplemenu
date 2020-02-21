@@ -62,12 +62,12 @@ int performAction(struct Rom *rom) {
 			}
 		}
 		if (keys[BTN_SELECT]&&!currentlySectionSwitching) {
-			for(int i=0;i<100;i++) {
+			for(int i=0;i<25;i++) {
 				selectRandomGame();
-				updateScreen(rom);
+				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			}
 			saveFavorites();
-			launchGame(rom);
+			launchGame(CURRENT_SECTION.currentGameNode->data);
 		}	
 		if (keys[BTN_DOWN]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;

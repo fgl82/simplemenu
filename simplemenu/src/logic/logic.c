@@ -752,13 +752,8 @@ int getFirstNonHiddenSection(int sectionCount) {
 }
 
 void selectRandomGame() {
-	int gamesInSection = countGamesInSection();
-	if (gamesInSection%ITEMS_PER_PAGE==0) {
-		CURRENT_SECTION.currentPage = rand() % ((int)gamesInSection/ITEMS_PER_PAGE);
-	} else {
-		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/ITEMS_PER_PAGE) +1);
-	}
-	CURRENT_SECTION.currentGameInPage = rand() % countGamesInPage();
+	int game = rand() % CURRENT_SECTION.gameCount;
+	scrollToGame(game);
 }
 
 void determineStartingScreen(int sectionCount) {
