@@ -1,6 +1,6 @@
 #ifndef SCREEN_DEFINED
 #define SCREEN_DEFINED
-void updateScreen();
+void updateScreen(struct Rom *rom);
 void drawHeader();
 void drawGameList();
 void drawFooter();

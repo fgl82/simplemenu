@@ -12,6 +12,8 @@
 
 int running;
 
+char mediaFolder[100];
+
 int itsStoppedBecauseOfAnError;
 char *errorMessage;
 int thereIsACriticalError;
@@ -27,7 +29,7 @@ int menuSectionCounter;
 int gamesInPage;
 
 int currentCPU;
-int pictureMode;
+int fullscreenMode;
 int hotKeyPressed;
 int currentlySectionSwitching;
 int currentlyChoosingEmulator;
@@ -84,6 +86,7 @@ struct MenuSection {
 	int realCurrentGameNumber;
 	int alphabeticalPaging;
 	int totalPages;
+	int gameCount;
 	int initialized;
 	int onlyFileNamesNoExtension;
 	int headerAndFooterBackgroundColor[3];
@@ -92,14 +95,15 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
+	struct Node* currentGameNode;
 	struct Node *head;
+	struct Node *tail;
 	hashtable_t *aliasHashTable;
 	int activeExecutable;
 	int activeEmulatorDirectory;
 	char category[100];
 };
 
-//struct Rom* currentGame;
 
 struct MenuSection menuSections[50];
 
