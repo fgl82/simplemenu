@@ -161,6 +161,7 @@ int performAction(struct Rom *rom) {
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
+
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
