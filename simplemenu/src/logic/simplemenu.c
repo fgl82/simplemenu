@@ -88,27 +88,26 @@ int main(int argc, char* argv[]) {
 		setSectionsState(argv[1]);
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
-		pictureMode=atoi(argv[4]);
+		fullscreenMode=atoi(argv[4]);
 		loadLastState();
 	} else {
 		loadLastState();
 	}
-	if(pictureMode) {
+	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
 	}
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	updateScreen();
+	updateScreen(CURRENT_SECTION.currentGameNode->data);
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
-			struct Rom *rom = GetNthElement(CURRENT_GAME_NUMBER);
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction(rom);
+						performAction(CURRENT_SECTION.currentGameNode->data);
 					} else {
 						performChoosingAction();
 					}
@@ -116,11 +115,11 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				updateScreen();
+				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
-					if(pictureMode) {
+					if(fullscreenMode) {
 						if(currentlySectionSwitching) {
 							hideFullScreenModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {
@@ -129,15 +128,15 @@ int main(int argc, char* argv[]) {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
-					updateScreen();
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				}
-				if(getPressedKey()==BTN_SELECT) {
+				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
 						stripGames=0;
 					} else {
 						stripGames=1;
 					}
-					updateScreen();
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				}
 			}
 		}

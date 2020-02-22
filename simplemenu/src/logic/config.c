@@ -154,7 +154,7 @@ void saveLastState() {
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", stripGames);
-	fprintf(fp, "%d;\n", pictureMode);
+	fprintf(fp, "%d;\n", fullscreenMode);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
 		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGameInPage, CURRENT_SECTION.realCurrentGameNumber);
@@ -206,7 +206,7 @@ void loadLastState() {
 	}
 	stripGames=stripGamesConfig;
 	currentSectionNumber=startInSection;
-	pictureMode=startInPictureMode;
+	fullscreenMode=startInPictureMode;
 	fclose(fp);
 	if (line) {
 		free(line);
@@ -239,9 +239,13 @@ void loadConfig() {
 		}  else if (i==5){
 			stripGames=atoi(line);
 		}  else if (i==6){
-			pictureMode=atoi(line);
-		} else {
+			fullscreenMode=atoi(line);
+		} else if (i==7){
 			shutDownEnabled=atoi(line);
+		} else {
+			strcpy(mediaFolder,line);
+			mediaFolder[strlen(mediaFolder)-1]='\0';
+			printf("%s\n",mediaFolder);
 		}
 		i++;
 	}

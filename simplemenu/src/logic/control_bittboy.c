@@ -54,7 +54,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
-				updateScreen();
+				updateScreen(rom);
 			}
 			saveFavorites();
 			launchGame();
@@ -64,7 +64,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage();
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -74,7 +74,7 @@ int performAction(struct Rom *rom) {
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage();
 //			CURRENT_SECTION.alphabeticalPaging=0;
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			return 0;
@@ -130,39 +130,49 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_L1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
+			currentlySectionSwitching=1;
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
+				loadGameList(0);
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
+
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (pictureMode&&!favoritesSectionSelected) {
+		if (fullscreenMode&&!favoritesSectionSelected) {
 			resetPicModeHideLogoTimer();
 			currentlySectionSwitching=1;
 		}
 		int advanced = advanceSection();
 		if(advanced) {
+			currentlySectionSwitching=1;
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
+				loadGameList(0);
 			}
 		}
-		if (!pictureMode) {
+		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
+
 
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if (keys[BTN_X]) {
@@ -170,12 +180,12 @@ int performAction(struct Rom *rom) {
 				resetPicModeHideMenuTimer();
 			}
 			if (!favoritesSectionSelected) {
-				markAsFavorite();
+				markAsFavorite(rom);
 			} else {
 				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
-					hideFullScreenModeMenu();
+//					hideFullScreenModeMenu();
 				}
 			}
 			return 0;
@@ -210,35 +220,35 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_Y]) {
-			if (pictureMode) {
-				pictureMode=0;
+			if (fullscreenMode) {
+				fullscreenMode=0;
 			} else {
-				pictureMode=1;
+				fullscreenMode=1;
 			}
 		}
 		if (keys[BTN_DOWN]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollDown();
 			return 1;
 		}
 		if(keys[BTN_UP]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			scrollUp();
 			return 1;
 		}
 		if(keys[BTN_RIGHT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			advancePage();
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
-			if(pictureMode) {
+			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
 			rewindPage();

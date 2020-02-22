@@ -48,7 +48,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	}
 	int len=strlen(buf);
 	int width = calculateProportionalSizeOrDistance(315);
-	if (pictureMode) {
+	if (fullscreenMode) {
 		width = calculateProportionalSizeOrDistance(315);
 	}
 	while (msg->w>width) {
@@ -149,7 +149,7 @@ void drawBatteryOnFooter(char *text) {
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
-	if (!pictureMode) {
+	if (!fullscreenMode) {
 		drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 	} else {
 		drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
@@ -301,8 +301,11 @@ void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
-	if (SCREEN_HEIGHT>600) {
-		SCREEN_HEIGHT = 600;
+	if (SCREEN_HEIGHT>768) {
+		SCREEN_HEIGHT = 768;
+	}
+	if (SCREEN_HEIGHT<240) {
+		SCREEN_HEIGHT = 240;
 	}
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);

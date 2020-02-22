@@ -279,7 +279,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	char pSectionNumber[3]="";
 	char pPictureMode[2]="";
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
-	snprintf(pPictureMode,sizeof(pPictureMode),"%d",pictureMode);
+	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
 #ifndef TARGET_PC
 	saveFavorites();
@@ -309,10 +309,11 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 
 int countGamesInSection() {
 	int gamesCounter=0;
+	struct Node* currentGameNode = CURRENT_SECTION.head;
 	for (int i=0;i<=10000;i++) {
-		struct Rom* currentGame = GetNthElement(i);
-		if (currentGame!=NULL&&strlen(currentGame->name)>0) {
+		if (currentGameNode!=NULL&&strlen(currentGameNode->data->name)>0) {
 			gamesCounter++;
+			currentGameNode = currentGameNode->next;
 		} else {
 			break;
 		}
@@ -402,15 +403,16 @@ struct Node *mergeSort(struct Node *head) {
 }
 
 void loadFavoritesSectionGameList() {
-	int game = 0;
+	int gameInPage = 0;
 	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
+	FAVORITES_SECTION.gameCount=0;
 	cleanListForSection(&FAVORITES_SECTION);
 	for (int i=0;i<favoritesSize;i++){
-		if (game==ITEMS_PER_PAGE) {
+		if (gameInPage==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize) {
 				page++;
-				game = 0;
+				gameInPage = 0;
 				FAVORITES_SECTION.totalPages++;
 			}
 		}
@@ -425,9 +427,13 @@ void loadFavoritesSectionGameList() {
 		strcpy(rom->alias, favorites[i].alias);
 		strcpy(rom->name, favorites[i].name);
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
-		game++;
+		gameInPage++;
+		FAVORITES_SECTION.gameCount++;
 	}
-//	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
+	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount-1);
+	if (favoritesSize>0) {
+		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
+	}
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {
@@ -634,6 +640,7 @@ void loadGameList(int refresh) {
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 								InsertAtTail(rom);
 								game++;
+								CURRENT_SECTION.gameCount++;
 							}
 							desktopCounter++;
 						}
@@ -670,6 +677,7 @@ void loadGameList(int refresh) {
 								rom->alias=NULL;
 							}
 						}
+						CURRENT_SECTION.gameCount++;
 						if (game==ITEMS_PER_PAGE) {
 							if(i!=realItemCount) {
 								CURRENT_SECTION.totalPages++;
@@ -694,7 +702,10 @@ void loadGameList(int refresh) {
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
-		menuSections[currentSectionNumber].head = mergeSort(menuSections[currentSectionNumber].head);
+		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
+//		CURRENT_SECTION.currentGameNode=GetNthNode(CURRENT_GAME_NUMBER);
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}
 	loading=0;
 }
@@ -706,7 +717,7 @@ int countGamesInPage() {
 	while(number%ITEMS_PER_PAGE!=0) {
 		number--;
 	}
-	node = GetNthNode(number);
+	node = CURRENT_SECTION.currentGameNode;
 	for (int i=number;i<number+ITEMS_PER_PAGE;i++) {
 		if (node!=NULL) {
 			if (node->data->name!=NULL && strlen(node->data->name)>1) {
@@ -731,13 +742,8 @@ int getFirstNonHiddenSection(int sectionCount) {
 }
 
 void selectRandomGame() {
-	int gamesInSection = countGamesInSection();
-	if (gamesInSection%ITEMS_PER_PAGE==0) {
-		CURRENT_SECTION.currentPage = rand() % ((int)gamesInSection/ITEMS_PER_PAGE);
-	} else {
-		CURRENT_SECTION.currentPage = rand() % ((int)(gamesInSection/ITEMS_PER_PAGE) +1);
-	}
-	CURRENT_SECTION.currentGameInPage = rand() % countGamesInPage();
+	int game = rand() % CURRENT_SECTION.gameCount;
+	scrollToGame(game);
 }
 
 void determineStartingScreen(int sectionCount) {
@@ -748,19 +754,12 @@ void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
+		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
 		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			scrollDown();
-		}
 		if (favoritesSize==0) {
 			favoritesSectionSelected=0;
 			currentSectionNumber=0;
@@ -782,19 +781,12 @@ void determineStartingScreen(int sectionCount) {
 				}
 			}
 		}
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
+		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
 		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			scrollDown();
-		}
 	}
 }
 

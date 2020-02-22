@@ -17,24 +17,73 @@
 #include "../headers/system_logic.h"
 #include "../headers/doubly_linked_rom_list.h"
 
+void scrollUp() {
+	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->prev;
+	//if at the first item of the first page
+	if (CURRENT_SECTION.currentGameNode==NULL) {
+		//go to the last page
+		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
+		//go to the last game whether on the same page or not
+		if (CURRENT_SECTION.totalPages==0) {
+			CURRENT_SECTION.currentGameInPage=CURRENT_SECTION.gameCount-1;
+		} else {
+			if (CURRENT_SECTION.gameCount%(ITEMS_PER_PAGE)!=0) {
+				CURRENT_SECTION.currentGameInPage=(CURRENT_SECTION.gameCount%ITEMS_PER_PAGE)-1;
+			} else {
+				CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
+			}
+		}
+		//point to the last node
+		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.tail;
+	} else {
+		//it's a full page and not the first item
+		if (CURRENT_SECTION.currentGameInPage > 0) {
+			//decrease selected game
+			CURRENT_SECTION.currentGameInPage--;
+		} else {
+			//decrease page
+			CURRENT_SECTION.currentPage--;
+			//go to the last ekement of the page
+			CURRENT_SECTION.currentGameInPage=ITEMS_PER_PAGE-1;
+		}
+	}
+	//establish real game number
+	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
+}
+
 void scrollDown() {
-	struct Node *currentNode = getCurrentNode();
-	if (CURRENT_SECTION.currentGameInPage < gamesInPage-1) {
-		if (currentNode->next!=NULL&&strlen(currentNode->next->data->name)>0) {
+	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->next;
+	// if at the end end of the list
+	if (CURRENT_SECTION.currentGameNode==NULL) {
+		//restart pages
+		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
+		CURRENT_SECTION.currentPage=0;
+		CURRENT_SECTION.currentGameInPage=0;
+	} else {
+		// it's a filled page and not the last item
+		if (CURRENT_SECTION.currentGameInPage < ITEMS_PER_PAGE-1) {
+			// increase selected game
 			CURRENT_SECTION.currentGameInPage++;
 		} else {
-			CURRENT_SECTION.currentPage=0;
+			CURRENT_SECTION.currentPage++;
 			CURRENT_SECTION.currentGameInPage=0;
 		}
-	} else {
-		if (CURRENT_SECTION.currentPage < CURRENT_SECTION.totalPages) {
-			CURRENT_SECTION.currentPage++;
-		} else {
-			CURRENT_SECTION.currentPage=0;
-		}
-		CURRENT_SECTION.currentGameInPage=0;
 	}
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
+}
+
+void scrollToGame(int gameNumber) {
+	int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
+	if (CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
+		pages--;
+	}
+	CURRENT_SECTION.totalPages=pages;
+	CURRENT_SECTION.currentGameInPage=0;
+	CURRENT_SECTION.currentPage=0;
+	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
+	while (CURRENT_GAME_NUMBER<gameNumber) {
+		scrollDown();
+	}
 }
 
 int advanceSection() {
@@ -43,7 +92,7 @@ int advanceSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-	if (pictureMode) {
+	if (fullscreenMode) {
 		if(theCurrentSectionHasGames()) {
 			displayBackgroundPicture();
 			showConsole();
@@ -51,20 +100,6 @@ int advanceSection() {
 		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
-		loadGameList(0);
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
-		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
-			pages--;
-		}
-		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			scrollDown();
-		}
 		return 1;
 	}
 	return 0;
@@ -76,7 +111,7 @@ int rewindSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-	if (pictureMode) {
+	if (fullscreenMode) {
 		if(theCurrentSectionHasGames()) {
 			displayBackgroundPicture();
 			showConsole();
@@ -84,20 +119,6 @@ int rewindSection() {
 		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
-		loadGameList(0);
-		int number = CURRENT_SECTION.realCurrentGameNumber;
-		int gamesInSection=countGamesInSection();
-		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
-			pages--;
-		}
-		CURRENT_SECTION.totalPages=pages;
-		CURRENT_SECTION.currentGameInPage=0;
-		CURRENT_SECTION.currentPage=0;
-		while (CURRENT_GAME_NUMBER<number) {
-			gamesInPage=countGamesInPage();
-			scrollDown();
-		}
 		return 1;
 	}
 	return 0;
@@ -129,60 +150,36 @@ void launchEmulator(struct Rom *rom) {
 	}
 }
 
-void scrollUp() {
-	if(CURRENT_SECTION.currentGameInPage == 0) {
-		if (CURRENT_SECTION.currentPage >0) {
-			CURRENT_SECTION.currentPage--;
-		} else {
-			CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
-		}
-		gamesInPage=countGamesInPage();
-		if (gamesInPage>0) {
-			CURRENT_SECTION.currentGameInPage=gamesInPage-1;
-		}
-		return;
-	}
-	if (CURRENT_SECTION.currentGameInPage > 0) {
-		CURRENT_SECTION.currentGameInPage--;
-	}
-	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
-}
-
 void advancePage(struct Rom *rom) {
-	struct Node* currentGameNode = getCurrentNode();
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
-		if (rom==NULL||rom->name==NULL) {
-			return;
-		}
 		if (CURRENT_SECTION.alphabeticalPaging) {
-			char *currentGame = getFileNameOrAlias(currentGameNode->data);
+			char *currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			char currentLetter=tolower(currentGame[0]);
-			while((tolower(currentGame[0])==currentLetter||isdigit(currentGame[0]))) {
-				if (CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGameInPage==countGamesInPage()-1) {
-					scrollDown();
-					break;
-				}
+			while((tolower(currentGame[0])==currentLetter||(isdigit(currentLetter)&&isdigit(currentGame[0])))) {
 				scrollDown();
 				free(currentGame);
-				currentGameNode=getCurrentNode();
-				currentGame = getFileNameOrAlias(currentGameNode->data);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			}
 			free(currentGame);
 		} else {
 			if(CURRENT_SECTION.currentPage!=CURRENT_SECTION.totalPages) {
 				CURRENT_SECTION.currentPage++;
+				for (int i=CURRENT_SECTION.currentGameInPage;i<ITEMS_PER_PAGE;i++) {
+					CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->next;
+				}
 			} else {
 				CURRENT_SECTION.currentPage=0;
+				CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
 			}
 			CURRENT_SECTION.currentGameInPage=0;
 		}
 	}
-	gamesInPage=countGamesInPage();
+//	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 }
 
 void rewindPage(struct Rom *rom) {
-	struct Node* currentGameNode = getCurrentNode();
+//	struct Node* currentGameNode = getCurrentNode();
 	if (rom==NULL||rom->name==NULL) {
 		return;
 	}
@@ -191,18 +188,17 @@ void rewindPage(struct Rom *rom) {
 		char *previousGame;
 		int hitStart = 0;
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0)) {
-			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->prev->data);
 			if(tolower(currentGame[0])==tolower(previousGame[0])) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0) {
 					hitStart = 1;
 					break;
 				} else {
 					scrollUp();
-					currentGameNode = getCurrentNode();
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(currentGameNode->data);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			} else {
 				break;
 			}
@@ -210,13 +206,12 @@ void rewindPage(struct Rom *rom) {
 		}
 		if (!hitStart) {
 			scrollUp();
-			currentGameNode = getCurrentNode();
 		}
 		hitStart=0;
 		free(currentGame);
-		currentGame = getFileNameOrAlias(currentGameNode->data);
+		currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 		while(!(CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0)) {
-			previousGame = getFileNameOrAlias(currentGameNode->prev->data);
+			previousGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->prev->data);
 			if ( (tolower(currentGame[0])==tolower(previousGame[0])) ||
 					(isdigit(currentGame[0])&&isdigit(previousGame[0]))) {
 				if (CURRENT_SECTION.currentPage==0&&CURRENT_SECTION.currentGameInPage==0) {
@@ -224,66 +219,53 @@ void rewindPage(struct Rom *rom) {
 					break;
 				} else {
 					scrollUp();
-					currentGameNode = getCurrentNode();
 				}
 				free(currentGame);
 				free(previousGame);
-				currentGame = getFileNameOrAlias(currentGameNode->data);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			} else {
 				break;
 			}
 		}
 		free(currentGame);
 	} else if (CURRENT_SECTION.currentPage > 0) {
-		CURRENT_SECTION.currentPage--;
-		CURRENT_SECTION.currentGameInPage=0;
+		int tempCurrentPage = CURRENT_SECTION.currentPage;
+		while (!(CURRENT_SECTION.currentPage==(tempCurrentPage-1)&&CURRENT_SECTION.currentGameInPage==0)) {
+			scrollUp();
+		}
 	} else {
-		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
-		CURRENT_SECTION.currentGameInPage=0;
-
+		while (!(CURRENT_SECTION.currentPage==CURRENT_SECTION.totalPages&&CURRENT_SECTION.currentGameInPage==0)) {
+			scrollUp();
+		}
 	}
-	gamesInPage=countGamesInPage();
+//	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 }
 
 void showOrHideFavorites() {
-	hideFullScreenModeMenu();
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
 		if (returnTo==0) {
-			if (pictureMode) {
+			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				currentlySectionSwitching=1;
 				displayBackgroundPicture();
 				showConsole();
-//				refreshScreen();
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
-			if (pictureMode) {
+			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				displayBackgroundPicture();
 				showConsole();
-//				refreshScreen();
 			}
 			loadGameList(0);
-			int number = CURRENT_SECTION.realCurrentGameNumber;
-			int gamesInSection=countGamesInSection();
-			int pages = gamesInSection / ITEMS_PER_PAGE;
-			if (gamesInSection%ITEMS_PER_PAGE==0) {
-				pages--;
-			}
-			CURRENT_SECTION.totalPages=pages;
-			CURRENT_SECTION.currentGameInPage=0;
-			CURRENT_SECTION.currentPage=0;
-			while (CURRENT_GAME_NUMBER<number) {
-				gamesInPage=countGamesInPage();
-				scrollDown();
-			}
 		}
+		hideFullScreenModeMenu();
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return;
 	}
 	if(strlen(favorites[0].name)<2) {
@@ -292,29 +274,14 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-
-	if (pictureMode) {
+	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
 		showConsole();
 		refreshScreen();
 	}
-
 	loadFavoritesSectionGameList();
-	int number = CURRENT_SECTION.realCurrentGameNumber;
-	int gamesInSection=countGamesInSection();
-	int pages = gamesInSection / ITEMS_PER_PAGE;
-	if (gamesInSection%ITEMS_PER_PAGE==0) {
-		pages--;
-	}
-	CURRENT_SECTION.totalPages=pages;
-	CURRENT_SECTION.currentGameInPage=0;
-	CURRENT_SECTION.currentPage=0;
-	while (CURRENT_GAME_NUMBER<number) {
-		gamesInPage=countGamesInPage();
-		scrollDown();
-	}
 }
 
 void removeFavorite() {
@@ -338,10 +305,12 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
 		favoritesSize--;
+//		if (favoritesSize > 0) {
+		if (CURRENT_GAME_NUMBER==favoritesSize) {
+			FAVORITES_SECTION.realCurrentGameNumber--;
+		}
 		loadFavoritesSectionGameList();
-	}
-	if(CURRENT_GAME_NUMBER==favoritesSize) {
-		scrollUp();
+//		}
 	}
 }
 
