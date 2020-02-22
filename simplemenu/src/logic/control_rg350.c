@@ -232,13 +232,15 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_Y]) {
+			int number = CURRENT_GAME_NUMBER;
 			if (fullscreenMode) {
 				fullscreenMode=0;
-				scrollToGame(CURRENT_GAME_NUMBER);
+				ITEMS_PER_PAGE=10;
  			} else {
 				fullscreenMode=1;
-				scrollToGame(CURRENT_GAME_NUMBER);
+				ITEMS_PER_PAGE=12;
 			}
+			scrollToGame(number);
 		}
 		if (keys[BTN_DOWN]) {
 			if(fullscreenMode) {

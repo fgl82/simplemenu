@@ -406,6 +406,7 @@ void loadFavoritesSectionGameList() {
 	int game = 0;
 	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
+	FAVORITES_SECTION.gameCount=0;
 	cleanListForSection(&FAVORITES_SECTION);
 	for (int i=0;i<favoritesSize;i++){
 		if (game==ITEMS_PER_PAGE) {

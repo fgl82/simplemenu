@@ -23,7 +23,7 @@ void scrollUp() {
 	if (CURRENT_SECTION.currentGameNode==NULL) {
 		//go to the last page
 		CURRENT_SECTION.currentPage=CURRENT_SECTION.totalPages;
-		//go to the last game
+		//go to the last game whether on the same page or not
 		if (CURRENT_SECTION.totalPages==0) {
 			CURRENT_SECTION.currentGameInPage=CURRENT_SECTION.gameCount-1;
 		} else {
@@ -73,11 +73,6 @@ void scrollDown() {
 }
 
 void scrollToGame(int gameNumber) {
-	if (fullscreenMode) {
-		ITEMS_PER_PAGE=12;
-	} else {
-		ITEMS_PER_PAGE=10;
-	}
 	int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 	if (CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
 		pages--;
