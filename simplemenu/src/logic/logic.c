@@ -432,11 +432,7 @@ void loadFavoritesSectionGameList() {
 	}
 	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount-1);
 	if (favoritesSize>0) {
-		if (CURRENT_GAME_NUMBER==favoritesSize) {
-			scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
-		} else {
-			scrollToGame(FAVORITES_SECTION.realCurrentGameNumber+1);
-		}
+		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
 	}
 }
 

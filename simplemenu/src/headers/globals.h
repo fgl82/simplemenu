@@ -12,6 +12,8 @@
 
 int running;
 
+char mediaFolder[100];
+
 int itsStoppedBecauseOfAnError;
 char *errorMessage;
 int thereIsACriticalError;

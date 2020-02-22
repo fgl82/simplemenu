@@ -306,8 +306,10 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].alias,"\0");
 		favoritesSize--;
 //		if (favoritesSize > 0) {
+		if (CURRENT_GAME_NUMBER==favoritesSize) {
 			FAVORITES_SECTION.realCurrentGameNumber--;
-			loadFavoritesSectionGameList();
+		}
+		loadFavoritesSectionGameList();
 //		}
 	}
 }

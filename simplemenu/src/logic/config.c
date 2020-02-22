@@ -240,8 +240,12 @@ void loadConfig() {
 			stripGames=atoi(line);
 		}  else if (i==6){
 			fullscreenMode=atoi(line);
-		} else {
+		} else if (i==7){
 			shutDownEnabled=atoi(line);
+		} else {
+			strcpy(mediaFolder,line);
+			mediaFolder[strlen(mediaFolder)-1]='\0';
+			printf("%s\n",mediaFolder);
 		}
 		i++;
 	}

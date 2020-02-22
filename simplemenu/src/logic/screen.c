@@ -222,7 +222,8 @@ void displayGamePicture(struct Rom *rom) {
 		strcpy(pictureWithFullPath, rom->directory);
 		tempGameName=getGameName(rom->name);
 	}
-	strcat(pictureWithFullPath,"media/");
+	strcat(pictureWithFullPath,mediaFolder);
+	strcat(pictureWithFullPath,"/");
 	//	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
