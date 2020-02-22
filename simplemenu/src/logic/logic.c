@@ -403,16 +403,16 @@ struct Node *mergeSort(struct Node *head) {
 }
 
 void loadFavoritesSectionGameList() {
-	int game = 0;
+	int gameInPage = 0;
 	int page = 0;
 	FAVORITES_SECTION.totalPages=0;
 	FAVORITES_SECTION.gameCount=0;
 	cleanListForSection(&FAVORITES_SECTION);
 	for (int i=0;i<favoritesSize;i++){
-		if (game==ITEMS_PER_PAGE) {
+		if (gameInPage==ITEMS_PER_PAGE) {
 			if(i!=favoritesSize) {
 				page++;
-				game = 0;
+				gameInPage = 0;
 				FAVORITES_SECTION.totalPages++;
 			}
 		}
@@ -427,26 +427,17 @@ void loadFavoritesSectionGameList() {
 		strcpy(rom->alias, favorites[i].alias);
 		strcpy(rom->name, favorites[i].name);
 		InsertAtTailInSection(&FAVORITES_SECTION, rom);
-		game++;
+		gameInPage++;
 		FAVORITES_SECTION.gameCount++;
 	}
 	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount-1);
-	scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
-
-//	int i=0;
-//	FAVORITES_SECTION.currentGameInPage=0;
-//	FAVORITES_SECTION.currentPage=0;
-//	FAVORITES_SECTION.currentGameNode=FAVORITES_SECTION.head;
-//	while (i<FAVORITES_SECTION.realCurrentGameNumber) {
-//		FAVORITES_SECTION.currentGameInPage++;
-//		if (FAVORITES_SECTION.currentGameInPage%ITEMS_PER_PAGE==0) {
-//			FAVORITES_SECTION.currentGameInPage=0;
-//			FAVORITES_SECTION.currentPage++;
-//		}
-//		FAVORITES_SECTION.currentGameNode=FAVORITES_SECTION.currentGameNode->next;
-//		i++;
-//	}
-//	menuSections[favoritesSectionNumber].head = mergeSort(menuSections[favoritesSectionNumber].head);
+	if (favoritesSize>0) {
+		if (CURRENT_GAME_NUMBER==favoritesSize) {
+			scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
+		} else {
+			scrollToGame(FAVORITES_SECTION.realCurrentGameNumber+1);
+		}
+	}
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {

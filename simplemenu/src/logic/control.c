@@ -243,7 +243,6 @@ void rewindPage(struct Rom *rom) {
 }
 
 void showOrHideFavorites() {
-	hideFullScreenModeMenu();
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
@@ -254,7 +253,6 @@ void showOrHideFavorites() {
 				currentlySectionSwitching=1;
 				displayBackgroundPicture();
 				showConsole();
-//				refreshScreen();
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
@@ -263,10 +261,10 @@ void showOrHideFavorites() {
 				resetPicModeHideLogoTimer();
 				displayBackgroundPicture();
 				showConsole();
-//				refreshScreen();
 			}
 			loadGameList(0);
 		}
+		hideFullScreenModeMenu();
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return;
 	}
@@ -276,7 +274,6 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
-
 	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
@@ -284,7 +281,6 @@ void showOrHideFavorites() {
 		showConsole();
 		refreshScreen();
 	}
-
 	loadFavoritesSectionGameList();
 }
 
@@ -309,10 +305,10 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
 		favoritesSize--;
-		loadFavoritesSectionGameList();
-	}
-	if(CURRENT_GAME_NUMBER==favoritesSize) {
-		scrollUp();
+//		if (favoritesSize > 0) {
+			FAVORITES_SECTION.realCurrentGameNumber--;
+			loadFavoritesSectionGameList();
+//		}
 	}
 }
 

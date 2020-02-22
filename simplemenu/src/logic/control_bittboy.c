@@ -54,7 +54,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<100;i++) {
 				selectRandomGame();
-				updateScreen();
+				updateScreen(rom);
 			}
 			saveFavorites();
 			launchGame();
@@ -136,15 +136,20 @@ int performAction(struct Rom *rom) {
 		}
 		int rewinded = rewindSection();
 		if(rewinded) {
+			currentlySectionSwitching=1;
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				rewindSection();
+				loadGameList(0);
 			}
 		}
 		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
+
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
@@ -154,15 +159,20 @@ int performAction(struct Rom *rom) {
 		}
 		int advanced = advanceSection();
 		if(advanced) {
+			currentlySectionSwitching=1;
+			loadGameList(0);
 			while(CURRENT_SECTION.hidden) {
 				advanceSection();
+				loadGameList(0);
 			}
 		}
 		if (!fullscreenMode) {
 			currentlySectionSwitching=0;
 		}
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return 0;
 	}
+
 
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if (keys[BTN_X]) {
@@ -170,12 +180,12 @@ int performAction(struct Rom *rom) {
 				resetPicModeHideMenuTimer();
 			}
 			if (!favoritesSectionSelected) {
-				markAsFavorite();
+				markAsFavorite(rom);
 			} else {
 				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
-					hideFullScreenModeMenu();
+//					hideFullScreenModeMenu();
 				}
 			}
 			return 0;

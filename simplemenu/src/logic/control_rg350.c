@@ -197,7 +197,6 @@ int performAction(struct Rom *rom) {
 				removeFavorite();
 				if(favoritesSize==0) {
 					showOrHideFavorites();
-					hideFullScreenModeMenu();
 				}
 			}
 			return 0;
