@@ -204,11 +204,18 @@ void showCurrentEmulator() {
 
 
 void showConsole() {
+	int color[3] = {0,0,0};
+//	for (int j=0;j<SCREEN_HEIGHT;j++) {
+//		if (j%2==0) {
+//			drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(320), calculateProportionalSizeOrDistance(1), calculateProportionalSizeOrDistance(0), calculateProportionalSizeOrDistance(j), color, 127);
+//		}
+//	}
+
 	displayImageOnScreen(CURRENT_SECTION.consolePicture, "PICTURE NOT FOUND");
 }
 
 void displayGamePicture(struct Rom *rom) {
-	int rgbColor[] = {0, 0, 0};
+	int rgbColor[] = {230, 230, 230};
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	if (favoritesSectionSelected) {
@@ -227,15 +234,27 @@ void displayGamePicture(struct Rom *rom) {
 	//	tempGameName=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
-	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
-	displayImageOnScreen(pictureWithFullPath, "NO SCREENSHOT");
-	if (!isPicModeMenuHidden) {
+//	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
+	displayImageOnScreen("./resources/back.png", "./resources/back.png");
+			int color[3] = {0,0,0};
+//	drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(320), calculateProportionalSizeOrDistance(240), calculateProportionalSizeOrDistance(0), calculateProportionalSizeOrDistance(0), color, 127);
+
+
+	//		for (int j=0;j<SCREEN_HEIGHT;j++) {
+	//			if (j%2==0) {
+	//				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(320), calculateProportionalSizeOrDistance(1), calculateProportionalSizeOrDistance(0), calculateProportionalSizeOrDistance(j), color, 127);
+	//			}
+	//		}
+	displayImageOnScreen(pictureWithFullPath, tempGameName);
+	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		int black[3]={0, 0, 0};
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 235);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 210);
 		//		displayImageOnScreen("./resources/transback.png", "NO SCREENSHOT");
 	} else {
 		int black[3]={0, 0, 0};
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(19), black, 180);
+		if(footerVisibleInFullscreenMode) {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(19), black, 180);
+		}
 		stripGameNameLeaveExtension(tempGameName);
 		//	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(18), 0, calculateProportionalSizeOrDistance(222), rgbColor);
 		//		displayImageOnScreen("./resources/transback1.png", "NO SCREENSHOT");
@@ -275,6 +294,7 @@ void displayGamePicture(struct Rom *rom) {
 			}
 		}
 	}
+
 	free(pictureWithFullPath);
 	free(tempGameName);
 }
@@ -374,7 +394,7 @@ void drawGameList() {
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
-					if(!isPicModeMenuHidden) {
+					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 //						int white[3]={255, 255, 0};
 //						drawTransparentRectangleToScreen(320, 20, 0, nextLine-11, white, 200);
 						drawShadedGameNameOnScreenPicMode(buf, nextLine);
@@ -386,7 +406,7 @@ void drawGameList() {
 		} else {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
-					if(!isPicModeMenuHidden) {
+					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 						drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
 					}
 				} else {

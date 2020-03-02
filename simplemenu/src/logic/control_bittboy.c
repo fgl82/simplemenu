@@ -57,12 +57,12 @@ int performAction(struct Rom *rom) {
 				updateScreen(rom);
 			}
 			saveFavorites();
-			launchGame();
+			launchGame(rom);
 		}
 		if (keys[BTN_DOWN]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			advancePage();
+			advancePage(rom);
 //			CURRENT_SECTION.alphabeticalPaging=0;
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
@@ -72,7 +72,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_UP]&&!currentlySectionSwitching) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
-			rewindPage();
+			rewindPage(rom);
 //			CURRENT_SECTION.alphabeticalPaging=0;
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
@@ -100,6 +100,7 @@ int performAction(struct Rom *rom) {
 					loadGameList(0);
 				}
 			}
+			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			return 0;
 		}
 		if(keys[BTN_LEFT]) {
@@ -123,6 +124,7 @@ int performAction(struct Rom *rom) {
 					loadGameList(0);
 				}
 			}
+			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			return 0;
 		}
 	}
@@ -173,7 +175,6 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 
-
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if (keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {
@@ -215,15 +216,17 @@ int performAction(struct Rom *rom) {
 			}
 			if (countGamesInPage()>0) {
 				saveFavorites();
-				launchGame();
+				launchGame(rom);
 			}
 			return 0;
 		}
 		if (keys[BTN_Y]) {
 			if (fullscreenMode) {
 				fullscreenMode=0;
+				ITEMS_PER_PAGE=10;
 			} else {
 				fullscreenMode=1;
+				ITEMS_PER_PAGE=12;
 			}
 		}
 		if (keys[BTN_DOWN]) {
@@ -244,14 +247,14 @@ int performAction(struct Rom *rom) {
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
-			advancePage();
+			advancePage(rom);
 			return 1;
 		}
 		if(keys[BTN_LEFT]) {
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
-			rewindPage();
+			rewindPage(rom);
 			return 1;
 		}
 	}

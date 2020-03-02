@@ -21,6 +21,7 @@ void initializeGlobals() {
 	currentSectionNumber=0;
 	gamesInPage=0;
 	CURRENT_SECTION.totalPages=0;
+	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
 	currentCPU=OC_NO;

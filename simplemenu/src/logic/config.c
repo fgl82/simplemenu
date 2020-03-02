@@ -20,7 +20,7 @@ void loadAliasList(int sectionNumber) {
 		strcpy(menuSections[sectionNumber].aliasFileName," ");
 		return;
 	}
-	menuSections[sectionNumber].aliasHashTable = ht_create(10000);
+	menuSections[sectionNumber].aliasHashTable = ht_create(MAX_GAMES_IN_SECTION);
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
 		char *romName = strtok(line, "=");
 		char *alias = strtok(NULL, "=");
@@ -242,6 +242,10 @@ void loadConfig() {
 			fullscreenMode=atoi(line);
 		} else if (i==7){
 			shutDownEnabled=atoi(line);
+		} else if (i==8){
+			footerVisibleInFullscreenMode=atoi(line);
+		} else if (i==9){
+			menuVisibleInFullscreenMode=atoi(line);
 		} else {
 			strcpy(mediaFolder,line);
 			mediaFolder[strlen(mediaFolder)-1]='\0';

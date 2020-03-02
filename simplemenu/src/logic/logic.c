@@ -310,8 +310,8 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 int countGamesInSection() {
 	int gamesCounter=0;
 	struct Node* currentGameNode = CURRENT_SECTION.head;
-	for (int i=0;i<=10000;i++) {
-		if (currentGameNode!=NULL&&strlen(currentGameNode->data->name)>0) {
+	for (int i=0;i<=MAX_GAMES_IN_SECTION;i++) {
+		if (currentGameNode!=NULL) {
 			gamesCounter++;
 			currentGameNode = currentGameNode->next;
 		} else {
@@ -533,7 +533,7 @@ int theCurrentSectionHasGames() {
 	char dirsCopy[1000];
 	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
 	ptr = strtok(dirsCopy, ",");
-	char *files[10000];
+	char *files[MAX_GAMES_IN_SECTION];
 	int value = 0;
 	while (ptr!=NULL) {
 		dirs[dirCounter]=malloc(strlen(ptr)+1);
@@ -576,7 +576,7 @@ void loadGameList(int refresh) {
 		}
 		cleanListForSection(&CURRENT_SECTION);
 		CURRENT_SECTION.totalPages=0;
-		char *files[10000];
+		char *files[MAX_GAMES_IN_SECTION];
 		int game = 0;
 		int dirCounter;
 		char *dirs[10];

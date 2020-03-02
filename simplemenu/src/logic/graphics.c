@@ -117,14 +117,17 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void drawPictureTextOnScreen(char *buf) {
+	if(!footerVisibleInFullscreenMode) {
+		return;
+	}
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 //	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
-	int white[3]={255, 255, 255};
-	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, white, VAlignTop | HAlignCenter);
+	int white[3]={0, 0, 0};
+	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, white, VAlignMiddle | HAlignCenter);
 }
 
 void drawTextOnFooter(const char text[64]) {
@@ -302,7 +305,7 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
 	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 768;
+		SCREEN_HEIGHT = 240;
 	}
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;

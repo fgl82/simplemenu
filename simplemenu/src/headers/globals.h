@@ -12,6 +12,8 @@
 
 int running;
 
+int MAX_GAMES_IN_SECTION;
+
 char mediaFolder[100];
 
 int itsStoppedBecauseOfAnError;
@@ -35,6 +37,8 @@ int currentlySectionSwitching;
 int currentlyChoosingEmulator;
 int stripGames;
 int shutDownEnabled;
+int footerVisibleInFullscreenMode;
+int menuVisibleInFullscreenMode;
 int loading;
 
 int OC_UC;
