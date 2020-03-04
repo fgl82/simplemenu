@@ -94,19 +94,19 @@ int performAction(struct Rom *rom) {
 			int advanced = advanceSection();
 			if(advanced) {
 				currentlySectionSwitching=1;
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
+//				if(theCurrentSectionHasGames()) {
+//					displayBackgroundPicture();
+//					showConsole();
+//					refreshScreen();
+//				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					advanceSection();
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
+//					if(theCurrentSectionHasGames()) {
+//						displayBackgroundPicture();
+//						showConsole();
+//						refreshScreen();
+//					}
 					loadGameList(0);
 				}
 			}
@@ -118,19 +118,19 @@ int performAction(struct Rom *rom) {
 			int rewinded = rewindSection();
 			if(rewinded) {
 				currentlySectionSwitching=1;
-				if(theCurrentSectionHasGames()) {
-					displayBackgroundPicture();
-					showConsole();
-					refreshScreen();
-				}
+//				if(theCurrentSectionHasGames()) {
+//					displayBackgroundPicture();
+//					showConsole();
+//					refreshScreen();
+//				}
 				loadGameList(0);
 				while(CURRENT_SECTION.hidden) {
 					rewindSection();
-					if(theCurrentSectionHasGames()) {
-						displayBackgroundPicture();
-						showConsole();
-						refreshScreen();
-					}
+//					if(theCurrentSectionHasGames()) {
+//						displayBackgroundPicture();
+//						showConsole();
+//						refreshScreen();
+//					}
 					loadGameList(0);
 				}
 			}

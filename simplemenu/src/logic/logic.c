@@ -451,7 +451,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 		}
 		d_name = entry->d_name;
 		if (entry->d_type & DT_DIR) {
-			if (strcmp(d_name,"media") != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
 				char * e = strrchr(d_name, '/');
 				if (e==NULL) {
@@ -526,12 +526,13 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile* stolenFile, char* fileName) {
 	}
 }
 
-int theCurrentSectionHasGames() {
+int theSectionHasGames(struct MenuSection *section) {
+	section->hidden=1;
 	int dirCounter;
 	char *dirs[10];
 	char* ptr;
 	char dirsCopy[1000];
-	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+	strcpy(dirsCopy,section->filesDirectories);
 	ptr = strtok(dirsCopy, ",");
 	char *files[MAX_GAMES_IN_SECTION];
 	int value = 0;
@@ -548,7 +549,7 @@ int theCurrentSectionHasGames() {
 			if (ext&&strcmp((files[i]),"..")!=0 &&
 					strcmp((files[i]),".")!=0 &&
 					strcmp(ext,".png")!=0&&
-					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+					isExtensionValid(ext,section->fileExtensions)) {
 				value = 1;
 				break;
 			}
@@ -557,13 +558,14 @@ int theCurrentSectionHasGames() {
 			free(files[i]);
 		}
 		if (value==1) {
+			section->hidden=0;
 			break;
 		}
 	}
 	for (int i=0;i<dirCounter;i++){
 		free (dirs[i]);
 	}
-	return value;
+	return !value;
 }
 
 void loadGameList(int refresh) {
@@ -802,7 +804,8 @@ void deleteGame(struct Rom *rom) {
 	char *tempGameName1;
 	strcpy(pictureWithFullPath, rom->directory);
 	tempGameName=getGameName(rom->name);
-	strcat(pictureWithFullPath,"media/");
+	strcat(pictureWithFullPath,mediaFolder);
+	strcat(pictureWithFullPath,"/");
 	tempGameName1=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");

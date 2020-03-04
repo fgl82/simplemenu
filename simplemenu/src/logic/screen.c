@@ -17,6 +17,15 @@
 
 char buf[300];
 
+void displayBackgroundPicture() {
+	if(fullscreenMode) {
+		displayImageOnScreen("./resources/back.png", "NO SCREENSHOT");
+	} else {
+		displayImageOnScreen("./resources/simpleback.png", "NO SCREENSHOT");
+	}
+}
+
+
 void showErrorMessage(char *errorMessage) {
 	int width = (((strlen(errorMessage))*(180))/calculateProportionalSizeOrDistance(18));
 	int height = calculateProportionalSizeOrDistance(40);
@@ -235,7 +244,7 @@ void displayGamePicture(struct Rom *rom) {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 //	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, rgbColor);
-	displayImageOnScreen("./resources/back.png", "./resources/back.png");
+	displayBackgroundPicture();
 			int color[3] = {0,0,0};
 //	drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(320), calculateProportionalSizeOrDistance(240), calculateProportionalSizeOrDistance(0), calculateProportionalSizeOrDistance(0), color, 127);
 
@@ -297,10 +306,6 @@ void displayGamePicture(struct Rom *rom) {
 
 	free(pictureWithFullPath);
 	free(tempGameName);
-}
-
-void displayBackgroundPicture() {
-	displayImageOnScreen("./resources/back.png", "NO SCREENSHOT");
 }
 
 void drawHeader(struct Rom *rom) {

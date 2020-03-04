@@ -92,12 +92,12 @@ int advanceSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-	if (fullscreenMode) {
-		if(theCurrentSectionHasGames()) {
+//	if (fullscreenMode) {
+		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-		}
+//		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
@@ -111,12 +111,12 @@ int rewindSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-	if (fullscreenMode) {
-		if(theCurrentSectionHasGames()) {
+//	if (fullscreenMode) {
+		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-		}
+//		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
@@ -158,6 +158,9 @@ void advancePage(struct Rom *rom) {
 			while((tolower(currentGame[0])==currentLetter||(isdigit(currentLetter)&&isdigit(currentGame[0])))) {
 				scrollDown();
 				free(currentGame);
+				if(CURRENT_SECTION.currentGameNode==CURRENT_SECTION.head) {
+					break;
+				}
 				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			}
 			free(currentGame);

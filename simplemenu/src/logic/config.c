@@ -249,7 +249,6 @@ void loadConfig() {
 		} else {
 			strcpy(mediaFolder,line);
 			mediaFolder[strlen(mediaFolder)-1]='\0';
-			printf("%s\n",mediaFolder);
 		}
 		i++;
 	}
@@ -398,7 +397,7 @@ int loadSections() {
 		if(strcmp("yes",value)==0) {
 			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
 		}
-		menuSections[menuSectionCounter].hidden=0;
+		theSectionHasGames(&menuSections[menuSectionCounter]);
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
