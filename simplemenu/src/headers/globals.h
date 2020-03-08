@@ -109,7 +109,7 @@ struct MenuSection {
 };
 
 
-struct MenuSection menuSections[50];
+struct MenuSection menuSections[100];
 
 struct OPKDesktopFile {
 	char parentOPK[200];

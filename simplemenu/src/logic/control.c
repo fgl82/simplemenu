@@ -92,12 +92,12 @@ int advanceSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-//	if (fullscreenMode) {
+	if (fullscreenMode) {
 		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-//		}
+		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
@@ -111,21 +111,17 @@ int rewindSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-//	if (fullscreenMode) {
+	if (fullscreenMode) {
 		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-//		}
+		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
 	}
 	return 0;
-}
-
-void showPicture() {
-	displayGamePicture();
 }
 
 void launchGame(struct Rom *rom) {

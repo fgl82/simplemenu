@@ -108,7 +108,12 @@ int main(int argc, char* argv[]) {
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction(CURRENT_SECTION.currentGameNode->data);
+						if (CURRENT_SECTION.currentGameNode!=NULL) {
+							performAction(CURRENT_SECTION.currentGameNode->data);
+						} else {
+							performAction(NULL);
+						}
+
 					} else {
 						performChoosingAction();
 					}
@@ -116,7 +121,12 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				updateScreen(CURRENT_SECTION.currentGameNode->data);
+				printf("1 %s \n", CURRENT_SECTION.sectionName);
+				if (CURRENT_SECTION.currentGameNode!=NULL) {
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
+				} else {
+					updateScreen(NULL);
+				}
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
@@ -129,7 +139,12 @@ int main(int argc, char* argv[]) {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						updateScreen(NULL);
+					}
+
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
@@ -137,7 +152,12 @@ int main(int argc, char* argv[]) {
 					} else {
 						stripGames=1;
 					}
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						updateScreen(NULL);
+					}
+
 				}
 			}
 		}

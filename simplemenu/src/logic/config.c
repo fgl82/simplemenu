@@ -284,7 +284,7 @@ int loadSections() {
 	char g[3];
 	char b[3];
 	char *consoles1 = strdup(consoles);
-	char *sectionNames[100];
+	char *sectionNames[10000];
 	int sectionCounter=0;
 
 	char* tokenizedSectionName=strtok(consoles1,",");
@@ -397,7 +397,7 @@ int loadSections() {
 		if(strcmp("yes",value)==0) {
 			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
 		}
-		theSectionHasGames(&menuSections[menuSectionCounter]);
+//		theSectionHasGames(&menuSections[menuSectionCounter]);
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
