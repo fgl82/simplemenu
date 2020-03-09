@@ -43,7 +43,7 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_B]) {
 		hotKeyPressed=1;
 		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
-			launchEmulator();
+			launchEmulator(rom);
 			return 1;
 		}
 		if (rom!=NULL&&keys[BTN_X]&&!currentlySectionSwitching) {

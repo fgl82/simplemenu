@@ -281,6 +281,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
+
 #ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
@@ -734,14 +735,14 @@ int countGamesInPage() {
 	return gamesCounter;
 }
 
-int getFirstNonHiddenSection(int sectionCount) {
-	for (int i=0;i<sectionCount;i++) {
-		if (menuSections[i].hidden==0) {
-			return i;
-		}
-	}
-	return 0;
-}
+//int getFirstNonHiddenSection(int sectionCount) {
+//	for (int i=0;i<sectionCount;i++) {
+//		if (menuSections[i].hidden==0) {
+//			return i;
+//		}
+//	}
+//	return 0;
+//}
 
 void selectRandomGame() {
 	int game = rand() % CURRENT_SECTION.gameCount;
@@ -769,23 +770,23 @@ void determineStartingScreen(int sectionCount) {
 		}
 	} else {
 		loadGameList(0);
-		if(CURRENT_SECTION.hidden) {
-			int advanced = advanceSection();
-			loadGameList(0);
-			if(advanced) {
-				while(CURRENT_SECTION.hidden) {
-					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
-						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
-						break;
-					}
-					advanceSection();
-					loadGameList(0);
-				}
-			}
-		}
+//		if(CURRENT_SECTION.hidden) {
+//			int advanced = advanceSection();
+//			loadGameList(0);
+//			if(advanced) {
+//				while(CURRENT_SECTION.hidden) {
+//					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
+//						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
+//						break;
+//					}
+//					advanceSection();
+//					loadGameList(0);
+//				}
+//			}
+//		}
 		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
+		if (pages>0&&gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
 		CURRENT_SECTION.totalPages=pages;

@@ -93,11 +93,11 @@ int advanceSection() {
 		currentSectionNumber=0;
 	}
 	if (fullscreenMode) {
-		if(!CURRENT_SECTION.hidden) {
+//		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-		}
+//		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
@@ -112,11 +112,11 @@ int rewindSection() {
 		currentSectionNumber=menuSectionCounter-2;
 	}
 	if (fullscreenMode) {
-		if(!CURRENT_SECTION.hidden) {
+//		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-		}
+//		}
 	}
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
@@ -154,10 +154,10 @@ void advancePage(struct Rom *rom) {
 			while((tolower(currentGame[0])==currentLetter||(isdigit(currentLetter)&&isdigit(currentGame[0])))) {
 				scrollDown();
 				free(currentGame);
+				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 				if(CURRENT_SECTION.currentGameNode==CURRENT_SECTION.head) {
 					break;
 				}
-				currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);
 			}
 			free(currentGame);
 		} else {

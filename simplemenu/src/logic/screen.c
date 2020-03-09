@@ -268,8 +268,6 @@ void displayGamePicture(struct Rom *rom) {
 						} else {
 							drawPictureTextOnScreen(rom->alias);
 						}
-					} else {
-						printf("papa212121\n");
 					}
 				}
 			}

@@ -101,7 +101,11 @@ int main(int argc, char* argv[]) {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	updateScreen(CURRENT_SECTION.currentGameNode->data);
+	if (CURRENT_SECTION.currentGameNode!=NULL) {
+		updateScreen(CURRENT_SECTION.currentGameNode->data);
+	} else {
+		updateScreen(NULL);
+	}
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
@@ -113,7 +117,6 @@ int main(int argc, char* argv[]) {
 						} else {
 							performAction(NULL);
 						}
-
 					} else {
 						performChoosingAction();
 					}
@@ -121,7 +124,6 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				printf("1 %s \n", CURRENT_SECTION.sectionName);
 				if (CURRENT_SECTION.currentGameNode!=NULL) {
 					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				} else {

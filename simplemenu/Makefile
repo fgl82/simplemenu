@@ -2,13 +2,13 @@
 TARGET = simplemenu
 #PLATFORM = BITTBOY
 #PLATFORM = RG-300
-#PLATFORM = RG-350
+PLATFORM = RG-350
 #PLATFORM = NPG
-PLATFORM = PC
+#PLATFORM = PC
 
 # Compiler
 
-ifeq ($(PLATFORM), BITTBOY)
+ifeq ($(PLATFORM), BITTBOY)b
 	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	CFLAGS = -DTARGET_BITTBOY -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall
