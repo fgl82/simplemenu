@@ -8,7 +8,7 @@ PLATFORM = RG-350
 
 # Compiler
 
-ifeq ($(PLATFORM), BITTBOY)b
+ifeq ($(PLATFORM), BITTBOY)
 	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	CFLAGS = -DTARGET_BITTBOY -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall

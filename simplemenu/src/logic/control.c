@@ -92,7 +92,7 @@ int advanceSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-	if (fullscreenMode) {
+	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
 //		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
@@ -111,7 +111,7 @@ int rewindSection() {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-	if (fullscreenMode) {
+	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
 //		if(!CURRENT_SECTION.hidden) {
 			displayBackgroundPicture();
 			showConsole();
