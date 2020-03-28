@@ -90,10 +90,8 @@ int main(int argc, char* argv[]) {
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
 		fullscreenMode=atoi(argv[4]);
-		loadLastState();
-	} else {
-		loadLastState();
 	}
+	loadLastState();
 	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
 	}

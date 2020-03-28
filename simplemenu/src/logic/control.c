@@ -73,6 +73,12 @@ void scrollDown() {
 }
 
 void scrollToGame(int gameNumber) {
+	if (CURRENT_SECTION.gameCount < gameNumber) {
+		CURRENT_SECTION.currentGameInPage=0;
+		CURRENT_SECTION.currentPage=0;
+		CURRENT_SECTION.currentGameNode=CURRENT_SECTION.head;
+		return;
+	}
 	int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 	if (CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
 		pages--;

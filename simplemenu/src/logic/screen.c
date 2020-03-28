@@ -19,9 +19,9 @@ char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
-		displayImageOnScreen("./resources/back.png", "NO SCREENSHOT");
+		displayImageOnScreen(fullscreenBackground, "NO SCREENSHOT");
 	} else {
-		displayImageOnScreen("./resources/simpleback.png", "NO SCREENSHOT");
+		displayImageOnScreen(simpleBackground, "NO SCREENSHOT");
 	}
 }
 

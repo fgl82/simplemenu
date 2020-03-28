@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPK_NAME='simplemenu.opk'
+OPK_NAME='SimpleMenu.opk'
 
 echo ${OPK_NAME}
 
@@ -8,26 +8,25 @@ echo ${OPK_NAME}
 cat > default.gcw0.desktop <<EOF
 [Desktop Entry]
 Name=SimpleMenu
-Comment=A sensible launcher
-Exec=simplemenu.dge
+Comment=A simple launcher
+Exec=simplemenu
 Terminal=false
 Type=Application
 StartupNotify=false
-Icon=smenu
+Icon=simplemenu
 Categories=applications;
 EOF
 
 # create opk
-FLIST="simplemenu.dge"
+chmod 777 simplemenu
+FLIST="simplemenu"
 FLIST="${FLIST} invoker.dge"
-FLIST="${FLIST} frontend_start"
-FLIST="${FLIST} usb_mode_on.sh"
-FLIST="${FLIST} usb_mode_off.sh"
 FLIST="${FLIST} resources"
 FLIST="${FLIST} scripts"
 FLIST="${FLIST} config"
+FLIST="${FLIST} apps"
 FLIST="${FLIST} default.gcw0.desktop"
-FLIST="${FLIST} smenu.png"
+FLIST="${FLIST} simplemenu.png"
 
 rm -f ${OPK_NAME}
 mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports

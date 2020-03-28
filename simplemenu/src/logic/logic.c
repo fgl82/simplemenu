@@ -601,7 +601,6 @@ void loadGameList(int refresh) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&
-						strcmp(ext,".png")!=0&&
 						isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {

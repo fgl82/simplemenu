@@ -14,7 +14,10 @@ int running;
 
 int MAX_GAMES_IN_SECTION;
 
-char mediaFolder[100];
+char mediaFolder[1000];
+char simpleBackground[1000];
+char fullscreenBackground[1000];
+char menuFont[1000];
 
 int itsStoppedBecauseOfAnError;
 char *errorMessage;
