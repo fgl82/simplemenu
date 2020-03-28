@@ -151,7 +151,7 @@ void loadFavorites() {
 void saveLastState() {
 	FILE * fp;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
@@ -168,7 +168,7 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
@@ -218,7 +218,7 @@ void loadLastState() {
 
 void loadConfig() {
 	char pathToConfigFilePlusFileName[3000];
-	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.cfg",getenv("HOME"));
+	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",getenv("HOME"));
 	ini_t *config = ini_load(pathToConfigFilePlusFileName);
 
 	const char *value = ini_get(config, "CPU", "underclocked_speed");
@@ -278,7 +278,7 @@ uint32_t hex2int(char *hex) {
 
 int loadSections() {
 	char pathToSectionsFilePlusFileName[300];
-	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",getenv("HOME"));
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
 	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char r[3];
