@@ -445,6 +445,8 @@ void setupDecorations(struct Rom *rom) {
 
 void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
+//	if(currentSectionNumber==favoritesSectionNumber) {
+//	}
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		setupDecorations(rom);
 		if (fullscreenMode) {

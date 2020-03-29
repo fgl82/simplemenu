@@ -175,6 +175,7 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 
+
 	if (!hotKeyPressed&&!currentlySectionSwitching&&!isUSBMode) {
 		if (keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {

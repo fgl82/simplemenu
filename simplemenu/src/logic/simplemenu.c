@@ -144,7 +144,6 @@ int main(int argc, char* argv[]) {
 					} else {
 						updateScreen(NULL);
 					}
-
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
@@ -157,7 +156,6 @@ int main(int argc, char* argv[]) {
 					} else {
 						updateScreen(NULL);
 					}
-
 				}
 			}
 		}

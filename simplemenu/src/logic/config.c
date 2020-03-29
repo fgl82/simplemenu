@@ -256,7 +256,6 @@ void loadConfig() {
 
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
-
 }
 
 uint32_t hex2int(char *hex) {
