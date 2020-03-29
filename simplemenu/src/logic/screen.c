@@ -240,7 +240,13 @@ void displayGamePicture(struct Rom *rom) {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	displayBackgroundPicture();
-	displayImageOnScreen(pictureWithFullPath, tempGameName);
+	if (rom!=NULL) {
+		char *tempDisplayName = getFileNameOrAlias(rom);
+		displayImageOnScreen(pictureWithFullPath, tempDisplayName);
+		free(tempDisplayName);
+	} else {
+		displayImageOnScreen(pictureWithFullPath, tempGameName);
+	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		int black[3]={0, 0, 0};
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 210);
