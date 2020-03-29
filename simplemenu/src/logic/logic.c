@@ -289,7 +289,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	setCPU(currentCPU);
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
-	printf("%s\n",fileToBeExecutedWithFullPath);
+	printf("%s%s -> %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
 	loadLastState();
 #endif
 }

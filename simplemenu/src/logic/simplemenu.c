@@ -85,12 +85,12 @@ int main(int argc, char* argv[]) {
 	setupDisplayAndKeys();
 	int sectionCount=loadSections();
 	loadFavorites();
-	if (argv[1]!=NULL) {
-		setSectionsState(argv[1]);
-		currentSectionNumber=atoi(argv[2]);
-		returnTo=atoi(argv[3]);
-		fullscreenMode=atoi(argv[4]);
-	}
+//	if (argv[1]!=NULL) {
+//		setSectionsState(argv[1]);
+//		currentSectionNumber=atoi(argv[2]);
+//		returnTo=atoi(argv[3]);
+//		fullscreenMode=atoi(argv[4]);
+//	}
 	loadLastState();
 	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;

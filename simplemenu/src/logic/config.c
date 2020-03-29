@@ -217,11 +217,29 @@ void loadLastState() {
 }
 
 void loadConfig() {
-	char pathToConfigFilePlusFileName[3000];
+	char pathToConfigFilePlusFileName[1000];
 	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",getenv("HOME"));
 	ini_t *config = ini_load(pathToConfigFilePlusFileName);
 
-	const char *value = ini_get(config, "CPU", "underclocked_speed");
+	const char *value;
+
+	char pathToThemeFilePlusFileName[1000];
+	snprintf(pathToThemeFilePlusFileName,sizeof(pathToThemeFilePlusFileName),"%s/.simplemenu/theme.ini",getenv("HOME"));
+	ini_t *themeConfig = ini_load(pathToThemeFilePlusFileName);
+
+	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
+	strcpy(simpleBackground,value);
+
+	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
+	strcpy(fullscreenBackground,value);
+
+	value = ini_get(themeConfig, "GENERAL", "font");
+	strcpy(menuFont,value);
+
+	value = ini_get(config, "GENERAL", "media_folder");
+	strcpy(mediaFolder,value);
+
+	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoi(value);
 
 	value = ini_get(config, "CPU", "normal_speed");
@@ -239,24 +257,11 @@ void loadConfig() {
 	value = ini_get(config, "SYSTEM", "allow_shutdown");
 	shutDownEnabled=atoi(value);
 
-	value = ini_get(config, "MENU_MODE", "logo_background");
-	strcpy(simpleBackground,value);
-
 	value = ini_get(config, "FULLSCREEN_MODE", "display_footer");
 	footerVisibleInFullscreenMode=atoi(value);
 
 	value = ini_get(config, "FULLSCREEN_MODE", "display_menu");
 	menuVisibleInFullscreenMode=atoi(value);
-
-	value = ini_get(config, "FULLSCREEN_MODE", "background");
-	strcpy(fullscreenBackground,value);
-
-	value = ini_get(config, "GENERAL", "font");
-	strcpy(menuFont,value);
-
-	value = ini_get(config, "GENERAL", "media_folder");
-	strcpy(mediaFolder,value);
-
 }
 
 uint32_t hex2int(char *hex) {
@@ -276,19 +281,59 @@ uint32_t hex2int(char *hex) {
 	return val;
 }
 
-int loadSections() {
-	char pathToSectionsFilePlusFileName[300];
-	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",getenv("HOME"));
-	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
-	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
+void setRGBFromHex (int *rgbColor, const char *hexColor) {
 	char r[3];
 	char g[3];
 	char b[3];
+	r[0]=hexColor[0];r[1]=hexColor[1];r[2]='\0';g[0]=hexColor[2];g[1]=hexColor[3];g[2]='\0';b[0]=hexColor[4];b[1]=hexColor[5];b[2]='\0';
+	rgbColor[0]=hex2int(r);
+	rgbColor[1]=hex2int(g);
+	rgbColor[2]=hex2int(b);
+}
+
+void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	if(value==NULL) {
+		strcpy(sectionValueToBeSet,"\0");
+		return;
+	}
+//	printf("%s - %s: %s\n", sectionName, valueName, value);
+	strcpy(sectionValueToBeSet,value);
+}
+
+void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	setRGBFromHex(sectionValueToBeSet, value);
+}
+
+int loadSections() {
+	char pathToSectionsFilePlusFileName[1000];
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",getenv("HOME"));
+	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
+
+	char pathToThemeFilePlusFileName[1000];
+	snprintf(pathToThemeFilePlusFileName,sizeof(pathToThemeFilePlusFileName),"%s/.simplemenu/theme.ini",getenv("HOME"));
+	ini_t *themeConfig = ini_load(pathToThemeFilePlusFileName);
+
+	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char *consoles1 = strdup(consoles);
 	char *sectionNames[10000];
+	const char *value;
 	int sectionCounter=0;
 
 	char* tokenizedSectionName=strtok(consoles1,",");
+
+	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
+	strcpy(simpleBackground,value);
+
+	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
+	strcpy(fullscreenBackground,value);
+
+	value = ini_get(themeConfig, "GENERAL", "font");
+	strcpy(menuFont,value);
+
 	while(tokenizedSectionName!=NULL) {
 		sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
 		strcpy(sectionNames[sectionCounter], tokenizedSectionName);
@@ -300,27 +345,7 @@ int loadSections() {
 		char *sectionName = sectionNames[menuSectionCounter];
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
 
-		//READ DIR
-		int dirCounter=0;
-		const char *value = ini_get(config, sectionName, "execDirs");
-		for (int i=0;i<10;i++) {
-			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
-		}
-		char *value1 = malloc(3000);
-		strcpy(value1,value);
-		char *currentDir = strtok(value1,",");
-		while(currentDir!=NULL) {
-			menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=malloc(strlen(currentDir)+1);
-			strcpy(menuSections[menuSectionCounter].emulatorDirectories[dirCounter],currentDir);
-			strcat(menuSections[menuSectionCounter].emulatorDirectories[dirCounter],"\0");
-			currentDir = strtok(NULL,",");
-			dirCounter++;
-		}
-		free (currentDir);
-		menuSections[menuSectionCounter].emulatorDirectories[dirCounter]=NULL;
-		menuSections[menuSectionCounter].activeEmulatorDirectory=0;
-
-		//READ EXEC
+		//READ EXECS
 		int execCounter=0;
 		value = ini_get(config, sectionName, "execs");
 		char *value2 = malloc(3000);
@@ -330,8 +355,16 @@ int loadSections() {
 		}
 		char* currentExec = strtok(value2,",");
 		while(currentExec!=NULL) {
-			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(currentExec)+1);
-			strcpy(menuSections[menuSectionCounter].executables[execCounter],currentExec);
+			char *tempNameWithoutPath = getNameWithoutPath(currentExec);
+			char *tempPathWithoutName = getRomPath(currentExec);
+			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(tempNameWithoutPath)+1);
+			strcpy(menuSections[menuSectionCounter].executables[execCounter],tempNameWithoutPath);
+			free(tempNameWithoutPath);
+			menuSections[menuSectionCounter].emulatorDirectories[execCounter]=malloc(strlen(tempPathWithoutName)+2);
+			strcpy(menuSections[menuSectionCounter].emulatorDirectories[execCounter],tempPathWithoutName);
+			free(tempPathWithoutName);
+			strcat(menuSections[menuSectionCounter].emulatorDirectories[execCounter],"/");
+			strcat(menuSections[menuSectionCounter].emulatorDirectories[execCounter],"\0");
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
@@ -339,50 +372,15 @@ int loadSections() {
 		menuSections[menuSectionCounter].executables[execCounter]=NULL;
 		menuSections[menuSectionCounter].activeExecutable=0;
 
-		value = ini_get(config, sectionName, "romDirs");
-		strcpy(menuSections[menuSectionCounter].filesDirectories,value);
-
-		value = ini_get(config, sectionName, "romExts");
-		strcpy(menuSections[menuSectionCounter].fileExtensions,value);
-
-		value = ini_get(config, sectionName, "headerBackGround");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].headerAndFooterBackgroundColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].headerAndFooterBackgroundColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].headerAndFooterBackgroundColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "headerFont");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].headerAndFooterTextColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].headerAndFooterTextColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].headerAndFooterTextColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "bodyBackground");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].bodyBackgroundColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].bodyBackgroundColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].bodyBackgroundColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "bodyFont");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].bodyTextColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].bodyTextColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].bodyTextColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "selectedItemBackground");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "selectedItemFont");
-		r[0]=value[0];r[1]=value[1];r[2]='\0';g[0]=value[2];g[1]=value[3];g[2]='\0';b[0]=value[4];b[1]=value[5];b[2]='\0';
-		menuSections[menuSectionCounter].bodySelectedTextTextColor[0]=hex2int(r);
-		menuSections[menuSectionCounter].bodySelectedTextTextColor[1]=hex2int(g);
-		menuSections[menuSectionCounter].bodySelectedTextTextColor[2]=hex2int(b);
-
-		value = ini_get(config, sectionName, "logo");
-		strcpy(menuSections[menuSectionCounter].consolePicture,value);
+		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories);
+		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions);
+		setRGBColorInSection(themeConfig, sectionName, "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "bodyBackground", menuSections[menuSectionCounter].bodyBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+		setStringValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].consolePicture);
 
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -391,14 +389,12 @@ int loadSections() {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,"\0");
 		}
 
-		value = ini_get(config, sectionName, "category");
-		strcpy(menuSections[menuSectionCounter].category,value);
+		setStringValueInSection (config, sectionName, "category", menuSections[menuSectionCounter].category);
 
 		value = ini_get(config, sectionName, "onlyFileNamesNoPathOrExtension");
-		if(strcmp("yes",value)==0) {
+		if(value!=NULL&&strcmp("yes",value)==0) {
 			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
 		}
-//		theSectionHasGames(&menuSections[menuSectionCounter]);
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
@@ -414,30 +410,19 @@ int loadSections() {
 	menuSections[menuSectionCounter].activeExecutable=0;
 	strcpy(menuSections[menuSectionCounter].filesDirectories,"/some/folder");
 	strcpy(menuSections[menuSectionCounter].fileExtensions,".zzz");
-	menuSections[menuSectionCounter].headerAndFooterBackgroundColor[0]=27;
-	menuSections[menuSectionCounter].headerAndFooterBackgroundColor[1]=31;
-	menuSections[menuSectionCounter].headerAndFooterBackgroundColor[2]=34;
-	menuSections[menuSectionCounter].headerAndFooterTextColor[0]=231;
-	menuSections[menuSectionCounter].headerAndFooterTextColor[1]=109;
-	menuSections[menuSectionCounter].headerAndFooterTextColor[2]=62;
-	menuSections[menuSectionCounter].bodyBackgroundColor[0]=49;
-	menuSections[menuSectionCounter].bodyBackgroundColor[1]=58;
-	menuSections[menuSectionCounter].bodyBackgroundColor[2]=66;
-	menuSections[menuSectionCounter].bodyTextColor[0]=152;
-	menuSections[menuSectionCounter].bodyTextColor[1]=157;
-	menuSections[menuSectionCounter].bodyTextColor[2]=152;
-	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[0]=248;
-	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[1]=85;
-	menuSections[menuSectionCounter].bodySelectedTextBackgroundColor[2]=41;
-	menuSections[menuSectionCounter].bodySelectedTextTextColor[0]=27;
-	menuSections[menuSectionCounter].bodySelectedTextTextColor[1]=33;
-	menuSections[menuSectionCounter].bodySelectedTextTextColor[2]=42;
 	strcpy(menuSections[menuSectionCounter].category, "all");
 	menuSections[menuSectionCounter].onlyFileNamesNoExtension=0;
 	menuSections[menuSectionCounter].hidden=0;
 	menuSections[menuSectionCounter].currentPage=0;
 	menuSections[menuSectionCounter].currentGameInPage=0;
-	strcpy(menuSections[menuSectionCounter].consolePicture,"./resources/favorites/logo.png");
+	setRGBColorInSection(themeConfig, "FAVORITES", "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "bodyBackground", menuSections[menuSectionCounter].bodyBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+	setStringValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].consolePicture);
+
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	return menuSectionCounter;
