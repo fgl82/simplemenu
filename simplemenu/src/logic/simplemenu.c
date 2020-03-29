@@ -21,6 +21,7 @@ void initializeGlobals() {
 	currentSectionNumber=0;
 	gamesInPage=0;
 	CURRENT_SECTION.totalPages=0;
+	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
 	currentCPU=OC_NO;
@@ -89,10 +90,8 @@ int main(int argc, char* argv[]) {
 		currentSectionNumber=atoi(argv[2]);
 		returnTo=atoi(argv[3]);
 		fullscreenMode=atoi(argv[4]);
-		loadLastState();
-	} else {
-		loadLastState();
 	}
+	loadLastState();
 	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
 	}
@@ -100,14 +99,22 @@ int main(int argc, char* argv[]) {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	updateScreen(CURRENT_SECTION.currentGameNode->data);
+	if (CURRENT_SECTION.currentGameNode!=NULL) {
+		updateScreen(CURRENT_SECTION.currentGameNode->data);
+	} else {
+		updateScreen(NULL);
+	}
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
-						performAction(CURRENT_SECTION.currentGameNode->data);
+						if (CURRENT_SECTION.currentGameNode!=NULL) {
+							performAction(CURRENT_SECTION.currentGameNode->data);
+						} else {
+							performAction(NULL);
+						}
 					} else {
 						performChoosingAction();
 					}
@@ -115,7 +122,11 @@ int main(int argc, char* argv[]) {
 				#ifndef TARGET_PC
 				resetScreenOffTimer();
 				#endif
-				updateScreen(CURRENT_SECTION.currentGameNode->data);
+				if (CURRENT_SECTION.currentGameNode!=NULL) {
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
+				} else {
+					updateScreen(NULL);
+				}
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
@@ -128,7 +139,11 @@ int main(int argc, char* argv[]) {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					currentlySectionSwitching=0;
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						updateScreen(NULL);
+					}
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
@@ -136,7 +151,11 @@ int main(int argc, char* argv[]) {
 					} else {
 						stripGames=1;
 					}
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						updateScreen(NULL);
+					}
 				}
 			}
 		}

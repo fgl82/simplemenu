@@ -20,7 +20,7 @@ void loadAliasList(int sectionNumber) {
 		strcpy(menuSections[sectionNumber].aliasFileName," ");
 		return;
 	}
-	menuSections[sectionNumber].aliasHashTable = ht_create(10000);
+	menuSections[sectionNumber].aliasHashTable = ht_create(MAX_GAMES_IN_SECTION);
 	while ((read = getline(&line, &len, aliasFile)) != -1) {
 		char *romName = strtok(line, "=");
 		char *alias = strtok(NULL, "=");
@@ -151,7 +151,7 @@ void loadFavorites() {
 void saveLastState() {
 	FILE * fp;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
@@ -168,7 +168,7 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.cfg",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
@@ -197,10 +197,13 @@ void loadLastState() {
 			currentSectionNumber=atoi(configurations[0]);
 			if(strlen(CURRENT_SECTION.sectionName)<1) {
 				continue;
-			}			
-			CURRENT_SECTION.currentPage=atoi(configurations[1]);
-			CURRENT_SECTION.currentGameInPage=atoi(configurations[2]);
-			CURRENT_SECTION.realCurrentGameNumber=atoi(configurations[3]);
+			}
+			int page = atoi(configurations[1]);
+			int game = atoi(configurations[2]);
+			int realCurrentGameNumber = atoi(configurations[3]);
+			CURRENT_SECTION.currentPage = page;
+			CURRENT_SECTION.currentGameInPage=game;
+			CURRENT_SECTION.realCurrentGameNumber=realCurrentGameNumber;
 			CURRENT_SECTION.alphabeticalPaging=0;
 		}
 	}
@@ -214,45 +217,45 @@ void loadLastState() {
 }
 
 void loadConfig() {
-	FILE * fp;
-	char * line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char pathToConfigFilePlusFileName[300];
-	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.cfg",getenv("HOME"));
-	fp = fopen(pathToConfigFilePlusFileName, "r");
-	int i=0;
-	while ((read = getline(&line, &len, fp)) != -1) {
-		if(line[0]=='#') {
-			continue;
-		}
-		if (i==0) {
-			OC_UC=atoi(line);
-		} else if (i==1) {
-			OC_NO=atoi(line);
-		} else if (i==2){
-			OC_OC=atoi(line);
-		} else if (i==3){
-			timeoutValue=atoi(line);
-		} else if (i==4){
-			OC_SLEEP=atoi(line);
-		}  else if (i==5){
-			stripGames=atoi(line);
-		}  else if (i==6){
-			fullscreenMode=atoi(line);
-		} else if (i==7){
-			shutDownEnabled=atoi(line);
-		} else {
-			strcpy(mediaFolder,line);
-			mediaFolder[strlen(mediaFolder)-1]='\0';
-			printf("%s\n",mediaFolder);
-		}
-		i++;
-	}
-	fclose(fp);
-	if (line) {
-		free(line);
-	}
+	char pathToConfigFilePlusFileName[3000];
+	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",getenv("HOME"));
+	ini_t *config = ini_load(pathToConfigFilePlusFileName);
+
+	const char *value = ini_get(config, "CPU", "underclocked_speed");
+	OC_UC=atoi(value);
+
+	value = ini_get(config, "CPU", "normal_speed");
+	OC_NO=atoi(value);
+
+	value = ini_get(config, "CPU", "overclocked_speed");
+	OC_NO=atoi(value);
+
+	value = ini_get(config, "CPU", "sleep_speed");
+	OC_SLEEP=atoi(value);
+
+	value = ini_get(config, "SYSTEM", "screen_timeout_in_seconds");
+	timeoutValue=atoi(value);
+
+	value = ini_get(config, "SYSTEM", "allow_shutdown");
+	shutDownEnabled=atoi(value);
+
+	value = ini_get(config, "MENU_MODE", "logo_background");
+	strcpy(simpleBackground,value);
+
+	value = ini_get(config, "FULLSCREEN_MODE", "display_footer");
+	footerVisibleInFullscreenMode=atoi(value);
+
+	value = ini_get(config, "FULLSCREEN_MODE", "display_menu");
+	menuVisibleInFullscreenMode=atoi(value);
+
+	value = ini_get(config, "FULLSCREEN_MODE", "background");
+	strcpy(fullscreenBackground,value);
+
+	value = ini_get(config, "GENERAL", "font");
+	strcpy(menuFont,value);
+
+	value = ini_get(config, "GENERAL", "media_folder");
+	strcpy(mediaFolder,value);
 }
 
 uint32_t hex2int(char *hex) {
@@ -274,14 +277,14 @@ uint32_t hex2int(char *hex) {
 
 int loadSections() {
 	char pathToSectionsFilePlusFileName[300];
-	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.cfg",getenv("HOME"));
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",getenv("HOME"));
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
 	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char r[3];
 	char g[3];
 	char b[3];
 	char *consoles1 = strdup(consoles);
-	char *sectionNames[100];
+	char *sectionNames[10000];
 	int sectionCounter=0;
 
 	char* tokenizedSectionName=strtok(consoles1,",");
@@ -394,7 +397,7 @@ int loadSections() {
 		if(strcmp("yes",value)==0) {
 			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
 		}
-		menuSections[menuSectionCounter].hidden=0;
+//		theSectionHasGames(&menuSections[menuSectionCounter]);
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;

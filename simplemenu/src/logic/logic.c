@@ -281,6 +281,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
+
 #ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
@@ -310,8 +311,8 @@ int isExtensionValid(char *extension, char *fileExtensions) {
 int countGamesInSection() {
 	int gamesCounter=0;
 	struct Node* currentGameNode = CURRENT_SECTION.head;
-	for (int i=0;i<=10000;i++) {
-		if (currentGameNode!=NULL&&strlen(currentGameNode->data->name)>0) {
+	for (int i=0;i<=MAX_GAMES_IN_SECTION;i++) {
+		if (currentGameNode!=NULL) {
 			gamesCounter++;
 			currentGameNode = currentGameNode->next;
 		} else {
@@ -451,7 +452,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 		}
 		d_name = entry->d_name;
 		if (entry->d_type & DT_DIR) {
-			if (strcmp(d_name,"media") != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
 				char * e = strrchr(d_name, '/');
 				if (e==NULL) {
@@ -526,14 +527,15 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile* stolenFile, char* fileName) {
 	}
 }
 
-int theCurrentSectionHasGames() {
+int theSectionHasGames(struct MenuSection *section) {
+	section->hidden=1;
 	int dirCounter;
 	char *dirs[10];
 	char* ptr;
 	char dirsCopy[1000];
-	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+	strcpy(dirsCopy,section->filesDirectories);
 	ptr = strtok(dirsCopy, ",");
-	char *files[10000];
+	char *files[MAX_GAMES_IN_SECTION];
 	int value = 0;
 	while (ptr!=NULL) {
 		dirs[dirCounter]=malloc(strlen(ptr)+1);
@@ -548,7 +550,7 @@ int theCurrentSectionHasGames() {
 			if (ext&&strcmp((files[i]),"..")!=0 &&
 					strcmp((files[i]),".")!=0 &&
 					strcmp(ext,".png")!=0&&
-					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+					isExtensionValid(ext,section->fileExtensions)) {
 				value = 1;
 				break;
 			}
@@ -557,13 +559,14 @@ int theCurrentSectionHasGames() {
 			free(files[i]);
 		}
 		if (value==1) {
+			section->hidden=0;
 			break;
 		}
 	}
 	for (int i=0;i<dirCounter;i++){
 		free (dirs[i]);
 	}
-	return value;
+	return !value;
 }
 
 void loadGameList(int refresh) {
@@ -576,7 +579,7 @@ void loadGameList(int refresh) {
 		}
 		cleanListForSection(&CURRENT_SECTION);
 		CURRENT_SECTION.totalPages=0;
-		char *files[10000];
+		char *files[MAX_GAMES_IN_SECTION];
 		int game = 0;
 		int dirCounter;
 		char *dirs[10];
@@ -598,7 +601,6 @@ void loadGameList(int refresh) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&
-						strcmp(ext,".png")!=0&&
 						isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {
@@ -732,14 +734,14 @@ int countGamesInPage() {
 	return gamesCounter;
 }
 
-int getFirstNonHiddenSection(int sectionCount) {
-	for (int i=0;i<sectionCount;i++) {
-		if (menuSections[i].hidden==0) {
-			return i;
-		}
-	}
-	return 0;
-}
+//int getFirstNonHiddenSection(int sectionCount) {
+//	for (int i=0;i<sectionCount;i++) {
+//		if (menuSections[i].hidden==0) {
+//			return i;
+//		}
+//	}
+//	return 0;
+//}
 
 void selectRandomGame() {
 	int game = rand() % CURRENT_SECTION.gameCount;
@@ -767,23 +769,23 @@ void determineStartingScreen(int sectionCount) {
 		}
 	} else {
 		loadGameList(0);
-		if(CURRENT_SECTION.hidden) {
-			int advanced = advanceSection();
-			loadGameList(0);
-			if(advanced) {
-				while(CURRENT_SECTION.hidden) {
-					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
-						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
-						break;
-					}
-					advanceSection();
-					loadGameList(0);
-				}
-			}
-		}
+//		if(CURRENT_SECTION.hidden) {
+//			int advanced = advanceSection();
+//			loadGameList(0);
+//			if(advanced) {
+//				while(CURRENT_SECTION.hidden) {
+//					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
+//						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
+//						break;
+//					}
+//					advanceSection();
+//					loadGameList(0);
+//				}
+//			}
+//		}
 		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (gamesInSection%ITEMS_PER_PAGE==0) {
+		if (pages>0&&gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
 		CURRENT_SECTION.totalPages=pages;
@@ -802,7 +804,8 @@ void deleteGame(struct Rom *rom) {
 	char *tempGameName1;
 	strcpy(pictureWithFullPath, rom->directory);
 	tempGameName=getGameName(rom->name);
-	strcat(pictureWithFullPath,"media/");
+	strcat(pictureWithFullPath,mediaFolder);
+	strcat(pictureWithFullPath,"/");
 	tempGameName1=getNameWithoutExtension(tempGameName);
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");

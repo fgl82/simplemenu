@@ -12,7 +12,12 @@
 
 int running;
 
-char mediaFolder[100];
+int MAX_GAMES_IN_SECTION;
+
+char mediaFolder[1000];
+char simpleBackground[1000];
+char fullscreenBackground[1000];
+char menuFont[1000];
 
 int itsStoppedBecauseOfAnError;
 char *errorMessage;
@@ -35,6 +40,8 @@ int currentlySectionSwitching;
 int currentlyChoosingEmulator;
 int stripGames;
 int shutDownEnabled;
+int footerVisibleInFullscreenMode;
+int menuVisibleInFullscreenMode;
 int loading;
 
 int OC_UC;
@@ -105,7 +112,7 @@ struct MenuSection {
 };
 
 
-struct MenuSection menuSections[50];
+struct MenuSection menuSections[100];
 
 struct OPKDesktopFile {
 	char parentOPK[200];
