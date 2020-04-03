@@ -21,9 +21,9 @@ EOF
 chmod 777 simplemenu
 FLIST="simplemenu"
 FLIST="${FLIST} invoker.dge"
-FLIST="${FLIST} resources"
 FLIST="${FLIST} scripts"
 FLIST="${FLIST} config"
+FLIST="${FLIST} themes"
 FLIST="${FLIST} apps"
 FLIST="${FLIST} default.gcw0.desktop"
 FLIST="${FLIST} simplemenu.png"

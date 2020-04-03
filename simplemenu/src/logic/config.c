@@ -11,6 +11,10 @@
 #include "../headers/string_utils.h"
 #include "../headers/ini2.h"
 
+char home[5000];
+char pathToThemeConfigFile[1000];
+char pathToThemeConfigFilePlusFileName[1000];
+
 void loadAliasList(int sectionNumber) {
 	char * line = NULL;
 	size_t len = 0;
@@ -35,41 +39,53 @@ void loadAliasList(int sectionNumber) {
 }
 
 void createConfigFilesInHomeIfTheyDontExist() {
-	char pathToConfigFiles[300];
-	char pathToAppFiles[300];
-	char pathToGameFiles[300];
-	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",getenv("HOME"));
-	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",getenv("HOME"));
-	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",getenv("HOME"));
+	snprintf(home,sizeof(home),"%s",getenv("HOME"));
+	char pathToConfigFiles[3000];
+	char pathToAppFiles[3000];
+	char pathToGameFiles[3000];
+	char pathToThemeFiles[3000];
+	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
+	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
+	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
+	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
-		char copyCommand[300];
-		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",getenv("HOME"));
+		char copyCommand[3000];
+		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",home);
 		int ret = system(copyCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		char copyAppsCommand[300];
+		char copyAppsCommand[3000];
 		mkdir(pathToAppFiles,0700);
-		snprintf(copyAppsCommand,sizeof(copyAppsCommand),"cp ./apps/* %s/.simplemenu/apps",getenv("HOME"));
+		snprintf(copyAppsCommand,sizeof(copyAppsCommand),"cp ./apps/* %s/.simplemenu/apps",home);
 		ret = system(copyAppsCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		char copyGamesCommand[300];
+		char copyGamesCommand[3000];
 		mkdir(pathToGameFiles,0700);
-		snprintf(copyGamesCommand,sizeof(copyGamesCommand),"cp ./games/* %s/.simplemenu/games",getenv("HOME"));
+		snprintf(copyGamesCommand,sizeof(copyGamesCommand),"cp ./games/* %s/.simplemenu/games",home);
 		ret = system(copyGamesCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		char deleteDirectoriesCommand[300];
-		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./apps");
-		ret = system(deleteDirectoriesCommand);
-		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./games");
-		ret = system(deleteDirectoriesCommand);
-		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./config");
-		ret = system(deleteDirectoriesCommand);
+		char copyThemesCommand[3000];
+		mkdir(pathToThemeFiles,0700);
+		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r ./themes/* %s/.simplemenu/themes",home);
+		ret = system(copyThemesCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+//		char deleteDirectoriesCommand[3000];
+//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./apps");
+//		ret = system(deleteDirectoriesCommand);
+//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./games");
+//		ret = system(deleteDirectoriesCommand);
+//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./themes");
+//		ret = system(deleteDirectoriesCommand);
+//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./config");
+//		ret = system(deleteDirectoriesCommand);
 	}
 }
 
@@ -77,7 +93,7 @@ void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;
 		char pathToFavoritesFilePlusFileName[300];
-		snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",getenv("HOME"));
+		snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",home);
 		fp = fopen(pathToFavoritesFilePlusFileName, "w");
 		int linesWritten=0;
 		for (int j=0;j<favoritesSize;j++) {
@@ -112,7 +128,7 @@ void loadFavorites() {
 	size_t len = 0;
 	ssize_t read;
 	char pathToFavoritesFilePlusFileName[300];
-	snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",getenv("HOME"));
+	snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",home);
 	fp = fopen(pathToFavoritesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
@@ -151,7 +167,7 @@ void loadFavorites() {
 void saveLastState() {
 	FILE * fp;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
@@ -168,7 +184,7 @@ void loadLastState() {
 	size_t len = 0;
 	ssize_t read;
 	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
@@ -195,9 +211,9 @@ void loadLastState() {
 			startInSection=atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
-			if(strlen(CURRENT_SECTION.sectionName)<1) {
-				continue;
-			}
+//			if(strlen(CURRENT_SECTION.sectionName)<1) {
+//				continue;
+//			}
 			int page = atoi(configurations[1]);
 			int game = atoi(configurations[2]);
 			int realCurrentGameNumber = atoi(configurations[3]);
@@ -214,27 +230,35 @@ void loadLastState() {
 	if (line) {
 		free(line);
 	}
+//	while(CURRENT_SECTION.gameCount==0) {
+//		currentSectionNumber++;
+//	}
 }
 
 void loadConfig() {
+//	snprintf(home,sizeof(home),"%s",getenv("HOME"));
 	char pathToConfigFilePlusFileName[1000];
-	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",getenv("HOME"));
-	ini_t *config = ini_load(pathToConfigFilePlusFileName);
-
 	const char *value;
+	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",home);
+	ini_t *config = ini_load(pathToConfigFilePlusFileName);
+	value = ini_get(config, "GENERAL", "theme");
+	snprintf(pathToThemeConfigFile,sizeof(pathToThemeConfigFile),"%s/.simplemenu/",home);
+	strcat(pathToThemeConfigFile, "themes/");
+	strcat(pathToThemeConfigFile, value);
+	strcat(pathToThemeConfigFile, "/");
 
-	char pathToThemeFilePlusFileName[1000];
-	snprintf(pathToThemeFilePlusFileName,sizeof(pathToThemeFilePlusFileName),"%s/.simplemenu/theme.ini",getenv("HOME"));
-	ini_t *themeConfig = ini_load(pathToThemeFilePlusFileName);
+	strcpy(pathToThemeConfigFilePlusFileName, pathToThemeConfigFile);
+	strcat(pathToThemeConfigFilePlusFileName, "theme.ini");
+	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
 
 	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
-	strcpy(simpleBackground,value);
+	snprintf(simpleBackground,sizeof(simpleBackground),"%s%s",pathToThemeConfigFile, value);
 
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
-	strcpy(fullscreenBackground,value);
+	snprintf(fullscreenBackground,sizeof(fullscreenBackground),"%s%s",pathToThemeConfigFile, value);
 
 	value = ini_get(themeConfig, "GENERAL", "font");
-	strcpy(menuFont,value);
+	snprintf(menuFont,sizeof(menuFont),"%s%s",pathToThemeConfigFile, value);
 
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
@@ -291,6 +315,18 @@ void setRGBFromHex (int *rgbColor, const char *hexColor) {
 	rgbColor[2]=hex2int(b);
 }
 
+void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	if(value==NULL) {
+		strcpy(sectionValueToBeSet,"\0");
+		return;
+	}
+	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
+	strcat(sectionValueToBeSet,value);
+//	printf("%s\n", sectionValueToBeSet);
+}
+
 void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
@@ -298,7 +334,6 @@ void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, 
 		strcpy(sectionValueToBeSet,"\0");
 		return;
 	}
-//	printf("%s - %s: %s\n", sectionName, valueName, value);
 	strcpy(sectionValueToBeSet,value);
 }
 
@@ -310,12 +345,9 @@ void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int
 
 int loadSections() {
 	char pathToSectionsFilePlusFileName[1000];
-	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",getenv("HOME"));
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",home);
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
-
-	char pathToThemeFilePlusFileName[1000];
-	snprintf(pathToThemeFilePlusFileName,sizeof(pathToThemeFilePlusFileName),"%s/.simplemenu/theme.ini",getenv("HOME"));
-	ini_t *themeConfig = ini_load(pathToThemeFilePlusFileName);
+	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
 
 	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char *consoles1 = strdup(consoles);
@@ -324,15 +356,6 @@ int loadSections() {
 	int sectionCounter=0;
 
 	char* tokenizedSectionName=strtok(consoles1,",");
-
-	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
-	strcpy(simpleBackground,value);
-
-	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
-	strcpy(fullscreenBackground,value);
-
-	value = ini_get(themeConfig, "GENERAL", "font");
-	strcpy(menuFont,value);
 
 	while(tokenizedSectionName!=NULL) {
 		sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
@@ -380,7 +403,7 @@ int loadSections() {
 		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-		setStringValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].consolePicture);
+		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].consolePicture);
 
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -421,7 +444,7 @@ int loadSections() {
 	setRGBColorInSection(themeConfig, "FAVORITES", "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-	setStringValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].consolePicture);
+	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].consolePicture);
 
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;

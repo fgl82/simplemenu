@@ -213,7 +213,7 @@ void showCurrentEmulator() {
 
 
 void showConsole() {
-	displayImageOnScreen(CURRENT_SECTION.consolePicture, "PICTURE NOT FOUND");
+	displayImageOnScreen(CURRENT_SECTION.consolePicture, CURRENT_SECTION.sectionName);
 }
 
 void displayGamePicture(struct Rom *rom) {

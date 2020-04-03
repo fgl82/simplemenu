@@ -276,10 +276,10 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 				w = SCREEN_WIDTH;
 				h = w*ratio;
 			}
-			if (strstr(fileName,CURRENT_SECTION.consolePicture)) {
-				w=calculateProportionalSizeOrDistance(img->w);
-				h=w*ratio;
-			}
+//			if (strstr(fileName,CURRENT_SECTION.consolePicture)) {
+//				w=calculateProportionalSizeOrDistance(img->w);
+//				h=w*ratio;
+//			}
 			if ((int)h!=(int)img->h) {
 				smoothing = 1;
 			}
