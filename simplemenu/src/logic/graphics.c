@@ -305,7 +305,7 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
 	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 240;
+		SCREEN_HEIGHT = 768;
 	}
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;
