@@ -99,6 +99,9 @@ int main(int argc, char* argv[]) {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
+	while(strlen(CURRENT_SECTION.sectionName)<1) {
+		advanceSection();
+	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {

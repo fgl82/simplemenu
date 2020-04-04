@@ -769,23 +769,8 @@ void determineStartingScreen(int sectionCount) {
 		}
 	} else {
 		loadGameList(0);
-//		if(CURRENT_SECTION.hidden) {
-//			int advanced = advanceSection();
-//			loadGameList(0);
-//			if(advanced) {
-//				while(CURRENT_SECTION.hidden) {
-//					if(currentSectionNumber==0||currentSectionNumber==favoritesSectionNumber) {
-//						generateError("NO ROMS WERE FOUND-SHUTTING DOWN",1);
-//						break;
-//					}
-//					advanceSection();
-//					loadGameList(0);
-//				}
-//			}
-//		}
-		int gamesInSection=CURRENT_SECTION.gameCount;
-		int pages = gamesInSection / ITEMS_PER_PAGE;
-		if (pages>0&&gamesInSection%ITEMS_PER_PAGE==0) {
+		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
+		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
 		CURRENT_SECTION.totalPages=pages;

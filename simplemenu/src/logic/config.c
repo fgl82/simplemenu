@@ -211,9 +211,9 @@ void loadLastState() {
 			startInSection=atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
-//			if(strlen(CURRENT_SECTION.sectionName)<1) {
-//				continue;
-//			}
+			if(strlen(CURRENT_SECTION.sectionName)<1) {
+				continue;
+			}
 			int page = atoi(configurations[1]);
 			int game = atoi(configurations[2]);
 			int realCurrentGameNumber = atoi(configurations[3]);
@@ -230,9 +230,6 @@ void loadLastState() {
 	if (line) {
 		free(line);
 	}
-//	while(CURRENT_SECTION.gameCount==0) {
-//		currentSectionNumber++;
-//	}
 }
 
 void loadConfig() {
