@@ -131,10 +131,31 @@ int rewindSection() {
 }
 
 void launchGame(struct Rom *rom) {
+	FILE *file;
+	char error[3000];
+	char tempExec[3000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
+		strcpy(tempExec,favorite.emulatorFolder);
+		strcat(tempExec,favorite.executable);
+		file = fopen(tempExec, "r");
+		if (!file) {
+			strcpy(error,favorite.executable);
+			strcat(error,"-NOT FOUND");
+			generateError(error,0);
+			return;
+		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (rom->name!=NULL) {
+		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+		file = fopen(tempExec, "r");
+		if (!file) {
+			strcpy(error,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+			strcat(error,"-NOT FOUND");
+			generateError(error,0);
+			return;
+		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
 		} else {
