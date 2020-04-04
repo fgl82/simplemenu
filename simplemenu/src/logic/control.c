@@ -139,7 +139,7 @@ void launchGame(struct Rom *rom) {
 		strcpy(tempExec,favorite.emulatorFolder);
 		strcat(tempExec,favorite.executable);
 		file = fopen(tempExec, "r");
-		if (!file) {
+		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,favorite.executable);
 			strcat(error,"-NOT FOUND");
 			generateError(error,0);
@@ -150,7 +150,7 @@ void launchGame(struct Rom *rom) {
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
 		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 		file = fopen(tempExec, "r");
-		if (!file) {
+		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 			strcat(error,"-NOT FOUND");
 			generateError(error,0);
