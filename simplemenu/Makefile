@@ -22,7 +22,7 @@ else ifeq ($(PLATFORM), RG-350)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	CFLAGS = -DTARGET_RG350 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lshake -lpthread -lfreetype -lz -lbz2
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lz -lbz2
 else ifeq ($(PLATFORM), NPG)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
