@@ -337,6 +337,9 @@ void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, 
 void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int *sectionValueToBeSet) {
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
+	if (value==NULL) {
+		value = ini_get(config, "DEFAULT", valueName);
+	}
 	setRGBFromHex(sectionValueToBeSet, value);
 }
 

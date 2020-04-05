@@ -18,7 +18,6 @@ Categories=applications;
 EOF
 
 # create opk
-chmod 777 simplemenu
 FLIST="simplemenu"
 FLIST="${FLIST} invoker.dge"
 FLIST="${FLIST} scripts"
