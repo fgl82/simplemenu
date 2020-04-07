@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 				}
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B&&!currentlyChoosing) {
-					if (!aKeyComboWasPressed) {
+					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber) {
 						beforeTryingToSwitchGroup = activeGroup;
 						currentlyChoosing=2;
 					}
