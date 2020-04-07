@@ -2,6 +2,7 @@
 #define STRING_UTILS
 char *replaceWord(const char *s, const char *oldW, const char *newW);
 char *toLower (char* string);
+char *toUpper (char* string);
 int positionWhereGameNameStartsInFullPath (char* string);
 char *getNameWithoutExtension(char *fileName);
 char *getNameWithoutPath(char *fileName);

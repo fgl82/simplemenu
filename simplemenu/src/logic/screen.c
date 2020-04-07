@@ -177,7 +177,26 @@ void showLetter(struct Rom *rom) {
 	free(currentGame);
 }
 
+
 void showCurrentEmulator() {
+	int height = SCREEN_HEIGHT;
+	int backgroundColor[3];
+	backgroundColor[0]=50;
+	backgroundColor[1]=50;
+	backgroundColor[2]=50;
+	int textColor[3]= {255, 255, 255};
+	//	char *tempString = malloc(strlen(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory])+strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
+	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
+	//	strcpy(tempString,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+	strcpy(tempString,sectionGroups[activeGroup].groupName);
+	strcat(tempString,"\0");
+	int width = SCREEN_WIDTH;
+	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
+	drawCurrentSectionGroup(tempString, textColor);
+	free(tempString);
+}
+
+void showCurrentEmulator1() {
 	int height = 30;
 	int filling[3];
 	int borderColor[3];

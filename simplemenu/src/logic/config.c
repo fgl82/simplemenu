@@ -172,6 +172,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
 	fprintf(fp, "%d;\n", currentSectionNumber);
+	fprintf(fp, "%d;\n", activeGroup);
 	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
 		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGameInPage, CURRENT_SECTION.realCurrentGameNumber);
 	}
@@ -195,6 +196,7 @@ void loadLastState() {
 	int startInSection = -1;
 	int startInPictureMode = -1;
 	int stripGamesConfig = -1;
+	int activeGroupRead= -1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -209,6 +211,8 @@ void loadLastState() {
 			startInPictureMode=atoi(configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
+		} else if (activeGroupRead==-1) {
+			activeGroupRead = atoi(configurations[0]);
 		} else {
 			currentSectionNumber=atoi(configurations[0]);
 			if(strlen(CURRENT_SECTION.sectionName)<1) {
@@ -225,12 +229,31 @@ void loadLastState() {
 	}
 	stripGames=stripGamesConfig;
 	currentSectionNumber=startInSection;
+	activeGroup = activeGroupRead;
 	fullscreenMode=startInPictureMode;
 	fclose(fp);
 	if (line) {
 		free(line);
 	}
 }
+
+int cmpfnc(const void *f1, const void *f2)
+{
+	struct SectionGroup *e1 = (struct SectionGroup *)f1;
+	struct SectionGroup *e2 = (struct SectionGroup *)f2;
+	char temp1[300]="";
+	char temp2[300]="";
+	strcpy(temp1,e1->groupName);
+	strcpy(temp2,e2->groupName);
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	for(int i=0;temp2[i]; i++) {
+		temp2[i] = tolower(temp2[i]);
+	}
+	return strcmp(temp1, temp2);
+}
+
 
 void loadConfig() {
 //	snprintf(home,sizeof(home),"%s",getenv("HOME"));
@@ -243,9 +266,9 @@ void loadConfig() {
 	strcat(pathToThemeConfigFile, "themes/");
 	strcat(pathToThemeConfigFile, value);
 	strcat(pathToThemeConfigFile, "/");
-
 	strcpy(pathToThemeConfigFilePlusFileName, pathToThemeConfigFile);
 	strcat(pathToThemeConfigFilePlusFileName, "theme.ini");
+
 	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
 
 	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
@@ -283,6 +306,27 @@ void loadConfig() {
 
 	value = ini_get(config, "FULLSCREEN_MODE", "display_menu");
 	menuVisibleInFullscreenMode=atoi(value);
+
+
+	sectionGroupCounter=0;
+	char *files[1000];
+	char tempString[1000];
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
+	int n = recursivelyScanDirectory(tempString, files, 0);
+
+	for(int i=0;i<n;i++) {
+		strcpy(sectionGroups[sectionGroupCounter].groupPath, files[i]);
+		char *temp = getNameWithoutPath((files[i]));
+		char *temp1 = getNameWithoutExtension(temp);
+		char *temp2 = toUpper(temp1);
+		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
+		free(temp);
+		free(temp1);
+		free(temp2);
+		sectionGroupCounter++;
+	}
+
+	qsort(sectionGroups, n, sizeof(struct SectionGroup), cmpfnc);
 }
 
 uint32_t hex2int(char *hex) {
@@ -321,7 +365,6 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	}
 	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
 	strcat(sectionValueToBeSet,value);
-//	printf("%s\n", sectionValueToBeSet);
 }
 
 void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
@@ -343,9 +386,10 @@ void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int
 	setRGBFromHex(sectionValueToBeSet, value);
 }
 
-int loadSections() {
+int loadSections(char *file) {
+	menuSectionCounter=0;
 	char pathToSectionsFilePlusFileName[1000];
-	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s/.simplemenu/sections.ini",home);
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s",file);
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
 	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
 
@@ -358,15 +402,19 @@ int loadSections() {
 	char* tokenizedSectionName=strtok(consoles1,",");
 
 	while(tokenizedSectionName!=NULL) {
-		sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
-		strcpy(sectionNames[sectionCounter], tokenizedSectionName);
+		value = ini_get(config, tokenizedSectionName, "execs");
+		if(value!=NULL) {
+			sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
+			strcpy(sectionNames[sectionCounter], tokenizedSectionName);
+			sectionCounter++;
+		}
 		tokenizedSectionName=strtok(NULL,",");
-		sectionCounter++;
 	}
-
+	free(tokenizedSectionName);
 	while(menuSectionCounter<sectionCounter) {
 		char *sectionName = sectionNames[menuSectionCounter];
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
+
 
 		//READ EXECS
 		int execCounter=0;

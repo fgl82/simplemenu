@@ -17,6 +17,11 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 
+	if (keys[BTN_START]&&!favoritesSectionSelected) {
+		currentlyChoosingEmulator=1;
+		return 0;
+	}
+
 	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_START]&&!favoritesSectionSelected) {
 		currentlyChoosingEmulator=1;
 		return 0;

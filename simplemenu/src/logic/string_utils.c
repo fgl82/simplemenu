@@ -38,6 +38,15 @@ char *toLower (char* string) {
 	return copy;
 }
 
+char *toUpper (char* string) {
+	char *copy = malloc(2000);
+	strcpy(copy, string);
+	for(int i=0;copy[i]; i++) {
+		copy[i] = toupper(copy[i]);
+	}
+	return copy;
+}
+
 char *getExtension (char *stringWithExtension) {
 	return strrchr(stringWithExtension, '.');
 }

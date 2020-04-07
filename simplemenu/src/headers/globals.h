@@ -79,6 +79,13 @@ struct Node  {
 	struct Node *prev;
 };
 
+struct SectionGroup {
+	char groupPath[1000];
+	char groupName[25];
+};
+
+int sectionGroupCounter;
+
 struct MenuSection {
 	char sectionName[25];
 	char *emulatorDirectories[10];
@@ -111,7 +118,8 @@ struct MenuSection {
 	char category[100];
 };
 
-
+int activeGroup;
+struct SectionGroup sectionGroups[100];
 struct MenuSection menuSections[100];
 
 struct OPKDesktopFile {

@@ -579,8 +579,9 @@ void loadGameList(int refresh) {
 		}
 		cleanListForSection(&CURRENT_SECTION);
 		CURRENT_SECTION.totalPages=0;
+		CURRENT_SECTION.gameCount=0;
 		char *files[MAX_GAMES_IN_SECTION];
-		int game = 0;
+		int game = -1;
 		int dirCounter;
 		char *dirs[10];
 		char* ptr;
@@ -594,6 +595,7 @@ void loadGameList(int refresh) {
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
+		printf("papa\n");
 		for(int k=0;k<dirCounter;k++) {
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			int realItemCount = n;

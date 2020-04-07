@@ -83,7 +83,8 @@ int main(int argc, char* argv[]) {
 	#endif
 	initializeGlobals();
 	setupDisplayAndKeys();
-	int sectionCount=loadSections();
+	loadLastState();
+	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	loadFavorites();
 //	if (argv[1]!=NULL) {
 //		setSectionsState(argv[1]);
@@ -91,7 +92,6 @@ int main(int argc, char* argv[]) {
 //		returnTo=atoi(argv[3]);
 //		fullscreenMode=atoi(argv[4]);
 //	}
-	loadLastState();
 	if(fullscreenMode) {
 		ITEMS_PER_PAGE=12;
 	}
@@ -110,6 +110,10 @@ int main(int argc, char* argv[]) {
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
+			if(getPressedKey()==SDLK_HOME) {
+				generateError("SASADAS1",0);
+				continue;
+			}
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
 					if (!currentlyChoosingEmulator) {
@@ -131,6 +135,10 @@ int main(int argc, char* argv[]) {
 					updateScreen(NULL);
 				}
 			} else if (getEventType()==getKeyUp()) {
+				if(getPressedKey()==SDLK_HOME) {
+					generateError("SASADAS",0);
+					continue;
+				}
 				if(getPressedKey()==BTN_B) {
 					hotKeyPressed=0;
 					if(fullscreenMode) {

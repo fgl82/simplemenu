@@ -370,8 +370,44 @@ void markAsFavorite(struct Rom *rom) {
 int isSelectPressed() {
 	return keys[BTN_SELECT];
 }
-
 void performChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(activeGroup>0) {
+			activeGroup--;
+		} else {
+			activeGroup=sectionGroupCounter-1;
+		}
+		return;
+	}
+	if (keys[BTN_DOWN]) {
+		if(activeGroup<sectionGroupCounter) {
+			activeGroup++;
+		} else {
+			activeGroup=0;
+		}
+		return;
+	}
+	if (keys[BTN_A]) {
+		if (currentlyChoosingEmulator) {
+			loadSections(sectionGroups[activeGroup].groupPath);
+			currentlyChoosingEmulator=0;
+			currentSectionNumber=0;
+			for(int i=0;i<menuSectionCounter;i++) {
+				menuSections[i].initialized=0;
+				cleanListForSection(&menuSections[i]);
+				menuSections[i].currentPage=0;
+				menuSections[i].currentPage=0;
+				menuSections[i].realCurrentGameNumber=0;
+				menuSections[i].currentGameInPage=0;
+				menuSections[i].currentGameNode=CURRENT_SECTION.head;
+			}
+			loadGameList(0);
+		}
+	}
+}
+
+
+void performChoosingAction1() {
 	if (keys[BTN_UP]) {
 		if(CURRENT_SECTION.activeExecutable>0) {
 			CURRENT_SECTION.activeExecutable--;
