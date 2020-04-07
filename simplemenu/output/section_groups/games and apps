@@ -1,0 +1,14 @@
+[CONSOLES]
+consoleList = GAMES,APPS
+
+[GAMES]
+execs = #
+romDirs = /home/bittboy/.simplemenu/opks/
+romExts = .opk
+category = games
+
+[APPS]
+execs = #
+romDirs = /home/bittboy/.simplemenu/scripts/,/home/bittboy/.simplemenu/opks/
+romExts = .opk,.fgl
+category = applications
