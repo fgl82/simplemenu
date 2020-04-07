@@ -183,7 +183,7 @@ void showCurrentGroup() {
 	int backgroundColor[3];
 	backgroundColor[0]=30;
 	backgroundColor[1]=30;
-	backgroundColor[2]=30;
+	backgroundColor[2]=130;
 	int textColor[3]= {255, 255, 255};
 	//	char *tempString = malloc(strlen(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory])+strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
 	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
@@ -191,7 +191,8 @@ void showCurrentGroup() {
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
 	int width = SCREEN_WIDTH;
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
+//	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
+	drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, backgroundColor, 230);
 	drawCurrentSectionGroup(tempString, textColor);
 	free(tempString);
 }
