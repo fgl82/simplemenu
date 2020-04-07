@@ -17,6 +17,7 @@ void removeFavorite();
 void markAsFavorite();
 int isSelectPressed();
 void performChoosingAction();
+void performGroupChoosingAction();
 int performAction();
 void callDeleteGame(struct Rom *rom);
 #endif

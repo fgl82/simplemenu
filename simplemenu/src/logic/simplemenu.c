@@ -110,20 +110,20 @@ int main(int argc, char* argv[]) {
 	enableKeyRepeat();
 	while (running) {
 		while(pollEvent()){
-			if(getPressedKey()==SDLK_HOME) {
-				generateError("SASADAS1",0);
-				continue;
-			}
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
-					if (!currentlyChoosingEmulator) {
+					if (currentlyChoosing==0) {
 						if (CURRENT_SECTION.currentGameNode!=NULL) {
 							performAction(CURRENT_SECTION.currentGameNode->data);
 						} else {
 							performAction(NULL);
 						}
 					} else {
-						performChoosingAction();
+						if (currentlyChoosing==1) {
+							performChoosingAction();
+						} else if (currentlyChoosing==2) {
+							performGroupChoosingAction();
+						}
 					}
 				}
 				#ifndef TARGET_PC
@@ -135,11 +135,11 @@ int main(int argc, char* argv[]) {
 					updateScreen(NULL);
 				}
 			} else if (getEventType()==getKeyUp()) {
-				if(getPressedKey()==SDLK_HOME) {
-					generateError("SASADAS",0);
-					continue;
-				}
-				if(getPressedKey()==BTN_B) {
+				if(getPressedKey()==BTN_B&&!currentlyChoosing) {
+					if (!aKeyComboWasPressed) {
+						beforeTryingToSwitchGroup = activeGroup;
+						currentlyChoosing=2;
+					}
 					hotKeyPressed=0;
 					if(fullscreenMode) {
 						if(currentlySectionSwitching) {
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 					} else {
 						updateScreen(NULL);
 					}
-
+					aKeyComboWasPressed=0;
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
 					if (stripGames) {
@@ -168,7 +168,6 @@ int main(int argc, char* argv[]) {
 					} else {
 						updateScreen(NULL);
 					}
-
 				}
 			}
 		}

@@ -36,8 +36,9 @@ int gamesInPage;
 int currentCPU;
 int fullscreenMode;
 int hotKeyPressed;
+int aKeyComboWasPressed;
 int currentlySectionSwitching;
-int currentlyChoosingEmulator;
+int currentlyChoosing;
 int stripGames;
 int shutDownEnabled;
 int footerVisibleInFullscreenMode;
@@ -119,6 +120,7 @@ struct MenuSection {
 };
 
 int activeGroup;
+int beforeTryingToSwitchGroup;
 struct SectionGroup sectionGroups[100];
 struct MenuSection menuSections[100];
 

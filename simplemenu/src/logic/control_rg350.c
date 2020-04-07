@@ -17,15 +17,11 @@ int performAction(struct Rom *rom) {
 		return 0;
 	}
 
-	if (keys[BTN_START]&&!favoritesSectionSelected) {
-		currentlyChoosingEmulator=1;
+	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_START]&&!favoritesSectionSelected) {
+		currentlyChoosing=1;
 		return 0;
 	}
 
-	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_START]&&!favoritesSectionSelected) {
-		currentlyChoosingEmulator=1;
-		return 0;
-	}
 	if (rom!=NULL&&keys[BTN_R2]) {
 		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
@@ -49,6 +45,7 @@ int performAction(struct Rom *rom) {
 		hotKeyPressed=1;
 		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator(rom);
+			aKeyComboWasPressed=1;
 			return 1;
 		}
 		if (rom!=NULL&&keys[BTN_X]&&!currentlySectionSwitching) {
@@ -56,6 +53,7 @@ int performAction(struct Rom *rom) {
 				resetPicModeHideMenuTimer();
 			}
 			callDeleteGame(rom);
+			aKeyComboWasPressed=1;
 			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
@@ -66,6 +64,7 @@ int performAction(struct Rom *rom) {
 			} else {
 				generateError("USB MODE  NOT AVAILABLE",0);
 			}
+			aKeyComboWasPressed=1;
 		}
 		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<25;i++) {
@@ -83,6 +82,7 @@ int performAction(struct Rom *rom) {
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
+			aKeyComboWasPressed=1;
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_UP]&&!currentlySectionSwitching) {
@@ -93,6 +93,7 @@ int performAction(struct Rom *rom) {
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
+			aKeyComboWasPressed=1;
 			return 0;
 		}
 		if(keys[BTN_RIGHT]) {
@@ -108,6 +109,7 @@ int performAction(struct Rom *rom) {
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			}
+			aKeyComboWasPressed=1;
 			return 0;
 		}
 		if(keys[BTN_LEFT]) {
@@ -123,6 +125,7 @@ int performAction(struct Rom *rom) {
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			}
+			aKeyComboWasPressed=1;
 			return 0;
 		}
 	}

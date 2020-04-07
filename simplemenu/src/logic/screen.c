@@ -178,12 +178,12 @@ void showLetter(struct Rom *rom) {
 }
 
 
-void showCurrentEmulator() {
+void showCurrentGroup() {
 	int height = SCREEN_HEIGHT;
 	int backgroundColor[3];
-	backgroundColor[0]=50;
-	backgroundColor[1]=50;
-	backgroundColor[2]=50;
+	backgroundColor[0]=30;
+	backgroundColor[1]=30;
+	backgroundColor[2]=30;
 	int textColor[3]= {255, 255, 255};
 	//	char *tempString = malloc(strlen(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory])+strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
 	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
@@ -196,7 +196,7 @@ void showCurrentEmulator() {
 	free(tempString);
 }
 
-void showCurrentEmulator1() {
+void showCurrentEmulator() {
 	int height = 30;
 	int filling[3];
 	int borderColor[3];
@@ -470,7 +470,9 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		drawGameList();
-		if (currentlyChoosingEmulator) {
+		if (currentlyChoosing==2) {
+			showCurrentGroup();
+		} else if (currentlyChoosing==1) {
 			showCurrentEmulator();
 		}
 		if (CURRENT_SECTION.alphabeticalPaging) {
