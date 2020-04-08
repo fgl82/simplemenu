@@ -44,9 +44,11 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToAppFiles[3000];
 	char pathToGameFiles[3000];
 	char pathToThemeFiles[3000];
+	char pathToSectionGroupsFiles[3000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
 	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
+	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
 	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
@@ -74,6 +76,13 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		mkdir(pathToThemeFiles,0700);
 		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r ./themes/* %s/.simplemenu/themes",home);
 		ret = system(copyThemesCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		char copySectionGroupsCommand[3000];
+		mkdir(pathToSectionGroupsFiles,0700);
+		snprintf(copySectionGroupsCommand,sizeof(copySectionGroupsCommand),"cp -r ./section_groups/* %s/.simplemenu/section_groups",home);
+		ret = system(copySectionGroupsCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
@@ -307,7 +316,6 @@ void loadConfig() {
 	value = ini_get(config, "FULLSCREEN_MODE", "display_menu");
 	menuVisibleInFullscreenMode=atoi(value);
 
-
 	sectionGroupCounter=0;
 	char *files[1000];
 	char tempString[1000];
@@ -315,9 +323,20 @@ void loadConfig() {
 	int n = recursivelyScanDirectory(tempString, files, 0);
 
 	for(int i=0;i<n;i++) {
+		if(strstr(files[i],".png")!=NULL) {
+			continue;
+		}
 		strcpy(sectionGroups[sectionGroupCounter].groupPath, files[i]);
 		char *temp = getNameWithoutPath((files[i]));
 		char *temp1 = getNameWithoutExtension(temp);
+
+		char *temp3 = malloc(3000);
+		strcpy(temp3, getRomPath(files[i]));
+		strcat(temp3,"/");
+		strcat(temp3,temp1);
+		strcat(temp3,".png");
+		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+
 		char *temp2 = toUpper(temp1);
 		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
 		free(temp);
@@ -325,8 +344,7 @@ void loadConfig() {
 		free(temp2);
 		sectionGroupCounter++;
 	}
-
-	qsort(sectionGroups, n, sizeof(struct SectionGroup), cmpfnc);
+	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
 }
 
 uint32_t hex2int(char *hex) {

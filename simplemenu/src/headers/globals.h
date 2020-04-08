@@ -83,6 +83,7 @@ struct Node  {
 struct SectionGroup {
 	char groupPath[1000];
 	char groupName[25];
+	char groupBackground[1000];
 };
 
 int sectionGroupCounter;

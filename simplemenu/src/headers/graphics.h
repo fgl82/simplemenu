@@ -33,7 +33,7 @@ void drawUSBScreen();
 void drawShutDownText();
 void drawError(char *errorMessage, int textColor[]);
 void drawCurrentExecutable(char *executable, int textColor[]);
-void drawCurrentSectionGroup(char *executable, int textColor[]);
+void drawCurrentSectionGroup(char *groupName, int textColor[]);
 void drawShadedGameNameOnScreenPicMode(char *buf, int position);
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position);
 #endif

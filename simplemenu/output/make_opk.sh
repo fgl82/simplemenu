@@ -18,14 +18,15 @@ Categories=applications;
 EOF
 
 # create opk
-FLIST="simplemenu"
-FLIST="${FLIST} invoker.dge"
-FLIST="${FLIST} scripts"
+FLIST="apps"
 FLIST="${FLIST} config"
+FLIST="${FLIST} scripts"
+FLIST="${FLIST} section_groups"
 FLIST="${FLIST} themes"
-FLIST="${FLIST} apps"
-FLIST="${FLIST} default.gcw0.desktop"
+FLIST="${FLIST} invoker.dge"
+FLIST="${FLIST} simplemenu"
 FLIST="${FLIST} simplemenu.png"
+FLIST="${FLIST} default.gcw0.desktop"
 
 rm -f ${OPK_NAME}
 mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports

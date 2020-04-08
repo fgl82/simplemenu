@@ -595,7 +595,6 @@ void loadGameList(int refresh) {
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
-		printf("papa\n");
 		for(int k=0;k<dirCounter;k++) {
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
