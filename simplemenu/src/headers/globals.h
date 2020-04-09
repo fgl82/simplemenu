@@ -123,6 +123,7 @@ struct MenuSection {
 int activeGroup;
 int beforeTryingToSwitchGroup;
 struct SectionGroup sectionGroups[100];
+int sectionGroupStates[100][100][4];
 struct MenuSection menuSections[100];
 
 struct OPKDesktopFile {

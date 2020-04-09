@@ -391,7 +391,18 @@ void performGroupChoosingAction() {
 		return;
 	}
 	if (keys[BTN_A]) {
+		int preFavs = favoritesSectionNumber;
 		if (beforeTryingToSwitchGroup!=activeGroup) {
+			for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+				if(sectionCount==currentSectionNumber) {
+					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=1;
+				} else {
+					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=0;
+				}
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][1]=menuSections[sectionCount].currentPage;
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][2]=menuSections[sectionCount].currentGameInPage;
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][3]=menuSections[sectionCount].realCurrentGameNumber;
+			}
 			if (currentlyChoosing) {
 				loadSections(sectionGroups[activeGroup].groupPath);
 				currentlyChoosing=0;
@@ -404,6 +415,20 @@ void performGroupChoosingAction() {
 					menuSections[i].realCurrentGameNumber=0;
 					menuSections[i].currentGameInPage=0;
 					menuSections[i].currentGameNode=CURRENT_SECTION.head;
+				}
+				for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+					if(sectionCount!=favoritesSectionNumber) {
+						if (sectionGroupStates[activeGroup][sectionCount][0]==1) {
+							currentSectionNumber=sectionCount;
+						}
+						menuSections[sectionCount].currentPage=sectionGroupStates[activeGroup][sectionCount][1];
+						menuSections[sectionCount].currentGameInPage=sectionGroupStates[activeGroup][sectionCount][2];
+						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[activeGroup][sectionCount][3];
+					} else {
+						menuSections[sectionCount].currentPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][1];
+						menuSections[sectionCount].currentGameInPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][2];
+						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][3];
+					}
 				}
 				loadGameList(0);
 			}

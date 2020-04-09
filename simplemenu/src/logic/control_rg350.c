@@ -78,7 +78,6 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage(rom);
-//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
@@ -89,7 +88,6 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage(rom);
-//			CURRENT_SECTION.alphabeticalPaging=0;
 			if(fullscreenMode) {
 				resetPicModeHideMenuTimer();
 			}
