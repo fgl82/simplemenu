@@ -444,6 +444,33 @@ int loadSections(char *file) {
 	return menuSectionCounter;
 }
 
+int countSections(char *file) {
+	menuSectionCounter=0;
+	char pathToSectionsFilePlusFileName[1000];
+	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s",file);
+	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
+
+	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
+	char *consoles1 = strdup(consoles);
+	char *sectionNames[10000];
+	const char *value;
+	int sectionCounter=0;
+
+	char* tokenizedSectionName=strtok(consoles1,",");
+
+	while(tokenizedSectionName!=NULL) {
+		value = ini_get(config, tokenizedSectionName, "execs");
+		if(value!=NULL) {
+			sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
+			strcpy(sectionNames[sectionCounter], tokenizedSectionName);
+			sectionCounter++;
+		}
+		tokenizedSectionName=strtok(NULL,",");
+	}
+
+	return sectionCounter;
+}
+
 void saveLastState() {
 	FILE * fp;
 	char pathToStatesFilePlusFileName[300];
@@ -451,15 +478,21 @@ void saveLastState() {
 	fp = fopen(pathToStatesFilePlusFileName, "w");
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
-	fprintf(fp, "%d;\n", currentSectionNumber);
 	fprintf(fp, "%d;\n", activeGroup);
+	fprintf(fp, "%d;\n", currentSectionNumber);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
-		for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
+		for (int sectionCount=0;sectionCount<sectionsNum;sectionCount++) {
 			if (groupCount==activeGroup) {
-				fprintf(fp, "%d;%d;%d;%d\n", sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber);
+				int isActive = 0;
+				if (sectionCount==currentSectionNumber) {
+					isActive=1;
+				}
+				fprintf(fp, "%d;%d;%d;%d;%d\n", isActive, sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber);
 			} else {
-				loadSections(sectionGroups[groupCount].groupPath);
-				fprintf(fp, "%d;%d;%d;%d\n", sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
+//				loadSections(sectionGroups[groupCount].groupPath);
+//				printf("%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
+				fprintf(fp, "%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
 			}
 		}
 	}
@@ -483,7 +516,8 @@ void loadLastState() {
 	int startInSection = -1;
 	int startInPictureMode = -1;
 	int stripGamesConfig = -1;
-	int activeGroupRead= -1;
+	int startInGroup= -1;
+	int groupCounter=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -496,27 +530,34 @@ void loadLastState() {
 			stripGamesConfig=atoi(configurations[0]);
 		} else if (startInPictureMode==-1){
 			startInPictureMode=atoi(configurations[0]);
+		} else if (startInGroup==-1) {
+			startInGroup = atoi(configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
-		} else if (activeGroupRead==-1) {
-			activeGroupRead = atoi(configurations[0]);
 		} else {
-			currentSectionNumber=atoi(configurations[0]);
-//			if(strlen(CURRENT_SECTION.sectionName)<1) {
-//				continue;
-//			}
-			int page = atoi(configurations[1]);
-			int game = atoi(configurations[2]);
-			int realCurrentGameNumber = atoi(configurations[3]);
-			CURRENT_SECTION.currentPage = page;
-			CURRENT_SECTION.currentGameInPage=game;
-			CURRENT_SECTION.realCurrentGameNumber=realCurrentGameNumber;
-			CURRENT_SECTION.alphabeticalPaging=0;
+			if(atoi(configurations[1])==0) {
+				groupCounter++;
+			}
+			int isActive =atoi(configurations[0]);
+			int sectionNumber =atoi(configurations[1]);
+			int page = atoi(configurations[2]);
+			int game = atoi(configurations[3]);
+			int realCurrentGameNumber = atoi(configurations[4]);
+			sectionGroupStates[groupCounter][sectionNumber][0]=isActive;
+			sectionGroupStates[groupCounter][sectionNumber][1]=page;
+			sectionGroupStates[groupCounter][sectionNumber][2]=game;
+			sectionGroupStates[groupCounter][sectionNumber][3]=realCurrentGameNumber;
+			if (groupCounter==startInGroup) {
+				menuSections[sectionNumber].currentPage=page;
+				menuSections[sectionNumber].currentGameInPage=game;
+				menuSections[sectionNumber].realCurrentGameNumber=realCurrentGameNumber;
+			}
+			menuSections[sectionNumber].alphabeticalPaging=0;
 		}
 	}
 	stripGames=stripGamesConfig;
 	currentSectionNumber=startInSection;
-	activeGroup = activeGroupRead;
+	activeGroup = startInGroup;
 	fullscreenMode=startInPictureMode;
 	fclose(fp);
 	if (line) {
