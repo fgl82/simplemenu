@@ -411,7 +411,6 @@ void performGroupChoosingAction() {
 					menuSections[i].initialized=0;
 					cleanListForSection(&menuSections[i]);
 					menuSections[i].currentPage=0;
-					menuSections[i].currentPage=0;
 					menuSections[i].realCurrentGameNumber=0;
 					menuSections[i].currentGameInPage=0;
 					menuSections[i].currentGameNode=CURRENT_SECTION.head;

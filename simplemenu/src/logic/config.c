@@ -173,79 +173,6 @@ void loadFavorites() {
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 }
 
-void saveLastState() {
-	FILE * fp;
-	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
-	fp = fopen(pathToStatesFilePlusFileName, "w");
-	fprintf(fp, "%d;\n", stripGames);
-	fprintf(fp, "%d;\n", fullscreenMode);
-	fprintf(fp, "%d;\n", currentSectionNumber);
-	fprintf(fp, "%d;\n", activeGroup);
-	for (currentSectionNumber=0;currentSectionNumber<menuSectionCounter;currentSectionNumber++) {
-		fprintf(fp, "%d;%d;%d;%d\n", currentSectionNumber, CURRENT_SECTION.currentPage, CURRENT_SECTION.currentGameInPage, CURRENT_SECTION.realCurrentGameNumber);
-	}
-	fclose(fp);
-}
-
-void loadLastState() {
-	FILE * fp;
-	char * line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char pathToStatesFilePlusFileName[300];
-	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
-	fp = fopen(pathToStatesFilePlusFileName, "r");
-	if (fp==NULL) {
-		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
-		return;
-	}
-	char *configurations[5];
-	char *ptr;
-	int startInSection = -1;
-	int startInPictureMode = -1;
-	int stripGamesConfig = -1;
-	int activeGroupRead= -1;
-	while ((read = getline(&line, &len, fp)) != -1) {
-		ptr = strtok(line, ";");
-		int i=0;
-		while(ptr != NULL) {
-			configurations[i]=ptr;
-			ptr = strtok(NULL, ";");
-			i++;
-		}
-		if (stripGamesConfig==-1) {
-			stripGamesConfig=atoi(configurations[0]);
-		} else if (startInPictureMode==-1){
-			startInPictureMode=atoi(configurations[0]);
-		} else if (startInSection==-1) {
-			startInSection=atoi(configurations[0]);
-		} else if (activeGroupRead==-1) {
-			activeGroupRead = atoi(configurations[0]);
-		} else {
-			currentSectionNumber=atoi(configurations[0]);
-//			if(strlen(CURRENT_SECTION.sectionName)<1) {
-//				continue;
-//			}
-			int page = atoi(configurations[1]);
-			int game = atoi(configurations[2]);
-			int realCurrentGameNumber = atoi(configurations[3]);
-			CURRENT_SECTION.currentPage = page;
-			CURRENT_SECTION.currentGameInPage=game;
-			CURRENT_SECTION.realCurrentGameNumber=realCurrentGameNumber;
-			CURRENT_SECTION.alphabeticalPaging=0;
-		}
-	}
-	stripGames=stripGamesConfig;
-	currentSectionNumber=startInSection;
-	activeGroup = activeGroupRead;
-	fullscreenMode=startInPictureMode;
-	fclose(fp);
-	if (line) {
-		free(line);
-	}
-}
-
 int cmpfnc(const void *f1, const void *f2)
 {
 	struct SectionGroup *e1 = (struct SectionGroup *)f1;
@@ -515,4 +442,84 @@ int loadSections(char *file) {
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	return menuSectionCounter;
+}
+
+void saveLastState() {
+	FILE * fp;
+	char pathToStatesFilePlusFileName[300];
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
+	fp = fopen(pathToStatesFilePlusFileName, "w");
+	fprintf(fp, "%d;\n", stripGames);
+	fprintf(fp, "%d;\n", fullscreenMode);
+	fprintf(fp, "%d;\n", currentSectionNumber);
+	fprintf(fp, "%d;\n", activeGroup);
+	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
+		for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+			if (groupCount==activeGroup) {
+				fprintf(fp, "%d;%d;%d;%d\n", sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber);
+			} else {
+				loadSections(sectionGroups[groupCount].groupPath);
+				fprintf(fp, "%d;%d;%d;%d\n", sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
+			}
+		}
+	}
+	fclose(fp);
+}
+
+void loadLastState() {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	char pathToStatesFilePlusFileName[300];
+	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
+	fp = fopen(pathToStatesFilePlusFileName, "r");
+	if (fp==NULL) {
+		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
+		return;
+	}
+	char *configurations[5];
+	char *ptr;
+	int startInSection = -1;
+	int startInPictureMode = -1;
+	int stripGamesConfig = -1;
+	int activeGroupRead= -1;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		ptr = strtok(line, ";");
+		int i=0;
+		while(ptr != NULL) {
+			configurations[i]=ptr;
+			ptr = strtok(NULL, ";");
+			i++;
+		}
+		if (stripGamesConfig==-1) {
+			stripGamesConfig=atoi(configurations[0]);
+		} else if (startInPictureMode==-1){
+			startInPictureMode=atoi(configurations[0]);
+		} else if (startInSection==-1) {
+			startInSection=atoi(configurations[0]);
+		} else if (activeGroupRead==-1) {
+			activeGroupRead = atoi(configurations[0]);
+		} else {
+			currentSectionNumber=atoi(configurations[0]);
+//			if(strlen(CURRENT_SECTION.sectionName)<1) {
+//				continue;
+//			}
+			int page = atoi(configurations[1]);
+			int game = atoi(configurations[2]);
+			int realCurrentGameNumber = atoi(configurations[3]);
+			CURRENT_SECTION.currentPage = page;
+			CURRENT_SECTION.currentGameInPage=game;
+			CURRENT_SECTION.realCurrentGameNumber=realCurrentGameNumber;
+			CURRENT_SECTION.alphabeticalPaging=0;
+		}
+	}
+	stripGames=stripGamesConfig;
+	currentSectionNumber=startInSection;
+	activeGroup = activeGroupRead;
+	fullscreenMode=startInPictureMode;
+	fclose(fp);
+	if (line) {
+		free(line);
+	}
 }
