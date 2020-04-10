@@ -29,6 +29,8 @@ void initializeGlobals() {
 	favoritesChanged=0;
 	ITEMS_PER_PAGE=10;
 	isPicModeMenuHidden=1;
+	autoHideLogos=1;
+	stripGames=1;
 	srand(time(0));
 }
 
