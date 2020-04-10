@@ -12,16 +12,6 @@
 
 int performAction(struct Rom *rom) {
 
-	if (keys[BTN_SELECT] && keys[BTN_START]) {
-		running=0;
-		return 0;
-	}
-
-	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_START]&&!favoritesSectionSelected) {
-		currentlyChoosing=1;
-		return 0;
-	}
-
 	if (rom!=NULL&&keys[BTN_R2]) {
 		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
@@ -127,7 +117,10 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 	}
-
+	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
+		currentlyChoosing=1;
+		return 0;
+	}
 	if(keys[BTN_L1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
@@ -188,6 +181,7 @@ int performAction(struct Rom *rom) {
 		}
 		if (keys[BTN_START]) {
 //			cycleFrequencies();
+			currentlyChoosing=3;
 			return 0;
 		}
 		if (keys[BTN_L2]) {

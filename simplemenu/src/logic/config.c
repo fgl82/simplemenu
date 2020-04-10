@@ -508,7 +508,8 @@ void loadLastState() {
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
-		generateError("STATE FILE NOT FOUND-SHUTTING DOWN",1);
+		generateError("STATE FILE NOT FOUND-REBUILDING",0);
+		saveLastState();
 		return;
 	}
 	char *configurations[5];

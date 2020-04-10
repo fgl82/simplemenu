@@ -123,6 +123,8 @@ int main(int argc, char* argv[]) {
 							performChoosingAction();
 						} else if (currentlyChoosing==2) {
 							performGroupChoosingAction();
+						} else if (currentlyChoosing==3) {
+							performSettingsChoosingAction();
 						}
 					}
 				}
@@ -158,11 +160,12 @@ int main(int argc, char* argv[]) {
 					aKeyComboWasPressed=0;
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
-					if (stripGames) {
-						stripGames=0;
-					} else {
-						stripGames=1;
-					}
+//					if (stripGames) {
+//						stripGames=0;
+//					} else {
+//						stripGames=1;
+//					}
+//					currentlyChoosing=3;
 					if (CURRENT_SECTION.currentGameNode!=NULL) {
 						updateScreen(CURRENT_SECTION.currentGameNode->data);
 					} else {

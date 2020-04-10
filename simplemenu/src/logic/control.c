@@ -438,6 +438,54 @@ void performGroupChoosingAction() {
 	}
 }
 
+void performSettingsChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		}
+		return;
+	}
+	if (keys[BTN_DOWN]) {
+		if(chosenSetting<7) {
+			chosenSetting++;
+		}
+		return;
+	}
+	if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==0) {
+			stripGames=1+stripGames*-1;
+		} else if (chosenSetting==1) {
+			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==2) {
+			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==3) {
+
+		} else if (chosenSetting==4) {
+			if (keys[BTN_LEFT]) {
+				if (timeoutValue>0) {
+					timeoutValue--;
+				}
+			} else {
+				if (timeoutValue<60) {
+					timeoutValue++;
+				}
+			}
+		}
+
+		return;
+	}
+	if (chosenSetting==6&&keys[BTN_A]) {
+		running=0;
+	}
+	if (keys[BTN_START]) {
+		if (currentlyChoosing) {
+			currentlyChoosing=0;
+			return;
+		}
+	}
+}
+
+
 
 void performChoosingAction() {
 	if (keys[BTN_UP]) {

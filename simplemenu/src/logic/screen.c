@@ -229,7 +229,6 @@ void showCurrentEmulator() {
 	free(tempString);
 }
 
-
 void showConsole() {
 	displayImageOnScreen(CURRENT_SECTION.consolePicture, CURRENT_SECTION.sectionName);
 }
@@ -461,6 +460,124 @@ void setupDecorations(struct Rom *rom) {
 	drawHeader(rom);
 }
 
+void setOptionsAndValues (char **options, char **values, char **hints){
+	options[0]= malloc(100);
+	options[1]= malloc(100);
+	options[2]= malloc(100);
+	options[3]= malloc(100);
+	options[4]= malloc(100);
+	options[5]= malloc(100);
+	options[6]= malloc(100);
+
+	values[0]= malloc(4);
+	values[1]= malloc(4);
+	values[2]= malloc(4);
+	values[3]= malloc(4);
+	values[4]= malloc(4);
+	values[5]= malloc(4);
+	values[6]= malloc(4);
+
+	hints[0]= malloc(100);
+	hints[1]= malloc(100);
+	hints[2]= malloc(100);
+	hints[3]= malloc(100);
+	hints[4]= malloc(100);
+	hints[5]= malloc(100);
+	hints[6]= malloc(100);
+
+	strcpy(options[0],"Tidy rom names: ");
+	strcpy(options[1],"Display fullscreen footer: ");
+	strcpy(options[2],"Display fullscreen menu: ");
+	strcpy(options[3],"Theme: ");
+	strcpy(options[4],"Screen timeout: ");
+	strcpy(options[5],"Default launcher: ");
+
+	if (shutDownEnabled) {
+		strcpy(options[6],"Shutdown");
+	} else {
+		strcpy(options[6],"Exit");
+	}
+
+	strcpy(hints[0],"CUT DETAILS OUT OF ROM NAMES");
+	strcpy(hints[1],"DISPLAY THE CURRENT ROM NAME");
+	strcpy(hints[2],"DISPLAY A TRASLUCENT MENU");
+	strcpy(hints[3],"LAUNCHER THEME");
+	strcpy(hints[4],"SECS UNTIL THE SCREEN TURNS OFF");
+	strcpy(hints[5],"LAUNCH AFTER BOOTING");
+	if (shutDownEnabled) {
+		strcpy(hints[6],"PRESS A TO QUIT");
+	} else {
+		strcpy(hints[6],"PRESS A TO QUIT");
+	}
+
+	if (stripGames) {
+		strcpy(values[0],"YES");
+	} else {
+		strcpy(values[0],"NO");
+	}
+	if (footerVisibleInFullscreenMode) {
+		strcpy(values[1],"YES");
+	} else {
+		strcpy(values[1],"NO");
+	}
+	if (menuVisibleInFullscreenMode) {
+		strcpy(values[2],"YES");
+	} else {
+		strcpy(values[2],"NO");
+	}
+	strcpy(values[3],"default");
+	snprintf(values[4],sizeof(values[4]),"%d",timeoutValue);
+	if (shutDownEnabled) {
+		strcpy(values[5],"YES");
+	} else {
+		strcpy(values[5],"NO");
+	}
+	strcpy(values[6],"\0");
+}
+
+void drawSettingsScreen() {
+	int height = 30;
+	int filling[3];
+	filling[0]=50;
+	filling[1]=50;
+	filling[2]=50;
+	int textColor[3]= {255, 255, 255};
+
+	char *options[7];
+	char *values[7];
+	char *hints[7];
+
+	setOptionsAndValues(options, values, hints);
+
+	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, filling);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, filling);
+	drawTextOnHeader("SETTINGS");
+	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
+	for (int i=0;i<7;i++) {
+		char temp[300];
+		strcpy(temp,options[i]);
+		if(strlen(values[i])>1) {
+			strcat(temp,values[i]);
+		}
+		if(i==chosenSetting) {
+			drawShadedGameNameOnScreen(temp, nextLine);
+			drawTextOnFooter(hints[i]);
+		} else {
+			drawNonShadedGameNameOnScreen(temp, nextLine);
+		}
+		nextLine+=calculateProportionalSizeOrDistance((14*19)/14);//CHANGE LAST VALUE FOR FONT SIZE
+	}
+	free(options[0]);
+	free(options[1]);
+	free(options[2]);
+	free(options[3]);
+	free(values[0]);
+	free(values[1]);
+	free(values[2]);
+	free(values[3]);
+//	free(tempString);
+}
+
 void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
@@ -469,7 +586,9 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		drawGameList();
-		if (currentlyChoosing==2) {
+		if (currentlyChoosing==3) {
+			drawSettingsScreen();
+		} else if (currentlyChoosing==2) {
 			showCurrentGroup();
 		} else if (currentlyChoosing==1) {
 			showCurrentEmulator();
