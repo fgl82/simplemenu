@@ -16,6 +16,14 @@ int running;
 
 int MAX_GAMES_IN_SECTION;
 
+int TIDY_ROMS_OPTION;
+int FULL_SCREEN_FOOTER_OPTION;
+int FULL_SCREEN_MENU_OPTION;
+int THEME_OPTION;
+int SCREEN_TIMEOUT_OPTION;
+int DEFAULT_OPTION;
+int SHUTDOWN_OPTION;
+
 char *themes[100];
 int activeTheme;
 int themeCounter;

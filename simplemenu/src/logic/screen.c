@@ -461,85 +461,91 @@ void setupDecorations(struct Rom *rom) {
 }
 
 void setOptionsAndValues (char **options, char **values, char **hints){
-	options[0]= malloc(100);
-	options[1]= malloc(100);
-	options[2]= malloc(100);
-	options[3]= malloc(100);
-	options[4]= malloc(100);
-	options[5]= malloc(100);
-	options[6]= malloc(100);
+	options[TIDY_ROMS_OPTION]= malloc(100);
+	options[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
+	options[FULL_SCREEN_MENU_OPTION]= malloc(100);
+	options[THEME_OPTION]= malloc(100);
+	options[SCREEN_TIMEOUT_OPTION]= malloc(100);
+	options[DEFAULT_OPTION]= malloc(100);
+	options[SHUTDOWN_OPTION]= malloc(100);
 
-	values[0]= malloc(4);
-	values[1]= malloc(4);
-	values[2]= malloc(4);
-	values[3]= malloc(2000);
-	values[4]= malloc(40);
-	values[5]= malloc(4);
-	values[6]= malloc(4);
+	values[TIDY_ROMS_OPTION]= malloc(4);
+	values[FULL_SCREEN_FOOTER_OPTION]= malloc(4);
+	values[FULL_SCREEN_MENU_OPTION]= malloc(4);
+	values[THEME_OPTION]= malloc(2000);
+	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
+	values[DEFAULT_OPTION]= malloc(4);
+	values[SHUTDOWN_OPTION]= malloc(4);
 
-	hints[0]= malloc(100);
-	hints[1]= malloc(100);
-	hints[2]= malloc(100);
-	hints[3]= malloc(100);
-	hints[4]= malloc(100);
-	hints[5]= malloc(100);
-	hints[6]= malloc(100);
+	hints[TIDY_ROMS_OPTION]= malloc(100);
+	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
+	hints[FULL_SCREEN_MENU_OPTION]= malloc(100);
+	hints[THEME_OPTION]= malloc(100);
+	hints[SCREEN_TIMEOUT_OPTION]= malloc(100);
+	hints[DEFAULT_OPTION]= malloc(100);
+	hints[SHUTDOWN_OPTION]= malloc(100);
 
-	strcpy(options[0],"Tidy rom names: ");
-	strcpy(options[1],"Display fullscreen footer: ");
-	strcpy(options[2],"Display fullscreen menu: ");
-	strcpy(options[3],"Theme: ");
-	strcpy(options[4],"Screen timeout: ");
-	strcpy(options[5],"Default launcher: ");
+	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
+	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Display fullscreen footer: ");
+	strcpy(options[FULL_SCREEN_MENU_OPTION],"Display fullscreen menu: ");
+	strcpy(options[THEME_OPTION],"Theme: ");
+	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
+	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
 
 	if (shutDownEnabled) {
-		strcpy(options[6],"Shutdown");
+		strcpy(options[SHUTDOWN_OPTION],"Shutdown");
 	} else {
-		strcpy(options[6],"Quit");
+		strcpy(options[SHUTDOWN_OPTION],"Quit");
 	}
 
-	strcpy(hints[0],"CUT DETAILS OUT OF ROM NAMES");
-	strcpy(hints[1],"DISPLAY THE CURRENT ROM NAME");
-	strcpy(hints[2],"DISPLAY A TRASLUCENT MENU");
-	strcpy(hints[3],"LAUNCHER THEME");
-	strcpy(hints[4],"SECS UNTIL THE SCREEN TURNS OFF");
-	strcpy(hints[5],"LAUNCH AFTER BOOTING");
+	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
+	strcpy(hints[FULL_SCREEN_FOOTER_OPTION],"DISPLAY THE CURRENT ROM NAME");
+	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRASLUCENT MENU");
+	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
+	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
+	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	if (shutDownEnabled) {
-		strcpy(hints[6],"PRESS A TO SHUTDOWN");
+		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
 	} else {
-		strcpy(hints[6],"PRESS A TO QUIT");
+		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO QUIT");
 	}
 
 	if (stripGames) {
-		strcpy(values[0],"YES");
+		strcpy(values[TIDY_ROMS_OPTION],"YES");
 	} else {
-		strcpy(values[0],"NO");
+		strcpy(values[TIDY_ROMS_OPTION],"NO");
 	}
 	if (footerVisibleInFullscreenMode) {
-		strcpy(values[1],"YES");
+		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"YES");
 	} else {
-		strcpy(values[1],"NO");
+		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"NO");
 	}
 	if (menuVisibleInFullscreenMode) {
-		strcpy(values[2],"YES");
+		strcpy(values[FULL_SCREEN_MENU_OPTION],"YES");
 	} else {
-		strcpy(values[2],"NO");
+		strcpy(values[FULL_SCREEN_MENU_OPTION],"NO");
 	}
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
-	strcpy(values[3],themeName);
+	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
-	sprintf(values[4],"%d",timeoutValue);
-	printf("%s\n",values[4]);
+	sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
 	if (shutDownEnabled) {
-		strcpy(values[5],"YES");
+		strcpy(values[DEFAULT_OPTION],"YES");
 	} else {
-		strcpy(values[5],"NO");
+		strcpy(values[DEFAULT_OPTION],"NO");
 	}
-	strcpy(values[6],"\0");
+	strcpy(values[SHUTDOWN_OPTION],"\0");
 }
 
 void drawSettingsScreen() {
-	int height = 30;
+
+	TIDY_ROMS_OPTION=3;
+	FULL_SCREEN_FOOTER_OPTION=4;
+	FULL_SCREEN_MENU_OPTION=5;
+	THEME_OPTION=1;
+	SCREEN_TIMEOUT_OPTION=2;
+	DEFAULT_OPTION=6;
+	SHUTDOWN_OPTION=0;
 
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
@@ -569,29 +575,29 @@ void drawSettingsScreen() {
 		}
 		nextLine+=calculateProportionalSizeOrDistance((14*19)/14);//CHANGE LAST VALUE FOR FONT SIZE
 	}
-	free(options[0]);
-	free(options[1]);
-	free(options[2]);
-	free(options[3]);
-	free(options[4]);
-	free(options[5]);
-	free(options[6]);
+	free(options[TIDY_ROMS_OPTION]);
+	free(options[FULL_SCREEN_FOOTER_OPTION]);
+	free(options[FULL_SCREEN_MENU_OPTION]);
+	free(options[THEME_OPTION]);
+	free(options[SCREEN_TIMEOUT_OPTION]);
+	free(options[DEFAULT_OPTION]);
+	free(options[SHUTDOWN_OPTION]);
 
-	free(values[0]);
-	free(values[1]);
-	free(values[2]);
-	free(values[3]);
-	free(values[4]);
-	free(values[5]);
-	free(values[6]);
+	free(values[TIDY_ROMS_OPTION]);
+	free(values[FULL_SCREEN_FOOTER_OPTION]);
+	free(values[FULL_SCREEN_MENU_OPTION]);
+	free(values[THEME_OPTION]);
+	free(values[SCREEN_TIMEOUT_OPTION]);
+	free(values[DEFAULT_OPTION]);
+	free(values[SHUTDOWN_OPTION]);
 
-	free(hints[0]);
-	free(hints[1]);
-	free(hints[2]);
-	free(hints[3]);
-	free(hints[4]);
-	free(hints[5]);
-	free(hints[6]);
+	free(hints[TIDY_ROMS_OPTION]);
+	free(hints[FULL_SCREEN_FOOTER_OPTION]);
+	free(hints[FULL_SCREEN_MENU_OPTION]);
+	free(hints[THEME_OPTION]);
+	free(hints[SCREEN_TIMEOUT_OPTION]);
+	free(hints[DEFAULT_OPTION]);
+	free(hints[SHUTDOWN_OPTION]);
 }
 
 void updateScreen(struct Rom *rom) {

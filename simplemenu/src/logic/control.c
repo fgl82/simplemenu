@@ -452,13 +452,13 @@ void performSettingsChoosingAction() {
 			chosenSetting=0;
 		}
 	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
-		if (chosenSetting==0) {
+		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
-		} else if (chosenSetting==1) {
+		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
 			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
-		} else if (chosenSetting==2) {
+		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
 			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
-		} else if (chosenSetting==3) {
+		} else if (chosenSetting==THEME_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (activeTheme>0) {
 					activeTheme--;
@@ -477,7 +477,7 @@ void performSettingsChoosingAction() {
 			strcat(temp,"/theme.ini");
 			loadTheme(temp);
 			free(temp);
-		} else if (chosenSetting==4) {
+		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (timeoutValue>1) {
 					timeoutValue--;
@@ -487,7 +487,7 @@ void performSettingsChoosingAction() {
 					timeoutValue++;
 				}
 			}
-		} else if (chosenSetting==5) {
+		} else if (chosenSetting==DEFAULT_OPTION) {
 			char command [300];
 			if (shutDownEnabled) {
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
@@ -500,7 +500,7 @@ void performSettingsChoosingAction() {
 			}
 			shutDownEnabled=1+shutDownEnabled*-1;
 		}
-	} else if (chosenSetting==6&&keys[BTN_A]) {
+	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
 	} else if (keys[BTN_START]) {
 		if (currentlyChoosing) {

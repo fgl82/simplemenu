@@ -127,11 +127,36 @@ void loadTheme(char *theme) {
 	}
 }
 
+static int cmpfnc1(const void *lhs, const void *rhs)
+{
+	char temp0[300];
+	char temp1[300];
+	strcpy (temp0,lhs);
+	strcpy (temp1,rhs);
+	for(int i=0;temp0[i]; i++) {
+		temp0[i] = tolower(temp0[i]);
+	}
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	return strcmp(toLower(temp0), toLower(temp1));
+}
+
+int cstring_cmp(const void *a, const void *b)
+{
+    const char **ia = (const char **)a;
+    const char **ib = (const char **)b;
+    return strcmp(*ia, *ib);
+	/* strcmp functions works exactly as expected from
+	comparison function */
+}
+
 void checkThemes() {
 	char *files[1000];
 	char tempString[1000];
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/themes/",getenv("HOME"));
 	int n = findDirectoriesInDirectory(tempString, files, 0);
+	qsort(files, n, sizeof(char *), cstring_cmp);
 	for(int i=0;i<n;i++) {
 		themes[i]=malloc(strlen(files[i])+1);
 		strcpy(themes[i],files[i]);
