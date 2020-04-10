@@ -441,6 +441,9 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].consolePicture);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
