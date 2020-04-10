@@ -500,7 +500,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 
 	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
 	strcpy(hints[FULL_SCREEN_FOOTER_OPTION],"DISPLAY THE CURRENT ROM NAME");
-	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRASLUCENT MENU");
+	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRANSLUCENT MENU");
 	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
@@ -538,7 +538,6 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 }
 
 void drawSettingsScreen() {
-
 	TIDY_ROMS_OPTION=3;
 	FULL_SCREEN_FOOTER_OPTION=4;
 	FULL_SCREEN_MENU_OPTION=5;

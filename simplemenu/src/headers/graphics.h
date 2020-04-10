@@ -36,4 +36,8 @@ void drawCurrentExecutable(char *executable, int textColor[]);
 void drawCurrentSectionGroup(char *groupName, int textColor[]);
 void drawShadedGameNameOnScreenPicMode(char *buf, int position);
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position);
+void drawTextOnHeaderWithColor(char *text, int txtColor[]);
+void drawShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[], int txtBackgroundColor[]);
+void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]);
+void drawTextOnFooterWithColor(const char text[64], int txtColor[]);
 #endif

@@ -181,6 +181,7 @@ int performAction(struct Rom *rom) {
 		}
 		if (keys[BTN_START]) {
 //			cycleFrequencies();
+			chosenSetting=SHUTDOWN_OPTION;
 			currentlyChoosing=3;
 			return 0;
 		}
