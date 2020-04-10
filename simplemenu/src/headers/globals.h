@@ -23,6 +23,7 @@ int THEME_OPTION;
 int SCREEN_TIMEOUT_OPTION;
 int DEFAULT_OPTION;
 int SHUTDOWN_OPTION;
+int AUTO_HIDE_LOGOS_OPTION;
 
 char *themes[100];
 int activeTheme;
@@ -57,6 +58,7 @@ int stripGames;
 int shutDownEnabled;
 int footerVisibleInFullscreenMode;
 int menuVisibleInFullscreenMode;
+int autoHideLogos;
 int loading;
 
 int OC_UC;

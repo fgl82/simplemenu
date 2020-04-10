@@ -546,6 +546,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", menuVisibleInFullscreenMode);
 	fprintf(fp, "%d;\n", activeTheme);
 	fprintf(fp, "%d;\n", timeoutValue);
+	fprintf(fp, "%d;\n", autoHideLogos);
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
@@ -589,6 +590,7 @@ void loadLastState() {
 	int menuVisible= -1;
 	int themeRead= -1;
 	int timeout= -1;
+	int readAutoHideLogos= -1;
 	int groupCounter=-1;
 	int savedVersion=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -622,7 +624,8 @@ void loadLastState() {
 			themeRead=atoi(configurations[0]);
 		} else if(timeout==-1) {
 			timeout=atoi(configurations[0]);
-			printf("%d\n",timeout);
+		} else if(readAutoHideLogos==-1) {
+			readAutoHideLogos=atoi(configurations[0]);
 		} else if (startInGroup==-1) {
 			startInGroup = atoi(configurations[0]);
 		} else if (startInSection==-1) {
@@ -655,6 +658,7 @@ void loadLastState() {
 	menuVisibleInFullscreenMode=menuVisible;
 	activeTheme=themeRead;
 	timeoutValue=timeout;
+	autoHideLogos=readAutoHideLogos;
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
 	fclose(fp);

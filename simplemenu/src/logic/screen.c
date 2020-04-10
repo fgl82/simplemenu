@@ -19,9 +19,9 @@ char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
-		displayImageOnScreen(fullscreenBackground, "NO SCREENSHOT");
+		displayImageOnScreen(fullscreenBackground, " ");
 	} else {
-		displayImageOnScreen(simpleBackground, "NO SCREENSHOT");
+		displayImageOnScreen(simpleBackground, " ");
 	}
 }
 
@@ -468,6 +468,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[SCREEN_TIMEOUT_OPTION]= malloc(100);
 	options[DEFAULT_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
+	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 
 	values[TIDY_ROMS_OPTION]= malloc(4);
 	values[FULL_SCREEN_FOOTER_OPTION]= malloc(4);
@@ -476,6 +477,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
 	values[DEFAULT_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(4);
+	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
 	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
@@ -484,6 +486,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[SCREEN_TIMEOUT_OPTION]= malloc(100);
 	hints[DEFAULT_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
+	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
 	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Display fullscreen footer: ");
@@ -491,6 +494,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[THEME_OPTION],"Theme: ");
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
+	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
 
 	if (shutDownEnabled) {
 		strcpy(options[SHUTDOWN_OPTION],"Shutdown");
@@ -504,6 +508,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
+	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
+
 	if (shutDownEnabled) {
 		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
 	} else {
@@ -535,23 +541,29 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		strcpy(values[DEFAULT_OPTION],"NO");
 	}
 	strcpy(values[SHUTDOWN_OPTION],"\0");
+	if (autoHideLogos) {
+		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"YES");
+	} else {
+		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"NO");
+	}
 }
 
 void drawSettingsScreen() {
 	TIDY_ROMS_OPTION=3;
-	FULL_SCREEN_FOOTER_OPTION=4;
-	FULL_SCREEN_MENU_OPTION=5;
+	AUTO_HIDE_LOGOS_OPTION=4;
+	FULL_SCREEN_FOOTER_OPTION=5;
+	FULL_SCREEN_MENU_OPTION=6;
 	THEME_OPTION=1;
 	SCREEN_TIMEOUT_OPTION=2;
-	DEFAULT_OPTION=6;
+	DEFAULT_OPTION=7;
 	SHUTDOWN_OPTION=0;
 
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
 
-	char *options[7];
-	char *values[7];
-	char *hints[7];
+	char *options[8];
+	char *values[8];
+	char *hints[8];
 
 	setOptionsAndValues(options, values, hints);
 
@@ -560,7 +572,7 @@ void drawSettingsScreen() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
-	for (int i=0;i<7;i++) {
+	for (int i=0;i<8;i++) {
 		char temp[300];
 		strcpy(temp,options[i]);
 		if(strlen(values[i])>0) {

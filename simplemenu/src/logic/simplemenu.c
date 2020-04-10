@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 	#endif
 	determineStartingScreen(sectionCount);
 	while(strlen(CURRENT_SECTION.sectionName)<1) {
-		advanceSection();
+		advanceSection(0);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 				}
 			} else if (getEventType()==getKeyUp()) {
 				if(getPressedKey()==BTN_B&&!currentlyChoosing) {
-					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+					if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
 						currentlyChoosing=2;
 					}
@@ -158,7 +158,9 @@ int main(int argc, char* argv[]) {
 						}
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
-					currentlySectionSwitching=0;
+					if (aKeyComboWasPressed) {
+						currentlySectionSwitching=0;
+					}
 					if (CURRENT_SECTION.currentGameNode!=NULL) {
 						updateScreen(CURRENT_SECTION.currentGameNode->data);
 					} else {

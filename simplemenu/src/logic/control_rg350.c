@@ -11,7 +11,12 @@
 #include "../headers/screen.h"
 
 int performAction(struct Rom *rom) {
-
+	if(currentlySectionSwitching) {
+		if (keys[BTN_A]) {
+			currentlySectionSwitching=0;
+			return 1;
+		}
+	}
 	if (rom!=NULL&&keys[BTN_R2]) {
 		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
@@ -86,12 +91,8 @@ int performAction(struct Rom *rom) {
 		}
 		if(keys[BTN_RIGHT]) {
 			hotKeyPressed=0;
-			int advanced = advanceSection();
+			int advanced = advanceSection(0);
 			if(advanced) {
-				currentlySectionSwitching=1;
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {
@@ -102,12 +103,8 @@ int performAction(struct Rom *rom) {
 		}
 		if(keys[BTN_LEFT]) {
 			hotKeyPressed=0;
-			int rewinded = rewindSection();
+			int rewinded = rewindSection(0);
 			if(rewinded) {
-				currentlySectionSwitching=1;
-				displayBackgroundPicture();
-				showConsole();
-				refreshScreen();
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {
@@ -124,17 +121,19 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_L1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (fullscreenMode&&!favoritesSectionSelected) {
-			resetPicModeHideLogoTimer();
+		if (!favoritesSectionSelected) {
+			if(autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
 			currentlySectionSwitching=1;
 		}
-		int rewinded = rewindSection();
+		int rewinded = rewindSection(1);
 		if(rewinded) {
 			currentlySectionSwitching=1;
 			loadGameList(0);
-			if (!fullscreenMode) {
-				currentlySectionSwitching=0;
-			}
+//			if (!fullscreenMode) {
+//				currentlySectionSwitching=0;
+//			}
 		}
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -145,17 +144,19 @@ int performAction(struct Rom *rom) {
 	if(keys[BTN_R1]) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
-		if (fullscreenMode&&!favoritesSectionSelected) {
-			resetPicModeHideLogoTimer();
+		if (!favoritesSectionSelected) {
+			if(autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
 			currentlySectionSwitching=1;
 		}
-		int advanced = advanceSection();
+		int advanced = advanceSection(1);
 		if(advanced) {
 			currentlySectionSwitching=1;
 			loadGameList(0);
-			if (!fullscreenMode) {
-				currentlySectionSwitching=0;
-			}
+//			if (!fullscreenMode) {
+//				currentlySectionSwitching=0;
+//			}
 		}
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
