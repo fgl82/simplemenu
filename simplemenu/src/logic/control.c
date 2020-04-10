@@ -442,16 +442,16 @@ void performSettingsChoosingAction() {
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
+		} else {
+			chosenSetting=6;;
 		}
-		return;
-	}
-	if (keys[BTN_DOWN]) {
-		if(chosenSetting<7) {
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<6) {
 			chosenSetting++;
+		} else {
+			chosenSetting=0;
 		}
-		return;
-	}
-	if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
 		if (chosenSetting==0) {
 			stripGames=1+stripGames*-1;
 		} else if (chosenSetting==1) {
@@ -459,10 +459,27 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==2) {
 			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==3) {
-
+			if (keys[BTN_LEFT]) {
+				if (activeTheme>0) {
+					activeTheme--;
+				} else {
+					activeTheme=themeCounter-1;
+				}
+			} else {
+				if (activeTheme<themeCounter-1) {
+					activeTheme++;
+				} else {
+					activeTheme=0;
+				}
+			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			free(temp);
 		} else if (chosenSetting==4) {
 			if (keys[BTN_LEFT]) {
-				if (timeoutValue>0) {
+				if (timeoutValue>1) {
 					timeoutValue--;
 				}
 			} else {
@@ -470,17 +487,24 @@ void performSettingsChoosingAction() {
 					timeoutValue++;
 				}
 			}
+		} else if (chosenSetting==5) {
+			char command [300];
+			if (shutDownEnabled) {
+				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
+			} else {
+				snprintf(command,sizeof(command),"cp scripts/frontend_start /usr/local/sbin/");
+			}
+			int ret = system(command);
+			if (ret==-1) {
+				generateError("THERE WAS AN ERROR", 0);
+			}
+			shutDownEnabled=1+shutDownEnabled*-1;
 		}
-
-		return;
-	}
-	if (chosenSetting==6&&keys[BTN_A]) {
+	} else if (chosenSetting==6&&keys[BTN_A]) {
 		running=0;
-	}
-	if (keys[BTN_START]) {
+	} else if (keys[BTN_START]) {
 		if (currentlyChoosing) {
 			currentlyChoosing=0;
-			return;
 		}
 	}
 }

@@ -472,8 +472,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[0]= malloc(4);
 	values[1]= malloc(4);
 	values[2]= malloc(4);
-	values[3]= malloc(4);
-	values[4]= malloc(4);
+	values[3]= malloc(2000);
+	values[4]= malloc(40);
 	values[5]= malloc(4);
 	values[6]= malloc(4);
 
@@ -495,7 +495,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	if (shutDownEnabled) {
 		strcpy(options[6],"Shutdown");
 	} else {
-		strcpy(options[6],"Exit");
+		strcpy(options[6],"Quit");
 	}
 
 	strcpy(hints[0],"CUT DETAILS OUT OF ROM NAMES");
@@ -505,7 +505,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[4],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[5],"LAUNCH AFTER BOOTING");
 	if (shutDownEnabled) {
-		strcpy(hints[6],"PRESS A TO QUIT");
+		strcpy(hints[6],"PRESS A TO SHUTDOWN");
 	} else {
 		strcpy(hints[6],"PRESS A TO QUIT");
 	}
@@ -525,8 +525,11 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	} else {
 		strcpy(values[2],"NO");
 	}
-	strcpy(values[3],"default");
-	snprintf(values[4],sizeof(values[4]),"%d",timeoutValue);
+	char *themeName=getNameWithoutPath((themes[activeTheme]));
+	strcpy(values[3],themeName);
+	free(themeName);
+	sprintf(values[4],"%d",timeoutValue);
+	printf("%s\n",values[4]);
 	if (shutDownEnabled) {
 		strcpy(values[5],"YES");
 	} else {
@@ -537,11 +540,9 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 
 void drawSettingsScreen() {
 	int height = 30;
-	int filling[3];
-	filling[0]=50;
-	filling[1]=50;
-	filling[2]=50;
-	int textColor[3]= {255, 255, 255};
+
+	int darkerAmber[3]={150,102,15};
+	int brighterAmber[3]= {243,197,31};
 
 	char *options[7];
 	char *values[7];
@@ -549,21 +550,22 @@ void drawSettingsScreen() {
 
 	setOptionsAndValues(options, values, hints);
 
-	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, filling);
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, filling);
-	drawTextOnHeader("SETTINGS");
+	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, brighterAmber);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
+	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
+	drawTextOnHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
 	for (int i=0;i<7;i++) {
 		char temp[300];
 		strcpy(temp,options[i]);
-		if(strlen(values[i])>1) {
+		if(strlen(values[i])>0) {
 			strcat(temp,values[i]);
 		}
 		if(i==chosenSetting) {
-			drawShadedGameNameOnScreen(temp, nextLine);
-			drawTextOnFooter(hints[i]);
+			drawShadedSettingsOptionOnScreen(temp, nextLine,brighterAmber,darkerAmber);
+			drawTextOnFooterWithColor(hints[i], brighterAmber);
 		} else {
-			drawNonShadedGameNameOnScreen(temp, nextLine);
+			drawNonShadedSettingsOptionOnScreen(temp, nextLine, darkerAmber);
 		}
 		nextLine+=calculateProportionalSizeOrDistance((14*19)/14);//CHANGE LAST VALUE FOR FONT SIZE
 	}
@@ -571,11 +573,25 @@ void drawSettingsScreen() {
 	free(options[1]);
 	free(options[2]);
 	free(options[3]);
+	free(options[4]);
+	free(options[5]);
+	free(options[6]);
+
 	free(values[0]);
 	free(values[1]);
 	free(values[2]);
 	free(values[3]);
-//	free(tempString);
+	free(values[4]);
+	free(values[5]);
+	free(values[6]);
+
+	free(hints[0]);
+	free(hints[1]);
+	free(hints[2]);
+	free(hints[3]);
+	free(hints[4]);
+	free(hints[5]);
+	free(hints[6]);
 }
 
 void updateScreen(struct Rom *rom) {

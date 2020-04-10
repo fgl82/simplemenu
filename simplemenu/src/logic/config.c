@@ -38,6 +38,107 @@ void loadAliasList(int sectionNumber) {
 	fclose(aliasFile);
 }
 
+void checkIfDefault() {
+	FILE * fp;
+	fp = fopen("/media/data/local/sbin/frontend_start", "r");
+	shutDownEnabled=0;
+	if (fp!=NULL) {
+		shutDownEnabled=1;
+		fclose(fp);
+	}
+}
+
+uint32_t hex2int(char *hex) {
+	char *hexCopy = malloc(strlen(hex)+1);
+	strcpy(hexCopy,hex);
+	uint32_t val = 0;
+	while (*hexCopy) {
+		// get current character then increment
+		uint8_t byte = *hexCopy++;
+		// transform hex character to the 4bit equivalent number, using the ascii table indexes
+		if (byte >= '0' && byte <= '9') byte = byte - '0';
+		else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
+		else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;
+		// shift 4 to make space for new digit, and add the 4 bits of the new digit
+		val = (val << 4) | (byte & 0xF);
+	}
+	return val;
+}
+
+void setRGBFromHex (int *rgbColor, const char *hexColor) {
+	char r[3];
+	char g[3];
+	char b[3];
+	r[0]=hexColor[0];r[1]=hexColor[1];r[2]='\0';g[0]=hexColor[2];g[1]=hexColor[3];g[2]='\0';b[0]=hexColor[4];b[1]=hexColor[5];b[2]='\0';
+	rgbColor[0]=hex2int(r);
+	rgbColor[1]=hex2int(g);
+	rgbColor[2]=hex2int(b);
+}
+
+
+void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	if(value==NULL) {
+		strcpy(sectionValueToBeSet,"\0");
+		return;
+	}
+	strcpy(sectionValueToBeSet,value);
+}
+
+void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	if (value==NULL) {
+		value = ini_get(config, "DEFAULT", valueName);
+	}
+	setRGBFromHex(sectionValueToBeSet, value);
+}
+
+void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
+	const char *value;
+	value = ini_get(config, sectionName, valueName);
+	if(value==NULL) {
+		strcpy(sectionValueToBeSet,"\0");
+		return;
+	}
+	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
+	strcat(sectionValueToBeSet,value);
+}
+
+void loadTheme(char *theme) {
+	strcpy(pathToThemeConfigFilePlusFileName,theme);
+	char *temp = getRomPath(theme);
+	strcat(temp,"/");
+	strcpy(pathToThemeConfigFile,temp);
+	free(temp);
+	ini_t *themeConfig = ini_load(theme);
+	for (int i=0;i<menuSectionCounter;i++) {
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerBackGround", menuSections[i].headerAndFooterBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerFont", menuSections[i].headerAndFooterTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyBackground", menuSections[i].bodyBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].bodyTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemBackground", menuSections[i].bodySelectedTextBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].consolePicture);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+	}
+}
+
+void checkThemes() {
+	char *files[1000];
+	char tempString[1000];
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/themes/",getenv("HOME"));
+	int n = findDirectoriesInDirectory(tempString, files, 0);
+	for(int i=0;i<n;i++) {
+		themes[i]=malloc(strlen(files[i])+1);
+		strcpy(themes[i],files[i]);
+		themeCounter++;
+	}
+}
+
 void createConfigFilesInHomeIfTheyDontExist() {
 	snprintf(home,sizeof(home),"%s",getenv("HOME"));
 	char pathToConfigFiles[3000];
@@ -274,63 +375,6 @@ void loadConfig() {
 	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
 }
 
-uint32_t hex2int(char *hex) {
-	char *hexCopy = malloc(strlen(hex)+1);
-	strcpy(hexCopy,hex);
-	uint32_t val = 0;
-	while (*hexCopy) {
-		// get current character then increment
-		uint8_t byte = *hexCopy++;
-		// transform hex character to the 4bit equivalent number, using the ascii table indexes
-		if (byte >= '0' && byte <= '9') byte = byte - '0';
-		else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
-		else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;
-		// shift 4 to make space for new digit, and add the 4 bits of the new digit
-		val = (val << 4) | (byte & 0xF);
-	}
-	return val;
-}
-
-void setRGBFromHex (int *rgbColor, const char *hexColor) {
-	char r[3];
-	char g[3];
-	char b[3];
-	r[0]=hexColor[0];r[1]=hexColor[1];r[2]='\0';g[0]=hexColor[2];g[1]=hexColor[3];g[2]='\0';b[0]=hexColor[4];b[1]=hexColor[5];b[2]='\0';
-	rgbColor[0]=hex2int(r);
-	rgbColor[1]=hex2int(g);
-	rgbColor[2]=hex2int(b);
-}
-
-void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
-	const char *value;
-	value = ini_get(config, sectionName, valueName);
-	if(value==NULL) {
-		strcpy(sectionValueToBeSet,"\0");
-		return;
-	}
-	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
-	strcat(sectionValueToBeSet,value);
-}
-
-void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
-	const char *value;
-	value = ini_get(config, sectionName, valueName);
-	if(value==NULL) {
-		strcpy(sectionValueToBeSet,"\0");
-		return;
-	}
-	strcpy(sectionValueToBeSet,value);
-}
-
-void setRGBColorInSection(ini_t *config, char *sectionName, char *valueName, int *sectionValueToBeSet) {
-	const char *value;
-	value = ini_get(config, sectionName, valueName);
-	if (value==NULL) {
-		value = ini_get(config, "DEFAULT", valueName);
-	}
-	setRGBFromHex(sectionValueToBeSet, value);
-}
-
 int loadSections(char *file) {
 	menuSectionCounter=0;
 	char pathToSectionsFilePlusFileName[1000];
@@ -476,8 +520,13 @@ void saveLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "w");
+	fprintf(fp, "%d;\n", 50);
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
+	fprintf(fp, "%d;\n", footerVisibleInFullscreenMode);
+	fprintf(fp, "%d;\n", menuVisibleInFullscreenMode);
+	fprintf(fp, "%d;\n", activeTheme);
+	fprintf(fp, "%d;\n", timeoutValue);
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
@@ -508,7 +557,6 @@ void loadLastState() {
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
-		generateError("STATE FILE NOT FOUND-REBUILDING",0);
 		saveLastState();
 		return;
 	}
@@ -518,7 +566,12 @@ void loadLastState() {
 	int startInPictureMode = -1;
 	int stripGamesConfig = -1;
 	int startInGroup= -1;
+	int footerVisible= -1;
+	int menuVisible= -1;
+	int themeRead= -1;
+	int timeout= -1;
 	int groupCounter=-1;
+	int savedVersion=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -527,15 +580,36 @@ void loadLastState() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		if (stripGamesConfig==-1) {
+		if (savedVersion==-1) {
+			savedVersion=atoi(configurations[0]);
+			if(savedVersion!=50) {
+				printf("NOPE!\n");
+				saveLastState();
+				fclose(fp);
+				if (line) {
+					free(line);
+				}
+				return;
+			}
+		} else if (stripGamesConfig==-1) {
 			stripGamesConfig=atoi(configurations[0]);
 		} else if (startInPictureMode==-1){
 			startInPictureMode=atoi(configurations[0]);
+		} else if(footerVisible==-1) {
+			footerVisible=atoi(configurations[0]);
+		} else if(menuVisible==-1) {
+			menuVisible=atoi(configurations[0]);
+		} else if(themeRead==-1) {
+			themeRead=atoi(configurations[0]);
+		} else if(timeout==-1) {
+			timeout=atoi(configurations[0]);
+			printf("%d\n",timeout);
 		} else if (startInGroup==-1) {
 			startInGroup = atoi(configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
-		} else {
+		}
+		else {
 			if(atoi(configurations[1])==0) {
 				groupCounter++;
 			}
@@ -557,9 +631,13 @@ void loadLastState() {
 		}
 	}
 	stripGames=stripGamesConfig;
+	fullscreenMode=startInPictureMode;
+	footerVisibleInFullscreenMode=footerVisible;
+	menuVisibleInFullscreenMode=menuVisible;
+	activeTheme=themeRead;
+	timeoutValue=timeout;
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
-	fullscreenMode=startInPictureMode;
 	fclose(fp);
 	if (line) {
 		free(line);

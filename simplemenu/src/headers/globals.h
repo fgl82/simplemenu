@@ -10,9 +10,15 @@
 #include <shake.h>
 #endif
 
+int version;
+
 int running;
 
 int MAX_GAMES_IN_SECTION;
+
+char *themes[100];
+int activeTheme;
+int themeCounter;
 
 char mediaFolder[1000];
 char simpleBackground[1000];
@@ -94,7 +100,7 @@ struct MenuSection {
 	char *executables[10];
 	char filesDirectories[400];
 	char fileExtensions[50];
-	char consolePicture[100];
+	char consolePicture[300];
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;

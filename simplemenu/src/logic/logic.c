@@ -204,16 +204,23 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 //}
 
 void quit() {
-	drawShutDownScreen();
-	refreshScreen();
+	if(shutDownEnabled) {
+		drawShutDownScreen();
+		refreshScreen();
+	}
 	saveLastState();
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
-	sleep(1.5);
+	if(shutDownEnabled) {
+		sleep(1.5);
+	}
 	freeResources();
 	if (shutDownEnabled) {
+		#ifdef TARGET_PC
+		exit(0);
+		#endif
 		execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 	} else {
 		exit(0);
@@ -472,6 +479,35 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	free(d);
 	return i;
 }
+
+int findDirectoriesInDirectory (char *directory, char* files[], int i) {
+	DIR * d;
+	d = opendir (directory);
+	if (d==NULL) {
+		return 0;
+	}
+	while (1) {
+		struct dirent *entry;
+		char * d_name;
+		entry = readdir (d);
+		if (!entry) {
+			break;
+		}
+		d_name = entry->d_name;
+		if (entry->d_type & DT_DIR) {
+			if (strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				files[i]=malloc(sizeof(path));
+				strcpy(files[i],path);
+				i++;
+			}
+		}
+	}
+	free(d);
+	return i;
+}
+
 
 int compareFavorites(const void *f1, const void *f2)
 {

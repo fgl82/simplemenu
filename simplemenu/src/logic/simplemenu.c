@@ -84,6 +84,13 @@ int main(int argc, char* argv[]) {
 	initializeGlobals();
 	setupDisplayAndKeys();
 	loadLastState();
+	checkIfDefault();
+	checkThemes();
+	char *temp=malloc(8000);
+	strcpy(temp,themes[activeTheme]);
+	strcat(temp,"/theme.ini");
+	loadTheme(temp);
+	free(temp);
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	loadFavorites();
 //	if (argv[1]!=NULL) {

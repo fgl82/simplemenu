@@ -90,6 +90,14 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtC
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
 }
 
+void drawShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[], int txtBackgroundColor[]) {
+	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, txtColor, VAlignBottom | HAlignCenter, txtBackgroundColor);
+}
+
+void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
+	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, txtColor, VAlignBottom | HAlignCenter);
+}
+
 void drawShadedGameNameOnScreen(char *buf, int position) {
 	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 }
@@ -134,6 +142,10 @@ void drawTextOnFooter(const char text[64]) {
 	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 }
 
+void drawTextOnFooterWithColor(const char text[64], int txtColor[]) {
+	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), text, txtColor, VAlignMiddle | HAlignCenter);
+}
+
 void drawShutDownText(const char text[64]) {
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(BIGFont, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
@@ -141,6 +153,10 @@ void drawShutDownText(const char text[64]) {
 
 void drawTextOnHeader(char *text) {
 	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignTop | HAlignCenter);
+}
+
+void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
+	drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(24), text, txtColor, VAlignTop | HAlignCenter);
 }
 
 void drawTimeOnFooter(char *text) {
