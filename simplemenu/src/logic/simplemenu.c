@@ -104,9 +104,15 @@ int main(int argc, char* argv[]) {
 //		returnTo=atoi(argv[3]);
 //		fullscreenMode=atoi(argv[4]);
 //	}
-	if(fullscreenMode) {
+
+	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+	if(fullscreenMode==0) {
+		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+	} else {
 		ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 	}
+	freeFonts();
+	initializeFonts();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();
 	#endif

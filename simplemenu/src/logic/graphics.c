@@ -343,6 +343,17 @@ void refreshScreen() {
 
 void initializeFonts() {
 	TTF_Init();
+	switch (MENU_ITEMS_PER_PAGE) {
+	    case 7:
+	    	fontSize=20;
+	        break;
+	    case 10:
+	    	fontSize=14;
+	        break;
+	    default:
+	    	fontSize=10;
+	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+	}
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize)+calculateProportionalSizeOrDistance(5));

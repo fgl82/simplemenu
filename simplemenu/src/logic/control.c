@@ -497,34 +497,34 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (MENU_ITEMS_PER_PAGE==15) {
+					MENU_ITEMS_PER_PAGE-=5;
+				} else if (MENU_ITEMS_PER_PAGE>7) {
 					MENU_ITEMS_PER_PAGE-=3;
-				} else if (MENU_ITEMS_PER_PAGE>8) {
-					MENU_ITEMS_PER_PAGE-=2;
 				}
 			} else {
-				if (MENU_ITEMS_PER_PAGE<12) {
-					MENU_ITEMS_PER_PAGE+=2;
-				} else if (ITEMS_PER_PAGE < 15) {
+				if (MENU_ITEMS_PER_PAGE<10) {
 					MENU_ITEMS_PER_PAGE+=3;
+				} else if (ITEMS_PER_PAGE < 15) {
+					MENU_ITEMS_PER_PAGE+=5;
 				}
 			}
 			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+			switch (MENU_ITEMS_PER_PAGE)
+			{
+			    case 7:
+			    	fontSize=20;
+			        break;
+			    case 10:
+			    	fontSize=14;
+			        break;
+			    default:
+			    	fontSize=10;
+			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 			} else {
 				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
-			}
-			switch (MENU_ITEMS_PER_PAGE)
-			{
-			    case 8: fontSize=19;
-			        break;
-			    case 10: fontSize=14;
-			        break;
-			    case 12: fontSize=13;
-			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
-			        break;
-			    default: // code to be executed if n doesn't match any cases
-			    	fontSize=10;
 			}
 			freeFonts();
 			initializeFonts();

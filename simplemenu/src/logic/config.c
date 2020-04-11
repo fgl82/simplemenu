@@ -553,6 +553,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", autoHideLogos);
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
+	fprintf(fp, "%d;\n", MENU_ITEMS_PER_PAGE);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
 		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
 		for (int sectionCount=0;sectionCount<sectionsNum;sectionCount++) {
@@ -597,6 +598,7 @@ void loadLastState() {
 	int readAutoHideLogos= -1;
 	int groupCounter=-1;
 	int savedVersion=-1;
+	int itemsRead=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -633,6 +635,8 @@ void loadLastState() {
 			startInGroup = atoi(configurations[0]);
 		} else if (startInSection==-1) {
 			startInSection=atoi(configurations[0]);
+		} else if (itemsRead==-1) {
+			itemsRead=atoi(configurations[0]);
 		}
 		else {
 			if(atoi(configurations[1])==0) {
@@ -664,6 +668,7 @@ void loadLastState() {
 	autoHideLogos=readAutoHideLogos;
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
+	MENU_ITEMS_PER_PAGE=itemsRead;
 	fclose(fp);
 	if (line) {
 		free(line);
