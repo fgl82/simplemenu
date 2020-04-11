@@ -635,6 +635,9 @@ void loadGameList(int refresh) {
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
+				if(autoHideLogos) {
+					resetPicModeHideLogoTimer();
+				}
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&

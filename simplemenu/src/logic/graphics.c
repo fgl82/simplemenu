@@ -348,15 +348,19 @@ void initializeFonts() {
 	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(16));
 }
 
-void freeResources() {
-	//    pthread_join(clockThread, NULL);
-	//    pthread_mutex_destroy(&lock);
+void freeFonts() {
 	TTF_CloseFont(font);
 	font = NULL;
 	TTF_CloseFont(headerFont);
 	headerFont = NULL;
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
+}
+
+void freeResources() {
+	//    pthread_join(clockThread, NULL);
+	//    pthread_mutex_destroy(&lock);
+	freeFonts();
 	TTF_Quit();
 	#ifdef TARGET_RG350
 	Shake_Stop(device, effect_id);

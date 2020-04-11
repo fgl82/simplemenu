@@ -129,6 +129,9 @@ int performAction(struct Rom *rom) {
 		}
 		int rewinded = rewindSection(1);
 		if(rewinded) {
+			displayBackgroundPicture();
+			showConsole();
+			refreshScreen();
 			currentlySectionSwitching=1;
 			loadGameList(0);
 //			if (!fullscreenMode) {
@@ -152,6 +155,9 @@ int performAction(struct Rom *rom) {
 		}
 		int advanced = advanceSection(1);
 		if(advanced) {
+			displayBackgroundPicture();
+			showConsole();
+			refreshScreen();
 			currentlySectionSwitching=1;
 			loadGameList(0);
 //			if (!fullscreenMode) {

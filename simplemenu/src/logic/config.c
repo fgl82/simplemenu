@@ -106,6 +106,7 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	strcat(sectionValueToBeSet,value);
 }
 
+
 void loadTheme(char *theme) {
 	strcpy(pathToThemeConfigFilePlusFileName,theme);
 	char *temp = getRomPath(theme);
@@ -124,6 +125,8 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+		freeFonts();
+		initializeFonts();
 	}
 }
 
@@ -460,7 +463,8 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
-
+		freeFonts();
+		initializeFonts();
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
