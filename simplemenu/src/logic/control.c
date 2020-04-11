@@ -458,10 +458,10 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=7;;
+			chosenSetting=8;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<7) {
+		if(chosenSetting<8) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -494,6 +494,42 @@ void performSettingsChoosingAction() {
 			strcat(temp,"/theme.ini");
 			loadTheme(temp);
 			free(temp);
+		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (MENU_ITEMS_PER_PAGE==15) {
+					MENU_ITEMS_PER_PAGE-=3;
+				} else if (MENU_ITEMS_PER_PAGE>8) {
+					MENU_ITEMS_PER_PAGE-=2;
+				}
+			} else {
+				if (MENU_ITEMS_PER_PAGE<12) {
+					MENU_ITEMS_PER_PAGE+=2;
+				} else if (ITEMS_PER_PAGE < 15) {
+					MENU_ITEMS_PER_PAGE+=3;
+				}
+			}
+			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+			if(fullscreenMode==0) {
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+			} else {
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			}
+			switch (MENU_ITEMS_PER_PAGE)
+			{
+			    case 8: fontSize=19;
+			        break;
+			    case 10: fontSize=14;
+			        break;
+			    case 12: fontSize=13;
+			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			        break;
+			    default: // code to be executed if n doesn't match any cases
+			    	fontSize=10;
+			}
+			freeFonts();
+			initializeFonts();
+			loadGameList(1);
+			drawGameList();
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (timeoutValue>1) {

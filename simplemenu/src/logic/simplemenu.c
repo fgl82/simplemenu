@@ -27,10 +27,13 @@ void initializeGlobals() {
 	currentCPU=OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
-	ITEMS_PER_PAGE=10;
+	FULLSCREEN_ITEMS_PER_PAGE=12;
+	MENU_ITEMS_PER_PAGE=10;
+	ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 	isPicModeMenuHidden=1;
 	autoHideLogos=1;
 	stripGames=1;
+	fontSize=14;
 	srand(time(0));
 }
 
@@ -102,7 +105,7 @@ int main(int argc, char* argv[]) {
 //		fullscreenMode=atoi(argv[4]);
 //	}
 	if(fullscreenMode) {
-		ITEMS_PER_PAGE=12;
+		ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 	}
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350)
 	initSuspendTimer();

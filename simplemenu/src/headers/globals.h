@@ -15,6 +15,9 @@ int version;
 int running;
 
 int MAX_GAMES_IN_SECTION;
+int ITEMS_PER_PAGE;
+int FULLSCREEN_ITEMS_PER_PAGE;
+int MENU_ITEMS_PER_PAGE;
 
 int TIDY_ROMS_OPTION;
 int FULL_SCREEN_FOOTER_OPTION;
@@ -24,6 +27,8 @@ int SCREEN_TIMEOUT_OPTION;
 int DEFAULT_OPTION;
 int SHUTDOWN_OPTION;
 int AUTO_HIDE_LOGOS_OPTION;
+int FONT_SIZE_OPTION;
+int ITEMS_PER_PAGE_OPTION;
 
 char *themes[100];
 int activeTheme;
@@ -47,6 +52,7 @@ int returnTo;
 int currentSectionNumber;
 int menuSectionCounter;
 int gamesInPage;
+int fontSize;
 
 int currentCPU;
 int fullscreenMode;

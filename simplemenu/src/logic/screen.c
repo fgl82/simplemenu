@@ -374,9 +374,10 @@ void drawGameList() {
 		drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 	}
 	gamesInPage=0;
-	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
+	int nextLine = calculateProportionalSizeOrDistance((10*((14*29)/fontSize))/ITEMS_PER_PAGE);//CHANGE FIRST VALUE FOR FONT SIZE
+//	int nextLine = calculateProportionalSizeOrDistance(fontSize+15);//CHANGE FIRST VALUE FOR FONT SIZE
 	if (fullscreenMode) {
-		nextLine = calculateProportionalSizeOrDistance(12);
+		nextLine = calculateProportionalSizeOrDistance(fontSize-2);//CHANGE FIRST VALUE FOR FONT SIZE
 	}
 	char *nameWithoutExtension;
 	struct Node* currentNode;
@@ -435,9 +436,9 @@ void drawGameList() {
 			}
 		}
 		if (!fullscreenMode) {
-			nextLine+=calculateProportionalSizeOrDistance((14*19)/14);//CHANGE LAST VALUE FOR FONT SIZE
+			nextLine+=calculateProportionalSizeOrDistance((fontSize*19)/14);//CHANGE LAST VALUE FOR FONT SIZE
 		} else {
-			nextLine+=calculateProportionalSizeOrDistance(20);
+			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/14);
 		}
 		free(nameWithoutExtension);
 		currentNode = currentNode->next;
@@ -469,6 +470,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[DEFAULT_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
 	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
+	options[FONT_SIZE_OPTION]= malloc(100);
+	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	values[TIDY_ROMS_OPTION]= malloc(4);
 	values[FULL_SCREEN_FOOTER_OPTION]= malloc(4);
@@ -478,6 +481,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[DEFAULT_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(4);
 	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
+	values[FONT_SIZE_OPTION]= malloc(4);
+	values[ITEMS_PER_PAGE_OPTION]=malloc(4);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
 	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
@@ -487,6 +492,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[DEFAULT_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
 	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
+	hints[FONT_SIZE_OPTION]= malloc(100);
+	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
 	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Display fullscreen footer: ");
@@ -495,6 +502,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
 	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
+	strcpy(options[FONT_SIZE_OPTION],"Font size: ");
+	strcpy(options[ITEMS_PER_PAGE_OPTION],"Games per page: ");
 
 	if (shutDownEnabled) {
 		strcpy(options[SHUTDOWN_OPTION],"Shutdown");
@@ -509,6 +518,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
+	strcpy(hints[FONT_SIZE_OPTION],"CHANGE THE FONT SIZE");
+	strcpy(hints[ITEMS_PER_PAGE_OPTION],"AMOUNT OF GAMES DISPLAYED");
 
 	if (shutDownEnabled) {
 		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
@@ -535,6 +546,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
 	sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
+	sprintf(values[ITEMS_PER_PAGE_OPTION],"%d",MENU_ITEMS_PER_PAGE);
+	sprintf(values[FONT_SIZE_OPTION],"%d",fontSize);
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");
 	} else {
@@ -549,21 +562,22 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 }
 
 void drawSettingsScreen() {
+	SHUTDOWN_OPTION=0;
+	THEME_OPTION=1;
+	SCREEN_TIMEOUT_OPTION=2;
 	TIDY_ROMS_OPTION=3;
 	AUTO_HIDE_LOGOS_OPTION=4;
 	FULL_SCREEN_FOOTER_OPTION=5;
 	FULL_SCREEN_MENU_OPTION=6;
-	THEME_OPTION=1;
-	SCREEN_TIMEOUT_OPTION=2;
-	DEFAULT_OPTION=7;
-	SHUTDOWN_OPTION=0;
+	ITEMS_PER_PAGE_OPTION=7;
+	DEFAULT_OPTION=8;
 
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
 
-	char *options[8];
-	char *values[8];
-	char *hints[8];
+	char *options[10];
+	char *values[10];
+	char *hints[10];
 
 	setOptionsAndValues(options, values, hints);
 
@@ -572,7 +586,7 @@ void drawSettingsScreen() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
-	for (int i=0;i<8;i++) {
+	for (int i=0;i<9;i++) {
 		char temp[300];
 		strcpy(temp,options[i]);
 		if(strlen(values[i])>0) {
@@ -593,6 +607,7 @@ void drawSettingsScreen() {
 	free(options[SCREEN_TIMEOUT_OPTION]);
 	free(options[DEFAULT_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
+	free(options[ITEMS_PER_PAGE_OPTION]);
 
 	free(values[TIDY_ROMS_OPTION]);
 	free(values[FULL_SCREEN_FOOTER_OPTION]);
@@ -601,6 +616,7 @@ void drawSettingsScreen() {
 	free(values[SCREEN_TIMEOUT_OPTION]);
 	free(values[DEFAULT_OPTION]);
 	free(values[SHUTDOWN_OPTION]);
+	free(values[ITEMS_PER_PAGE_OPTION]);
 
 	free(hints[TIDY_ROMS_OPTION]);
 	free(hints[FULL_SCREEN_FOOTER_OPTION]);
@@ -609,6 +625,7 @@ void drawSettingsScreen() {
 	free(hints[SCREEN_TIMEOUT_OPTION]);
 	free(hints[DEFAULT_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
+	free(hints[ITEMS_PER_PAGE_OPTION]);
 }
 
 void updateScreen(struct Rom *rom) {
