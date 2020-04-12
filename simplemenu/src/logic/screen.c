@@ -120,7 +120,7 @@ void showLetter(struct Rom *rom) {
 	}
 	if (fullscreenMode||ITEMS_PER_PAGE==15) {
 		int x = 0;
-		int y = calculateProportionalSizeOrDistance(231);
+		int y = calculateProportionalSizeOrDistance(229);
 		for (int i=0;i<27;i++) {
 			if (!letterExistsInGameList(letters[i], existingLetters)) {
 				textColor[0]=40;
@@ -245,7 +245,7 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
-	displayImageOnScreen(CURRENT_SECTION.consolePicture, CURRENT_SECTION.sectionName);
+	displayImageOnScreen(CURRENT_SECTION.systemLogo, CURRENT_SECTION.sectionName);
 }
 
 void displayGamePicture(struct Rom *rom) {
@@ -537,7 +537,6 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[DEFAULT_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
 	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
-	options[FONT_SIZE_OPTION]= malloc(100);
 	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	values[TIDY_ROMS_OPTION]= malloc(4);
@@ -548,8 +547,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[DEFAULT_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(4);
 	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
-	values[FONT_SIZE_OPTION]= malloc(4);
-	values[ITEMS_PER_PAGE_OPTION]=malloc(4);
+	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
 	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
@@ -559,7 +557,6 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[DEFAULT_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
 	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
-	hints[FONT_SIZE_OPTION]= malloc(100);
 	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
@@ -569,8 +566,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
 	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
-	strcpy(options[FONT_SIZE_OPTION],"Font size: ");
-	strcpy(options[ITEMS_PER_PAGE_OPTION],"Games per page: ");
+	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
 	if (shutDownEnabled) {
 		strcpy(options[SHUTDOWN_OPTION],"Shutdown");
@@ -585,8 +581,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
-	strcpy(hints[FONT_SIZE_OPTION],"CHANGE THE FONT SIZE");
-	strcpy(hints[ITEMS_PER_PAGE_OPTION],"AMOUNT OF GAMES DISPLAYED");
+	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
 
 	if (shutDownEnabled) {
 		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
@@ -613,8 +608,11 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
 	sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
-	sprintf(values[ITEMS_PER_PAGE_OPTION],"%d",MENU_ITEMS_PER_PAGE);
-	sprintf(values[FONT_SIZE_OPTION],"%d",fontSize);
+	if(MENU_ITEMS_PER_PAGE==10) {
+		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
+	} else {
+		strcpy(values[ITEMS_PER_PAGE_OPTION],"BLINDING MENU");
+	}
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");
 	} else {
@@ -651,7 +649,7 @@ void drawSettingsScreen() {
 	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, brighterAmber);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
-	drawTextOnHeaderWithColor("SETTINGS",brighterAmber);
+	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
 	for (int i=0;i<9;i++) {
 		char temp[300];
@@ -661,7 +659,7 @@ void drawSettingsScreen() {
 		}
 		if(i==chosenSetting) {
 			drawShadedSettingsOptionOnScreen(temp, nextLine,brighterAmber,darkerAmber);
-			drawTextOnFooterWithColor(hints[i], brighterAmber);
+			drawTextOnSettingsFooterWithColor(hints[i], brighterAmber);
 		} else {
 			drawNonShadedSettingsOptionOnScreen(temp, nextLine, darkerAmber);
 		}
@@ -693,6 +691,7 @@ void drawSettingsScreen() {
 	free(hints[DEFAULT_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[ITEMS_PER_PAGE_OPTION]);
+
 }
 
 void updateScreen(struct Rom *rom) {
@@ -707,6 +706,7 @@ void updateScreen(struct Rom *rom) {
 			displayGamePictureInMenu(rom);
 		}
 		if (currentlyChoosing==3) {
+			initializeSettingsFonts();
 			drawSettingsScreen();
 		} else if (currentlyChoosing==2) {
 			showCurrentGroup();

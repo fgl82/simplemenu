@@ -498,13 +498,9 @@ void performSettingsChoosingAction() {
 			if (keys[BTN_LEFT]) {
 				if (MENU_ITEMS_PER_PAGE==15) {
 					MENU_ITEMS_PER_PAGE-=5;
-				} else if (MENU_ITEMS_PER_PAGE>7) {
-					MENU_ITEMS_PER_PAGE-=3;
 				}
 			} else {
-				if (MENU_ITEMS_PER_PAGE<10) {
-					MENU_ITEMS_PER_PAGE+=3;
-				} else if (ITEMS_PER_PAGE < 15) {
+				if (ITEMS_PER_PAGE < 15) {
 					MENU_ITEMS_PER_PAGE+=5;
 				}
 			}
@@ -557,6 +553,7 @@ void performSettingsChoosingAction() {
 		running=0;
 	} else if (keys[BTN_START]) {
 		if (currentlyChoosing) {
+			freeSettingsFonts();
 			currentlyChoosing=0;
 		}
 	}

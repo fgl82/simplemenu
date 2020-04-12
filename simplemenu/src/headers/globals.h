@@ -116,7 +116,8 @@ struct MenuSection {
 	char *executables[10];
 	char filesDirectories[400];
 	char fileExtensions[50];
-	char consolePicture[300];
+	char systemLogo[300];
+	char systemPicture[300];
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;
