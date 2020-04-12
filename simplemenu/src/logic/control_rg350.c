@@ -122,9 +122,6 @@ int performAction(struct Rom *rom) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (!favoritesSectionSelected) {
-			if(autoHideLogos) {
-				resetPicModeHideLogoTimer();
-			}
 			currentlySectionSwitching=1;
 		}
 		int rewinded = rewindSection(1);
@@ -134,6 +131,9 @@ int performAction(struct Rom *rom) {
 			refreshScreen();
 			currentlySectionSwitching=1;
 			loadGameList(0);
+			if(autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
 //			if (!fullscreenMode) {
 //				currentlySectionSwitching=0;
 //			}
@@ -148,9 +148,6 @@ int performAction(struct Rom *rom) {
 		hideFullScreenModeMenu();
 		hotKeyPressed=0;
 		if (!favoritesSectionSelected) {
-			if(autoHideLogos) {
-				resetPicModeHideLogoTimer();
-			}
 			currentlySectionSwitching=1;
 		}
 		int advanced = advanceSection(1);
@@ -160,6 +157,9 @@ int performAction(struct Rom *rom) {
 			refreshScreen();
 			currentlySectionSwitching=1;
 			loadGameList(0);
+			if(autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
 //			if (!fullscreenMode) {
 //				currentlySectionSwitching=0;
 //			}

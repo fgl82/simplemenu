@@ -10,7 +10,7 @@
 #include <shake.h>
 #endif
 
-int version;
+int MAGIC_NUMBER;
 
 int running;
 

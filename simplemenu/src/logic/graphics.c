@@ -50,10 +50,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 	}
 	int len=strlen(buf);
-	int width = calculateProportionalSizeOrDistance(315);
-	if (fullscreenMode) {
-		width = calculateProportionalSizeOrDistance(315);
-	}
+	int width = calculateProportionalSizeOrDistance(MAGIC_NUMBER);
 	while (msg->w>width) {
 		bufCopy[len]='\0';
 		SDL_FreeSurface(msg);
@@ -104,6 +101,15 @@ void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]
 void drawShadedGameNameOnScreen(char *buf, int position) {
 	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 }
+
+void drawShadedGameNameOnScreenLeft(char *buf, int position) {
+	drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+}
+
+void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignLeft);
+}
+
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
@@ -159,7 +165,11 @@ void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	if (!fullscreenMode) {
-		drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+		if (ITEMS_PER_PAGE<15) {
+			drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+		} else {
+			drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+		}
 	} else {
 		drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 	}
@@ -243,6 +253,36 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	SDL_FreeSurface(transparentrectangle);
 }
 
+int drawImage1(SDL_Surface* display, SDL_Surface *image, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+	// Zoom function uses doubles for rates of scaling, rather than
+	// exact size values. This is how we get around that:
+	double zoomx = newwidth  / (float)image->w;
+	double zoomy = newheight / (float)image->h;
+	// This function assumes no smoothing, so that any colorkeys wont bleed.
+	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, smoothing);
+	// If the original had an alpha color key, give it to the new one.
+	if( image->flags & SDL_SRCCOLORKEY ) {
+		// Acquire the original Key
+		Uint32 colorkey = image->format->colorkey;
+		// Set to the new image
+		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
+	}
+	// The original picture is no longer needed.
+	SDL_FreeSurface(image);
+	// Set it instead to the new image.
+	image =  sized;
+	SDL_Rect src, dest;
+	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
+	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
+	if(transparent == 1 ) {
+		//Set the color as transparent
+		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
+	}
+	SDL_BlitSurface(image, &src, display, &dest);
+	SDL_FreeSurface(image);
+	return 1;
+}
+
 int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
@@ -271,6 +311,75 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, i
 	SDL_BlitSurface(image, &src, display, &dest);
 	SDL_FreeSurface(image);
 	return 1;
+}
+
+void displayImageOnScreen1(char *fileName, char *fallBackText) {
+	SDL_Surface *img = IMG_Load(fileName);
+	SDL_Surface *img1 = IMG_Load(CURRENT_SECTION.consolePicture);
+	if (img==NULL) {
+		drawImgFallbackTextOnScreen(fallBackText);
+	} else {
+			double w = img->w;
+			double h = img->h;
+			double w1 = img1->w;
+			double h1 = img1->h;
+
+			double ratio = 0;  // Used for aspect ratio
+			double ratio1 = 0;  // Used for aspect ratio
+			int smoothing = 0;
+			ratio = w / h;   // get ratio for scaling image
+			ratio1 = w1 / h1;   // get ratio for scaling image
+			h = SCREEN_HEIGHT;
+			h1 = SCREEN_HEIGHT;
+			w = h*ratio;
+			w1 = h1*ratio1;
+			if (w>SCREEN_WIDTH) {
+				ratio = h / w;   // get ratio for scaling image
+				w = SCREEN_WIDTH;
+				h = w*ratio;
+			}
+			if (w1>SCREEN_WIDTH) {
+				ratio1 = h1 / w1;   // get ratio for scaling image
+				w1 = SCREEN_WIDTH;
+				h1 = w1*ratio1;
+			}
+//			if ((int)h!=(int)img->h) {
+				smoothing = 1;
+//			}
+			int color[3];
+			color[0] = CURRENT_SECTION.bodyBackgroundColor[0]-30;
+			color[1] = CURRENT_SECTION.bodyBackgroundColor[1]-30;
+			color[2] = CURRENT_SECTION.bodyBackgroundColor[2]-30;
+			if (color[0]<0) {
+				color[0]=0;
+			}
+			if (color[1]<0) {
+				color[1]=0;
+			}
+			if (color[2]<0) {
+				color[2]=0;
+			}
+			int color1[3];
+			color1[0] = color[0]-20;
+			color1[1] = color[1]-20;
+			color1[2] = color[2]-20;
+			if (color1[0]<0) {
+				color1[0]=0;
+			}
+			if (color1[1]<0) {
+				color1[1]=0;
+			}
+			if (color1[2]<0) {
+				color1[2]=0;
+			}
+
+			drawRectangleOnScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance(22),color1);
+			drawRectangleOnScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(159),SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance(22),color1);
+			drawRectangleOnScreen(w/3-calculateProportionalSizeOrDistance(6),h/3-calculateProportionalSizeOrDistance(4),calculateProportionalSizeOrDistance(268)-((w/3-calculateProportionalSizeOrDistance(6))/2),calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
+			drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(268)-((w/3-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(25), 0, 0, w/3-calculateProportionalSizeOrDistance(8), h/3-calculateProportionalSizeOrDistance(6), 0, smoothing);
+			drawImage1(screen, img1, CURRENT_SECTION.consolePicture, calculateProportionalSizeOrDistance(268)-((w1/3-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(122), 0, 0, w1/3-calculateProportionalSizeOrDistance(8), h1/3-calculateProportionalSizeOrDistance(6), 0, smoothing);
+//			drawTextOnScreen(font,calculateProportionalSizeOrDistance(167),calculateProportionalSizeOrDistance(90),"blablabla1",CURRENT_SECTION.bodyTextColor,VAlignMiddle | HAlignCenter);
+	}
 }
 
 void displayImageOnScreen(char *fileName, char *fallBackText) {
@@ -328,7 +437,7 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
 	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 320;
+		SCREEN_HEIGHT = 960;
 	}
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;
@@ -343,23 +452,12 @@ void refreshScreen() {
 
 void initializeFonts() {
 	TTF_Init();
-	switch (MENU_ITEMS_PER_PAGE) {
-	    case 7:
-	    	fontSize=20;
-	        break;
-	    case 10:
-	    	fontSize=14;
-	        break;
-	    default:
-	    	fontSize=10;
-	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
-	}
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
-	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize)+calculateProportionalSizeOrDistance(5));
-	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize)+calculateProportionalSizeOrDistance(18));
-	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize)+calculateProportionalSizeOrDistance(6));
-	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize)+calculateProportionalSizeOrDistance(2));
+	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
+	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+18));
+	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
+	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+2));
 }
 
 void freeFonts() {

@@ -35,6 +35,7 @@ void initializeGlobals() {
 	stripGames=1;
 	fontSize=14;
 	srand(time(0));
+	MAGIC_NUMBER = 315;
 }
 
 void resetFrameBuffer () {
@@ -106,6 +107,17 @@ int main(int argc, char* argv[]) {
 //	}
 
 	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+	switch (MENU_ITEMS_PER_PAGE) {
+	    case 7:
+	    	fontSize=20;
+	        break;
+	    case 10:
+	    	fontSize=14;
+	        break;
+	    default:
+	    	fontSize=10;
+	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 	} else {
