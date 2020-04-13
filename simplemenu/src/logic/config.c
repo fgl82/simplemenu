@@ -125,6 +125,7 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 		freeFonts();
 		initializeFonts();
@@ -334,6 +335,9 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
 	snprintf(fullscreenBackground,sizeof(fullscreenBackground),"%s%s",pathToThemeConfigFile, value);
 
+	value = ini_get(themeConfig, "GENERAL", "no_pic");
+	snprintf(nopic,sizeof(nopic),"%s%s",pathToThemeConfigFile, value);
+
 	value = ini_get(themeConfig, "GENERAL", "font");
 	snprintf(menuFont,sizeof(menuFont),"%s%s",pathToThemeConfigFile, value);
 
@@ -464,6 +468,7 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 		freeFonts();
 		initializeFonts();

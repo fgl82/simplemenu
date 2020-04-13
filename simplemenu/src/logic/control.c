@@ -495,14 +495,10 @@ void performSettingsChoosingAction() {
 			loadTheme(temp);
 			free(temp);
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
-			if (keys[BTN_LEFT]) {
-				if (MENU_ITEMS_PER_PAGE==15) {
-					MENU_ITEMS_PER_PAGE-=5;
-				}
+			if (MENU_ITEMS_PER_PAGE==12) {
+				MENU_ITEMS_PER_PAGE=10;
 			} else {
-				if (ITEMS_PER_PAGE < 15) {
-					MENU_ITEMS_PER_PAGE+=5;
-				}
+				MENU_ITEMS_PER_PAGE=12;
 			}
 			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 			switch (MENU_ITEMS_PER_PAGE)
@@ -514,8 +510,8 @@ void performSettingsChoosingAction() {
 			    	fontSize=14;
 			        break;
 			    default:
-			    	fontSize=10;
-			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			    	fontSize=12;
+//			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
 			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

@@ -115,8 +115,8 @@ int main(int argc, char* argv[]) {
 	    	fontSize=14;
 	        break;
 	    default:
-	    	fontSize=10;
-	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+	    	fontSize=12;
+//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
 	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

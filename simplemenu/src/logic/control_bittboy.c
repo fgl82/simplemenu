@@ -202,10 +202,10 @@ int performAction(struct Rom *rom) {
 			int number = CURRENT_GAME_NUMBER;
 			if (fullscreenMode) {
 				fullscreenMode=0;
-				ITEMS_PER_PAGE=10;
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
  			} else {
 				fullscreenMode=1;
-				ITEMS_PER_PAGE=12;
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 			}
 			if (CURRENT_SECTION.gameCount>0) {
 				scrollToGame(number);

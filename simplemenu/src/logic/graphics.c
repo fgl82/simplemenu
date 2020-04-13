@@ -107,11 +107,11 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenLeft(char *buf, int position) {
-	drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(96), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 }
 
 void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
-	drawTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignLeft);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(96), position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
 }
 
 
@@ -177,7 +177,7 @@ void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	if (!fullscreenMode) {
-		if (ITEMS_PER_PAGE<15) {
+		if (ITEMS_PER_PAGE==10) {
 			drawTextOnScreen(BIGFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 		} else {
 			drawTextOnScreen(miniFont, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
@@ -356,8 +356,8 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 		color1[2]=0;
 	}
 
-	drawRectangleOnScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance(22),color1);
-	drawRectangleOnScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(159),SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance(22),color1);
+	drawRectangleOnScreen(SCREEN_WIDTH/5*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2,calculateProportionalSizeOrDistance(22),color1);
+	drawRectangleOnScreen(SCREEN_WIDTH/5*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(159),SCREEN_WIDTH-SCREEN_WIDTH/5*2,calculateProportionalSizeOrDistance(22),color1);
 
 	if (img1!=NULL) {
 		double w1 = img1->w;
@@ -371,9 +371,12 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 			w1 = SCREEN_WIDTH;
 			h1 = w1*ratio1;
 		}
-		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(268)-((w1/3-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(122), 0, 0, w1/3-calculateProportionalSizeOrDistance(8), h1/3-calculateProportionalSizeOrDistance(6), 0, 1);
+		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-((w1/2.5-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(122), 0, 0, w1/2.5-calculateProportionalSizeOrDistance(8), h1/2.5-calculateProportionalSizeOrDistance(6), 0, 1);
 	}
-
+	if(img==NULL) {
+		printf("%s\n",nopic);
+		img = IMG_Load(nopic);
+	}
 	if (img!=NULL) {
 		double w = img->w;
 		double h = img->h;
@@ -388,8 +391,8 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 			w = SCREEN_WIDTH;
 			h = w*ratio;
 		}
-		drawRectangleOnScreen(w/3-calculateProportionalSizeOrDistance(6),h/3-calculateProportionalSizeOrDistance(4),calculateProportionalSizeOrDistance(268)-((w/3-calculateProportionalSizeOrDistance(6))/2),calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
-		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(268)-((w/3-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(25), 0, 0, w/3-calculateProportionalSizeOrDistance(8), h/3-calculateProportionalSizeOrDistance(6), 0, smoothing);
+		drawRectangleOnScreen(w/2.5-calculateProportionalSizeOrDistance(6),h/2.5-calculateProportionalSizeOrDistance(4),calculateProportionalSizeOrDistance(256)-((w/2.5-calculateProportionalSizeOrDistance(6))/2),calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
+		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(256)-((w/2.5-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(25), 0, 0, w/2.5-calculateProportionalSizeOrDistance(8), h/2.5-calculateProportionalSizeOrDistance(6), 0, smoothing);
 	}
 }
 
