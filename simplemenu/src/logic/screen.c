@@ -614,7 +614,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	if(MENU_ITEMS_PER_PAGE==10) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
 	} else {
-		strcpy(values[ITEMS_PER_PAGE_OPTION],"BLINDING MENU");
+		strcpy(values[ITEMS_PER_PAGE_OPTION],"TRADITIONAL");
 	}
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");
