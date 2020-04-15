@@ -356,6 +356,9 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 		color1[2]=0;
 	}
 
+	int imgw;
+	int imgh;
+
 	drawTransparentRectangleToScreen(SCREEN_WIDTH/5*2+calculateProportionalSizeOrDistance(1),SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2-calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(22),color1,60);
 //	drawRectangleOnScreen(SCREEN_WIDTH/5*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(159),SCREEN_WIDTH-SCREEN_WIDTH/5*2,calculateProportionalSizeOrDistance(22),color1);
 
@@ -364,14 +367,16 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 		double h1 = img1->h;
 		double ratio1 = 0;  // Used for aspect ratio
 		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = SCREEN_HEIGHT;
+		h1 = calculateProportionalSizeOrDistance(90);
 		w1 = h1*ratio1;
-		if (w1>SCREEN_WIDTH) {
+		int smoothing = 0;
+		if (w1!=calculateProportionalSizeOrDistance(120)) {
 			ratio1 = h1 / w1;   // get ratio for scaling image
-			w1 = SCREEN_WIDTH;
+			w1 = 120;
 			h1 = w1*ratio1;
+			smoothing = 1;
 		}
-		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-((w1/2.5-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(123), 0, 0, w1/2.5-calculateProportionalSizeOrDistance(8), h1/2.5-calculateProportionalSizeOrDistance(6), 0, 1);
+		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(123), 0, 0, w1, h1, 0, smoothing);
 	}
 //	if(img==NULL) {
 //		img = IMG_Load(nopic);
@@ -382,21 +387,28 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 		double ratio = 0;  // Used for aspect ratio
 		int smoothing = 1;
 		ratio = w / h;   // get ratio for scaling image
-		h = SCREEN_HEIGHT;
+		h = calculateProportionalSizeOrDistance(90);
 		w = h*ratio;
-		smoothing = 1;
-		if (w>SCREEN_WIDTH) {
-			ratio = h / w;   // get ratio for scaling image
-			w = SCREEN_WIDTH;
-			h = w*ratio;
+		smoothing = 0;
+		int leftPos=256;
+		if (w!=calculateProportionalSizeOrDistance(120)) {
+			ratio = w / h;   // get ratio for scaling image
+			h = calculateProportionalSizeOrDistance(90);
+			w = h*ratio;
+			if(ratio>1.34||ratio<1.33) {
+				leftPos=257;
+			}
+			if (w>calculateProportionalSizeOrDistance(120)) {
+				ratio = h / w;   // get ratio for scaling image
+				w = calculateProportionalSizeOrDistance(120);
+				h = w*ratio;
+				leftPos=256;
+			}
+			smoothing=1;
 		}
-		int leftPos=257;
-		if(ratio>1.32&&ratio<1.34) {
-			leftPos=256;
-		}
-		drawRectangleOnScreen(w/2.5-calculateProportionalSizeOrDistance(4),h/2.5-calculateProportionalSizeOrDistance(2),calculateProportionalSizeOrDistance(leftPos)-((w/2.5-calculateProportionalSizeOrDistance(4))/2),calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
-		drawTransparentRectangleToScreen(w/2.5-calculateProportionalSizeOrDistance(8),h/2.5-calculateProportionalSizeOrDistance(6),calculateProportionalSizeOrDistance(leftPos)-((w/2.5-calculateProportionalSizeOrDistance(8))/2),calculateProportionalSizeOrDistance(26),color1,125);
-		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-((w/2.5-calculateProportionalSizeOrDistance(8))/2), calculateProportionalSizeOrDistance(26), 0, 0, w/2.5-calculateProportionalSizeOrDistance(8), h/2.5-calculateProportionalSizeOrDistance(6), 0, smoothing);
+		drawRectangleOnScreen(w+calculateProportionalSizeOrDistance(4),h+calculateProportionalSizeOrDistance(4),calculateProportionalSizeOrDistance(leftPos-((w+calculateProportionalSizeOrDistance(4))/2)),calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
+		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance(26),color1,125);
+		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
 
 
 	}
@@ -457,7 +469,7 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
 	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 960;
+		SCREEN_HEIGHT = 240;
 	}
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;
