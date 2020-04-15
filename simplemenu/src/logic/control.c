@@ -17,6 +17,8 @@
 #include "../headers/system_logic.h"
 #include "../headers/doubly_linked_rom_list.h"
 
+int switchToGroup;
+
 void scrollUp() {
 	CURRENT_SECTION.currentGameNode=CURRENT_SECTION.currentGameNode->prev;
 	//if at the first item of the first page
@@ -92,38 +94,53 @@ void scrollToGame(int gameNumber) {
 	}
 }
 
-int advanceSection() {
+int advanceSection(int showLogo) {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
-	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
-//		if(!CURRENT_SECTION.hidden) {
-			displayBackgroundPicture();
-			showConsole();
-			refreshScreen();
-//		}
+	#ifndef TARGET_BITTBOY
+	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
+		currentlySectionSwitching=1;
+		displayBackgroundPicture();
+		showConsole();
 	}
+	refreshScreen();
+	#endif
+	#ifdef TARGET_BITTBOY
+	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
+		displayBackgroundPicture();
+		showConsole();
+		refreshScreen();
+	}
+	#endif
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
 	}
 	return 0;
 }
 
-int rewindSection() {
+int rewindSection(int showLogo) {
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
 		currentSectionNumber--;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
-	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
-//		if(!CURRENT_SECTION.hidden) {
-			displayBackgroundPicture();
-			showConsole();
-			refreshScreen();
-//		}
+	#ifndef TARGET_BITTBOY
+	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
+		currentlySectionSwitching=1;
+		displayBackgroundPicture();
+		showConsole();
 	}
+	#endif
+	#ifdef TARGET_BITTBOY
+	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
+		displayBackgroundPicture();
+		showConsole();
+		refreshScreen();
+	}
+	#endif
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		return 1;
 	}
@@ -371,6 +388,175 @@ int isSelectPressed() {
 	return keys[BTN_SELECT];
 }
 
+void performGroupChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(activeGroup>0) {
+			activeGroup--;
+		} else {
+			activeGroup=sectionGroupCounter-1;
+		}
+		return;
+	}
+	if (keys[BTN_DOWN]) {
+		if(activeGroup<sectionGroupCounter-1) {
+			activeGroup++;
+		} else {
+			activeGroup=0;
+		}
+		return;
+	}
+	if (keys[BTN_A]) {
+		int preFavs = favoritesSectionNumber;
+		if (beforeTryingToSwitchGroup!=activeGroup) {
+			for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+				if(sectionCount==currentSectionNumber) {
+					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=1;
+				} else {
+					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=0;
+				}
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][1]=menuSections[sectionCount].currentPage;
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][2]=menuSections[sectionCount].currentGameInPage;
+				sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][3]=menuSections[sectionCount].realCurrentGameNumber;
+			}
+			if (currentlyChoosing) {
+				loadSections(sectionGroups[activeGroup].groupPath);
+				currentlyChoosing=0;
+				currentSectionNumber=0;
+				for(int i=0;i<menuSectionCounter;i++) {
+					menuSections[i].initialized=0;
+					cleanListForSection(&menuSections[i]);
+					menuSections[i].currentPage=0;
+					menuSections[i].realCurrentGameNumber=0;
+					menuSections[i].currentGameInPage=0;
+					menuSections[i].currentGameNode=CURRENT_SECTION.head;
+				}
+				for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
+					if(sectionCount!=favoritesSectionNumber) {
+						if (sectionGroupStates[activeGroup][sectionCount][0]==1) {
+							currentSectionNumber=sectionCount;
+						}
+						menuSections[sectionCount].currentPage=sectionGroupStates[activeGroup][sectionCount][1];
+						menuSections[sectionCount].currentGameInPage=sectionGroupStates[activeGroup][sectionCount][2];
+						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[activeGroup][sectionCount][3];
+					} else {
+						menuSections[sectionCount].currentPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][1];
+						menuSections[sectionCount].currentGameInPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][2];
+						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][3];
+					}
+				}
+				loadGameList(0);
+			}
+		} else {
+			activeGroup = beforeTryingToSwitchGroup;
+			currentlyChoosing=0;
+		}
+	}
+}
+
+void performSettingsChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		} else {
+			chosenSetting=8;
+		}
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<8) {
+			chosenSetting++;
+		} else {
+			chosenSetting=0;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==TIDY_ROMS_OPTION) {
+			stripGames=1+stripGames*-1;
+		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
+			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==AUTO_HIDE_LOGOS_OPTION) {
+			autoHideLogos=1+autoHideLogos*-1;
+		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
+			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==THEME_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (activeTheme>0) {
+					activeTheme--;
+				} else {
+					activeTheme=themeCounter-1;
+				}
+			} else {
+				if (activeTheme<themeCounter-1) {
+					activeTheme++;
+				} else {
+					activeTheme=0;
+				}
+			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			free(temp);
+		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
+			if (MENU_ITEMS_PER_PAGE==12) {
+				MENU_ITEMS_PER_PAGE=10;
+			} else {
+				MENU_ITEMS_PER_PAGE=12;
+			}
+			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+			switch (MENU_ITEMS_PER_PAGE)
+			{
+			    case 7:
+			    	fontSize=20;
+			        break;
+			    case 10:
+			    	fontSize=14;
+			        break;
+			    default:
+			    	fontSize=12;
+//			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			}
+			if(fullscreenMode==0) {
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+			} else {
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			}
+			freeFonts();
+			initializeFonts();
+			loadGameList(1);
+			drawGameList();
+		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (timeoutValue>1) {
+					timeoutValue--;
+				}
+			} else {
+				if (timeoutValue<60) {
+					timeoutValue++;
+				}
+			}
+		} else if (chosenSetting==DEFAULT_OPTION) {
+			char command [300];
+			if (shutDownEnabled) {
+				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
+			} else {
+				snprintf(command,sizeof(command),"cp scripts/frontend_start /usr/local/sbin/");
+			}
+			int ret = system(command);
+			if (ret==-1) {
+				generateError("THERE WAS AN ERROR", 0);
+			}
+			shutDownEnabled=1+shutDownEnabled*-1;
+		}
+	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
+		running=0;
+	} else if (keys[BTN_START]) {
+		if (currentlyChoosing) {
+			freeSettingsFonts();
+			currentlyChoosing=0;
+		}
+	}
+}
+
+
+
 void performChoosingAction() {
 	if (keys[BTN_UP]) {
 		if(CURRENT_SECTION.activeExecutable>0) {
@@ -396,8 +582,8 @@ void performChoosingAction() {
 		return;
 	}
 	if (keys[BTN_A]) {
-		if (currentlyChoosingEmulator) {
-			currentlyChoosingEmulator=0;
+		if (currentlyChoosing) {
+			currentlyChoosing=0;
 			return;
 		}
 	}
@@ -408,7 +594,7 @@ void callDeleteGame(struct Rom *rom) {
 		deleteGame(rom);
 		loadGameList(1);
 		while(CURRENT_SECTION.hidden) {
-			rewindSection();
+			rewindSection(0);
 			loadGameList(0);
 			hideFullScreenModeMenu();
 		}

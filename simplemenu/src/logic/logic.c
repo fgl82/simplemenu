@@ -204,16 +204,23 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 //}
 
 void quit() {
-	drawShutDownScreen();
-	refreshScreen();
+	if(shutDownEnabled) {
+		drawShutDownScreen();
+		refreshScreen();
+	}
 	saveLastState();
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
-	sleep(1.5);
+	if(shutDownEnabled) {
+		sleep(1.5);
+	}
 	freeResources();
 	if (shutDownEnabled) {
+		#ifdef TARGET_PC
+		exit(0);
+		#endif
 		execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 	} else {
 		exit(0);
@@ -473,6 +480,35 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	return i;
 }
 
+int findDirectoriesInDirectory (char *directory, char* files[], int i) {
+	DIR * d;
+	d = opendir (directory);
+	if (d==NULL) {
+		return 0;
+	}
+	while (1) {
+		struct dirent *entry;
+		char * d_name;
+		entry = readdir (d);
+		if (!entry) {
+			break;
+		}
+		d_name = entry->d_name;
+		if (entry->d_type & DT_DIR) {
+			if (strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				files[i]=malloc(sizeof(path));
+				strcpy(files[i],path);
+				i++;
+			}
+		}
+	}
+	free(d);
+	return i;
+}
+
+
 int compareFavorites(const void *f1, const void *f2)
 {
 	struct Favorite *e1 = (struct Favorite *)f1;
@@ -579,8 +615,9 @@ void loadGameList(int refresh) {
 		}
 		cleanListForSection(&CURRENT_SECTION);
 		CURRENT_SECTION.totalPages=0;
+		CURRENT_SECTION.gameCount=0;
 		char *files[MAX_GAMES_IN_SECTION];
-		int game = 0;
+		int game = -1;
 		int dirCounter;
 		char *dirs[10];
 		char* ptr;
@@ -706,7 +743,6 @@ void loadGameList(int refresh) {
 		}
 		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
-//		CURRENT_SECTION.currentGameNode=GetNthNode(CURRENT_GAME_NUMBER);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}
 	loading=0;

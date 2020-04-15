@@ -10,13 +10,34 @@
 #include <shake.h>
 #endif
 
+int MAGIC_NUMBER;
+
 int running;
 
 int MAX_GAMES_IN_SECTION;
+int ITEMS_PER_PAGE;
+int FULLSCREEN_ITEMS_PER_PAGE;
+int MENU_ITEMS_PER_PAGE;
+
+int TIDY_ROMS_OPTION;
+int FULL_SCREEN_FOOTER_OPTION;
+int FULL_SCREEN_MENU_OPTION;
+int THEME_OPTION;
+int SCREEN_TIMEOUT_OPTION;
+int DEFAULT_OPTION;
+int SHUTDOWN_OPTION;
+int AUTO_HIDE_LOGOS_OPTION;
+int FONT_SIZE_OPTION;
+int ITEMS_PER_PAGE_OPTION;
+
+char *themes[100];
+int activeTheme;
+int themeCounter;
 
 char mediaFolder[1000];
 char simpleBackground[1000];
 char fullscreenBackground[1000];
+char nopic[1000];
 char menuFont[1000];
 
 int itsStoppedBecauseOfAnError;
@@ -32,16 +53,19 @@ int returnTo;
 int currentSectionNumber;
 int menuSectionCounter;
 int gamesInPage;
+int fontSize;
 
 int currentCPU;
 int fullscreenMode;
 int hotKeyPressed;
+int aKeyComboWasPressed;
 int currentlySectionSwitching;
-int currentlyChoosingEmulator;
+int currentlyChoosing;
 int stripGames;
 int shutDownEnabled;
 int footerVisibleInFullscreenMode;
 int menuVisibleInFullscreenMode;
+int autoHideLogos;
 int loading;
 
 int OC_UC;
@@ -79,13 +103,22 @@ struct Node  {
 	struct Node *prev;
 };
 
+struct SectionGroup {
+	char groupPath[1000];
+	char groupName[25];
+	char groupBackground[1000];
+};
+
+int sectionGroupCounter;
+
 struct MenuSection {
 	char sectionName[25];
 	char *emulatorDirectories[10];
 	char *executables[10];
 	char filesDirectories[400];
 	char fileExtensions[50];
-	char consolePicture[100];
+	char systemLogo[300];
+	char systemPicture[300];
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;
@@ -111,7 +144,11 @@ struct MenuSection {
 	char category[100];
 };
 
-
+int activeGroup;
+int beforeTryingToSwitchGroup;
+int chosenSetting;
+struct SectionGroup sectionGroups[100];
+int sectionGroupStates[100][100][4];
 struct MenuSection menuSections[100];
 
 struct OPKDesktopFile {

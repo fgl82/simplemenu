@@ -8,4 +8,7 @@ int loadSections();
 int loadConfig();
 void loadAliasList(int sectionNumber);
 void createConfigFilesInHomeIfTheyDontExist();
+void checkIfDefault();
+void loadTheme(char *theme);
+void checkThemes();
 #endif

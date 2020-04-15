@@ -22,4 +22,6 @@ char *getRomRealName(char *nameWithoutExtension);
 char *getAlias(char *romName);
 char *getFileNameOrAlias(struct Rom *rom);
 int theCurrentSectionHasGames();
+int recursivelyScanDirectory (char *directory, char* files[], int i);
+int findDirectoriesInDirectory (char *directory, char* files[], int i);
 #endif

@@ -1,4 +1,3 @@
 #ifndef CONSTANTS_DEFINED
 #define CONSTANTS_DEFINED
-int ITEMS_PER_PAGE;
 #endif

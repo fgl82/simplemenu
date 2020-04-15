@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# author MashTec
+# modified by FGL82
+
+
+if [ -f /media/data/SimpleMenu/simplemenu ]; then
+    cd /media/data/SimpleMenu
+    ./simplemenu
+elif [ -f /media/data/apps/SimpleMenu-RG-350.opk ]; then
+    /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/SimpleMenu-RG-350.opk
+elif [ -f /media/data/apps/SimpleMenu-PG2.opk ]; then
+    /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/SimpleMenu-PG2.opk
+elif [ -f /media/data/apps/gmenunx.opk ]; then
+    /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/gmenunx.opk
+else
+    /usr/bin/gmenu2x
+fi
