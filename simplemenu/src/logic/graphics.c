@@ -356,9 +356,6 @@ void displayImageOnScreen1(char *fileName, char *fallBackText) {
 		color1[2]=0;
 	}
 
-	int imgw;
-	int imgh;
-
 	drawTransparentRectangleToScreen(SCREEN_WIDTH/5*2+calculateProportionalSizeOrDistance(1),SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2-calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(22),color1,60);
 //	drawRectangleOnScreen(SCREEN_WIDTH/5*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(159),SCREEN_WIDTH-SCREEN_WIDTH/5*2,calculateProportionalSizeOrDistance(22),color1);
 
