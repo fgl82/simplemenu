@@ -108,9 +108,10 @@ int main(int argc, char* argv[]) {
 
 	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 	switch (MENU_ITEMS_PER_PAGE) {
-	    case 7:
-	    	fontSize=20;
-	        break;
+	    case 16:
+	    	fontSize=10;
+	    	FULLSCREEN_ITEMS_PER_PAGE-=2;
+	      break;
 	    case 10:
 	    	fontSize=14;
 	        break;
