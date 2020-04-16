@@ -495,23 +495,36 @@ void performSettingsChoosingAction() {
 			loadTheme(temp);
 			free(temp);
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
-			if (MENU_ITEMS_PER_PAGE==12) {
-				MENU_ITEMS_PER_PAGE=10;
-			} else {
-				MENU_ITEMS_PER_PAGE=12;
+			if (keys[BTN_LEFT]) {
+				if (MENU_ITEMS_PER_PAGE==12) {
+					MENU_ITEMS_PER_PAGE=10;
+				} else if (MENU_ITEMS_PER_PAGE==10) {
+					MENU_ITEMS_PER_PAGE=15;
+				} else {
+					MENU_ITEMS_PER_PAGE=12;
+				}
+			}
+			if (keys[BTN_RIGHT]) {
+				if (MENU_ITEMS_PER_PAGE==12) {
+					MENU_ITEMS_PER_PAGE=15;
+				} else if (MENU_ITEMS_PER_PAGE==15) {
+					MENU_ITEMS_PER_PAGE=10;
+				} else {
+					MENU_ITEMS_PER_PAGE=12;
+				}
 			}
 			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 			switch (MENU_ITEMS_PER_PAGE)
 			{
-			    case 7:
-			    	fontSize=20;
+			    case 12:
+			    	fontSize=12;
 			        break;
 			    case 10:
 			    	fontSize=14;
 			        break;
 			    default:
-			    	fontSize=12;
-//			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			    	fontSize=10;
+			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
 			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

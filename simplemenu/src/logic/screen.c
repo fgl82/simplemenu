@@ -366,10 +366,18 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
-		displayImageOnScreen1(pictureWithFullPath, tempDisplayName);
+		if (MENU_ITEMS_PER_PAGE==12) {
+			displayImageOnScreenTraditional(pictureWithFullPath, tempDisplayName);
+		} else {
+			displayImageOnScreenDrunkenMonkey(pictureWithFullPath, tempDisplayName);
+		}
 		free(tempDisplayName);
 	} else {
-		displayImageOnScreen1(pictureWithFullPath, tempGameName);
+		if (MENU_ITEMS_PER_PAGE==12) {
+			displayImageOnScreenTraditional(pictureWithFullPath, tempGameName);
+		} else {
+			displayImageOnScreenDrunkenMonkey(pictureWithFullPath, tempGameName);
+		}
 	}
 	free(pictureWithFullPath);
 	free(tempGameName);
@@ -427,10 +435,8 @@ void drawGameList() {
 	}
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance((10*((14*29)/fontSize))/ITEMS_PER_PAGE);//CHANGE FIRST VALUE FOR FONT SIZE
-	if(MENU_ITEMS_PER_PAGE==12) {
-//		nextLine -= calculateProportionalSizeOrDistance(2);
-	} else if(MENU_ITEMS_PER_PAGE==7) {
-		nextLine += calculateProportionalSizeOrDistance(1);
+	if(MENU_ITEMS_PER_PAGE==15) {
+		nextLine -= calculateProportionalSizeOrDistance(1);
 	} else if (MENU_ITEMS_PER_PAGE==10) {
 		nextLine -= calculateProportionalSizeOrDistance(1);
 	}
@@ -466,7 +472,6 @@ void drawGameList() {
 			}
 		}
 		if (fullscreenMode) {
-//			sprintf(buf,"%d. %s", i+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage+1, nameWithoutExtension);
 			sprintf(buf,"%s", nameWithoutExtension);
 		} else {
 			sprintf(buf,"%s", nameWithoutExtension);
@@ -475,13 +480,14 @@ void drawGameList() {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-//						int white[3]={255, 255, 0};
-//						drawTransparentRectangleToScreen(320, 20, 0, nextLine-11, white, 200);
 						drawShadedGameNameOnScreenPicMode(buf, nextLine);
 					}
 				} else {
-					if(ITEMS_PER_PAGE==12) {
+					if(MENU_ITEMS_PER_PAGE==12) {
 						MAGIC_NUMBER = 188;
+						drawShadedGameNameOnScreenCenter(buf, nextLine);
+					} else if(MENU_ITEMS_PER_PAGE==15) {
+						MAGIC_NUMBER = 212;
 						drawShadedGameNameOnScreenLeft(buf, nextLine);
 					} else {
 						drawShadedGameNameOnScreen(buf, nextLine);
@@ -495,8 +501,11 @@ void drawGameList() {
 						drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
 					}
 				} else {
-					if(ITEMS_PER_PAGE==12) {
+					if(MENU_ITEMS_PER_PAGE==12) {
 						MAGIC_NUMBER = 188;
+						drawNonShadedGameNameOnScreenCenter(buf, nextLine);
+					} else if(MENU_ITEMS_PER_PAGE==15) {
+						MAGIC_NUMBER = 212;
 						drawNonShadedGameNameOnScreenLeft(buf, nextLine);
 					} else {
 						drawNonShadedGameNameOnScreen(buf, nextLine);
@@ -613,8 +622,10 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
 	if(MENU_ITEMS_PER_PAGE==10) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
-	} else {
+	} else if (MENU_ITEMS_PER_PAGE==12) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"TRADITIONAL");
+	} else {
+		strcpy(values[ITEMS_PER_PAGE_OPTION],"DRUNKEN MONKEY");
 	}
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");
@@ -705,7 +716,7 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		drawGameList();
-		if (!fullscreenMode&&MENU_ITEMS_PER_PAGE==12) {
+		if (!fullscreenMode&&(MENU_ITEMS_PER_PAGE==12||MENU_ITEMS_PER_PAGE==15)) {
 			displayGamePictureInMenu(rom);
 		}
 		if (currentlyChoosing==3) {
