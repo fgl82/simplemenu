@@ -84,7 +84,7 @@ void showLetter(struct Rom *rom) {
 		rectangleX = 0;
 		rectangleY = calculateProportionalSizeOrDistance(220);
 	}
-	if (ITEMS_PER_PAGE==12) {
+	if (ITEMS_PER_PAGE==12||ITEMS_PER_PAGE==16) {
 		filling[0] = CURRENT_SECTION.headerAndFooterBackgroundColor[0];
 		filling[1] = CURRENT_SECTION.headerAndFooterBackgroundColor[1];
 		filling[2] = CURRENT_SECTION.headerAndFooterBackgroundColor[2];
@@ -118,10 +118,10 @@ void showLetter(struct Rom *rom) {
 	if(isdigit(currentGameFirstLetter[0])) {
 		currentGameFirstLetter[0]='#';
 	}
-	if (fullscreenMode||ITEMS_PER_PAGE==12) {
+	if (fullscreenMode||MENU_ITEMS_PER_PAGE==12||MENU_ITEMS_PER_PAGE==16) {
 		int x = 0;
 		int y = calculateProportionalSizeOrDistance(231);
-		if (ITEMS_PER_PAGE==12&&!fullscreenMode) {
+		if (MENU_ITEMS_PER_PAGE==12&&!fullscreenMode) {
 			y = calculateProportionalSizeOrDistance(231);
 		}
 		for (int i=0;i<27;i++) {
@@ -388,7 +388,11 @@ void drawHeader(struct Rom *rom) {
 	//	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if (!fullscreenMode) {
-		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+		if(MENU_ITEMS_PER_PAGE!=12) {
+			drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/14), 0, 0, rgbColor);
+		} else {
+			drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+		}
 	}
 	if (currentCPU==OC_UC) {
 		strcpy(finalString,"- ");
@@ -431,14 +435,20 @@ void drawShutDownScreen() {
 void drawGameList() {
 	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 	if (!fullscreenMode) {
-		drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+		if(MENU_ITEMS_PER_PAGE!=12) {
+			drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/14), 0, calculateProportionalSizeOrDistance((22*fontSize)/14), rgbColor);
+		} else {
+			drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+		}
 	}
 	gamesInPage=0;
 	int nextLine = calculateProportionalSizeOrDistance((10*((14*29)/fontSize))/ITEMS_PER_PAGE);//CHANGE FIRST VALUE FOR FONT SIZE
-	if(MENU_ITEMS_PER_PAGE==15) {
-		nextLine -= calculateProportionalSizeOrDistance(1);
+	if(MENU_ITEMS_PER_PAGE==16) {
+		nextLine -= calculateProportionalSizeOrDistance(7);
 	} else if (MENU_ITEMS_PER_PAGE==10) {
 		nextLine -= calculateProportionalSizeOrDistance(1);
+	} else {
+//		nextLine -= calculateProportionalSizeOrDistance(5);
 	}
 //	int nextLine = calculateProportionalSizeOrDistance(fontSize+15);//CHANGE FIRST VALUE FOR FONT SIZE
 	if (fullscreenMode) {
@@ -486,7 +496,7 @@ void drawGameList() {
 					if(MENU_ITEMS_PER_PAGE==12) {
 						MAGIC_NUMBER = 188;
 						drawShadedGameNameOnScreenCenter(buf, nextLine);
-					} else if(MENU_ITEMS_PER_PAGE==15) {
+					} else if(MENU_ITEMS_PER_PAGE==16) {
 						MAGIC_NUMBER = 212;
 						drawShadedGameNameOnScreenLeft(buf, nextLine);
 					} else {
@@ -504,7 +514,7 @@ void drawGameList() {
 					if(MENU_ITEMS_PER_PAGE==12) {
 						MAGIC_NUMBER = 188;
 						drawNonShadedGameNameOnScreenCenter(buf, nextLine);
-					} else if(MENU_ITEMS_PER_PAGE==15) {
+					} else if(MENU_ITEMS_PER_PAGE==16) {
 						MAGIC_NUMBER = 212;
 						drawNonShadedGameNameOnScreenLeft(buf, nextLine);
 					} else {
@@ -526,7 +536,11 @@ void drawGameList() {
 
 void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
+	if(ITEMS_PER_PAGE!=12) {
+		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/14), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/14), rgbColor);
+	} else {
+		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
+	}
 	drawTextOnFooter(text);
 }
 void setupDecorations(struct Rom *rom) {
@@ -716,7 +730,7 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		drawGameList();
-		if (!fullscreenMode&&(MENU_ITEMS_PER_PAGE==12||MENU_ITEMS_PER_PAGE==15)) {
+		if (!fullscreenMode&&(MENU_ITEMS_PER_PAGE==12||MENU_ITEMS_PER_PAGE==16)) {
 			displayGamePictureInMenu(rom);
 		}
 		if (currentlyChoosing==3) {

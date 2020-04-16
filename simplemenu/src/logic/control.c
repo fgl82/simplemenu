@@ -499,15 +499,15 @@ void performSettingsChoosingAction() {
 				if (MENU_ITEMS_PER_PAGE==12) {
 					MENU_ITEMS_PER_PAGE=10;
 				} else if (MENU_ITEMS_PER_PAGE==10) {
-					MENU_ITEMS_PER_PAGE=15;
+					MENU_ITEMS_PER_PAGE=16;
 				} else {
 					MENU_ITEMS_PER_PAGE=12;
 				}
 			}
 			if (keys[BTN_RIGHT]) {
 				if (MENU_ITEMS_PER_PAGE==12) {
-					MENU_ITEMS_PER_PAGE=15;
-				} else if (MENU_ITEMS_PER_PAGE==15) {
+					MENU_ITEMS_PER_PAGE=16;
+				} else if (MENU_ITEMS_PER_PAGE==16) {
 					MENU_ITEMS_PER_PAGE=10;
 				} else {
 					MENU_ITEMS_PER_PAGE=12;
@@ -524,7 +524,7 @@ void performSettingsChoosingAction() {
 			        break;
 			    default:
 			    	fontSize=10;
-			    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+			    	FULLSCREEN_ITEMS_PER_PAGE-=2;
 			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
@@ -533,7 +533,11 @@ void performSettingsChoosingAction() {
 			}
 			freeFonts();
 			initializeFonts();
-			loadGameList(1);
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(1);
+			} else {
+				loadFavoritesSectionGameList(1);
+			}
 			drawGameList();
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if (keys[BTN_LEFT]) {
