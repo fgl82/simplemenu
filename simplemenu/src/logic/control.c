@@ -518,7 +518,7 @@ void performSettingsChoosingAction() {
 			{
 			    case 12:
 			    	fontSize=12;
-			        break;
+			      break;
 			    case 10:
 			    	fontSize=14;
 			        break;

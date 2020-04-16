@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 	    case 16:
 	    	fontSize=10;
 	    	FULLSCREEN_ITEMS_PER_PAGE-=2;
-	        break;
+	      break;
 	    case 10:
 	    	fontSize=14;
 	        break;

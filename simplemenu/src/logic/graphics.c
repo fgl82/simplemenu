@@ -373,7 +373,7 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 
 	drawTransparentRectangleToScreen(SCREEN_WIDTH/5*2+calculateProportionalSizeOrDistance(1),SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2-calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(22),color1,60);
 
-	if (img1!=NULL) {
+  if (img1!=NULL) {
 		double w1 = img1->w;
 		double h1 = img1->h;
 		double ratio1 = 0;  // Used for aspect ratio
@@ -388,7 +388,6 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 			smoothing = 1;
 		}
 		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(168)-h1/2, 0, 0, w1, h1, 0, smoothing);
-
 	}
 //	if(img==NULL) {
 //		img = IMG_Load(nopic);
