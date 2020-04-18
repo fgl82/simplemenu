@@ -91,6 +91,9 @@ char *getNameWithoutExtension(char *fileName) {
 }
 
 char *getNameWithoutPath(char *fileName) {
+	if (strstr(fileName," / ")!=NULL) {
+		return strdup(fileName);
+	}
 	char *e;
 	char *result;
 	e = strrchr(fileName, '/');

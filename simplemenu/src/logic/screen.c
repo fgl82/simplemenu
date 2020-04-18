@@ -447,10 +447,7 @@ void drawGameList() {
 		nextLine -= calculateProportionalSizeOrDistance(7);
 	} else if (MENU_ITEMS_PER_PAGE==10) {
 		nextLine -= calculateProportionalSizeOrDistance(1);
-	} else {
-//		nextLine -= calculateProportionalSizeOrDistance(5);
 	}
-//	int nextLine = calculateProportionalSizeOrDistance(fontSize+15);//CHANGE FIRST VALUE FOR FONT SIZE
 	if (fullscreenMode) {
 		nextLine = calculateProportionalSizeOrDistance(fontSize-2);//CHANGE FIRST VALUE FOR FONT SIZE
 	}
@@ -467,7 +464,9 @@ void drawGameList() {
 		if (rom->alias!=NULL &&  (strlen(rom->alias)>2)) {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
 			strcpy(nameWithoutExtension,rom->alias);
-			strcat(nameWithoutExtension,"\0");
+			if(stripGames) {
+				stripGameName(nameWithoutExtension);
+			}
 		} else {
 			nameWithoutExtension=malloc(strlen(rom->name)+1);
 			strcpy(nameWithoutExtension,rom->name);

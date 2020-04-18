@@ -69,37 +69,45 @@ char *search(char* arr[], int n, char *x)
 	return "Not Found";
 }
 
-char *getRomRealName(char *nameWithoutExtension) {
+void wowser(){
+//	if(stripGames) {
+//		while (nameTakenFromAlias[charNumber]) {
+//			if (nameTakenFromAlias[charNumber]=='('||nameTakenFromAlias[charNumber]=='[') {
+//				nameTakenFromAlias[charNumber-1]='\0';
+//				break;
+//			}
+//			charNumber++;
+//		}
+//		charNumber=0;
+//		while (nameTakenFromAlias[charNumber]) {
+//			if (nameTakenFromAlias[charNumber]=='/') {
+//				nameTakenFromAlias[charNumber-1]='\0';
+//				break;
+//			}
+//			charNumber++;
+//		}
+//		free(strippedNameWithoutExtension);
+//	}
+}
+
+char *getRomRealName(char *romName) {
 	char *nameTakenFromAlias;
-	char* strippedNameWithoutExtension = malloc(strlen(nameWithoutExtension)+1);
-	strcpy(strippedNameWithoutExtension,nameWithoutExtension);
+	char* strippedNameWithoutExtension = malloc(strlen(romName)+1);
+	strcpy(strippedNameWithoutExtension,romName);
 	stripGameName(strippedNameWithoutExtension);
 	nameTakenFromAlias=ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
 	if (nameTakenFromAlias!=NULL) {
-		int charNumber=0;
-		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='('||nameTakenFromAlias[charNumber]=='[') {
-				nameTakenFromAlias[charNumber-1]='\0';
-				break;
-			}
-			charNumber++;
-		}
-		charNumber=0;
-		while (nameTakenFromAlias[charNumber]) {
-			if (nameTakenFromAlias[charNumber]=='/') {
-				nameTakenFromAlias[charNumber-1]='\0';
-				break;
-			}
-			charNumber++;
-		}
-		free(strippedNameWithoutExtension);
 		return(nameTakenFromAlias);
+	} else {
+		char *dup=strdup(romName);
+		stripGameNameLeaveExtension(dup);
+		return(dup);
 	}
 	if(strippedNameWithoutExtension != NULL) {
 		free(strippedNameWithoutExtension);
 	}
-	nameTakenFromAlias=malloc(strlen(nameWithoutExtension)+1);
-	strcpy(nameTakenFromAlias, nameWithoutExtension);
+	nameTakenFromAlias=malloc(strlen(romName)+1);
+	strcpy(nameTakenFromAlias, romName);
 	return(nameTakenFromAlias);
 }
 
@@ -151,14 +159,14 @@ char *getAlias(char *romName) {
 		if(currentSectionNumber==favoritesSectionNumber) {
 			struct Favorite favorite = findFavorite(alias);
 			if (strlen(favorite.alias)<2) {
-				stripGameName(alias);
+//				stripGameName(alias);
 			}
 		} else {
 			char *ext = getExtension(romName);
 			if (strcmp(ext,".opk")==0) {
 				strcpy (alias, romName);
 			}
-			stripGameName(alias);
+//			stripGameName(alias);
 		}
 	}
 	return alias;
@@ -177,14 +185,14 @@ char *getFileNameOrAlias(struct Rom *rom) {
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
-		//		if(stripGames) {
+//				if(stripGames) {
 		stripGameName(displayName);
-		//		} else {
-		//			char tmp[300];
-		//			strcpy(tmp, getNameWithoutPath(displayName));
-		//			strcpy(displayName, tmp);
-		//			printf("returning %s\n",displayName);
-		//		}
+//				} else {
+//					char tmp[300];
+//					strcpy(tmp, getNameWithoutPath(displayName));
+//					strcpy(displayName, tmp);
+//					printf("returning %s\n",displayName);
+//				}
 	}
 	return displayName;
 }

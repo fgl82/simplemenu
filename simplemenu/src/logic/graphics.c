@@ -438,13 +438,13 @@ void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 			ratio = w / h;   // get ratio for scaling image
 			h = calculateProportionalSizeOrDistance(72);
 			w = h*ratio;
-			if(ratio>1.34||ratio<1.33) {
-				leftPos=267;
-			}
 			if (w>calculateProportionalSizeOrDistance(96)) {
 				ratio = h / w;   // get ratio for scaling image
 				w = calculateProportionalSizeOrDistance(96);
 				h = w*ratio;
+				leftPos=267;
+			}
+			if(ratio>1.34||ratio<1.33) {
 				leftPos=267;
 			}
 			smoothing=1;
