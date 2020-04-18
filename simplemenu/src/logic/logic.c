@@ -605,6 +605,43 @@ int theSectionHasGames(struct MenuSection *section) {
 	return !value;
 }
 
+//void setBasicGameList() {
+//	char *files[MAX_GAMES_IN_SECTION];
+//	int dirCounter;
+//	char *dirs[10];
+//	char* ptr;
+//	char dirsCopy[1000];
+//	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+//	ptr = strtok(dirsCopy, ",");
+//	loading=1;
+//	while (ptr!=NULL) {
+//		dirs[dirCounter]=malloc(strlen(ptr)+1);
+//		strcpy(dirs[dirCounter],ptr);
+//		ptr = strtok(NULL, ",");
+//		dirCounter++;
+//	}
+//	for(int k=0;k<dirCounter;k++) {
+//		int n = recursivelyScanDirectory(dirs[k], files, 0);
+//		qsort(files, n, sizeof(char *), sortStringArray);
+//		for (int i=0;i<n;i++){
+//			char *ext = getExtension(files[i]);
+//			if (ext&&strcmp((files[i]),"..")!=0 &&
+//					strcmp((files[i]),".")!=0 &&
+//					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
+//				CURRENT_SECTION.fileList[i]=malloc(1000);
+//				strcpy(CURRENT_SECTION.fileList[i],files[i]);
+//				CURRENT_SECTION.gameCount=+1;
+//			}
+//		}
+//		for (int i=0;i<n;i++){
+//			free(files[i]);
+//		}
+//	}
+//	for (int i=0;i<dirCounter;i++){
+//		free (dirs[i]);
+//	}
+//}
+
 void loadGameList(int refresh) {
 	int loadedFiles=0;
 	if (CURRENT_SECTION.initialized==0||refresh) {
@@ -804,6 +841,7 @@ void determineStartingScreen(int sectionCount) {
 			determineStartingScreen(sectionCount);
 		}
 	} else {
+//		setBasicGameList();
 		loadGameList(0);
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

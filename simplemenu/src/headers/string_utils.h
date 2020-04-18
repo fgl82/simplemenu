@@ -11,4 +11,5 @@ char *getExtension (char *stringWithExtension);
 void stripGameName(char *gameName);
 void stripGameNameLeaveExtension(char *gameName);
 char *getGameName(char *gameName);
+int sortStringArray (const void *lhs, const void *rhs);
 #endif

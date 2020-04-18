@@ -10,6 +10,7 @@
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
 #include "../headers/ini2.h"
+#include "../headers/graphics.h"
 
 char home[5000];
 char pathToThemeConfigFile[1000];
@@ -39,8 +40,13 @@ void loadAliasList(int sectionNumber) {
 }
 
 void checkIfDefault() {
-	FILE * fp;
+	FILE * fp=NULL;
+	#ifdef TARGET_BITTBOY
+	fp = fopen("/mnt/autoexec.sh", "r");
+	#endif
+	#ifdef TARGET_RG350
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
+	#endif
 	shutDownEnabled=0;
 	if (fp!=NULL) {
 		shutDownEnabled=1;
@@ -132,27 +138,12 @@ void loadTheme(char *theme) {
 	}
 }
 
-static int cmpfnc1(const void *lhs, const void *rhs)
-{
-	char temp0[300];
-	char temp1[300];
-	strcpy (temp0,lhs);
-	strcpy (temp1,rhs);
-	for(int i=0;temp0[i]; i++) {
-		temp0[i] = tolower(temp0[i]);
-	}
-	for(int i=0;temp1[i]; i++) {
-		temp1[i] = tolower(temp1[i]);
-	}
-	return strcmp(temp0, temp1);
-}
-
 void checkThemes() {
 	char *files[1000];
 	char tempString[1000];
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/themes/",getenv("HOME"));
 	int n = findDirectoriesInDirectory(tempString, files, 0);
-	qsort(files, n, sizeof(char *), cmpfnc1);
+	qsort(files, n, sizeof(const char*), sortStringArray);
 	for(int i=0;i<n;i++) {
 		themes[i]=malloc(strlen(files[i])+1);
 		strcpy(themes[i],files[i]);

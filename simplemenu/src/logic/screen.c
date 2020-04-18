@@ -208,7 +208,7 @@ void showCurrentGroup() {
 	strcat(tempString,"\0");
 	drawRectangleOnScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
 	displayImageOnScreen(sectionGroups[activeGroup].groupBackground," ");
-	drawTransparentRectangleToScreen(SCREEN_WIDTH, 70, 0, SCREEN_HEIGHT/2-38, backgroundColor, 50);
+	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);
 	free(tempString);
 }

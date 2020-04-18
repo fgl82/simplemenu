@@ -107,9 +107,8 @@ int advanceSection(int showLogo) {
 		showConsole();
 	}
 	refreshScreen();
-	#endif
-	#ifdef TARGET_BITTBOY
-	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
+	#else
+	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		displayBackgroundPicture();
 		showConsole();
 		refreshScreen();
@@ -133,9 +132,8 @@ int rewindSection(int showLogo) {
 		displayBackgroundPicture();
 		showConsole();
 	}
-	#endif
-	#ifdef TARGET_BITTBOY
-	if (fullscreenMode&&currentSectionNumber!=favoritesSectionNumber) {
+	#else
+	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		displayBackgroundPicture();
 		showConsole();
 		refreshScreen();
@@ -219,6 +217,9 @@ void advancePage(struct Rom *rom) {
 	}
 //	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
+//	showCurrentGames(CURRENT_SECTION.realCurrentGameNumber,CURRENT_SECTION.realCurrentGameNumber+10);
+	cleanListForSection(&CURRENT_SECTION);
+	loadGameList(1);
 }
 
 void rewindPage(struct Rom *rom) {
@@ -552,9 +553,19 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==DEFAULT_OPTION) {
 			char command [300];
 			if (shutDownEnabled) {
+				#ifdef TARGET_BITTBOY
+				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh");
+				#endif
+				#ifdef TARGET_RG350
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
+				#endif
 			} else {
+				#ifdef TARGET_BITTBOY
+				snprintf(command,sizeof(command),"cp scripts/autoexec.sh /mnt");
+				#endif
+				#ifdef TARGET_RG350
 				snprintf(command,sizeof(command),"cp scripts/frontend_start /usr/local/sbin/");
+				#endif
 			}
 			int ret = system(command);
 			if (ret==-1) {

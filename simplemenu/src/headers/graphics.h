@@ -40,4 +40,15 @@ void drawTextOnHeaderWithColor(char *text, int txtColor[]);
 void drawShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[], int txtBackgroundColor[]);
 void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]);
 void drawTextOnFooterWithColor(const char text[64], int txtColor[]);
+void displayImageOnScreenTraditional(char *fileName, char *fallBackText);
+void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText);
+void freeFonts();
+void freeSettingsFonts();
+void initializeSettingsFonts();
+void drawTextOnSettingsFooterWithColor(const char text[64], int txtColor[]);
+void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]);
+void drawShadedGameNameOnScreenLeft(char *buf, int position);
+void drawNonShadedGameNameOnScreenLeft(char *buf, int position);
+void drawShadedGameNameOnScreenCenter(char *buf, int position);
+void drawNonShadedGameNameOnScreenCenter(char *buf, int position);
 #endif

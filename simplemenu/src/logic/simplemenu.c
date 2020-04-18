@@ -12,6 +12,7 @@
 #include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/graphics.h"
 #include "../headers/system_logic.h"
 #include "../headers/doubly_linked_rom_list.h"
 

@@ -3,6 +3,21 @@
 #include <string.h>
 #include "../headers/globals.h"
 
+int sortStringArray (const void *lhs, const void *rhs)
+{
+	char temp0[300];
+	char temp1[300];
+	strcpy (temp0,*(const char**)lhs);
+	strcpy (temp1,*(const char**)rhs);
+	for(int i=0;temp0[i]; i++) {
+		temp0[i] = tolower(temp0[i]);
+	}
+	for(int i=0;temp1[i]; i++) {
+		temp1[i] = tolower(temp1[i]);
+	}
+	return strcmp(temp0, temp1);
+}
+
 char *replaceWord(const char *s, const char *oldW, const char *newW) {
     char *result;
     int i, cnt = 0;
