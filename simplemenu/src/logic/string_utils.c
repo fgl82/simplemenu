@@ -91,7 +91,8 @@ char *getNameWithoutExtension(char *fileName) {
 }
 
 char *getNameWithoutPath(char *fileName) {
-	if (strstr(fileName," / ")!=NULL) {
+	//Adding special case for certain alias
+	if (strstr(fileName," / ")!=NULL||strstr(fileName,",")!=NULL) {
 		return strdup(fileName);
 	}
 	char *e;
