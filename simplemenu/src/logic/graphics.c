@@ -130,7 +130,7 @@ void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 		color[1]= 100;
 		color[2]= 255;
 	}
-//	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
+	//	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
 	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 }
@@ -150,7 +150,7 @@ void drawPictureTextOnScreen(char *buf) {
 	}
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
-//	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+	//	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
@@ -275,7 +275,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	rectangleDest.h = h;
 	rectangleDest.x = x;
 	rectangleDest.y = y;
-//	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+	//	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
 	SDL_FreeSurface(transparentrectangle);
 }
@@ -343,37 +343,11 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, i
 void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 	SDL_Surface *img = IMG_Load(fileName);
 	SDL_Surface *img1 = IMG_Load(CURRENT_SECTION.systemPicture);
-	int color[3];
-	color[0] = CURRENT_SECTION.bodyBackgroundColor[0]-30;
-	color[1] = CURRENT_SECTION.bodyBackgroundColor[1]-30;
-	color[2] = CURRENT_SECTION.bodyBackgroundColor[2]-30;
+	int rightRectangleColor[3] = {80, 80, 80};
 
-	if (color[0]<0) {
-		color[0]=0;
-	}
-	if (color[1]<0) {
-		color[1]=0;
-	}
-	if (color[2]<0) {
-		color[2]=0;
-	}
-	int color1[3];
-	color1[0] = 80;
-	color1[1] = 80;
-	color1[2] = 80;
-	if (color1[0]<0) {
-		color1[0]=0;
-	}
-	if (color1[1]<0) {
-		color1[1]=0;
-	}
-	if (color1[2]<0) {
-		color1[2]=0;
-	}
+	drawTransparentRectangleToScreen(SCREEN_WIDTH/5*2+calculateProportionalSizeOrDistance(1),SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2-calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(22),rightRectangleColor,60);
 
-	drawTransparentRectangleToScreen(SCREEN_WIDTH/5*2+calculateProportionalSizeOrDistance(1),SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-SCREEN_WIDTH/5*2-calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(22),color1,60);
-
-  if (img1!=NULL) {
+	if (img1!=NULL) {
 		double w1 = img1->w;
 		double h1 = img1->h;
 		double ratio1 = 0;  // Used for aspect ratio
@@ -389,9 +363,10 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 		}
 		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(168)-h1/2, 0, 0, w1, h1, 0, smoothing);
 	}
-//	if(img==NULL) {
-//		img = IMG_Load(nopic);
-//	}
+	//	if(img==NULL) {
+	//		img = IMG_Load(nopic);
+	//	}
+
 	if (img!=NULL) {
 		double w = img->w;
 		double h = img->h;
@@ -418,7 +393,7 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 			smoothing=1;
 		}
 		drawRectangleOnScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(leftPos)-((w+calculateProportionalSizeOrDistance(4))/2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
-		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance(26),color1,125);
+		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
 		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
 	}
 }
@@ -426,35 +401,9 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 	SDL_Surface *img = IMG_Load(fileName);
 	SDL_Surface *img1 = IMG_Load(CURRENT_SECTION.systemPicture);
-	int color[3];
-	color[0] = CURRENT_SECTION.bodyBackgroundColor[0]-30;
-	color[1] = CURRENT_SECTION.bodyBackgroundColor[1]-30;
-	color[2] = CURRENT_SECTION.bodyBackgroundColor[2]-30;
+	int rightRectangleColor[3] = {80, 80, 80};
 
-	if (color[0]<0) {
-		color[0]=0;
-	}
-	if (color[1]<0) {
-		color[1]=0;
-	}
-	if (color[2]<0) {
-		color[2]=0;
-	}
-	int color1[3];
-	color1[0] = 80;
-	color1[1] = 80;
-	color1[2] = 80;
-	if (color1[0]<0) {
-		color1[0]=0;
-	}
-	if (color1[1]<0) {
-		color1[1]=0;
-	}
-	if (color1[2]<0) {
-		color1[2]=0;
-	}
-
-	drawTransparentRectangleToScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/14)*2,SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance((22*fontSize)/14),color1,60);
+	drawTransparentRectangleToScreen(SCREEN_WIDTH/3,SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/14)*2,SCREEN_WIDTH-SCREEN_WIDTH/3,calculateProportionalSizeOrDistance((22*fontSize)/14),rightRectangleColor,60);
 
 	if (img1!=NULL) {
 		double w1 = img1->w;
@@ -472,9 +421,9 @@ void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 		}
 		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(266)-(w1/2), calculateProportionalSizeOrDistance(158)-h1/2, 0, 0, w1, h1, 0, smoothing);
 	}
-//	if(img==NULL) {
-//		img = IMG_Load(nopic);22
-//	}
+	//	if(img==NULL) {
+	//		img = IMG_Load(nopic);22
+	//	}
 	if (img!=NULL) {
 		double w = img->w;
 		double h = img->h;
@@ -501,8 +450,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 			smoothing=1;
 		}
 		drawRectangleOnScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(leftPos)-((w+calculateProportionalSizeOrDistance(4))/2), calculateProportionalSizeOrDistance((24*fontSize)/14),CURRENT_SECTION.headerAndFooterBackgroundColor);
-		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance((26*fontSize)/14),color1,125);
-		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance((26*fontSize)/14), 0, 0, w, h, 0, smoothing);
+		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance((27*fontSize)/14),rightRectangleColor,125);
+		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance((27*fontSize)/14), 0, 0, w, h, 0, smoothing);
 	}
 }
 
@@ -532,10 +481,10 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 				w = SCREEN_WIDTH;
 				h = w*ratio;
 			}
-//			if (strstr(fileName,CURRENT_SECTION.consolePicture)) {
-//				w=calculateProportionalSizeOrDistance(img->w);
-//				h=w*ratio;
-//			}
+			//			if (strstr(fileName,CURRENT_SECTION.consolePicture)) {
+			//				w=calculateProportionalSizeOrDistance(img->w);
+			//				h=w*ratio;
+			//			}
 			if ((int)h!=(int)img->h) {
 				smoothing = 1;
 			}
@@ -619,11 +568,11 @@ void freeResources() {
 	//    pthread_mutex_destroy(&lock);
 	freeFonts();
 	TTF_Quit();
-	#ifdef TARGET_RG350
+#ifdef TARGET_RG350
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
-	#endif
+#endif
 	SDL_Quit();
 }
