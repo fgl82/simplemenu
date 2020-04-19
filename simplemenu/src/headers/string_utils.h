@@ -12,4 +12,5 @@ void stripGameName(char *gameName);
 void stripGameNameLeaveExtension(char *gameName);
 char *getGameName(char *gameName);
 int sortStringArray (const void *lhs, const void *rhs);
+char *getAliasWithoutAlternateNameOrParenthesis(char *fileName);
 #endif

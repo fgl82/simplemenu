@@ -297,6 +297,9 @@ void displayGamePicture(struct Rom *rom) {
 				displayName=getFileNameOrAlias(rom);
 			}
 			if (rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
+				if (stripGames) {
+					strcpy(displayName,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+				}
 				drawPictureTextOnScreen(displayName);
 			} else {
 				if (currentSectionNumber==favoritesSectionNumber) {
@@ -465,8 +468,10 @@ void drawGameList() {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
 			strcpy(nameWithoutExtension,rom->alias);
 			if(stripGames) {
-				stripGameName(nameWithoutExtension);
+				strcpy(nameWithoutExtension,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+//				stripGameNameLeaveExtension(nameWithoutExtension);
 			}
+			strcat(nameWithoutExtension,"\0");
 		} else {
 			nameWithoutExtension=malloc(strlen(rom->name)+1);
 			strcpy(nameWithoutExtension,rom->name);

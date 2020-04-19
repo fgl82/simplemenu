@@ -100,7 +100,7 @@ char *getRomRealName(char *romName) {
 		return(nameTakenFromAlias);
 	} else {
 		char *dup=strdup(romName);
-		stripGameNameLeaveExtension(dup);
+		stripGameName(dup);
 		return(dup);
 	}
 	if(strippedNameWithoutExtension != NULL) {
@@ -352,30 +352,36 @@ struct Node *split(struct Node *head)
 
 struct Node *merge(struct Node *first, struct Node *second)
 {
-	if (!second) {
-		return first;
-	}
-
 	if (!first) {
 		return second;
 	}
 
-	char s1Alias[300];
-	strcpy(s1Alias,first->data->alias);
+	if (!second) {
+		return first;
+	}
 
+
+	char s1Alias[300];
+	if(first->data->alias!=NULL&&strlen(first->data->alias)>2) {
+		strcpy(s1Alias,first->data->alias);
+	} else {
+		strcpy(s1Alias,first->data->name);
+	}
 	char s2Alias[300];
-	strcpy(s2Alias,second->data->alias);
+	if(second->data->alias!=NULL&&strlen(second->data->alias)>2) {
+		strcpy(s2Alias,second->data->alias);
+	} else {
+		strcpy(s2Alias,second->data->name);
+	}
 
 //	if(strstr(first->data->name,"pwr")!=NULL) {
 //		printf("2- %s\n",s1Alias);
 //	}
-
-	char * noPathS1Alias=getNameWithoutPath(s1Alias);
-	char * noPathS2Alias=getNameWithoutPath(s2Alias);
+	char * noPathS1Alias=strdup(s1Alias);
+	char * noPathS2Alias=strdup(s2Alias);
 //	printf("%s vs %s\n",noPathS1Alias, noPathS2Alias);
 //	stripGameName(noPathS1Alias);
-
-	stripGameName(noPathS2Alias);
+//	stripGameName(noPathS2Alias);
 
 	for(int i=0;i<strlen(noPathS1Alias);i++) {
 		noPathS1Alias[i]=tolower(noPathS1Alias[i]);

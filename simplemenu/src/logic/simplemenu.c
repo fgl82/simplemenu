@@ -3,18 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
-#include <pthread.h>
+
 #include "../headers/config.h"
 #include "../headers/control.h"
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
+#include "../headers/graphics.h"
 #include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
-#include "../headers/graphics.h"
+#include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
-#include "../headers/doubly_linked_rom_list.h"
 
 
 void initializeGlobals() {
@@ -70,6 +69,8 @@ void sig_term_handler(int signum)
 //}
 
 int main(int argc, char* argv[]) {
+//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
+//	exit(0);
 	//	testSectionLoad();
 	//	exit(0);
 	//	lastChargeLevel = getBatteryLevel();

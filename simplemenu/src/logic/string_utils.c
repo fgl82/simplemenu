@@ -90,9 +90,36 @@ char *getNameWithoutExtension(char *fileName) {
 	return retstr;
 }
 
+
+char *getAliasWithoutAlternateNameOrParenthesis(char *fileName) {
+	char *retstr;
+	char *firstslash;
+	char *firstParenthesis;
+	retstr = malloc(strlen (fileName) + 1);
+	strcpy (retstr, fileName);
+	firstParenthesis = strrchr (retstr, '(');
+	if (firstParenthesis != NULL) {
+		*firstParenthesis = '\0';
+		if(*(firstParenthesis-1)==' ') {
+			*(firstParenthesis-1)='\0';
+		}
+	}
+	firstslash = strrchr (retstr, '/');
+	while (firstslash != NULL) {
+		if (firstParenthesis==NULL||firstslash<firstParenthesis) {
+			*firstslash = '\0';
+			if(*(firstslash-1)==' ') {
+				*(firstslash-1)='\0';
+			}
+		}
+		firstslash = strrchr (retstr, '/');
+	}
+	return retstr;
+}
+
 char *getNameWithoutPath(char *fileName) {
 	//Adding special case for certain alias
-	if (strstr(fileName," / ")!=NULL||strstr(fileName,",")!=NULL) {
+	if (strstr(fileName," / ")!=NULL) {
 		return strdup(fileName);
 	}
 	char *e;
