@@ -218,8 +218,6 @@ void advancePage(struct Rom *rom) {
 //	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 //	showCurrentGames(CURRENT_SECTION.realCurrentGameNumber,CURRENT_SECTION.realCurrentGameNumber+10);
-	cleanListForSection(&CURRENT_SECTION);
-	loadGameList(1);
 }
 
 void rewindPage(struct Rom *rom) {
@@ -556,12 +554,18 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh");
 				#endif
+				#ifdef TARGET_RG300
+				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh");
+				#endif
 				#ifdef TARGET_RG350
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
 				#endif
 			} else {
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"cp scripts/autoexec.sh /mnt");
+				#endif
+				#ifdef TARGET_RG300
+				snprintf(command,sizeof(command),"cp scripts/autoexec.sh /home/retrofw/autoexec.sh");
 				#endif
 				#ifdef TARGET_RG350
 				snprintf(command,sizeof(command),"cp scripts/frontend_start /usr/local/sbin/");

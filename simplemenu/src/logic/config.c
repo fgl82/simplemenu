@@ -44,6 +44,9 @@ void checkIfDefault() {
 	#ifdef TARGET_BITTBOY
 	fp = fopen("/mnt/autoexec.sh", "r");
 	#endif
+	#ifdef TARGET_RG300
+	fp = fopen("/home/retrofw/autoexec.sh", "r");
+	#endif
 	#ifdef TARGET_RG350
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	#endif
@@ -342,7 +345,7 @@ void loadConfig() {
 	OC_NO=atoi(value);
 
 	value = ini_get(config, "CPU", "overclocked_speed");
-	OC_NO=atoi(value);
+	OC_OC=atoi(value);
 
 	value = ini_get(config, "CPU", "sleep_speed");
 	OC_SLEEP=atoi(value);

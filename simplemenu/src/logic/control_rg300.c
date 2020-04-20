@@ -6,6 +6,7 @@
 #include "../headers/graphics.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/system_logic.h"
 
 int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
@@ -75,7 +76,6 @@ int performAction(struct Rom *rom) {
 		}
 		if(keys[BTN_RIGHT]) {
 			hotKeyPressed=0;
-			currentlySectionSwitching=1;
 			int advanced = advanceSection(0);
 			if(advanced) {
 				loadGameList(0);
@@ -88,7 +88,6 @@ int performAction(struct Rom *rom) {
 		}
 		if(keys[BTN_LEFT]) {
 			hotKeyPressed=0;
-			currentlySectionSwitching=1;
 			int rewinded = rewindSection(0);
 			if(rewinded) {
 				loadGameList(0);

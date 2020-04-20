@@ -708,7 +708,6 @@ void loadGameList(int refresh) {
 								realItemCount++;
 								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2;// " -m "
 								int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
-
 								struct Rom *rom;
 								rom=malloc(sizeof(struct Rom));
 								rom->name=malloc(size);
@@ -723,12 +722,22 @@ void loadGameList(int refresh) {
 										game = 0;
 									}
 								}
-
+								#ifdef TARGET_RG300
+								if(strstr(desktopFiles[desktopCounter].name,"default")==NULL) {
+									strcpy(rom->name,"-m|");
+									strcat(rom->name,desktopFiles[desktopCounter].name);
+									strcat(rom->name,"|");
+								} else {
+									strcpy(rom->name,desktopFiles[desktopCounter].parentOPK);
+									strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
+								}
+								#else
 								strcpy(rom->name,"-m|");
 								strcat(rom->name,desktopFiles[desktopCounter].name);
 								strcat(rom->name,"|");
 								strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
+								#endif
 								InsertAtTail(rom);
 								game++;
 								CURRENT_SECTION.gameCount++;
