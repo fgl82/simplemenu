@@ -522,6 +522,7 @@ void initializeDisplay() {
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 
+	#ifdef TARGET_RG300
 //	ipu modes (/proc/jz/ipu):
 //	0: stretch
 //	1: aspect
@@ -530,6 +531,8 @@ void initializeDisplay() {
 	FILE *fp = fopen("/proc/jz/ipu","w");
 	fprintf(fp,"3");
 	fclose(fp);
+	#endif
+
 	TTF_Init();
 }
 
@@ -544,7 +547,7 @@ void initializeSettingsFonts() {
 }
 
 void initializeFonts() {
-//	TTF_Init();
+	TTF_Init();
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
