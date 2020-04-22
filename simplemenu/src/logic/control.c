@@ -146,7 +146,7 @@ int rewindSection(int showLogo) {
 }
 
 void launchGame(struct Rom *rom) {
-	FILE *file;
+	FILE *file=NULL;
 	char error[3000];
 	char tempExec[3000];
 	if (favoritesSectionSelected && favoritesSize > 0) {
@@ -552,28 +552,28 @@ void performSettingsChoosingAction() {
 			char command [300];
 			if (shutDownEnabled) {
 				#ifdef TARGET_BITTBOY
-				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh");
+				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh;mv /mnt/autoexec.sh.bck /mnt/autoexec.sh");
 				#endif
 				#ifdef TARGET_RG300
-				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh");
+				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
 				#ifdef TARGET_RG350
-				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start");
+				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
 			} else {
 				#ifdef TARGET_BITTBOY
-				snprintf(command,sizeof(command),"cp scripts/autoexec.sh /mnt");
+				snprintf(command,sizeof(command),"mv /mnt/autoexec.sh /mnt/autoexec.sh.bck;cp scripts/autoexec.sh /mnt");
 				#endif
 				#ifdef TARGET_RG300
-				snprintf(command,sizeof(command),"cp scripts/autoexec.sh /home/retrofw/autoexec.sh");
+				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
 				#ifdef TARGET_RG350
-				snprintf(command,sizeof(command),"cp scripts/frontend_start /usr/local/sbin/");
+				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
 				#endif
 			}
 			int ret = system(command);
 			if (ret==-1) {
-				generateError("THERE WAS AN ERROR", 0);
+//				generateError("THERE WAS AN ERROR", 0);
 			}
 			shutDownEnabled=1+shutDownEnabled*-1;
 		}
@@ -581,7 +581,7 @@ void performSettingsChoosingAction() {
 		running=0;
 	} else if (keys[BTN_START]) {
 		if (currentlyChoosing) {
-			freeSettingsFonts();
+//			freeSettingsFonts();
 			currentlyChoosing=0;
 		}
 	}

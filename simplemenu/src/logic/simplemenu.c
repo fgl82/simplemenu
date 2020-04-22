@@ -128,6 +128,7 @@ int main(int argc, char* argv[]) {
 	}
 	freeFonts();
 	initializeFonts();
+	initializeSettingsFonts();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
 	initSuspendTimer();
 	#endif

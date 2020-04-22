@@ -283,7 +283,7 @@ int checkIfEmulatorExists(char *path, char *executable) {
 }
 
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
-	char states[200]="";
+	char states[2000]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
 		char tempString[200]="";
 		snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
@@ -296,17 +296,19 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
-
-#ifndef TARGET_PC
+	
+	#ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
+	clearPicModeHideLogoTimer();
+	clearPicModeHideMenuTimer();
 	freeResources();
 	setCPU(currentCPU);
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-#else
-	printf("%s%s -> %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
+	#else
+	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
 	loadLastState();
-#endif
+	#endif
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
@@ -463,7 +465,10 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	DIR * d;
 	d = opendir (directory);
 	if (d==NULL) {
+//		printf("%s was null\n",directory);
 		return 0;
+	} else {
+//		printf("%s was NOT null\n",directory);
 	}
 	while (1) {
 		struct dirent *entry;
@@ -473,6 +478,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 			break;
 		}
 		d_name = entry->d_name;
+//		printf("%d %s\n", entry->d_type, entry->d_name);
 		if (entry->d_type & DT_DIR) {
 			if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
@@ -670,19 +676,22 @@ void loadGameList(int refresh) {
 		CURRENT_SECTION.gameCount=0;
 		char *files[MAX_GAMES_IN_SECTION];
 		int game = -1;
-		int dirCounter;
+		int dirCounter=0;
 		char *dirs[10];
-		char* ptr;
-		char dirsCopy[1000];
+		char* ptr=NULL;
+		char *dirsCopy=malloc(strlen(CURRENT_SECTION.filesDirectories)+1);
 		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
 		ptr = strtok(dirsCopy, ",");
 		loading=1;
+		printf("---------\n");
 		while (ptr!=NULL) {
+			printf("point %s\n",ptr);
 			dirs[dirCounter]=malloc(strlen(ptr)+1);
 			strcpy(dirs[dirCounter],ptr);
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
+		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			int realItemCount = n;

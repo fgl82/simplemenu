@@ -738,7 +738,6 @@ void updateScreen(struct Rom *rom) {
 			displayGamePictureInMenu(rom);
 		}
 		if (currentlyChoosing==3) {
-			initializeSettingsFonts();
 			drawSettingsScreen();
 		} else if (currentlyChoosing==2) {
 			showCurrentGroup();

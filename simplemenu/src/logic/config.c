@@ -40,20 +40,43 @@ void loadAliasList(int sectionNumber) {
 }
 
 void checkIfDefault() {
-	FILE * fp=NULL;
+	FILE *fp=NULL;
+	FILE *fpScripts=NULL;
 	#ifdef TARGET_BITTBOY
 	fp = fopen("/mnt/autoexec.sh", "r");
+	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
 	#ifdef TARGET_RG300
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
+	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
 	#ifdef TARGET_RG350
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
+	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
-	shutDownEnabled=0;
+	shutDownEnabled=1;
+	int sameFile=1;
+	int c1, c2;
+	if (fp==NULL) {
+		shutDownEnabled=0;
+		return;
+	}
+	c1 = getc(fp);
+	c2 = getc(fpScripts);
+	while (sameFile && c1 != EOF && c2 != EOF) {
+		if (c1 != c2) {
+			sameFile=0;
+			shutDownEnabled=0;
+			break;
+		}
+		c1 = getc(fp);
+		c2 = getc(fpScripts);
+	}
 	if (fp!=NULL) {
-		shutDownEnabled=1;
 		fclose(fp);
+	}
+	if (fpScripts!=NULL) {
+		fclose(fpScripts);
 	}
 }
 

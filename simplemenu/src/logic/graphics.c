@@ -29,7 +29,11 @@ TTF_Font *settingsHeaderFont = NULL;
 TTF_Font *settingsFooterFont = NULL;
 
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
-	SDL_Color c= { r, g, b };
+	SDL_Color c;
+	c.r = r;
+	c.g = g;
+	c.b = b;
+	c.unused = 1;
 	return c;
 }
 
@@ -517,6 +521,15 @@ void initializeDisplay() {
 	}
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+
+//	ipu modes (/proc/jz/ipu):
+//	0: stretch
+//	1: aspect
+//	2: original (fallback to aspect when downscale is needed)
+//	3: 4:3
+	FILE *fp = fopen("/proc/jz/ipu","w");
+	fprintf(fp,"3");
+	fclose(fp);
 	TTF_Init();
 }
 
@@ -531,6 +544,7 @@ void initializeSettingsFonts() {
 }
 
 void initializeFonts() {
+//	TTF_Init();
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
@@ -567,12 +581,13 @@ void freeResources() {
 	//    pthread_join(clockThread, NULL);
 	//    pthread_mutex_destroy(&lock);
 	freeFonts();
+	freeSettingsFonts();
 	TTF_Quit();
-#ifdef TARGET_RG350
+	#ifdef TARGET_RG350
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
-#endif
+	#endif
 	SDL_Quit();
 }
