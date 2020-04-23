@@ -23,15 +23,6 @@
 #include "../headers/doubly_linked_rom_list.h"
 
 
-void writeLog (char *line) {
-#ifdef LOG_ON
-	FILE *f;
-	f = fopen("log.txt", "a");
-	fprintf(f, "%s\n", line);
-	fclose(f);
-#endif
-}
-
 FILE *getCurrentSectionAliasFile() {
 	FILE *aliasFile;
 	aliasFile = fopen(CURRENT_SECTION.aliasFileName, "r");
@@ -385,11 +376,11 @@ struct Node *merge(struct Node *first, struct Node *second)
 //	stripGameName(noPathS1Alias);
 //	stripGameName(noPathS2Alias);
 
-	for(int i=0;i<strlen(noPathS1Alias);i++) {
+	for(unsigned int i=0;i<strlen(noPathS1Alias);i++) {
 		noPathS1Alias[i]=tolower(noPathS1Alias[i]);
 	}
 
-	for(int i=0;i<strlen(noPathS2Alias);i++) {
+	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
 		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
 	}
 
@@ -683,9 +674,7 @@ void loadGameList(int refresh) {
 		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
 		ptr = strtok(dirsCopy, ",");
 		loading=1;
-		printf("---------\n");
 		while (ptr!=NULL) {
-			printf("point %s\n",ptr);
 			dirs[dirCounter]=malloc(strlen(ptr)+1);
 			strcpy(dirs[dirCounter],ptr);
 			ptr = strtok(NULL, ",");

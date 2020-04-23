@@ -370,16 +370,16 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
 		if (MENU_ITEMS_PER_PAGE==12) {
-			displayImageOnScreenTraditional(pictureWithFullPath, tempDisplayName);
+			displayImageOnScreenTraditional(pictureWithFullPath);
 		} else {
-			displayImageOnScreenDrunkenMonkey(pictureWithFullPath, tempDisplayName);
+			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		}
 		free(tempDisplayName);
 	} else {
 		if (MENU_ITEMS_PER_PAGE==12) {
-			displayImageOnScreenTraditional(pictureWithFullPath, tempGameName);
+			displayImageOnScreenTraditional(pictureWithFullPath);
 		} else {
-			displayImageOnScreenDrunkenMonkey(pictureWithFullPath, tempGameName);
+			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		}
 	}
 	free(pictureWithFullPath);
@@ -772,7 +772,7 @@ void clearPicModeHideMenuTimer() {
 	picModeHideMenuTimer = NULL;
 }
 
-uint32_t hideFullScreenModeMenu(uint32_t interval, void *param) {
+uint32_t hideFullScreenModeMenu() {
 	if(!hotKeyPressed) {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
@@ -798,7 +798,7 @@ void clearPicModeHideLogoTimer() {
 	picModeHideLogoTimer = NULL;
 }
 
-uint32_t hidePicModeLogo(uint32_t interval, void *param) {
+uint32_t hidePicModeLogo() {
 //	while(loading) {
 //	}
 	clearPicModeHideLogoTimer();

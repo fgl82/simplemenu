@@ -37,9 +37,6 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	return c;
 }
 
-int calculateInverseProportionalSizeOrDistance (int number) {
-	return (SCREEN_HEIGHT*240)/SCREEN_HEIGHT;
-}
 int calculateProportionalSizeOrDistance(int number) {
 	return (SCREEN_HEIGHT*number)/240;
 	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
@@ -284,7 +281,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	SDL_FreeSurface(transparentrectangle);
 }
 
-int drawImage1(SDL_Surface* display, SDL_Surface *image, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
@@ -314,7 +311,7 @@ int drawImage1(SDL_Surface* display, SDL_Surface *image, const char * filename, 
 	return 1;
 }
 
-int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
@@ -344,7 +341,7 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, const char * filename, i
 	return 1;
 }
 
-void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
+void displayImageOnScreenTraditional(char *fileName) {
 	SDL_Surface *img = IMG_Load(fileName);
 	SDL_Surface *img1 = IMG_Load(CURRENT_SECTION.systemPicture);
 	int rightRectangleColor[3] = {80, 80, 80};
@@ -365,7 +362,7 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 			h1 = w1*ratio1;
 			smoothing = 1;
 		}
-		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(168)-h1/2, 0, 0, w1, h1, 0, smoothing);
+		drawImage1(screen, img1, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(168)-h1/2, 0, 0, w1, h1, 0, smoothing);
 	}
 	//	if(img==NULL) {
 	//		img = IMG_Load(nopic);
@@ -398,11 +395,11 @@ void displayImageOnScreenTraditional(char *fileName, char *fallBackText) {
 		}
 		drawRectangleOnScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(leftPos)-((w+calculateProportionalSizeOrDistance(4))/2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
 		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
-		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
+		drawImage(screen, img, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
 	}
 }
 
-void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
+void displayImageOnScreenDrunkenMonkey(char *fileName) {
 	SDL_Surface *img = IMG_Load(fileName);
 	SDL_Surface *img1 = IMG_Load(CURRENT_SECTION.systemPicture);
 	int rightRectangleColor[3] = {80, 80, 80};
@@ -423,7 +420,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 			h1 = w1*ratio1;
 			smoothing = 1;
 		}
-		drawImage1(screen, img1, CURRENT_SECTION.systemPicture, calculateProportionalSizeOrDistance(266)-(w1/2), calculateProportionalSizeOrDistance(158)-h1/2, 0, 0, w1, h1, 0, smoothing);
+		drawImage1(screen, img1, calculateProportionalSizeOrDistance(266)-(w1/2), calculateProportionalSizeOrDistance(158)-h1/2, 0, 0, w1, h1, 0, smoothing);
 	}
 	//	if(img==NULL) {
 	//		img = IMG_Load(nopic);22
@@ -455,7 +452,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName, char *fallBackText) {
 		}
 		drawRectangleOnScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(leftPos)-((w+calculateProportionalSizeOrDistance(4))/2), calculateProportionalSizeOrDistance((24*fontSize)/14),CURRENT_SECTION.headerAndFooterBackgroundColor);
 		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(leftPos)-(w/2),calculateProportionalSizeOrDistance((27*fontSize)/14),rightRectangleColor,125);
-		drawImage1(screen, img, fileName, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance((27*fontSize)/14), 0, 0, w, h, 0, smoothing);
+		drawImage1(screen, img, calculateProportionalSizeOrDistance(leftPos)-(w/2), calculateProportionalSizeOrDistance((27*fontSize)/14), 0, 0, w, h, 0, smoothing);
 	}
 }
 
@@ -492,7 +489,7 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 			if ((int)h!=(int)img->h) {
 				smoothing = 1;
 			}
-			drawImage(screen, img, fileName, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
+			drawImage(screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 		}
 	}
 }

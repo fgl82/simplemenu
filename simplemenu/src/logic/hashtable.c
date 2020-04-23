@@ -35,7 +35,7 @@ hashtable_t *ht_create( int size ) {
 int ht_hash( hashtable_t *hashtable, char *key ) {
 
 	unsigned long int hashval=5381;
-	int i = 0;
+	unsigned int i = 0;
 
 	/* Convert our string to an integer */
 	while( hashval < ULONG_MAX && i < strlen( key ) ) {

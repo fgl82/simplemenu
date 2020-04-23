@@ -1,10 +1,10 @@
 # Software Name
 TARGET = simplemenu
 #PLATFORM = BITTBOY
-#PLATFORM = RG-300
+PLATFORM = RG-300
 #PLATFORM = RG-350
 #PLATFORM = NPG
-PLATFORM = PC
+#PLATFORM = PC
 
 # Compiler
 
@@ -16,8 +16,8 @@ ifeq ($(PLATFORM), BITTBOY)
 else ifeq ($(PLATFORM), RG-300)
 	CC = /opt/new-toolchain/usr/bin/mipsel-linux-gcc
 	LINKER = /opt/new-toolchain/usr/bin/mipsel-linux-gcc
-	CFLAGS = -DTARGET_RG300 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lpng -ljpeg -lSDL_ttf -lpthread -lfreetype -lz -lbz2
+	CFLAGS = -DTARGET_RG300 -DUSE_GZIP -ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz 
 else ifeq ($(PLATFORM), RG-350)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
@@ -39,6 +39,7 @@ endif
 CFLAGS +=  -I.
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
+#DEBUG=YES
 ifeq ($(DEBUG), YES)
 	CFLAGS +=  -DDEBUG -g3
 else

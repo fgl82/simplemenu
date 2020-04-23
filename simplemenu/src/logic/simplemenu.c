@@ -47,6 +47,9 @@ void resetFrameBuffer () {
 
 void sig_term_handler(int signum)
 {
+	if (signum==1) {
+
+	}
 	running=0;
 }
 
@@ -68,7 +71,7 @@ void sig_term_handler(int signum)
 //	printf("pepe\n");
 //}
 
-int main(int argc, char* argv[]) {
+int main() {
 //	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
 //	exit(0);
 	//	testSectionLoad();

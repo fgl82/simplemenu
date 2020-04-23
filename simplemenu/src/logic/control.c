@@ -189,6 +189,9 @@ void launchEmulator(struct Rom *rom) {
 }
 
 void advancePage(struct Rom *rom) {
+	if (rom==NULL||rom->name==NULL) {
+		return;
+	}
 	if(CURRENT_SECTION.currentPage<=CURRENT_SECTION.totalPages) {
 		if (CURRENT_SECTION.alphabeticalPaging) {
 			char *currentGame = getFileNameOrAlias(CURRENT_SECTION.currentGameNode->data);

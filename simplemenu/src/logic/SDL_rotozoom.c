@@ -901,11 +901,12 @@ void _rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx,
 	double x, y, cx, cy, sx, sy;
 	double radangle;
 	int dstwidthhalf, dstheighthalf;
-
+	int unusedVar=zoomy;
+	unusedVar=0;
 	/*
 	* Determine destination width and height by rotating a centered source box
 	*/
-	radangle = angle * (M_PI / 180.0);
+	radangle = angle * (M_PI / 180.0)+unusedVar;
 	*sanglezoom = sin(radangle);
 	*canglezoom = cos(radangle);
 	*sanglezoom *= zoomx;
