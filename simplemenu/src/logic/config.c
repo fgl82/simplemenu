@@ -634,7 +634,7 @@ void loadLastState() {
 		}
 		if (savedVersion==-1) {
 			savedVersion=atoi(configurations[0]);
-			if(savedVersion!=53) {
+			if(savedVersion!=54) {
 				saveLastState();
 				fclose(fp);
 				if (line) {
