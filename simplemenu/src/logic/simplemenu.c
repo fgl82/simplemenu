@@ -173,7 +173,7 @@ int main() {
 				} else {
 					updateScreen(NULL);
 				}
-			} else if (getEventType()==getKeyUp()) {
+			} else if (getEventType()==getKeyUp()&&!isUSBMode) {
 				if(getPressedKey()==BTN_B&&!currentlyChoosing) {
 					if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;

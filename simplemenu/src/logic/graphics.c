@@ -497,13 +497,13 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};
 	int black[3]={0, 0, 0};
-	displayImageOnScreen("./resources/usb.png","");
+	displayImageOnScreen("./usb.png","");
+	drawTextOnScreen(headerFont,163,27,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont,163,215,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont,163,31,"USB MODE",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,161,27,"USB MODE",white,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,163,217,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont,161,29,"USB MODE",white,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont,161,215,"PRESS START TO END",white,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,163,219,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(headerFont,161,217,"PRESS START TO END",white,VAlignMiddle | HAlignCenter);
 }
 
 void initializeDisplay() {
@@ -518,18 +518,6 @@ void initializeDisplay() {
 	}
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-
-	#ifdef TARGET_RG300
-//	ipu modes (/proc/jz/ipu):
-//	0: stretch
-//	1: aspect
-//	2: original (fallback to aspect when downscale is needed)
-//	3: 4:3
-	FILE *fp = fopen("/proc/jz/ipu","w");
-	fprintf(fp,"3");
-	fclose(fp);
-	#endif
-
 	TTF_Init();
 }
 

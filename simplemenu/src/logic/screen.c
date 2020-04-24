@@ -565,6 +565,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[THEME_OPTION]= malloc(100);
 	options[SCREEN_TIMEOUT_OPTION]= malloc(100);
 	options[DEFAULT_OPTION]= malloc(100);
+	options[USB_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
 	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
@@ -575,6 +576,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[THEME_OPTION]= malloc(2000);
 	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
 	values[DEFAULT_OPTION]= malloc(4);
+	values[USB_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(4);
 	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
 	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
@@ -585,6 +587,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[THEME_OPTION]= malloc(100);
 	hints[SCREEN_TIMEOUT_OPTION]= malloc(100);
 	hints[DEFAULT_OPTION]= malloc(100);
+	hints[USB_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
 	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
@@ -595,6 +598,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[THEME_OPTION],"Theme: ");
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
+	strcpy(options[USB_OPTION],"USB mode");
 	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
 	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
@@ -612,6 +616,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
 	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
+	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
 
 	if (shutDownEnabled) {
 		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
@@ -651,6 +656,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		strcpy(values[DEFAULT_OPTION],"NO");
 	}
 	strcpy(values[SHUTDOWN_OPTION],"\0");
+	strcpy(values[USB_OPTION],"\0");
 	if (autoHideLogos) {
 		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"YES");
 	} else {
@@ -668,13 +674,14 @@ void drawSettingsScreen() {
 	FULL_SCREEN_MENU_OPTION=6;
 	ITEMS_PER_PAGE_OPTION=7;
 	DEFAULT_OPTION=8;
+	USB_OPTION=9;
 
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
 
-	char *options[10];
-	char *values[10];
-	char *hints[10];
+	char *options[11];
+	char *values[11];
+	char *hints[11];
 
 	setOptionsAndValues(options, values, hints);
 
@@ -683,7 +690,7 @@ void drawSettingsScreen() {
 	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((14*29)/14);//CHANGE FIRST VALUE FOR FONT SIZE
-	for (int i=0;i<9;i++) {
+	for (int i=0;i<10;i++) {
 		char temp[300];
 		strcpy(temp,options[i]);
 		if(strlen(values[i])>0) {
@@ -703,6 +710,7 @@ void drawSettingsScreen() {
 	free(options[THEME_OPTION]);
 	free(options[SCREEN_TIMEOUT_OPTION]);
 	free(options[DEFAULT_OPTION]);
+	free(options[USB_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
 	free(options[ITEMS_PER_PAGE_OPTION]);
 
@@ -713,6 +721,7 @@ void drawSettingsScreen() {
 	free(values[SCREEN_TIMEOUT_OPTION]);
 	free(values[DEFAULT_OPTION]);
 	free(values[SHUTDOWN_OPTION]);
+	free(values[USB_OPTION]);
 	free(values[ITEMS_PER_PAGE_OPTION]);
 
 	free(hints[TIDY_ROMS_OPTION]);
@@ -721,6 +730,7 @@ void drawSettingsScreen() {
 	free(hints[THEME_OPTION]);
 	free(hints[SCREEN_TIMEOUT_OPTION]);
 	free(hints[DEFAULT_OPTION]);
+	free(hints[USB_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[ITEMS_PER_PAGE_OPTION]);
 

@@ -295,6 +295,16 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	clearPicModeHideMenuTimer();
 	freeResources();
 	setCPU(currentCPU);
+	#ifdef TARGET_RG300
+	//	ipu modes (/proc/jz/ipu):
+	//	0: stretch
+	//	1: aspect
+	//	2: original (fallback to aspect when downscale is needed)
+	//	3: 4:3
+	FILE *fp = fopen("/proc/jz/ipu","w");
+	fprintf(fp,CURRENT_SECTION.scaling);
+	fclose(fp);
+	#endif
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	#else
 	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);

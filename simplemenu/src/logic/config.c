@@ -108,11 +108,11 @@ void setRGBFromHex (int *rgbColor, const char *hexColor) {
 }
 
 
-void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet) {
+void setStringValueInSection(ini_t *config, char *sectionName, char *valueName, char *sectionValueToBeSet,char *fallback) {
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
 	if(value==NULL) {
-		strcpy(sectionValueToBeSet,"\0");
+		strcpy(sectionValueToBeSet,fallback);
 		return;
 	}
 	strcpy(sectionValueToBeSet,value);
@@ -473,8 +473,9 @@ int loadSections(char *file) {
 		menuSections[menuSectionCounter].executables[execCounter]=NULL;
 		menuSections[menuSectionCounter].activeExecutable=0;
 
-		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories);
-		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions);
+		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories,"\0");
+		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions,"\0");
+		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"3");
 		setRGBColorInSection(themeConfig, sectionName, "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "bodyBackground", menuSections[menuSectionCounter].bodyBackgroundColor);
@@ -496,7 +497,7 @@ int loadSections(char *file) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,"\0");
 		}
 
-		setStringValueInSection (config, sectionName, "category", menuSections[menuSectionCounter].category);
+		setStringValueInSection (config, sectionName, "category", menuSections[menuSectionCounter].category,"\0");
 
 		value = ini_get(config, sectionName, "onlyFileNamesNoPathOrExtension");
 		if(value!=NULL&&strcmp("yes",value)==0) {

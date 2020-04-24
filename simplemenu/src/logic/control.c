@@ -460,10 +460,10 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=8;
+			chosenSetting=9;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<8) {
+		if(chosenSetting<9) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -554,6 +554,8 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==DEFAULT_OPTION) {
 			char command [300];
 			if (shutDownEnabled) {
+//				char *homePath=malloc(1000);
+//				snprintf(homePath,sizeof(homePath),"%s",getenv("HOME"));
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh;mv /mnt/autoexec.sh.bck /mnt/autoexec.sh");
 				#endif
@@ -582,9 +584,17 @@ void performSettingsChoosingAction() {
 		}
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
+	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+		hotKeyPressed=0;
+		int returnedValue = system("./scripts/usb_mode_on.sh>/home/retrofw/apps/test.txt");
+		if (returnedValue==0) {
+			isUSBMode = 1;
+		} else {
+			generateError("USB MODE  NOT AVAILABLE",0);
+		}
+		currentlyChoosing=0;
 	} else if (keys[BTN_START]) {
 		if (currentlyChoosing) {
-//			freeSettingsFonts();
 			currentlyChoosing=0;
 		}
 	}

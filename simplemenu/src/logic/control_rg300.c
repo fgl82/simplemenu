@@ -9,6 +9,19 @@
 #include "../headers/system_logic.h"
 
 int performAction(struct Rom *rom) {
+	if (keys[BTN_START]&&isUSBMode) {
+		hotKeyPressed=0;
+		isUSBMode=0;
+		int ret = system("scripts/usb_mode_off.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		return 0;
+	} else {
+		if(isUSBMode) {
+			return 0;
+		}
+	}
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;

@@ -54,6 +54,7 @@ FLIST="${FLIST} $1/section_groups"
 FLIST="${FLIST} $1/themes"
 FLIST="${FLIST} invoker.dge"
 FLIST="${FLIST} simplemenu"
+FLIST="${FLIST} usb.png"
 FLIST="${FLIST} simplemenu.png"
 if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ]; then
     FLIST="${FLIST} default.gcw0.desktop"

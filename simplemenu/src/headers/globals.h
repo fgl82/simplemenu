@@ -25,6 +25,7 @@ int FULL_SCREEN_MENU_OPTION;
 int THEME_OPTION;
 int SCREEN_TIMEOUT_OPTION;
 int DEFAULT_OPTION;
+int USB_OPTION;
 int SHUTDOWN_OPTION;
 int AUTO_HIDE_LOGOS_OPTION;
 int FONT_SIZE_OPTION;
@@ -142,6 +143,7 @@ struct MenuSection {
 	int activeExecutable;
 	int activeEmulatorDirectory;
 	char category[100];
+	char scaling[2];
 //	char *fileList[50000];
 };
 
