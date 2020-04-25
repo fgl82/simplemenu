@@ -456,17 +456,26 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 	}
 }
 
-void displayImageOnScreen(char *fileName, char *fallBackText) {
+void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen) {
 	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
 		drawImgFallbackTextOnScreen(fallBackText);
 	} else {
-		if (img->h==SCREEN_HEIGHT || img->w==SCREEN_WIDTH) {
+		if (!scaleToFullScreen||img->h==SCREEN_HEIGHT || img->w==SCREEN_WIDTH) {
 			SDL_Rect rectangleDest;
 			rectangleDest.w = 0;
 			rectangleDest.h = 0;
 			rectangleDest.x = SCREEN_WIDTH/2-img->w/2;
 			rectangleDest.y = ((SCREEN_HEIGHT)/2-img->h/2);
+			if(strcmp(fileName,favoriteIndicator)==0&&!fullscreenMode) {
+				if (ITEMS_PER_PAGE==12) {
+					rectangleDest.y=calculateProportionalSizeOrDistance(46);
+					rectangleDest.x = SCREEN_WIDTH-SCREEN_WIDTH/5-img->w/2;
+				} else if (ITEMS_PER_PAGE==16) {
+					rectangleDest.y=calculateProportionalSizeOrDistance(31);
+					rectangleDest.x = SCREEN_WIDTH-SCREEN_WIDTH/6-img->w/2;
+				}
+			}
 			SDL_BlitSurface(img, NULL, screen, &rectangleDest);
 			SDL_FreeSurface(img);
 		} else {
@@ -497,7 +506,7 @@ void displayImageOnScreen(char *fileName, char *fallBackText) {
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};
 	int black[3]={0, 0, 0};
-	displayImageOnScreen("./usb.png","");
+	displayCenteredImageOnScreen("./usb.png"," ",1);
 	drawTextOnScreen(headerFont,163,27,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,161,27,"USB MODE",white,VAlignMiddle | HAlignCenter);
@@ -511,7 +520,7 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_HEIGHT = info->current_h;
 	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 960;
+		SCREEN_HEIGHT = 240;
 	}
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;

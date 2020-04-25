@@ -16,6 +16,11 @@ int performAction(struct Rom *rom) {
 			currentlySectionSwitching=0;
 			return 1;
 		}
+		if (keys[BTN_START]) {
+			currentlySectionSwitching=0;
+			currentlyChoosing=3;
+			return 1;
+		}
 	}
 	if (rom!=NULL&&keys[BTN_R2]) {
 		hideFullScreenModeMenu();
@@ -126,10 +131,10 @@ int performAction(struct Rom *rom) {
 		}
 		int rewinded = rewindSection(1);
 		if(rewinded) {
+			currentlySectionSwitching=1;
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-			currentlySectionSwitching=1;
 			loadGameList(0);
 			if(autoHideLogos) {
 				resetPicModeHideLogoTimer();
@@ -152,10 +157,10 @@ int performAction(struct Rom *rom) {
 		}
 		int advanced = advanceSection(1);
 		if(advanced) {
+			currentlySectionSwitching=1;
 			displayBackgroundPicture();
 			showConsole();
 			refreshScreen();
-			currentlySectionSwitching=1;
 			loadGameList(0);
 			if(autoHideLogos) {
 				resetPicModeHideLogoTimer();

@@ -23,6 +23,21 @@ else
     make PLATFORM=RG-300
 fi
 
+cd /home/bittboy/git/invoker/invoker/
+
+if [ "$1" = "RG-350" ]; then
+    make clean
+    make PLATFORM=RG-350
+elif [ "$1" = "PG2" ]; then
+    make clean
+    make PLATFORM=NPG
+else
+    make clean
+    make PLATFORM=RG-300
+fi
+
+cp invoker.dge /home/bittboy/git/simplemenu/simplemenu/output
+
 if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ]; then
     var="gcw0"
 fi

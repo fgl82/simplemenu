@@ -393,7 +393,10 @@ struct Node *merge(struct Node *first, struct Node *second)
 	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
 		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
 	}
-
+	if(CURRENT_SECTION.aliasFileName!=NULL) {
+		stripGameName(noPathS1Alias);
+		stripGameName(noPathS2Alias);
+	}
 	if (strcmp(noPathS1Alias, noPathS2Alias)<=0)
 	{
 		free(noPathS1Alias);

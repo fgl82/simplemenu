@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -333,7 +334,7 @@ void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
 		#ifdef TARGET_RG350
-		Shake_Play(device, effect_id);
+		Shake_Play(device, effect_id1);
 		#endif	
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
 			strcpy(favorites[i].emulatorFolder,favorites[i+1].emulatorFolder);
@@ -350,20 +351,45 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
 		favoritesSize--;
-//		if (favoritesSize > 0) {
 		if (CURRENT_GAME_NUMBER==favoritesSize) {
 			FAVORITES_SECTION.realCurrentGameNumber--;
 		}
 		loadFavoritesSectionGameList();
-//		}
+		if(!isPicModeMenuHidden) {
+			resetPicModeHideMenuTimer();
+		}
 	}
+}
+
+int msleep(long msec)
+{
+    struct timespec ts;
+    int res;
+
+    if (msec < 0)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
+    ts.tv_sec = msec / 1000;
+    ts.tv_nsec = (msec % 1000) * 1000000;
+
+    do {
+        res = nanosleep(&ts, &ts);
+    } while (res && errno == EINTR);
+
+    return res;
 }
 
 void markAsFavorite(struct Rom *rom) {
 	favoritesChanged=1;
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(rom->name)) {
+			resetHideHeartTimer();
 			#ifdef TARGET_RG350
+			Shake_Play(device, effect_id);
+			msleep(200);
 			Shake_Play(device, effect_id);
 			#endif		
 			if (CURRENT_SECTION.onlyFileNamesNoExtension) {
@@ -391,7 +417,11 @@ int isSelectPressed() {
 }
 
 void performGroupChoosingAction() {
-	if (keys[BTN_UP]) {
+	if (keys[BTN_START]) {
+		currentlyChoosing=3;
+		return;
+	}
+	if (keys[BTN_UP]||keys[BTN_L1]) {
 		if(activeGroup>0) {
 			activeGroup--;
 		} else {
@@ -399,7 +429,7 @@ void performGroupChoosingAction() {
 		}
 		return;
 	}
-	if (keys[BTN_DOWN]) {
+	if (keys[BTN_DOWN]||keys[BTN_R1]) {
 		if(activeGroup<sectionGroupCounter-1) {
 			activeGroup++;
 		} else {
@@ -460,10 +490,18 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
+			#ifdef TARGET_RG300
 			chosenSetting=9;
+			#else
+			chosenSetting=8;
+			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
+		#ifdef TARGET_RG300
 		if(chosenSetting<9) {
+		#else
+		if(chosenSetting<8) {
+		#endif
 			chosenSetting++;
 		} else {
 			chosenSetting=0;

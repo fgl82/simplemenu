@@ -1,10 +1,10 @@
 # Software Name
 TARGET = simplemenu
 #PLATFORM = BITTBOY
-PLATFORM = RG-300
+#PLATFORM = RG-300
 #PLATFORM = RG-350
 #PLATFORM = NPG
-#PLATFORM = PC
+PLATFORM = PC
 
 # Compiler
 

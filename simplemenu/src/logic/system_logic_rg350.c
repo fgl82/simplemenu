@@ -83,8 +83,10 @@ void HW_Init()
 	#ifdef TARGET_RG350
 	Shake_Init();
 	device = Shake_Open(0);
-	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SINE, 0.5, 0.0, 0.15, 0.0);
+	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SQUARE, 0.5, 0.1, 0.05, 0.1);
+	Shake_SimplePeriodic(&effect1, SHAKE_PERIODIC_SQUARE, 0.5, 0.1, 0.05, 0.1);
 	effect_id=Shake_UploadEffect(device, &effect);
+	effect_id1=Shake_UploadEffect(device, &effect1);
 	#endif
 //    uint32_t soundDev = open("/dev/mixer", O_RDWR);
 //    int32_t vol = (100 << 8) | 100;

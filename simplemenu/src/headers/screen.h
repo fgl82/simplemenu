@@ -16,4 +16,6 @@ void resetPicModeHideMenuTimer();
 void resetPicModeHideLogoTimer();
 void clearPicModeHideMenuTimer();
 void clearPicModeHideLogoTimer();
+void clearHideHeartTimer();
+void resetHideHeartTimer();
 #endif

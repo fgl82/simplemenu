@@ -38,6 +38,7 @@ int themeCounter;
 char mediaFolder[1000];
 char simpleBackground[1000];
 char fullscreenBackground[1000];
+char favoriteIndicator[1000];
 char nopic[1000];
 char menuFont[1000];
 
@@ -77,6 +78,8 @@ int OC_SLEEP;
 SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;
+SDL_TimerID hideHeartTimer;
+
 int timeoutValue;
 int isPicModeMenuHidden;
 int isSuspended;
@@ -175,6 +178,8 @@ uint8_t *keys;
 Shake_Device *device;
 Shake_Effect effect;
 int effect_id;
+Shake_Effect effect1;
+int effect_id1;
 #endif
 
 time_t currRawtime;
