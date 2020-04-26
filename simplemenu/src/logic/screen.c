@@ -762,6 +762,8 @@ void updateScreen(struct Rom *rom) {
 		drawGameList();
 		if (!fullscreenMode&&(MENU_ITEMS_PER_PAGE==12||MENU_ITEMS_PER_PAGE==16)) {
 			displayGamePictureInMenu(rom);
+		} else {
+			displayHeart();
 		}
 		if (currentlyChoosing==3) {
 			drawSettingsScreen();
