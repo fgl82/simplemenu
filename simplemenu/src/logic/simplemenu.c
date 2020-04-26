@@ -35,7 +35,6 @@ void initializeGlobals() {
 	stripGames=1;
 	fontSize=14;
 	srand(time(0));
-	MAGIC_NUMBER = 315;
 }
 
 void resetFrameBuffer () {

@@ -10,7 +10,7 @@ HAlignCenter = 4,
 VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
-int calculateProportionalSizeOrDistance(int number);
+int calculateProportionalVerticalSizeOrDistance(int number);
 int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]);
 int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align);
 void drawShadedGameNameOnScreen(char *buf, int position);
