@@ -38,8 +38,11 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 int calculateProportionalSizeOrDistance(int number) {
-	return (SCREEN_HEIGHT*number)/240;
-	//	return (number*SCREEN_WIDTH)/SCREEN_HEIGHT;
+	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
+		return (SCREEN_HEIGHT*number)/240;
+	else {
+		return ((SCREEN_HEIGHT-(SCREEN_HEIGHT*60/240))*number)/180;
+	}
 }
 
 int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
@@ -362,7 +365,7 @@ void displayImageOnScreenTraditional(char *fileName) {
 			h1 = w1*ratio1;
 			smoothing = 1;
 		}
-		drawImage1(screen, img1, calculateProportionalSizeOrDistance(256)-(w1/2), calculateProportionalSizeOrDistance(168)-h1/2, 0, 0, w1, h1, 0, smoothing);
+		drawImage1(screen, img1, SCREEN_WIDTH-(SCREEN_WIDTH/5)-(w1/2), SCREEN_HEIGHT-calculateProportionalSizeOrDistance(72)-h1/2, 0, 0, w1, h1, 0, smoothing);
 	}
 	//	if(img==NULL) {
 	//		img = IMG_Load(nopic);
@@ -518,10 +521,15 @@ void drawUSBScreen() {
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
+	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
-	if (SCREEN_HEIGHT>768) {
-		SCREEN_HEIGHT = 240;
-	}
+	SCREEN_WIDTH = 640;
+	SCREEN_HEIGHT = 480;
+//	if (SCREEN_HEIGHT>768) {
+//		SCREEN_WIDTH = 1920;
+//		SCREEN_HEIGHT = 1080;
+//	}
+	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	if (SCREEN_HEIGHT<240) {
 		SCREEN_HEIGHT = 240;
 	}
