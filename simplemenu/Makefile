@@ -7,7 +7,6 @@ TARGET = simplemenu
 PLATFORM = PC
 
 # Compiler
-
 ifeq ($(PLATFORM), BITTBOY)
 	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
@@ -32,7 +31,7 @@ else
 	CC = gcc
 	LINKER   = gcc
 	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
-	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lpthread -lfreetype -lz	
+	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lz	
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
