@@ -139,9 +139,6 @@ int performAction(struct Rom *rom) {
 			if(autoHideLogos) {
 				resetPicModeHideLogoTimer();
 			}
-//			if (!fullscreenMode) {
-//				currentlySectionSwitching=0;
-//			}
 		}
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -165,9 +162,6 @@ int performAction(struct Rom *rom) {
 			if(autoHideLogos) {
 				resetPicModeHideLogoTimer();
 			}
-//			if (!fullscreenMode) {
-//				currentlySectionSwitching=0;
-//			}
 		}
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);

@@ -553,7 +553,7 @@ void drawGameList() {
 void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if(ITEMS_PER_PAGE!=12) {
-		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/14), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/14), rgbColor);
+		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((23*fontSize)/14), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((23*fontSize)/14), rgbColor);
 	} else {
 		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	}

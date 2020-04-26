@@ -690,16 +690,11 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
-	if (SCREEN_HEIGHT>768) {
-		SCREEN_WIDTH = 1920;
-		SCREEN_HEIGHT = 1080;
-	}
+	#ifndef TARGET_PC
 	SCREEN_WIDTH = 320;
 	SCREEN_HEIGHT = 240;
+	#endif
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	if (SCREEN_HEIGHT<240) {
-		SCREEN_HEIGHT = 240;
-	}
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_FULLSCREEN);
 	TTF_Init();

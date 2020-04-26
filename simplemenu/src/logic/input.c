@@ -53,7 +53,7 @@ int getJoystickMotion() {
 }
 
 void enableKeyRepeat() {
-	SDL_EnableKeyRepeat(250,180);
+	SDL_EnableKeyRepeat(250,100);
 }
 
 void initializeKeys() {
