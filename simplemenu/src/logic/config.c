@@ -161,6 +161,8 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 		freeFonts();
+		freeSettingsFonts();
+		initializeSettingsFonts();
 		initializeFonts();
 	}
 }
@@ -365,6 +367,27 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
 
+	value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
+	textPositionCalibration = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "font_size");
+	baseFont = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
+	itemsInSimple = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
+	itemsInFullSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_traditional");
+	itemsInTraditional = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_traditional");
+	itemsInFullTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_drunken_monkey");
+	itemsInDrunkenMonkey = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
+	itemsInFullDrunkenMonkey = atoi(value);
+
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoi(value);
 
@@ -488,13 +511,7 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
-		freeFonts();
-		initializeFonts();
+
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
@@ -512,6 +529,36 @@ int loadSections(char *file) {
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
 	}
+
+	value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
+	textPositionCalibration = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "font_size");
+	baseFont = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
+	itemsInSimple = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
+	itemsInFullSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_traditional");
+	itemsInTraditional = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_traditional");
+	itemsInFullTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_drunken_monkey");
+	itemsInDrunkenMonkey = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
+	itemsInFullDrunkenMonkey = atoi(value);
+
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+	freeFonts();
+	initializeFonts();
+
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
 	menuSections[menuSectionCounter].emulatorDirectories[0]=malloc(strlen("/some/folder/")+1);
 	strcpy(menuSections[menuSectionCounter].emulatorDirectories[0],"/some/folder/");
@@ -584,7 +631,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", autoHideLogos);
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
-	fprintf(fp, "%d;\n", MENU_ITEMS_PER_PAGE);
+	fprintf(fp, "%d;\n", currentMode);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
 		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
 		for (int sectionCount=0;sectionCount<sectionsNum;sectionCount++) {
@@ -699,7 +746,7 @@ void loadLastState() {
 	autoHideLogos=readAutoHideLogos;
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
-	MENU_ITEMS_PER_PAGE=itemsRead;
+	currentMode=itemsRead;
 	fclose(fp);
 	if (line) {
 		free(line);

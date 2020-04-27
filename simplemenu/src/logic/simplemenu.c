@@ -33,7 +33,6 @@ void initializeGlobals() {
 	isPicModeMenuHidden=1;
 	autoHideLogos=1;
 	stripGames=1;
-	fontSize=14;
 	srand(time(0));
 }
 
@@ -110,17 +109,26 @@ int main() {
 //		fullscreenMode=atoi(argv[4]);
 //	}
 
-	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
-	switch (MENU_ITEMS_PER_PAGE) {
-	    case 16:
-	    	fontSize=10;
-	    	FULLSCREEN_ITEMS_PER_PAGE-=2;
-	      break;
-	    case 10:
-	    	fontSize=14;
+//	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+
+	switch (currentMode) {
+	    case 2:
+	    	fontSize=baseFont-4;
+	    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+	    	currentMode=2;
+	    	break;
+	    case 0:
+	    	fontSize=baseFont;
+	    	currentMode=0;
+	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 	        break;
 	    default:
-	    	fontSize=12;
+	    	fontSize=baseFont-2;
+	    	currentMode=1;
+	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
 //	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
 	}
 	if(fullscreenMode==0) {

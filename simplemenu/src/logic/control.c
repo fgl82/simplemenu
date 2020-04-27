@@ -536,35 +536,47 @@ void performSettingsChoosingAction() {
 			free(temp);
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
-				if (MENU_ITEMS_PER_PAGE==12) {
-					MENU_ITEMS_PER_PAGE=10;
-				} else if (MENU_ITEMS_PER_PAGE==10) {
-					MENU_ITEMS_PER_PAGE=16;
+				if (currentMode==2) {
+					MENU_ITEMS_PER_PAGE=itemsInTraditional;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+					currentMode=1;
+				} else if (currentMode==1) {
+					MENU_ITEMS_PER_PAGE=itemsInSimple;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+					currentMode=0;
 				} else {
-					MENU_ITEMS_PER_PAGE=12;
+					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+					currentMode=2;
 				}
 			}
 			if (keys[BTN_RIGHT]) {
-				if (MENU_ITEMS_PER_PAGE==12) {
-					MENU_ITEMS_PER_PAGE=16;
-				} else if (MENU_ITEMS_PER_PAGE==16) {
-					MENU_ITEMS_PER_PAGE=10;
+				if (currentMode==0) {
+					MENU_ITEMS_PER_PAGE=itemsInTraditional;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+					currentMode=1;
+				} else if (currentMode==1) {
+					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+					currentMode=2;
 				} else {
-					MENU_ITEMS_PER_PAGE=12;
+					MENU_ITEMS_PER_PAGE=itemsInSimple;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+					currentMode=0;
 				}
 			}
-			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
-			switch (MENU_ITEMS_PER_PAGE)
+//			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
+			switch (currentMode)
 			{
-			    case 12:
-			    	fontSize=12;
+			    case 1:
+			    	fontSize=baseFont-2;
 			      break;
-			    case 10:
-			    	fontSize=14;
+			    case 0:
+			    	fontSize=baseFont;
 			        break;
 			    default:
-			    	fontSize=10;
-			    	FULLSCREEN_ITEMS_PER_PAGE-=2;
+			    	fontSize=baseFont-4;
+//			    	FULLSCREEN_ITEMS_PER_PAGE-=2;
 			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

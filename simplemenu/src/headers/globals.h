@@ -31,6 +31,17 @@ int AUTO_HIDE_LOGOS_OPTION;
 int FONT_SIZE_OPTION;
 int ITEMS_PER_PAGE_OPTION;
 
+int textPositionCalibration;
+int baseFont;
+int itemsInSimple;
+int itemsInFullSimple;
+int itemsInTraditional;
+int itemsInFullTraditional;
+int itemsInDrunkenMonkey;
+int itemsInFullDrunkenMonkey;
+int currentMode;
+
+
 char *themes[100];
 int activeTheme;
 int themeCounter;
