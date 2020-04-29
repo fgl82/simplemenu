@@ -634,17 +634,17 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", currentMode);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
 		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
-		for (int sectionCount=0;sectionCount<sectionsNum;sectionCount++) {
+		for (int sectionCount=0;sectionCount<=sectionsNum;sectionCount++) {
 			if (groupCount==activeGroup) {
 				int isActive = 0;
 				if (sectionCount==currentSectionNumber) {
 					isActive=1;
 				}
-				fprintf(fp, "%d;%d;%d;%d;%d\n", isActive, sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber);
+				fprintf(fp, "%d;%d;%d;%d;%d;%d\n", isActive, sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber, returnTo);
 			} else {
 //				loadSections(sectionGroups[groupCount].groupPath);
 //				printf("%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
-				fprintf(fp, "%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
+				fprintf(fp, "%d;%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3], returnTo);
 			}
 		}
 	}
@@ -725,14 +725,17 @@ void loadLastState() {
 			int page = atoi(configurations[2]);
 			int game = atoi(configurations[3]);
 			int realCurrentGameNumber = atoi(configurations[4]);
+			int retTo = atoi(configurations[5]);
 			sectionGroupStates[groupCounter][sectionNumber][0]=isActive;
 			sectionGroupStates[groupCounter][sectionNumber][1]=page;
 			sectionGroupStates[groupCounter][sectionNumber][2]=game;
 			sectionGroupStates[groupCounter][sectionNumber][3]=realCurrentGameNumber;
+			sectionGroupStates[groupCounter][sectionNumber][4]=retTo;
 			if (groupCounter==startInGroup) {
 				menuSections[sectionNumber].currentPage=page;
 				menuSections[sectionNumber].currentGameInPage=game;
 				menuSections[sectionNumber].realCurrentGameNumber=realCurrentGameNumber;
+				returnTo=retTo;
 			}
 			menuSections[sectionNumber].alphabeticalPaging=0;
 		}
