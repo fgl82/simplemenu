@@ -28,6 +28,7 @@ else ifeq ($(PLATFORM), NPG)
 	CFLAGS = -DTARGET_NPG -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lz -lbz2	
 else
+	TARGET = simplemenu-x86
 	CC = gcc
 	LINKER   = gcc
 	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
