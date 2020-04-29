@@ -20,6 +20,7 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 #include "../headers/opk.h"
+#include "../headers/input.h"
 #include "../headers/doubly_linked_rom_list.h"
 
 
@@ -274,6 +275,9 @@ int checkIfEmulatorExists(char *path, char *executable) {
 }
 
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
+
+	char *exec = strdup(executable);
+
 	char states[2000]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
 		char tempString[200]="";
@@ -288,17 +292,19 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
 	
-//	#ifndef TARGET_PC
 	#ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
 	#endif
+
 	freeResources();
+
 	#ifndef TARGET_PC
 	setCPU(currentCPU);
 	#endif
+
 	#ifdef TARGET_RG300
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
@@ -309,18 +315,24 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	fprintf(fp,CURRENT_SECTION.scaling);
 	fclose(fp);
 	#endif
+
 	#ifndef TARGET_PC
-	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+	execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
+
 	#else
-	strcat(executable, " \"");
-	strcat(executable, fileToBeExecutedWithFullPath);
-	strcat(executable, "\"");
-	printf("%s\n",executable);
-	system(executable);
+
+	strcat(exec, " \"");
+	strcat(exec, fileToBeExecutedWithFullPath);
+	strcat(exec, "\"");
+
+	system(exec);
+
 	setupDisplayAndKeys();
+	enableKeyRepeat();
 	initializeFonts();
 	initializeSettingsFonts();
 	#endif
+
 //	#else
 //	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
 //	loadLastState();

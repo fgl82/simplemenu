@@ -150,6 +150,10 @@ void launchGame(struct Rom *rom) {
 	FILE *file=NULL;
 	char error[3000];
 	char tempExec[3000];
+
+	char tempExecDirPlusFileName[3000];
+	char tempExecFile[3000];
+
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(tempExec,favorite.emulatorFolder);
@@ -158,18 +162,29 @@ void launchGame(struct Rom *rom) {
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,favorite.executable);
 			strcat(error,"-NOT FOUND");
-//			generateError(error,0);
+			generateError(error,0);
 			return;
 		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (rom->name!=NULL) {
+
+
+		printf("%d %s\n",CURRENT_SECTION.activeEmulatorDirectory, CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+
+		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+		char *ptr = strtok(tempExecFile, " ");
+		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+		strcat(tempExecDirPlusFileName,ptr);
+		file = fopen(tempExecDirPlusFileName, "r");
+
 		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
-		file = fopen(tempExec, "r");
+
 		if (!file&&strstr(tempExec,"#")==NULL) {
-			strcpy(error,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+			strcpy(error,tempExecDirPlusFileName);
 			strcat(error,"-NOT FOUND");
-//			generateError(error,0);
+			generateError(error,0);
 			return;
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
