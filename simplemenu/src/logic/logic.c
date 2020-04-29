@@ -288,13 +288,17 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
 	
+//	#ifndef TARGET_PC
 	#ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
+	#endif
 	freeResources();
+	#ifndef TARGET_PC
 	setCPU(currentCPU);
+	#endif
 	#ifdef TARGET_RG300
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
@@ -305,11 +309,22 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	fprintf(fp,CURRENT_SECTION.scaling);
 	fclose(fp);
 	#endif
+	#ifndef TARGET_PC
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, executable, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	#else
-	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
-	loadLastState();
+	strcat(executable, " \"");
+	strcat(executable, fileToBeExecutedWithFullPath);
+	strcat(executable, "\"");
+	printf("%s\n",executable);
+	system(executable);
+	setupDisplayAndKeys();
+	initializeFonts();
+	initializeSettingsFonts();
 	#endif
+//	#else
+//	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
+//	loadLastState();
+//	#endif
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {

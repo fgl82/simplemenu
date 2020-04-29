@@ -158,7 +158,7 @@ void launchGame(struct Rom *rom) {
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,favorite.executable);
 			strcat(error,"-NOT FOUND");
-			generateError(error,0);
+//			generateError(error,0);
 			return;
 		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
@@ -169,7 +169,7 @@ void launchGame(struct Rom *rom) {
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 			strcat(error,"-NOT FOUND");
-			generateError(error,0);
+//			generateError(error,0);
 			return;
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {

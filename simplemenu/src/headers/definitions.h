@@ -48,7 +48,7 @@ double SCREEN_RATIO;
 	#define BTN_DOWN		SDLK_DOWN
 	#define BTN_LEFT		SDLK_LEFT
 	#define BTN_RIGHT		SDLK_RIGHT
-#else
+#elif defined(TARGET_RG350)
 	#define BTN_X			SDLK_SPACE
 	#define BTN_A			SDLK_LCTRL
 	#define BTN_B			SDLK_LALT
@@ -60,6 +60,22 @@ double SCREEN_RATIO;
 	#define BTN_R1			SDLK_BACKSPACE
 	#define BTN_L2			SDLK_PAGEUP
 	#define BTN_R2			SDLK_PAGEDOWN
+	#define BTN_UP			SDLK_UP
+	#define BTN_DOWN		SDLK_DOWN
+	#define BTN_LEFT		SDLK_LEFT
+	#define BTN_RIGHT		SDLK_RIGHT
+#else
+	#define BTN_X			SDLK_SPACE
+	#define BTN_A			SDLK_RETURN
+	#define BTN_B			SDLK_LSHIFT
+	#define BTN_Y			SDLK_BACKSPACE
+	#define BTN_START		SDLK_ESCAPE
+	#define BTN_SELECT		SDLK_RSHIFT
+	#define BTN_R  		    SDLK_W
+	#define BTN_L1			SDLK_PAGEUP
+	#define BTN_R1			SDLK_PAGEDOWN
+	#define BTN_L2			SDLK_HOME
+	#define BTN_R2			SDLK_END
 	#define BTN_UP			SDLK_UP
 	#define BTN_DOWN		SDLK_DOWN
 	#define BTN_LEFT		SDLK_LEFT
