@@ -276,7 +276,8 @@ int checkIfEmulatorExists(char *path, char *executable) {
 
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
 
-	char *exec = strdup(executable);
+	char *exec = malloc(strlen(executable)+100);
+	strcpy(exec, executable);
 
 	char states[2000]="";
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
@@ -326,6 +327,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	strcat(exec, "\"");
 
 	system(exec);
+	free(exec);
 
 	setupDisplayAndKeys();
 	enableKeyRepeat();
@@ -617,7 +619,7 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile* stolenFile, char* fileName) {
 
 int theSectionHasGames(struct MenuSection *section) {
 	section->hidden=1;
-	int dirCounter;
+	int dirCounter=0;
 	char *dirs[10];
 	char* ptr;
 	char dirsCopy[1000];

@@ -663,7 +663,7 @@ void loadLastState() {
 		saveLastState();
 		return;
 	}
-	char *configurations[5];
+	char *configurations[6];
 	char *ptr;
 	int startInSection = -1;
 	int startInPictureMode = -1;
