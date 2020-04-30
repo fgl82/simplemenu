@@ -549,6 +549,17 @@ void performSettingsChoosingAction() {
 			strcat(temp,"/theme.ini");
 			loadTheme(temp);
 			free(temp);
+			if(fullscreenMode==0) {
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+			} else {
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			}
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(1);
+			} else {
+				loadFavoritesSectionGameList(1);
+			}
+			drawGameList();
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (currentMode==2) {

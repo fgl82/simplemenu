@@ -146,6 +146,7 @@ void loadTheme(char *theme) {
 	strcpy(pathToThemeConfigFile,temp);
 	free(temp);
 	ini_t *themeConfig = ini_load(theme);
+	const char *value;
 	for (int i=0;i<menuSectionCounter;i++) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerBackGround", menuSections[i].headerAndFooterBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerFont", menuSections[i].headerAndFooterTextColor);
@@ -160,6 +161,49 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+		value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
+		textPositionCalibration = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "font_size");
+		baseFont = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_in_simple");
+		itemsInSimple = atoi(value);
+		value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
+		itemsInFullSimple = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_in_traditional");
+		itemsInTraditional = atoi(value);
+		value = ini_get(themeConfig, "GENERAL", "items_in_full_traditional");
+		itemsInFullTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_in_drunken_monkey");
+		itemsInDrunkenMonkey = atoi(value);
+		value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
+		itemsInFullDrunkenMonkey = atoi(value);
+
+		switch (currentMode) {
+		    case 2:
+		    	fontSize=baseFont-4;
+		    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+		    	currentMode=2;
+		    	break;
+		    case 0:
+		    	fontSize=baseFont;
+		    	currentMode=0;
+		    	MENU_ITEMS_PER_PAGE=itemsInSimple;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+		        break;
+		    default:
+		    	fontSize=baseFont-2;
+		    	currentMode=1;
+		    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+	//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+		}
+
+
 		freeFonts();
 		freeSettingsFonts();
 		initializeSettingsFonts();
