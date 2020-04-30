@@ -84,12 +84,12 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	} else if (align & HAlignRight) {
 		x -= msg->w;
 	}
+	y+=calculateProportionalSizeOrDistance(textPositionCalibration);
 	if (align & VAlignMiddle) {
 		y -= msg->h / 2;
 	} else if (align & VAlignTop) {
 		y -= msg->h;
 	}
-	y+=calculateProportionalSizeOrDistance(textPositionCalibration);
 	SDL_Rect rect;
 	rect.x = x;
 	rect.y = y;
@@ -195,10 +195,14 @@ void drawTextOnSettingsFooterWithColor(const char text[64], int txtColor[]) {
 }
 
 void drawTextOnHeader(char *text) {
-	if (MENU_ITEMS_PER_PAGE!=12) {
-		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance((13*fontSize)/baseFont), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle| HAlignCenter);
+	if (currentMode==2) {
+		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance((13*fontSize)/baseFont), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 	} else {
-		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(13), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle| HAlignCenter);
+		if (currentMode==0) {
+			drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance((13*fontSize)/baseFont), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
+		} else {
+			drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance((16	*fontSize)/baseFont), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
+		}
 	}
 }
 
