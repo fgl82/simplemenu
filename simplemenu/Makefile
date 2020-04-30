@@ -31,7 +31,7 @@ else
 	TARGET = simplemenu-x86
 	CC = gcc
 	LINKER   = gcc
-	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall
+	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra
 	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lz	
 endif
 

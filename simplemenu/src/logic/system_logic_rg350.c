@@ -49,7 +49,7 @@ void clearTimer() {
 	timeoutTimer = NULL;
 }
 
-uint32_t suspend(uint32_t interval, void *param) {
+uint32_t suspend() {
 	if (!isUSBMode) {
 		clearTimer();
 		oldCPU=currentCPU;
