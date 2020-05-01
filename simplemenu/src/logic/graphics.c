@@ -639,7 +639,7 @@ void displayImageOnScreenDrunkenMonkey1(char *fileName) {
 	}
 }
 
-void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen) {
+void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen, int keepRatio) {
 	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
 		drawImgFallbackTextOnScreen(fallBackText);
@@ -665,7 +665,7 @@ void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleT
 				w = SCREEN_WIDTH;
 				h = w*ratio;
 			}
-			if (!is43()) {
+			if (!is43()&&!keepRatio) {
 				w=SCREEN_WIDTH;
 			}
 			if ((int)h!=(int)img->h) {
@@ -679,7 +679,7 @@ void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleT
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};
 	int black[3]={0, 0, 0};
-	displayCenteredImageOnScreen("./usb.png"," ",1);
+	displayCenteredImageOnScreen("./usb.png"," ",1,0);
 	drawTextOnScreen(headerFont,163,27,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
 	drawTextOnScreen(headerFont,161,27,"USB MODE",white,VAlignMiddle | HAlignCenter);

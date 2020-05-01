@@ -24,7 +24,7 @@ SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor
 void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int transparency);
 SDL_Surface *loadImage (char *fileName);
 void displayBackGroundImage(char *fileName, SDL_Surface *surface);
-void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen);
+void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen, int keepRatio);
 void initializeDisplay();
 void refreshScreen();
 void initializeFonts();

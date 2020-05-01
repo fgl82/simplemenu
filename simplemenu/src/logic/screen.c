@@ -19,9 +19,9 @@ char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
-		displayCenteredImageOnScreen(fullscreenBackground, " ",1);
+		displayCenteredImageOnScreen(fullscreenBackground, " ",1,0);
 	} else {
-		displayCenteredImageOnScreen(simpleBackground, " ",1);
+		displayCenteredImageOnScreen(simpleBackground, " ",1,0);
 	}
 }
 
@@ -215,7 +215,7 @@ void showCurrentGroup() {
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
-	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1);
+	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1,0);
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);
 	free(tempString);
@@ -256,8 +256,7 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
-	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
-	displayCenteredImageOnScreen(CURRENT_SECTION.systemLogo, CURRENT_SECTION.sectionName, 1);
+	displayCenteredImageOnScreen(CURRENT_SECTION.systemLogo, CURRENT_SECTION.sectionName, 1,0);
 }
 
 //void showHeart() {
@@ -291,10 +290,10 @@ void displayGamePicture(struct Rom *rom) {
 	displayBackgroundPicture();
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
-		displayCenteredImageOnScreen(pictureWithFullPath, tempDisplayName, 1);
+		displayCenteredImageOnScreen(pictureWithFullPath, tempDisplayName, 1,1);
 		free(tempDisplayName);
 	} else {
-		displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1);
+		displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		int black[3]={0, 0, 0};
@@ -792,8 +791,8 @@ void updateScreen(struct Rom *rom) {
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
 	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
-		displayBackgroundPicture();
-		showConsole();
+//		displayBackgroundPicture();
+//		showConsole();
 	}
 	refreshScreen();
 	//    pthread_mutex_unlock(&lock);

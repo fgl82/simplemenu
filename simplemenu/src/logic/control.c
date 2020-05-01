@@ -96,6 +96,9 @@ void scrollToGame(int gameNumber) {
 }
 
 int advanceSection(int showLogo) {
+	if(currentSectionNumber==favoritesSectionNumber) {
+		return 0;
+	}
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
 		currentSectionNumber++;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
@@ -106,6 +109,7 @@ int advanceSection(int showLogo) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
 		showConsole();
+		refreshScreen();
 	}
 	refreshScreen();
 	#else
@@ -115,10 +119,7 @@ int advanceSection(int showLogo) {
 		refreshScreen();
 	}
 	#endif
-	if(currentSectionNumber!=favoritesSectionNumber) {
-		return 1;
-	}
-	return 0;
+	return 1;
 }
 
 int rewindSection(int showLogo) {
@@ -132,6 +133,7 @@ int rewindSection(int showLogo) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
 		showConsole();
+		refreshScreen();
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
