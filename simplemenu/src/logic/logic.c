@@ -941,3 +941,7 @@ void deleteGame(struct Rom *rom) {
 		generateError("FATAL ERROR", 1);
 	}
 }
+
+int is43 () {
+	return SCREEN_RATIO<=1.34&&SCREEN_RATIO>=1.33;
+}

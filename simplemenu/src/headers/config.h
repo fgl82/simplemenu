@@ -6,6 +6,7 @@ void saveFavorites();
 void loadFavorites();
 int loadSections();
 int loadConfig();
+int readInputConfig();
 void loadAliasList(int sectionNumber);
 void createConfigFilesInHomeIfTheyDontExist();
 void checkIfDefault();

@@ -10,15 +10,45 @@
 #include <shake.h>
 #endif
 
-int MAGIC_NUMBER;
-
+/* STATUS */
+char *errorMessage;
 int running;
+int itsStoppedBecauseOfAnError;
+int thereIsACriticalError;
+int favoritesChanged;
+int favoritesSectionSelected;
+int returnTo;
+int currentSectionNumber;
+int currentCPU;
+int fullscreenMode;
+int hotKeyPressed;
+int aKeyComboWasPressed;
+int currentlySectionSwitching;
+int currentlyChoosing;
+int loading;
+int isPicModeMenuHidden;
+int isSuspended;
+int isUSBMode;
+int activeGroup;
+int beforeTryingToSwitchGroup;
+int chosenSetting;
+SDL_TimerID timeoutTimer;
+SDL_TimerID picModeHideMenuTimer;
+SDL_TimerID picModeHideLogoTimer;
+SDL_TimerID hideHeartTimer;
 
+/* QUANTITIES */
 int MAX_GAMES_IN_SECTION;
 int ITEMS_PER_PAGE;
 int FULLSCREEN_ITEMS_PER_PAGE;
 int MENU_ITEMS_PER_PAGE;
+int favoritesSectionNumber;
+int favoritesSize;
+int menuSectionCounter;
+int sectionGroupCounter;
+int gamesInPage;
 
+/* SETTINGS */
 int TIDY_ROMS_OPTION;
 int FULL_SCREEN_FOOTER_OPTION;
 int FULL_SCREEN_MENU_OPTION;
@@ -30,7 +60,23 @@ int SHUTDOWN_OPTION;
 int AUTO_HIDE_LOGOS_OPTION;
 int FONT_SIZE_OPTION;
 int ITEMS_PER_PAGE_OPTION;
+char mediaFolder[1000];
+int stripGames;
+int shutDownEnabled;
+int footerVisibleInFullscreenMode;
+int menuVisibleInFullscreenMode;
+int autoHideLogos;
+int timeoutValue;
+int OC_UC;
+int OC_NO;
+int OC_OC;
+int OC_SLEEP;
+int backlightValue;
 
+/* THEME */
+char *themes[100];
+int activeTheme;
+int themeCounter;
 int textPositionCalibration;
 int baseFont;
 int itemsInSimple;
@@ -40,62 +86,25 @@ int itemsInFullTraditional;
 int itemsInDrunkenMonkey;
 int itemsInFullDrunkenMonkey;
 int currentMode;
-
-
-char *themes[100];
-int activeTheme;
-int themeCounter;
-
-char mediaFolder[1000];
 char simpleBackground[1000];
 char fullscreenBackground[1000];
 char favoriteIndicator[1000];
 char nopic[1000];
 char menuFont[1000];
-
-int itsStoppedBecauseOfAnError;
-char *errorMessage;
-int thereIsACriticalError;
-
-int favoritesSectionNumber;
-int favoritesSectionSelected;
-int favoritesChanged;
-int favoritesSize;
-int returnTo;
-
-int currentSectionNumber;
-int menuSectionCounter;
-int gamesInPage;
 int fontSize;
 
-int currentCPU;
-int fullscreenMode;
-int hotKeyPressed;
-int aKeyComboWasPressed;
-int currentlySectionSwitching;
-int currentlyChoosing;
-int stripGames;
-int shutDownEnabled;
-int footerVisibleInFullscreenMode;
-int menuVisibleInFullscreenMode;
-int autoHideLogos;
-int loading;
+/* STRUCTS */
+struct OPKDesktopFile {
+	char parentOPK[200];
+	char name[200];
+	char displayName[200];
+	char category[200];
+};
 
-int OC_UC;
-int OC_NO;
-int OC_OC;
-int OC_SLEEP;
-
-SDL_TimerID timeoutTimer;
-SDL_TimerID picModeHideMenuTimer;
-SDL_TimerID picModeHideLogoTimer;
-SDL_TimerID hideHeartTimer;
-
-int timeoutValue;
-int isPicModeMenuHidden;
-int isSuspended;
-int isUSBMode;
-int backlightValue;
+struct StolenGMenuFile {
+	char title[200];
+	char exec[200];
+};
 
 struct Favorite {
 	char section[300];
@@ -123,8 +132,6 @@ struct SectionGroup {
 	char groupName[25];
 	char groupBackground[1000];
 };
-
-int sectionGroupCounter;
 
 struct MenuSection {
 	char sectionName[25];
@@ -161,29 +168,29 @@ struct MenuSection {
 //	char *fileList[50000];
 };
 
-int activeGroup;
-int beforeTryingToSwitchGroup;
-int chosenSetting;
 struct SectionGroup sectionGroups[100];
 int sectionGroupStates[100][100][5];
 struct MenuSection menuSections[100];
-
-struct OPKDesktopFile {
-	char parentOPK[200];
-	char name[200];
-	char displayName[200];
-	char category[200];
-};
-
-struct StolenGMenuFile {
-	char title[200];
-	char exec[200];
-};
-
 struct Favorite favorites[2000];
 
+/* CONTROL */
 uint8_t *keys;
 //SDL_Joystick *joystick;
+int BTN_Y;
+int BTN_B;
+int BTN_A;
+int BTN_X;
+int BTN_START;
+int BTN_SELECT;
+int BTN_R;
+int BTN_UP;
+int BTN_DOWN;
+int BTN_LEFT;
+int BTN_RIGHT;
+int BTN_L1;
+int BTN_R1;
+int BTN_L2;
+int BTN_R2;
 
 #ifdef TARGET_RG350
 Shake_Device *device;
@@ -193,6 +200,13 @@ Shake_Effect effect1;
 int effect_id1;
 #endif
 
+/* SCREEN */
+int MAGIC_NUMBER;
+int SCREEN_HEIGHT;
+int SCREEN_WIDTH;
+double SCREEN_RATIO;
+
+/* MISC */
 time_t currRawtime;
 struct tm * currTime;
 int lastSec;

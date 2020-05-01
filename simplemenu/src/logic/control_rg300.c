@@ -9,7 +9,7 @@
 #include "../headers/system_logic.h"
 
 int performAction(struct Rom *rom) {
-	if (keys[BTN_START]&&isUSBMode) {
+	if (keys[BTN_SETTINGS]&&isUSBMode) {
 		hotKeyPressed=0;
 		isUSBMode=0;
 		int ret = system("scripts/usb_mode_off.sh");
@@ -23,15 +23,15 @@ int performAction(struct Rom *rom) {
 		}
 	}
 	if(currentlySectionSwitching) {
-		if (keys[BTN_A]) {
+		if (keys[BTN_LAUNCH]) {
 			currentlySectionSwitching=0;
 			return 1;
 		}
 	}
-	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
+	if(itsStoppedBecauseOfAnError&&!keys[BTN_LAUNCH]) {
 		return(0);
 	}
-	if(keys[BTN_B]) {
+	if(keys[BTN_HOTKEY]) {
 		hotKeyPressed=1;
 		if (rom!=NULL&&keys[BTN_R]) {
 			hideFullScreenModeMenu();
@@ -40,7 +40,7 @@ int performAction(struct Rom *rom) {
 				return(1);
 			}
 		}
-		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_LAUNCH]&&!currentlySectionSwitching) {
 			launchEmulator(rom);
 			aKeyComboWasPressed=1;
 			return 1;
@@ -53,13 +53,13 @@ int performAction(struct Rom *rom) {
 			aKeyComboWasPressed=1;
 			return 1;
 		}
-		if (keys[BTN_START]&&!currentlySectionSwitching) {
+		if (keys[BTN_SETTINGS]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
 			cycleFrequencies();
 			aKeyComboWasPressed=1;
 			return 0;
 		}
-		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_SELECTEMU]&&!currentlySectionSwitching) {
 			for(int i=0;i<25;i++) {
 				selectRandomGame();
 				updateScreen(CURRENT_SECTION.currentGameNode->data);
@@ -112,7 +112,7 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 	}
-	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
+	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECTEMU]&&!favoritesSectionSelected) {
 		currentlyChoosing=1;
 		return 0;
 	}
@@ -184,7 +184,7 @@ int performAction(struct Rom *rom) {
 			}
 			return 0;
 		}
-		if (keys[BTN_START]) {
+		if (keys[BTN_SETTINGS]) {
 //			cycleFrequencies();
 			chosenSetting=SHUTDOWN_OPTION;
 			currentlyChoosing=3;
@@ -194,7 +194,7 @@ int performAction(struct Rom *rom) {
 			showOrHideFavorites();
 			return 0;
 		}
-		if (rom!=NULL&&keys[BTN_A]) {
+		if (rom!=NULL&&keys[BTN_LAUNCH]) {
 			if(itsStoppedBecauseOfAnError) {
 				if(thereIsACriticalError) {
 					#ifndef TARGET_PC
@@ -215,7 +215,7 @@ int performAction(struct Rom *rom) {
 			}
 			return 0;
 		}
-		if (keys[BTN_Y]) {
+		if (keys[BTN_FULLSCREEN]) {
 			int number = CURRENT_GAME_NUMBER;
 			if (fullscreenMode) {
 				fullscreenMode=0;

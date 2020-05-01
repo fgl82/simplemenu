@@ -686,13 +686,93 @@ void saveLastState() {
 				}
 				fprintf(fp, "%d;%d;%d;%d;%d;%d\n", isActive, sectionCount, menuSections[sectionCount].currentPage, menuSections[sectionCount].currentGameInPage, menuSections[sectionCount].realCurrentGameNumber, returnTo);
 			} else {
-//				loadSections(sectionGroups[groupCount].groupPath);
-//				printf("%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3]);
 				fprintf(fp, "%d;%d;%d;%d;%d;%d\n", sectionGroupStates[groupCount][sectionCount][0], sectionCount, sectionGroupStates[groupCount][sectionCount][1], sectionGroupStates[groupCount][sectionCount][2], sectionGroupStates[groupCount][sectionCount][3], returnTo);
 			}
 		}
 	}
 	fclose(fp);
+}
+
+void readInputConfig() {
+	char pathToInputFilePlusFileName[1000];
+	snprintf(pathToInputFilePlusFileName,sizeof(pathToInputFilePlusFileName),"%s/.simplemenu/input.ini",home);
+	ini_t *config = ini_load(pathToInputFilePlusFileName);
+	const char *value = NULL;
+
+	value = ini_get(config, "CONTROLS", "A");
+	if (value) {
+		BTN_A = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "B");
+	if (value) {
+		BTN_B = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "X");
+	if (value) {
+		BTN_X = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "Y");
+	if (value) {
+		BTN_Y = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "L1");
+	if (value) {
+		BTN_L1 = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "L2");
+	if (value) {
+		BTN_L2 = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R1");
+	if (value) {
+		BTN_R1 = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R2");
+	if (value) {
+		BTN_R2 = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "UP");
+	if (value) {
+		BTN_UP = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "DOWN");
+	if (value) {
+		BTN_DOWN = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "LEFT");
+	if (value) {
+		BTN_LEFT = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "RIGHT");
+	if (value) {
+		BTN_RIGHT = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "START");
+	if (value) {
+		BTN_START = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "SELECT");
+	if (value) {
+		BTN_SELECT = atoi(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R");
+	if (value) {
+		BTN_R = atoi(value);
+	}
 }
 
 void loadLastState() {

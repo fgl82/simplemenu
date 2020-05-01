@@ -86,6 +86,7 @@ int main() {
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
+	readInputConfig();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
 	HW_Init();
 	setCPU(OC_NO);

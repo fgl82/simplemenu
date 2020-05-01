@@ -42,8 +42,8 @@ void showErrorMessage(char *errorMessage) {
 	filling[1]=0;
 	filling[2]=0;
 	int textColor[3]={255, 255, 255};
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
 	drawError(errorMessage, textColor);
 	itsStoppedBecauseOfAnError=1;
 }
@@ -99,12 +99,17 @@ void showLetter(struct Rom *rom) {
 		rectangleX = 0;
 		rectangleY = calculateProportionalSizeOrDistance(219);
 	}
-	if (!fullscreenMode&&currentMode==0) {
-		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth+10), calculateProportionalSizeOrDistance(rectangleHeight+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2)-calculateProportionalSizeOrDistance(5), borderColor);
-		drawRectangleOnScreen(calculateProportionalSizeOrDistance(rectangleWidth), calculateProportionalSizeOrDistance(rectangleHeight), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2), filling);
+	if (!fullscreenMode) {
+		if (currentMode==0) {
+			drawRectangleToScreen(calculateProportionalSizeOrDistance(rectangleWidth+10), calculateProportionalSizeOrDistance(rectangleHeight+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2)-calculateProportionalSizeOrDistance(5), borderColor);
+			drawRectangleToScreen(calculateProportionalSizeOrDistance(rectangleWidth), calculateProportionalSizeOrDistance(rectangleHeight), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2), filling);
+		} else {
+			drawRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, filling);
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, filling,80);
+		}
 	} else {
-		drawRectangleOnScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling);
-		drawTransparentRectangleToScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling,80);
+		drawRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, (int[]){0,0,0});
+//		drawTransparentRectangleToScreen(rectangleWidth, rectangleHeight, rectangleX, rectangleY, filling,80);
 	}
 	char currentGameFirstLetter[2]="";
 	char *currentGame = malloc(500);
@@ -140,7 +145,7 @@ void showLetter(struct Rom *rom) {
 				textColor[2]=0;
 			}
 			if (strcmp(letters[i],"N")==0) {
-				x+=calculateProportionalSizeOrDistance(baseFont);
+				x+=calculateProportionalSizeOrDistance(14);
 			} else if (strcmp(letters[i],"A")==0) {
 				x+=calculateProportionalSizeOrDistance(13);
 			} else if (strcmp(letters[i],"B")==0) {
@@ -186,6 +191,9 @@ void showLetter(struct Rom *rom) {
 			} else {
 				x+=calculateProportionalSizeOrDistance(11);
 			}
+			if(!is43()&&x>calculateProportionalSizeOrDistance(14)) {
+				x+=calculateProportionalSizeOrDistance(4);
+			}
 			drawCurrentLetter(letters[i], textColor, x, y);
 		}
 	} else {
@@ -206,7 +214,7 @@ void showCurrentGroup() {
 	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
 	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1);
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);
@@ -241,13 +249,14 @@ void showCurrentEmulator() {
 	strcpy(tempString,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 	strcat(tempString,"\0");
 	int width = strlen(tempString)*11;
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
-	drawRectangleOnScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)                                         , filling);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)                                         , filling);
 	drawCurrentExecutable(tempString, textColor);
 	free(tempString);
 }
 
 void showConsole() {
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
 	displayCenteredImageOnScreen(CURRENT_SECTION.systemLogo, CURRENT_SECTION.sectionName, 1);
 }
 
@@ -256,6 +265,7 @@ void showConsole() {
 //}
 
 void displayGamePicture(struct Rom *rom) {
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	if (favoritesSectionSelected) {
@@ -396,9 +406,9 @@ void drawHeader(struct Rom *rom) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if (!fullscreenMode) {
 		if(MENU_ITEMS_PER_PAGE!=12) {
-			drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), 0, 0, rgbColor);
+			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), 0, 0, rgbColor);
 		} else {
-			drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
+			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
 		}
 	}
 	if (currentCPU==OC_UC) {
@@ -435,7 +445,7 @@ void drawHeader(struct Rom *rom) {
 
 void drawShutDownScreen() {
 	int black[] = {0,0,0};
-	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
 	drawShutDownText("SHUTTING DOWN");
 }
 
@@ -443,9 +453,9 @@ void drawGameList() {
 	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 	if (!fullscreenMode) {
 		if(MENU_ITEMS_PER_PAGE!=12) {
-			drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
+			drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
 		} else {
-			drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
+			drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
 		}
 	}
 	gamesInPage=0;
@@ -553,9 +563,9 @@ void drawGameList() {
 void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if(ITEMS_PER_PAGE!=12) {
-		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((23*fontSize)/baseFont), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((23*fontSize)/baseFont), rgbColor);
+		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((23*fontSize)/baseFont), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((23*fontSize)/baseFont), rgbColor);
 	} else {
-		drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
+		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	}
 	drawTextOnFooter(text);
 }
@@ -697,9 +707,9 @@ void drawSettingsScreen() {
 
 	setOptionsAndValues(options, values, hints);
 
-	drawRectangleOnScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, brighterAmber);
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
-	drawRectangleOnScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0,0, brighterAmber);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((baseFont*29)/baseFont);//CHANGE FIRST VALUE FOR FONT SIZE
 	#ifdef TARGET_RG300
