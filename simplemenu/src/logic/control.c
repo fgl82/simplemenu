@@ -109,9 +109,9 @@ int advanceSection(int showLogo) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
 		showConsole();
-		refreshScreen();
+//		refreshScreen();
 	}
-	refreshScreen();
+//	refreshScreen();
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		displayBackgroundPicture();
@@ -133,7 +133,7 @@ int rewindSection(int showLogo) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
 		showConsole();
-		refreshScreen();
+//		refreshScreen();
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {

@@ -790,7 +790,7 @@ void updateScreen(struct Rom *rom) {
 		drawUSBScreen();
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
-	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
+//	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
 //		displayBackgroundPicture();
 //		showConsole();
 	}
@@ -839,11 +839,10 @@ void clearPicModeHideLogoTimer() {
 }
 
 uint32_t hidePicModeLogo() {
-//	while(loading) {
-//	}
 	clearPicModeHideLogoTimer();
-	currentlySectionSwitching=0;
 	hotKeyPressed=0;
+	aKeyComboWasPressed=0;
+	currentlySectionSwitching=0;
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {
