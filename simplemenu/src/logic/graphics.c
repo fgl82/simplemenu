@@ -418,8 +418,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(56);
-				if(hh!=56) {
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -443,8 +443,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(56);
-				if(hh!=56) {
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -481,8 +481,8 @@ void displayHeart() {
 			double ratioh = 0;  // Used for aspect ratio
 			int smoothing = 1;
 			ratioh = wh / hh;   // get ratio for scaling image
-			hh = calculateProportionalSizeOrDistance(56);
-			if(hh!=56) {
+			hh = calculateProportionalSizeOrDistance(64);
+			if(hh!=64) {
 				smoothing = 1;
 			}
 			wh = hh*ratioh;
@@ -525,8 +525,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				double ratioh = 0;  // Used for aspect ratio
 				int smoothing = 1;
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(56);
-				if(hh!=56) {
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -551,8 +551,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				double ratioh = 0;  // Used for aspect ratio
 				int smoothing = 1;
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(56);
-				if(hh!=56) {
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
