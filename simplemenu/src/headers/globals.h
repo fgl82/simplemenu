@@ -108,6 +108,7 @@ char favoriteIndicator[1000];
 char nopic[1000];
 char menuFont[1000];
 int fontSize;
+int footerOnTop;
 
 /* STRUCTS */
 struct OPKDesktopFile {

@@ -170,8 +170,7 @@ void drawPictureTextOnScreen(char *buf) {
 		return;
 	}
 	int white[3]={255, 255, 255};
-	drawTextOnScreen(font, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
-	//	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(239), buf, white, VAlignTop | HAlignCenter);
+	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(((17*fontSize)/baseFont)+currentMode+(currentMode>0?0:0)):calculateProportionalSizeOrDistance(239+currentMode), buf, white, VAlignTop | HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {

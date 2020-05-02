@@ -216,6 +216,9 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
 		itemsInFullDrunkenMonkey = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
+		footerOnTop = atoi(value);
+
 		switch (currentMode) {
 		    case 2:
 		    	fontSize=baseFont-4;
@@ -499,6 +502,9 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
 	itemsInFullDrunkenMonkey = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
+	footerOnTop = atoi(value);
+
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoi(value);
 
@@ -695,6 +701,9 @@ int loadSections(char *file) {
 	itemsInDrunkenMonkey = atoi(value);
 	value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
 	itemsInFullDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
+	footerOnTop = atoi(value);
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
