@@ -139,7 +139,6 @@ void drawShadedGameNameOnScreenCenter(char *buf, int position) {
 void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
 	int centerRomList = (SCREEN_WIDTH-2*(SCREEN_WIDTH/screenDivisions))/2;
-
 	drawTextOnScreen(font, centerRomList, position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
 }
 
@@ -597,7 +596,6 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(wh/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont)+calculateProportionalSizeOrDistance(72)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-
 	}
 
 	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);

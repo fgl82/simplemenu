@@ -124,7 +124,7 @@ int main() {
 	    	currentMode=0;
 	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
 	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-	        break;
+        break;
 	    default:
 	    	fontSize=baseFont-2;
 	    	currentMode=1;
