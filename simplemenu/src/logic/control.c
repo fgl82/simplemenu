@@ -526,6 +526,8 @@ void performSettingsChoosingAction() {
 	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
+		} else if (chosenSetting==SHUTDOWN_OPTION) {
+			wannaReset=1+(wannaReset*-1);
 		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
 			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==AUTO_HIDE_LOGOS_OPTION) {
@@ -632,8 +634,6 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==DEFAULT_OPTION) {
 			char command [300];
 			if (shutDownEnabled) {
-//				char *homePath=malloc(1000);
-//				snprintf(homePath,sizeof(homePath),"%s",getenv("HOME"));
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh;mv /mnt/autoexec.sh.bck /mnt/autoexec.sh");
 				#endif

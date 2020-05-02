@@ -445,7 +445,11 @@ void drawHeader(struct Rom *rom) {
 void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
-	drawShutDownText("SHUTTING DOWN");
+	if (wannaReset) {
+		drawShutDownText("REBOOTING");
+	} else {
+		drawShutDownText("SHUTTING DOWN");
+	}
 }
 
 void drawGameList() {
@@ -622,7 +626,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
 	values[DEFAULT_OPTION]= malloc(4);
 	values[USB_OPTION]= malloc(4);
-	values[SHUTDOWN_OPTION]= malloc(4);
+	values[SHUTDOWN_OPTION]= malloc(30);
 	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
 	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
 
@@ -648,9 +652,17 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
 	if (shutDownEnabled) {
-		strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+		if (wannaReset) {
+			strcpy(options[SHUTDOWN_OPTION],"Reboot");
+		} else {
+			strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+		}
 	} else {
-		strcpy(options[SHUTDOWN_OPTION],"Quit");
+		if (wannaReset) {
+			strcpy(options[SHUTDOWN_OPTION],"Reboot");
+		} else {
+			strcpy(options[SHUTDOWN_OPTION],"Quit");
+		}
 	}
 
 	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
@@ -663,10 +675,12 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
 
-	if (shutDownEnabled) {
-		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO SHUTDOWN");
+	if (shutDownEnabled&&!wannaReset) {
+		strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+	} else if (wannaReset){
+		strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
 	} else {
-		strcpy(hints[SHUTDOWN_OPTION],"PRESS A TO QUIT");
+		strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
 	}
 
 	if (stripGames) {

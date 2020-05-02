@@ -204,7 +204,7 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 //}
 
 void quit() {
-	if(shutDownEnabled) {
+	if(shutDownEnabled||wannaReset) {
 		drawShutDownScreen();
 		refreshScreen();
 	}
@@ -213,7 +213,7 @@ void quit() {
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
-	if(shutDownEnabled) {
+	if(shutDownEnabled||wannaReset) {
 		sleep(1.5);
 	}
 	freeResources();
@@ -221,9 +221,17 @@ void quit() {
 		#ifdef TARGET_PC
 		exit(0);
 		#endif
-		execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+		if (wannaReset) {
+			execlp("sh", "sh", "-c", "sync && reboot", NULL);
+		} else {
+			execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+		}
 	} else {
-		exit(0);
+		if (wannaReset) {
+			execlp("sh", "sh", "-c", "sync && reboot", NULL);
+		} else {
+			exit(0);
+		}
 	}
 }
 
