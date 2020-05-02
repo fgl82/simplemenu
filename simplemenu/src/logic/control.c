@@ -618,7 +618,7 @@ void performSettingsChoosingAction() {
 			drawGameList();
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if (keys[BTN_LEFT]) {
-				if (timeoutValue>1) {
+				if (timeoutValue>0) {
 					timeoutValue--;
 				}
 			} else {

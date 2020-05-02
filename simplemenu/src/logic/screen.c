@@ -701,7 +701,11 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
 	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
-	sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
+	if (timeoutValue>0) {
+		sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
+	} else {
+		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","ALWAYS ON");
+	}
 	if(currentMode==0) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
 	} else if (currentMode==1) {

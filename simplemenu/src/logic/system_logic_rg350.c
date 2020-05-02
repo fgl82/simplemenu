@@ -50,14 +50,16 @@ void clearTimer() {
 }
 
 uint32_t suspend() {
-	if (!isUSBMode) {
-		clearTimer();
-		oldCPU=currentCPU;
-		turnScreenOnOrOff(0);
-//		setCPU(OC_SLEEP);
-		isSuspended=1;
-	} else {
-		resetScreenOffTimer();
+	if(timeoutValue!=0) {
+		if (!isUSBMode) {
+			clearTimer();
+			oldCPU=currentCPU;
+			turnScreenOnOrOff(0);
+	//		setCPU(OC_SLEEP);
+			isSuspended=1;
+		} else {
+			resetScreenOffTimer();
+		}
 	}
 	return 0;
 };

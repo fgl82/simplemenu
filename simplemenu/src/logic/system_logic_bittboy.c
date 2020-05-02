@@ -322,15 +322,17 @@ void clearTimer() {
 }
 
 uint32_t suspend(uint32_t interval, void *param) {
-	if (!isUSBMode) {
-		clearTimer();
-		backlightValue = getBacklight();
-		oldCPU=currentCPU;
-		setBacklight(0);
-		setCPU(OC_SLEEP);
-		isSuspended=1;
-	} else {
-		resetScreenOffTimer();
+	if(timeoutValue!=0) {
+		if (!isUSBMode) {
+			clearTimer();
+			backlightValue = getBacklight();
+			oldCPU=currentCPU;
+			setBacklight(0);
+			setCPU(OC_SLEEP);
+			isSuspended=1;
+		} else {
+			resetScreenOffTimer();
+		}
 	}
 	return 0;
 };
