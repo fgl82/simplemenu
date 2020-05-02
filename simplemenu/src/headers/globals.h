@@ -165,6 +165,7 @@ struct MenuSection {
 	int activeEmulatorDirectory;
 	char category[100];
 	char scaling[2];
+	char mask[1000];
 //	char *fileList[50000];
 };
 

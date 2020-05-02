@@ -62,11 +62,11 @@ EOF
 
 # create opk
 FLIST="$1/apps"
-FLIST="${FLIST} ${1}/config"
+FLIST="${FLIST} $1/config"
 FLIST="${FLIST} $1/games"
 FLIST="${FLIST} $1/scripts"
 FLIST="${FLIST} $1/section_groups"
-FLIST="${FLIST} $1/themes"
+FLIST="${FLIST} themes"
 FLIST="${FLIST} invoker.dge"
 FLIST="${FLIST} simplemenu"
 FLIST="${FLIST} usb.png"
