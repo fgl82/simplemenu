@@ -809,6 +809,9 @@ void updateScreen(struct Rom *rom) {
 			displayGamePictureInMenu(rom);
 		}
 		drawGameList();
+		if (currentMode==0){
+			displayHeart();
+		}
 		if (currentlyChoosing==3) {
 			drawSettingsScreen();
 		} else if (currentlyChoosing==2) {
@@ -826,8 +829,8 @@ void updateScreen(struct Rom *rom) {
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
 	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
-		displayBackgroundPicture();
-		showConsole();
+//		displayBackgroundPicture();
+//		showConsole();
 	}
 	refreshScreen();
 	//    pthread_mutex_unlock(&lock);
