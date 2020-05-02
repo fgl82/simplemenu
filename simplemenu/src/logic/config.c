@@ -735,7 +735,7 @@ int loadSections(char *file) {
 }
 
 int countSections(char *file) {
-	menuSectionCounter=0;
+//	menuSectionCounter=0;
 	char pathToSectionsFilePlusFileName[1000];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s",file);
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);

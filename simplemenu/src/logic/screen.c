@@ -796,7 +796,6 @@ void drawSettingsScreen() {
 	free(hints[USB_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[ITEMS_PER_PAGE_OPTION]);
-
 }
 
 void updateScreen(struct Rom *rom) {
@@ -808,8 +807,6 @@ void updateScreen(struct Rom *rom) {
 		}
 		if (!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			displayGamePictureInMenu(rom);
-		} else {
-			displayHeart();
 		}
 		drawGameList();
 		if (currentlyChoosing==3) {
@@ -828,9 +825,9 @@ void updateScreen(struct Rom *rom) {
 		drawUSBScreen();
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
-//	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
-//		displayBackgroundPicture();
-//		showConsole();
+	} else if (currentlySectionSwitching||picModeHideLogoTimer!=NULL){
+		displayBackgroundPicture();
+		showConsole();
 	}
 	refreshScreen();
 	//    pthread_mutex_unlock(&lock);

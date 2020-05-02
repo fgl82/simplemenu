@@ -15,6 +15,7 @@
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/SDL_rotozoom.h"
+#include "../headers/logic.h"
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
@@ -621,7 +622,9 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen, int keepRatio) {
 	SDL_Surface *img = IMG_Load(fileName);
 	if (img==NULL) {
-		drawImgFallbackTextOnScreen(fallBackText);
+		if (strlen(fallBackText)>1) {
+			drawImgFallbackTextOnScreen(fallBackText);
+		}
 	} else {
 		if (!scaleToFullScreen||img->h==SCREEN_HEIGHT || img->w==SCREEN_WIDTH) {
 			SDL_Rect rectangleDest;

@@ -135,7 +135,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-		aKeyComboWasPressed=1;
+//		aKeyComboWasPressed=1;
 		return 0;
 //		hideFullScreenModeMenu();
 //		hotKeyPressed=0;
@@ -171,7 +171,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-		aKeyComboWasPressed=1;
+//		aKeyComboWasPressed=1;
 		return 0;
 //		hideFullScreenModeMenu();
 //		hotKeyPressed=0;

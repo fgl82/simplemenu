@@ -168,13 +168,9 @@ void launchGame(struct Rom *rom) {
 		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
 	} else if (rom->name!=NULL) {
-
-
-		printf("%d %s\n",CURRENT_SECTION.activeEmulatorDirectory, CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
-
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
-
 		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+
 		char *ptr = strtok(tempExecFile, " ");
 		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
 		strcat(tempExecDirPlusFileName,ptr);
