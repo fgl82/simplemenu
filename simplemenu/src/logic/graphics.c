@@ -170,6 +170,7 @@ void drawPictureTextOnScreen(char *buf) {
 		return;
 	}
 	int white[3]={255, 255, 255};
+	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), (int[]){0,0,0}, 180);
 	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(((17*fontSize)/baseFont)+currentMode+(currentMode>0?0:0)):calculateProportionalSizeOrDistance(239+currentMode), buf, white, VAlignTop | HAlignCenter);
 }
 
