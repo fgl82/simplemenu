@@ -6,6 +6,7 @@
 #include "../headers/graphics.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/system_logic.h"
 
 int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
