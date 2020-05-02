@@ -449,10 +449,10 @@ void drawShutDownScreen() {
 }
 
 void drawGameList() {
-	if (strcmp(CURRENT_SECTION.mask,"\0")==0&&(currentMode==0||currentMode==2)) {
+	if (strcmp(CURRENT_SECTION.mask,"\0")==0&&(currentMode==0)) {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		if (!fullscreenMode) {
-			if(MENU_ITEMS_PER_PAGE!=12) {
+			if(currentMode!=1) {
 				drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
 			} else {
 				drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
@@ -460,15 +460,37 @@ void drawGameList() {
 		}
 	}
 	gamesInPage=0;
-	int nextLine = calculateProportionalSizeOrDistance((10*((baseFont*29)/fontSize))/ITEMS_PER_PAGE);//CHANGE FIRST VALUE FOR FONT SIZE
-	if(currentMode==2) {
-		nextLine -= calculateProportionalSizeOrDistance(7);
-	} else if (currentMode==1) {
-		nextLine -= calculateProportionalSizeOrDistance(1);
+	int nextLine = 0;
+	if(!fullscreenMode) {
+		switch (currentMode) {
+			case 0:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
+				break;
+			case 1:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInTraditional);
+				break;
+			case 2:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInDrunkenMonkey);
+				break;
+		}
+	} else {
+		switch (currentMode) {
+			case 0:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInFullSimple);
+				break;
+			case 1:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInFullTraditional);
+				break;
+			case 2:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInFullDrunkenMonkey);
+				break;
+		}
 	}
-	if (fullscreenMode) {
-		nextLine = calculateProportionalSizeOrDistance(fontSize-2);//CHANGE FIRST VALUE FOR FONT SIZE
-	}
+
+//	nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
+//	if (fullscreenMode) {
+//		nextLine = calculateProportionalSizeOrDistance(fontSize-2);//CHANGE FIRST VALUE FOR FONT SIZE
+//	}
 	char *nameWithoutExtension;
 	struct Node* currentNode;
 	currentNode = GetNthNode(ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);

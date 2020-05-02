@@ -77,7 +77,22 @@ int backlightValue;
 char *themes[100];
 int activeTheme;
 int themeCounter;
-int textPositionCalibration;
+
+int gameListPositionInSimple;
+int gameListPositionInFullSimple;
+int headerPositionInSimple;
+int footerPositionInSimple;
+
+int gameListPositionInTraditional;
+int gameListPositionInFullTraditional;
+int headerPositionInTraditional;
+int footerPositionInTraditional;
+
+int gameListPositionInDrunkenMonkey;
+int gameListPositionInFullDrunkenMonkey;
+int headerPositionInDrunkenMonkey;
+int footerPositionInDrunkenMonkey;
+
 int baseFont;
 int itemsInSimple;
 int itemsInFullSimple;

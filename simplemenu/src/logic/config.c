@@ -161,8 +161,42 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
-		value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
-		textPositionCalibration = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
+		gameListPositionInSimple = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_simple");
+		gameListPositionInFullSimple = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "header_position_in_simple");
+		headerPositionInSimple = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "footer_position_in_simple");
+		footerPositionInSimple = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_traditional");
+		gameListPositionInTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_traditional");
+		gameListPositionInFullTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "header_position_in_traditional");
+		headerPositionInTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
+		footerPositionInTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
+		gameListPositionInDrunkenMonkey = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_drunken_monkey");
+		gameListPositionInFullDrunkenMonkey = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "header_position_in_drunken_monkey");
+		headerPositionInDrunkenMonkey = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
+		footerPositionInDrunkenMonkey = atoi(value);
 
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
@@ -411,8 +445,41 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
 
-	value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
-	textPositionCalibration = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
+	gameListPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_simple");
+	gameListPositionInFullSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_simple");
+	headerPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_simple");
+	footerPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_traditional");
+	gameListPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_traditional");
+	gameListPositionInFullTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_traditional");
+	headerPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
+	footerPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
+	gameListPositionInDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_drunken_monkey");
+	gameListPositionInFullDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_drunken_monkey");
+	headerPositionInDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
+	footerPositionInDrunkenMonkey = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
@@ -575,8 +642,41 @@ int loadSections(char *file) {
 		menuSectionCounter++;
 	}
 
-	value = ini_get(themeConfig, "GENERAL", "text_position_calibration");
-	textPositionCalibration = atoi(value);
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
+	gameListPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_simple");
+	gameListPositionInFullSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_simple");
+	headerPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_simple");
+	footerPositionInSimple = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_traditional");
+	gameListPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_traditional");
+	gameListPositionInFullTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_traditional");
+	headerPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
+	footerPositionInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
+	gameListPositionInDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_drunken_monkey");
+	gameListPositionInFullDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "header_position_in_drunken_monkey");
+	headerPositionInDrunkenMonkey = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
+	footerPositionInDrunkenMonkey = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
