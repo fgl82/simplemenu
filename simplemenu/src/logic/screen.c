@@ -289,57 +289,30 @@ void displayGamePicture(struct Rom *rom) {
 	strcat(pictureWithFullPath,".png");
 	displayBackgroundPicture();
 	if (rom==NULL) {
-//		char *tempDisplayName = getFileNameOrAlias(rom);
-//		displayCenteredImageOnScreen(pictureWithFullPath, tempDisplayName, 1,1);
-//		free(tempDisplayName);
-//	} else {
+		//		char *tempDisplayName = getFileNameOrAlias(rom);
+		//		displayCenteredImageOnScreen(pictureWithFullPath, tempDisplayName, 1,1);
+		//		free(tempDisplayName);
+		//	} else {
 		displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
 		return;
 	}
 
-		stripGameNameLeaveExtension(tempGameName);
-		if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
-			char* displayName=NULL;
-			if (rom!=NULL) {
-				displayName=getFileNameOrAlias(rom);
-			}
-			if (rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
-				if (stripGames) {
-					strcpy(displayName,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
-				}
-				displayCenteredImageOnScreen(pictureWithFullPath, displayName, 1,1);
-				drawPictureTextOnScreen(displayName);
-			} else {
-				if (currentSectionNumber==favoritesSectionNumber) {
-					if (rom!=NULL) {
-						if (strlen(rom->alias)<2) {
-							char tmp[300];
-							strcpy(tmp,getNameWithoutPath(rom->name));
-							strcpy(tmp,getNameWithoutExtension(tmp));
-							displayCenteredImageOnScreen(pictureWithFullPath, tmp, 1,1);
-							drawPictureTextOnScreen(tmp);
-						} else {
-							displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
-							drawPictureTextOnScreen(rom->alias);
-						}
-					}
-				}
-			}
-			free(displayName);
-		} else {
+	stripGameNameLeaveExtension(tempGameName);
+	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
+		char* displayName=NULL;
+		if (rom!=NULL) {
+			displayName=getFileNameOrAlias(rom);
+		}
+		if (rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
 			if (stripGames) {
+				strcpy(displayName,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+			}
+			displayCenteredImageOnScreen(pictureWithFullPath, displayName, 1,1);
+			drawPictureTextOnScreen(displayName);
+		} else {
+			if (currentSectionNumber==favoritesSectionNumber) {
 				if (rom!=NULL) {
-					if (rom->alias==NULL||strlen(rom->alias)<2) {
-						displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
-						drawPictureTextOnScreen(tempGameName);
-					} else {
-						displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
-						drawPictureTextOnScreen(rom->alias);
-					}
-				}
-			} else {
-				if (rom!=NULL) {
-					if (rom->alias==NULL||strlen(rom->alias)<2) {
+					if (strlen(rom->alias)<2) {
 						char tmp[300];
 						strcpy(tmp,getNameWithoutPath(rom->name));
 						strcpy(tmp,getNameWithoutExtension(tmp));
@@ -352,10 +325,37 @@ void displayGamePicture(struct Rom *rom) {
 				}
 			}
 		}
-		if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-			int black[3]={0, 0, 0};
-			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 210);
+		free(displayName);
+	} else {
+		if (stripGames) {
+			if (rom!=NULL) {
+				if (rom->alias==NULL||strlen(rom->alias)<2) {
+					displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
+					drawPictureTextOnScreen(tempGameName);
+				} else {
+					displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
+					drawPictureTextOnScreen(rom->alias);
+				}
+			}
+		} else {
+			if (rom!=NULL) {
+				if (rom->alias==NULL||strlen(rom->alias)<2) {
+					char tmp[300];
+					strcpy(tmp,getNameWithoutPath(rom->name));
+					strcpy(tmp,getNameWithoutExtension(tmp));
+					displayCenteredImageOnScreen(pictureWithFullPath, tmp, 1,1);
+					drawPictureTextOnScreen(tmp);
+				} else {
+					displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
+					drawPictureTextOnScreen(rom->alias);
+				}
+			}
 		}
+	}
+	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
+		int black[3]={0, 0, 0};
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 210);
+	}
 
 	free(pictureWithFullPath);
 	free(tempGameName);
@@ -817,7 +817,7 @@ void updateScreen(struct Rom *rom) {
 			displayGamePictureInMenu(rom);
 		}
 		drawGameList();
-		if (currentMode==0){
+		if (currentMode==0||fullscreenMode==1){
 			displayHeart();
 		}
 		if (currentlyChoosing==3) {
