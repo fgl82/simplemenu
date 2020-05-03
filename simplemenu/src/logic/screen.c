@@ -264,7 +264,7 @@ void showConsole() {
 //}
 
 void displayGamePicture(struct Rom *rom) {
-	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
+//	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	if (favoritesSectionSelected) {
@@ -289,38 +289,45 @@ void displayGamePicture(struct Rom *rom) {
 	strcat(pictureWithFullPath,".png");
 	displayBackgroundPicture();
 	if (rom==NULL) {
-		//		char *tempDisplayName = getFileNameOrAlias(rom);
-		//		displayCenteredImageOnScreen(pictureWithFullPath, tempDisplayName, 1,1);
-		//		free(tempDisplayName);
-		//	} else {
 		displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
 		return;
 	}
-
 	stripGameNameLeaveExtension(tempGameName);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1||currentSectionNumber==favoritesSectionNumber) {
 		char* displayName=NULL;
 		if (rom!=NULL) {
 			displayName=getFileNameOrAlias(rom);
 		}
-		if (rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
+		if (!favoritesSectionSelected&&rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
 			if (stripGames) {
 				strcpy(displayName,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+			} else {
+				strcpy(displayName,rom->alias);
 			}
 			displayCenteredImageOnScreen(pictureWithFullPath, displayName, 1,1);
 			drawPictureTextOnScreen(displayName);
 		} else {
-			if (currentSectionNumber==favoritesSectionNumber) {
+			if (favoritesSectionSelected) {
 				if (rom!=NULL) {
 					if (strlen(rom->alias)<2) {
 						char tmp[300];
 						strcpy(tmp,getNameWithoutPath(rom->name));
 						strcpy(tmp,getNameWithoutExtension(tmp));
-						displayCenteredImageOnScreen(pictureWithFullPath, tmp, 1,1);
-						drawPictureTextOnScreen(tmp);
+						if (stripGames) {
+							displayCenteredImageOnScreen(pictureWithFullPath, getAliasWithoutAlternateNameOrParenthesis(tmp), 1,1);
+							drawPictureTextOnScreen(getAliasWithoutAlternateNameOrParenthesis(tmp));
+						} else {
+							displayCenteredImageOnScreen(pictureWithFullPath, tmp, 1,1);
+							drawPictureTextOnScreen(tmp);
+						}
 					} else {
-						displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
-						drawPictureTextOnScreen(rom->alias);
+						if (stripGames) {
+							displayCenteredImageOnScreen(pictureWithFullPath, getAliasWithoutAlternateNameOrParenthesis(rom->alias), 1,1);
+							drawPictureTextOnScreen(getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+						} else {
+							displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
+							drawPictureTextOnScreen(rom->alias);
+						}
 					}
 				}
 			}
