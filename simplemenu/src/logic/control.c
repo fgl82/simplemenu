@@ -572,8 +572,8 @@ void performSettingsChoosingAction() {
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 					currentMode=0;
 				}  else if (currentMode==0) {
-					MENU_ITEMS_PER_PAGE=itemsInSimple;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+					MENU_ITEMS_PER_PAGE=itemsInCustom;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
 					currentMode=3;
 				} else {
 					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
@@ -591,27 +591,28 @@ void performSettingsChoosingAction() {
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
 					currentMode=2;
 				} else if (currentMode==2) {
-					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-					currentMode=3;}
-				else {
+					MENU_ITEMS_PER_PAGE=itemsInCustom;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+					currentMode=3;
+				} else {
 					MENU_ITEMS_PER_PAGE=itemsInSimple;
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 					currentMode=0;
 				}
 			}
-//			FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 			switch (currentMode)
 			{
+		    	case 0:
+		    		fontSize=baseFont;
+		    		break;
 			    case 1:
 			    	fontSize=baseFont-2;
-			      break;
-			    case 0:
-			    	fontSize=baseFont;
-			        break;
-			    default:
+			    	break;
+			    case 2:
 			    	fontSize=baseFont-4;
-//			    	FULLSCREEN_ITEMS_PER_PAGE-=2;
+			    	break;
+			    default:
+			    	fontSize=fontSizeCustom;
 			}
 			if(fullscreenMode==0) {
 				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

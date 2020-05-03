@@ -132,7 +132,7 @@ int main() {
 	    	currentMode=2;
 	    	break;
 	    default:
-	    	fontSize=baseFont;
+	    	fontSize=fontSizeCustom;
 	    	currentMode=3;
 	    	MENU_ITEMS_PER_PAGE=itemsInCustom;
 	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;

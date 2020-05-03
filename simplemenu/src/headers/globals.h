@@ -127,6 +127,7 @@ int systemWidthInCustom;
 int systemHeightInCustom;
 int systemXInCustom;
 int systemYInCustom;
+int fontSizeCustom;
 
 /* STRUCTS */
 struct OPKDesktopFile {

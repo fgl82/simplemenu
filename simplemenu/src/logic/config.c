@@ -254,6 +254,9 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
 		systemYInCustom = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+		fontSizeCustom = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
 
@@ -295,7 +298,7 @@ void loadTheme(char *theme) {
 		    	currentMode=2;
 		    	break;
 		    default:
-		    	fontSize=baseFont;
+		    	fontSize=fontSizeCustom;
 		    	currentMode=3;
 		    	MENU_ITEMS_PER_PAGE=itemsInCustom;
 		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
@@ -597,6 +600,9 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
 	systemYInCustom = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+	fontSizeCustom = atoi(value);
+
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
 
@@ -853,6 +859,9 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
 	systemYInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+	fontSizeCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
