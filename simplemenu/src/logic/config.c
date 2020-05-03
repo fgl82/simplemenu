@@ -224,6 +224,9 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
 		gameListYInCustom = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+		gameListWidthInCustom = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
 		gameListPositionInFullCustom = atoi(value);
 
@@ -273,27 +276,30 @@ void loadTheme(char *theme) {
 		footerOnTop = atoi(value);
 
 		switch (currentMode) {
-		    case 2:
-		    	fontSize=baseFont-4;
-		    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-		    	currentMode=2;
-		    	break;
 		    case 0:
 		    	fontSize=baseFont;
 		    	currentMode=0;
 		    	MENU_ITEMS_PER_PAGE=itemsInSimple;
 		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 		        break;
-		    default:
+		    case 1:
 		    	fontSize=baseFont-2;
 		    	currentMode=1;
 		    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
 		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-	//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+		    	break;
+		    case 2:
+		    	fontSize=baseFont-4;
+		    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+		    	currentMode=2;
+		    	break;
+		    default:
+		    	fontSize=baseFont;
+		    	currentMode=3;
+		    	MENU_ITEMS_PER_PAGE=itemsInCustom;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
 		}
-
-
 		freeFonts();
 		freeSettingsFonts();
 		initializeSettingsFonts();
@@ -561,6 +567,9 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
 	gameListYInCustom = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+	gameListWidthInCustom = atoi(value);
+
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
 	gameListPositionInFullCustom = atoi(value);
 
@@ -814,6 +823,9 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
 	gameListYInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+	gameListWidthInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
 	gameListPositionInFullCustom = atoi(value);
@@ -1106,6 +1118,7 @@ void loadLastState() {
 			startInSection=atoi(configurations[0]);
 		} else if (itemsRead==-1) {
 			itemsRead=atoi(configurations[0]);
+			printf("%d\n",itemsRead);
 		}
 		else {
 			if(atoi(configurations[1])==0) {

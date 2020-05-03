@@ -113,24 +113,30 @@ int main() {
 //	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 
 	switch (currentMode) {
+	    case 0:
+	    	fontSize=baseFont;
+	    	currentMode=0;
+	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+	    	break;
+	    case 1:
+	    	fontSize=baseFont-2;
+	    	currentMode=1;
+	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+	    	break;
 	    case 2:
 	    	fontSize=baseFont-4;
 	    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
 	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
 	    	currentMode=2;
 	    	break;
-	    case 0:
-	    	fontSize=baseFont;
-	    	currentMode=0;
-	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-        break;
 	    default:
-	    	fontSize=baseFont-2;
-	    	currentMode=1;
-	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+	    	fontSize=baseFont;
+	    	currentMode=3;
+	    	MENU_ITEMS_PER_PAGE=itemsInCustom;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+	    	break;
 	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

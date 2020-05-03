@@ -473,6 +473,10 @@ void drawGameList() {
 	if (currentMode==3&&!fullscreenMode) {
 		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 	}
+	if (currentMode==0&&!fullscreenMode) {
+		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
+		drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
+	}
 	if (strcmp(CURRENT_SECTION.mask,"\0")==0&&(currentMode==0)) {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		if (!fullscreenMode) {
@@ -576,7 +580,7 @@ void drawGameList() {
 					} else if(currentMode==3) {
 						int screenDivisions=(SCREEN_RATIO*5)/1.33;
 						int romListWidth=SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(43);
-						MAGIC_NUMBER = romListWidth;
+						MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidthInCustom);
 						drawShadedGameNameOnScreenCustom(buf, nextLine);
 					} else {
 						drawShadedGameNameOnScreen(buf, nextLine);
@@ -601,6 +605,7 @@ void drawGameList() {
 						MAGIC_NUMBER = romListWidth;
 						drawNonShadedGameNameOnScreenLeft(buf, nextLine);
 					} else if (currentMode ==3) {
+						MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidthInCustom);
 						drawNonShadedGameNameOnScreenCustom(buf, nextLine);
 					} else {
 						drawNonShadedGameNameOnScreen(buf, nextLine);

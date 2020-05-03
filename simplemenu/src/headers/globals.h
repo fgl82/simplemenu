@@ -117,6 +117,7 @@ int itemsSeparationInCustom;
 int gameListAlignmentInCustom;
 int gameListXInCustom;
 int gameListYInCustom;
+int gameListWidthInCustom;
 int gameListPositionInFullCustom;
 int artWidthInCustom;
 int artHeightInCustom;
