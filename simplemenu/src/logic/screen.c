@@ -470,6 +470,9 @@ void drawShutDownScreen() {
 }
 
 void drawGameList() {
+	if (currentMode==3&&!fullscreenMode) {
+		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+	}
 	if (strcmp(CURRENT_SECTION.mask,"\0")==0&&(currentMode==0)) {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		if (!fullscreenMode) {
@@ -492,6 +495,9 @@ void drawGameList() {
 				break;
 			case 2:
 				nextLine = calculateProportionalSizeOrDistance(gameListPositionInDrunkenMonkey);
+				break;
+			case 3:
+				nextLine = calculateProportionalSizeOrDistance(gameListYInCustom);
 				break;
 		}
 	} else {
@@ -567,6 +573,11 @@ void drawGameList() {
 						int romListWidth=SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(43);
 						MAGIC_NUMBER = romListWidth;
 						drawShadedGameNameOnScreenLeft(buf, nextLine);
+					} else if(currentMode==3) {
+						int screenDivisions=(SCREEN_RATIO*5)/1.33;
+						int romListWidth=SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(43);
+						MAGIC_NUMBER = romListWidth;
+						drawShadedGameNameOnScreenCustom(buf, nextLine);
 					} else {
 						drawShadedGameNameOnScreen(buf, nextLine);
 					}
@@ -589,6 +600,8 @@ void drawGameList() {
 						int romListWidth=SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(43);
 						MAGIC_NUMBER = romListWidth;
 						drawNonShadedGameNameOnScreenLeft(buf, nextLine);
+					} else if (currentMode ==3) {
+						drawNonShadedGameNameOnScreenCustom(buf, nextLine);
 					} else {
 						drawNonShadedGameNameOnScreen(buf, nextLine);
 					}
@@ -602,6 +615,8 @@ void drawGameList() {
 				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInTraditional);
 			} else if(currentMode==2) {
 				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInDrunkenMonkey);
+			} else if(currentMode==3) {
+				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInCustom);
 			}
 		} else {
 			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/baseFont);
