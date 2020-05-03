@@ -497,6 +497,92 @@ void displayImageOnScreenTraditional(char *fileName) {
 	}
 }
 
+void displayImageOnScreenCustom(char *fileName) {
+	SDL_Surface *screenshot = IMG_Load(fileName);
+	int rightRectangleColor[3] = {80, 80, 80};
+	int screenDivisions=(SCREEN_RATIO*5)/1.33;
+
+	displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+
+	if (screenshot!=NULL) {
+		double w = screenshot->w;
+		double h = screenshot->h;
+		double ratio = 0;  // Used for aspect ratio
+		int smoothing = 1;
+		ratio = w / h;   // get ratio for scaling image
+		h = calculateProportionalSizeOrDistance(90);
+		w = h*ratio;
+		smoothing = 0;
+		if (w!=2*(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(8)) {
+			ratio = h / w;   // get ratio for scaling image
+			w = 2*(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(8);
+			h = w*ratio;
+			int max = 90;
+			int newMax = 90;
+			if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
+				max = 116;
+				newMax = 100;
+			}
+			if (h>calculateProportionalSizeOrDistance(max)) {
+				ratio = w / h;   // get ratio for scaling image
+				h = calculateProportionalSizeOrDistance(newMax);
+				w = h*ratio;
+			}
+			smoothing=1;
+		}
+		drawImage(screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
+		if(hideHeartTimer!=NULL) {
+			SDL_Surface *heart = IMG_Load(favoriteIndicator);
+			if (heart!=NULL) {
+				double wh = heart->w;
+				double hh = heart->h;
+				double ratioh = 0;  // Used for aspect ratio
+				ratioh = wh / hh;   // get ratio for scaling image
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
+					smoothing = 1;
+				}
+				wh = hh*ratioh;
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+			}
+		}
+	} else {
+		int smoothing = 0;
+		if(hideHeartTimer!=NULL) {
+			SDL_Surface *heart = IMG_Load(favoriteIndicator);
+			if (heart!=NULL) {
+				double wh = heart->w;
+				double hh = heart->h;
+				double ratioh = 0;  // Used for aspect ratio
+				ratioh = wh / hh;   // get ratio for scaling image
+				hh = calculateProportionalSizeOrDistance(64);
+				if(hh!=64) {
+					smoothing = 1;
+				}
+				wh = hh*ratioh;
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+calculateProportionalSizeOrDistance(90)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+			}
+		}
+	}
+	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
+	if (systemImage!=NULL) {
+		double w1 = systemImage->w;
+		double h1 = systemImage->h;
+		double ratio1 = 0;  // Used for aspect ratio
+		ratio1 = w1 / h1;   // get ratio for scaling image
+		h1 = (SCREEN_HEIGHT*90)/240;
+		w1 = h1*ratio1;
+		ratio1 = h1 / w1;   // get ratio for scaling image
+		int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
+		int smoothing=0;
+		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
+			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
+			smoothing=1;
+		}
+		drawImage1(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+	}
+}
+
 void displayHeart() {
 	if(hideHeartTimer!=NULL) {
 		SDL_Surface *heart = IMG_Load(favoriteIndicator);

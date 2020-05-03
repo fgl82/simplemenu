@@ -327,13 +327,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 
 	#ifndef TARGET_PC
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-
 	#else
 
 	strcat(exec, " \"");
 	strcat(exec, fileToBeExecutedWithFullPath);
 	strcat(exec, "\"");
-
+	printf("%s\n",exec);
 	system(exec);
 	free(exec);
 

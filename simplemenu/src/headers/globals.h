@@ -78,37 +78,54 @@ int backlightValue;
 char *themes[100];
 int activeTheme;
 int themeCounter;
+int currentMode;
+char menuFont[1000];
+int baseFont;
+int fontSize;
+int footerOnTop;
+char simpleBackground[1000];
+char fullscreenBackground[1000];
+char favoriteIndicator[1000];
 
+int itemsInSimple;
+int itemsInFullSimple;
+int itemsSeparationInSimple;
 int gameListPositionInSimple;
 int gameListPositionInFullSimple;
 int headerPositionInSimple;
 int footerPositionInSimple;
 
+int itemsInTraditional;
+int itemsInFullTraditional;
+int itemsSeparationInTraditional;
 int gameListPositionInTraditional;
 int gameListPositionInFullTraditional;
 int headerPositionInTraditional;
 int footerPositionInTraditional;
 
+int itemsInDrunkenMonkey;
+int itemsInFullDrunkenMonkey;
+int itemsSeparationInDrunkenMonkey;
 int gameListPositionInDrunkenMonkey;
 int gameListPositionInFullDrunkenMonkey;
 int headerPositionInDrunkenMonkey;
 int footerPositionInDrunkenMonkey;
 
-int baseFont;
-int itemsInSimple;
-int itemsInFullSimple;
-int itemsInTraditional;
-int itemsInFullTraditional;
-int itemsInDrunkenMonkey;
-int itemsInFullDrunkenMonkey;
-int currentMode;
-char simpleBackground[1000];
-char fullscreenBackground[1000];
-char favoriteIndicator[1000];
-char nopic[1000];
-char menuFont[1000];
-int fontSize;
-int footerOnTop;
+int itemsInCustom;
+int itemsInFullCustom;
+int itemsSeparationInCustom;
+int gameListAlignmentInCustom;
+int gameListXInCustom;
+int gameListYInCustom;
+int gameListPositionInFullCustom;
+int artWidthInCustom;
+int artHeightInCustom;
+int artXInCustom;
+int artYInCustom;
+int systemWidthInCustom;
+int systemHeightInCustom;
+int systemXInCustom;
+int systemYInCustom;
 
 /* STRUCTS */
 struct OPKDesktopFile {

@@ -399,8 +399,10 @@ void displayGamePictureInMenu(struct Rom *rom) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
 		if (currentMode==1) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else {
+		} else if (currentMode==2) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
+		} else {
+			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 		free(tempDisplayName);
 	} else {
@@ -594,7 +596,13 @@ void drawGameList() {
 			}
 		}
 		if (!fullscreenMode) {
-			nextLine+=calculateProportionalSizeOrDistance((fontSize*19)/baseFont);
+			if(currentMode==0) {
+				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInSimple);
+			} else if(currentMode==1) {
+				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInTraditional);
+			} else if(currentMode==2) {
+				nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInDrunkenMonkey);
+			}
 		} else {
 			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/baseFont);
 		}
@@ -727,8 +735,10 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
 	} else if (currentMode==1) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"TRADITIONAL");
-	} else {
+	} else if (currentMode==2) {
 		strcpy(values[ITEMS_PER_PAGE_OPTION],"DRUNKEN MONKEY");
+	} else {
+		strcpy(values[ITEMS_PER_PAGE_OPTION],"CUSTOM");
 	}
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");

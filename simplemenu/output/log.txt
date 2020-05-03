@@ -1,0 +1,121 @@
+[INFO] RetroArch 1.8.5 (Git 8bcd74b)
+[INFO] === Build =======================================
+[INFO] CPU Model Name: Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+[INFO] Capabilities:  MMX MMXEXT SSE SSE2 SSE3 SSSE3 SSE4 SSE4.2 AES AVX AVX2
+[INFO] Built: Mar 22 2020
+[INFO] Version: 1.8.5
+[INFO] Git: 8bcd74b
+[INFO] =================================================
+[INFO] [Environ]: SET_PIXEL_FORMAT: RGB565.
+[INFO] Version of libretro API: 1
+[INFO] Compiled against API: 1
+[INFO] [Audio]: Set audio input rate to: 30000.00 Hz.
+[INFO] [Video]: Video @ fullscreen
+[ERROR] [Wayland]: Failed to connect to Wayland server.
+[INFO] [GL]: Found GL context: x
+[INFO] [GL]: Detecting screen resolution 1920x1080.
+[INFO] [GLX]: Window manager is Mutter (Muffin).
+[INFO] [XINERAMA]: Xinerama version: 1.1.
+[INFO] [XINERAMA]: Xinerama screens: 1.
+[INFO] [GLX]: Using Xinerama on screen #0.
+[INFO] [GLX]: X = 0, Y = 0, W = 1920, H = 1080.
+[INFO] [GLX]: Using windowed fullscreen.
+[INFO] [GLX]: Found swap function: glXSwapIntervalEXT.
+[INFO] [GLX]: glXSwapInterval(1)
+[INFO] [GL]: Vendor: Intel Open Source Technology Center, Renderer: Mesa DRI Intel(R) HD Graphics 520 (Skylake GT2) .
+[INFO] [GL]: Version: 3.0 Mesa 19.2.8.
+[INFO] [GL]: Using resolution 1920x1080
+[INFO] [GL]: Default shader backend found: glsl.
+[INFO] [Shader driver]: Using GLSL shader backend.
+[INFO] [GLSL]: Checking GLSL shader support ...
+[WARN] [GL]: Stock GLSL shaders will be used.
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] Setting up menu pipeline shaders for XMB ... 
+[INFO] [GLSL]: Compiling ribbon shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Compiling simple ribbon shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Compiling snow shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Compiling modern snow shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Compiling bokeh shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GLSL]: Compiling snowflake shader..
+[INFO] [GLSL]: Found GLSL vertex shader.
+[INFO] [GLSL]: Found GLSL fragment shader.
+[INFO] [GLSL]: Linking GLSL program.
+[INFO] [GL]: Using 4 textures.
+[INFO] [GL]: Loaded 1 program(s).
+[INFO] [GL]: Using GL_RGB565 for texture uploads.
+[INFO] [Joypad]: Found joypad driver: "udev".
+[INFO] [Font]: Using font rendering backend: freetype.
+[INFO] [DBus]: Suspended screensaver via DBus.
+[INFO] [Video]: Found display server: x11
+[INFO] [PulseAudio]: Requested 24576 bytes buffer, got 18432.
+[INFO] [Menu]: Found menu display driver: "gl".
+[ERROR] Failed to create rendering backend: freetype.
+[ERROR] Failed to create rendering backend: stb-unicode.
+[INFO] [Font]: Using font rendering backend: bitmap.
+[ERROR] Failed to create rendering backend: freetype.
+[ERROR] Failed to create rendering backend: stb-unicode.
+[INFO] [Font]: Using font rendering backend: bitmap.
+[INFO] [Menu]: Found menu display driver: "gl".
+[ERROR] Failed to create rendering backend: freetype.
+[ERROR] Failed to create rendering backend: stb-unicode.
+[INFO] [Font]: Using font rendering backend: bitmap.
+[ERROR] Failed to create rendering backend: freetype.
+[ERROR] Failed to create rendering backend: stb-unicode.
+[INFO] [Font]: Using font rendering backend: bitmap.
+[WARN] [XMB] Asset missing: /home/bittboy/.config/retroarch/assets/xmb/monochrome/png/retroarch.png
+[WARN] [XMB] Critical asset missing, no icons will be drawn
+[INFO] [LED]: LED driver = 'null' 0x55c4e7941aa0
+[INFO] [MIDI]: Initializing ...
+[INFO] [MIDI]: Input disabled.
+[INFO] [MIDI]: Output disabled.
+[INFO] [MIDI]: Initialized "alsa" driver.
+[INFO] SRAM will not be saved.
+[INFO] Loading history file: [/home/bittboy/.config/retroarch/content_history.lpl].
+[INFO] Loading history file: [/home/bittboy/.config/retroarch/content_music_history.lpl].
+[INFO] Loading history file: [/home/bittboy/.config/retroarch/content_video_history.lpl].
+[INFO] Loading history file: [/home/bittboy/.config/retroarch/content_image_history.lpl].
+[INFO] Loading favorites file: [/home/bittboy/.config/retroarch/content_favorites.lpl].
+[INFO] [GL]: VSync => on
+[INFO] [GLX]: glXSwapInterval(1)
+[INFO] [GL]: VSync => on
+[INFO] [GLX]: glXSwapInterval(1)
+[INFO] [PulseAudio]: Pausing.
+[INFO] [PulseAudio]: Unpausing.
+[INFO] [GL]: VSync => on
+[INFO] [GLX]: glXSwapInterval(1)
+[INFO] [PulseAudio]: Pausing.
+[INFO] [PulseAudio]: Unpausing.
+[INFO] [config] Saved new config to "/home/bittboy/.config/retroarch/retroarch.cfg".
+[INFO] Content ran for a total of: 00 hours, 00 minutes, 00 seconds.
+[INFO] Unloading game..
+[INFO] [PulseAudio]: Pausing.
+[INFO] Unloading core..
+[INFO] Unloading core symbols..
+[INFO] [XINERAMA]: Xinerama version: 1.1.
+[INFO] [XINERAMA]: Xinerama screens: 1.
+[INFO] [XINERAMA]: Saved monitor #0.
+[INFO] [Video]: Does not have enough samples for monitor refresh rate estimation. Requires to run for at least 4096 frames.
+[INFO] [Video]: Does not have enough samples for monitor refresh rate estimation. Requires to run for at least 4096 frames.

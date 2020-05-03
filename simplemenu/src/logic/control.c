@@ -170,14 +170,11 @@ void launchGame(struct Rom *rom) {
 	} else if (rom->name!=NULL) {
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
 		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
-
-		char *ptr = strtok(tempExecFile, " ");
+		char *ptr = strtok(tempExec, " ");
 		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
-		strcat(tempExecDirPlusFileName,ptr);
-		file = fopen(tempExecDirPlusFileName, "r");
-
+		strcat(tempExecDirPlusFileName,tempExecFile);
+		file = fopen(ptr, "r");
 		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
-
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,tempExecDirPlusFileName);
 			strcat(error,"-NOT FOUND");
@@ -187,7 +184,12 @@ void launchGame(struct Rom *rom) {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
 		} else {
+			printf("%s\n",tempExecDirPlusFileName);
+			#ifdef TARGET_PC
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], tempExecDirPlusFileName,rom->name);
+			#else
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
+			#endif
 		}
 	}
 }
@@ -569,6 +571,10 @@ void performSettingsChoosingAction() {
 					MENU_ITEMS_PER_PAGE=itemsInSimple;
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 					currentMode=0;
+				}  else if (currentMode==0) {
+					MENU_ITEMS_PER_PAGE=itemsInSimple;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+					currentMode=3;
 				} else {
 					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
@@ -584,7 +590,11 @@ void performSettingsChoosingAction() {
 					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
 					currentMode=2;
-				} else {
+				} else if (currentMode==2) {
+					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+					currentMode=3;}
+				else {
 					MENU_ITEMS_PER_PAGE=itemsInSimple;
 					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 					currentMode=0;
