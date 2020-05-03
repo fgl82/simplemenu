@@ -314,16 +314,20 @@ void displayGamePicture(struct Rom *rom) {
 						strcpy(tmp,getNameWithoutPath(rom->name));
 						strcpy(tmp,getNameWithoutExtension(tmp));
 						if (stripGames) {
-							displayCenteredImageOnScreen(pictureWithFullPath, getAliasWithoutAlternateNameOrParenthesis(tmp), 1,1);
-							drawPictureTextOnScreen(getAliasWithoutAlternateNameOrParenthesis(tmp));
+							char * temp1 = getAliasWithoutAlternateNameOrParenthesis(tmp);
+							displayCenteredImageOnScreen(pictureWithFullPath, temp1, 1,1);
+							drawPictureTextOnScreen(temp1);
+							free(temp1);
 						} else {
 							displayCenteredImageOnScreen(pictureWithFullPath, tmp, 1,1);
 							drawPictureTextOnScreen(tmp);
 						}
 					} else {
 						if (stripGames) {
-							displayCenteredImageOnScreen(pictureWithFullPath, getAliasWithoutAlternateNameOrParenthesis(rom->alias), 1,1);
-							drawPictureTextOnScreen(getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+							char * temp1 = getAliasWithoutAlternateNameOrParenthesis(rom->alias);
+							displayCenteredImageOnScreen(pictureWithFullPath, temp1, 1,1);
+							drawPictureTextOnScreen(temp1);
+							free(temp1);
 						} else {
 							displayCenteredImageOnScreen(pictureWithFullPath, rom->alias, 1,1);
 							drawPictureTextOnScreen(rom->alias);
@@ -520,7 +524,9 @@ void drawGameList() {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
 			strcpy(nameWithoutExtension,rom->alias);
 			if(stripGames) {
-				strcpy(nameWithoutExtension,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
+				char* temp1 = getAliasWithoutAlternateNameOrParenthesis(rom->alias);
+				strcpy(nameWithoutExtension,temp1);
+				free(temp1);
 //				stripGameNameLeaveExtension(nameWithoutExtension);
 			}
 			strcat(nameWithoutExtension,"\0");
