@@ -507,6 +507,12 @@ void displayImageOnScreenTraditional(char *fileName) {
 }
 
 void displayImageOnScreenCustom(char *fileName) {
+
+	if (currentMode==3&&!fullscreenMode) {
+		printf("sdasd\n");
+		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+	}
+
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;

@@ -470,9 +470,6 @@ void drawShutDownScreen() {
 }
 
 void drawGameList() {
-	if (currentMode==3&&!fullscreenMode) {
-		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
-	}
 	if (currentMode==0&&!fullscreenMode) {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
@@ -856,7 +853,7 @@ void updateScreen(struct Rom *rom) {
 		if (fullscreenMode) {
 			displayGamePicture(rom);
 		}
-		if (!fullscreenMode&&(currentMode==1||currentMode==2)) {
+		if (!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
 			displayGamePictureInMenu(rom);
 		}
 		drawGameList();
