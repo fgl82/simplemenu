@@ -575,8 +575,6 @@ void drawGameList() {
 						MAGIC_NUMBER = romListWidth;
 						drawShadedGameNameOnScreenLeft(buf, nextLine);
 					} else if(currentMode==3) {
-						int screenDivisions=(SCREEN_RATIO*5)/1.33;
-						int romListWidth=SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(43);
 						MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidthInCustom);
 						drawShadedGameNameOnScreenCustom(buf, nextLine);
 					} else {

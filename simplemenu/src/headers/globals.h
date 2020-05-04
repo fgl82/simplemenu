@@ -82,6 +82,7 @@ int currentMode;
 char menuFont[1000];
 int baseFont;
 int fontSize;
+int transparentShading;
 int footerOnTop;
 char simpleBackground[1000];
 char fullscreenBackground[1000];

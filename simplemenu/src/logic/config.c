@@ -260,6 +260,9 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "transparent_shading");
+		transparentShading  = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "items_in_simple");
 		itemsInSimple = atoi(value);
 		value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
@@ -606,6 +609,9 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "transparent_shading");
+	transparentShading  = atoi(value);
+
 	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
 	itemsInSimple = atoi(value);
 	value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
@@ -865,6 +871,9 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "transparent_shading");
+	transparentShading  = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
 	itemsInSimple = atoi(value);

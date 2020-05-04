@@ -29,6 +29,8 @@ TTF_Font *settingsfont = NULL;
 TTF_Font *settingsHeaderFont = NULL;
 TTF_Font *settingsFooterFont = NULL;
 
+SDL_Surface *backgroundImg;
+
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	SDL_Color c;
 	c.r = r;
@@ -156,13 +158,19 @@ void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
-	if (gameListAlignmentInCustom == 0) {
-		drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	} else if (gameListAlignmentInCustom == 1) {
-		drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	} else {
-		drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	}
+		int hAlign = 0;
+		if (gameListAlignmentInCustom==0) {
+			hAlign = HAlignLeft;
+		} else if (gameListAlignmentInCustom==1) {
+			hAlign = HAlignCenter;
+		} else {
+			hAlign = HAlignRight;
+		}
+		if (transparentShading) {
+			drawTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign);
+		} else {
+			drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+		}
 }
 
 void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
@@ -509,12 +517,11 @@ void displayImageOnScreenTraditional(char *fileName) {
 void displayImageOnScreenCustom(char *fileName) {
 
 	if (currentMode==3&&!fullscreenMode) {
-		printf("sdasd\n");
-		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+		displayCustomMaskOnScreen();
+//		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 	}
 
 	SDL_Surface *screenshot = IMG_Load(fileName);
-	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
 
 	displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
@@ -525,27 +532,21 @@ void displayImageOnScreenCustom(char *fileName) {
 		double ratio = 0;  // Used for aspect ratio
 		int smoothing = 1;
 		ratio = w / h;   // get ratio for scaling image
-		h = calculateProportionalSizeOrDistance(90);
+		h = calculateProportionalSizeOrDistance(artHeightInCustom);
 		w = h*ratio;
 		smoothing = 0;
-		if (w!=2*(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(8)) {
+		if (w!=artWidthInCustom) {
 			ratio = h / w;   // get ratio for scaling image
-			w = 2*(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(8);
+			w = calculateProportionalSizeOrDistance(artWidthInCustom);
 			h = w*ratio;
-			int max = 90;
-			int newMax = 90;
-			if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-				max = 116;
-				newMax = 100;
-			}
-			if (h>calculateProportionalSizeOrDistance(max)) {
+			if (h>calculateProportionalSizeOrDistance(artHeightInCustom)) {
 				ratio = w / h;   // get ratio for scaling image
-				h = calculateProportionalSizeOrDistance(newMax);
+				h = calculateProportionalSizeOrDistance(artHeightInCustom);
 				w = h*ratio;
 			}
 			smoothing=1;
 		}
-		drawImage(screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
+		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -585,16 +586,10 @@ void displayImageOnScreenCustom(char *fileName) {
 		double h1 = systemImage->h;
 		double ratio1 = 0;  // Used for aspect ratio
 		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = (SCREEN_HEIGHT*90)/240;
+		h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
 		w1 = h1*ratio1;
-		ratio1 = h1 / w1;   // get ratio for scaling image
-		int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
-		int smoothing=0;
-		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
-			smoothing=1;
-		}
-		drawImage1(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+		int smoothing=1;
+		drawImage1(screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
 	}
 }
 
@@ -751,6 +746,16 @@ void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleT
 	}
 }
 
+void displayCustomMaskOnScreen() {
+		SDL_Rect rectangleDest;
+		rectangleDest.w = 0;
+		rectangleDest.h = 0;
+		rectangleDest.x = 0;
+		rectangleDest.y = 0;
+		SDL_BlitSurface(backgroundImg, NULL, screen, &rectangleDest);
+//		SDL_FreeSurface(img);
+}
+
 void drawUSBScreen() {
 	int white[3]={255, 255, 255};
 	int black[3]={0, 0, 0};
@@ -768,15 +773,17 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
-	#ifndef TARGET_PC
+//	#ifndef TARGET_PC
 	SCREEN_WIDTH = 320;
 	SCREEN_HEIGHT = 240;
-	#endif
+//	#endif
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_FULLSCREEN);
+//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+	backgroundImg = IMG_Load("/home/bittboy/Pictures/mask.png");
 }
 
 void refreshScreen() {
