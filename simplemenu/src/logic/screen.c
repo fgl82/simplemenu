@@ -84,7 +84,7 @@ void showLetter(struct Rom *rom) {
 		rectangleX = 0;
 		rectangleY = calculateProportionalSizeOrDistance(220);
 	}
-	if (currentMode==1||currentMode==2) {
+	if (currentMode==1||currentMode==2||currentMode==3) {
 		filling[0] = CURRENT_SECTION.headerAndFooterBackgroundColor[0];
 		filling[1] = CURRENT_SECTION.headerAndFooterBackgroundColor[1];
 		filling[2] = CURRENT_SECTION.headerAndFooterBackgroundColor[2];
@@ -103,9 +103,11 @@ void showLetter(struct Rom *rom) {
 		if (currentMode==0) {
 			drawRectangleToScreen(calculateProportionalSizeOrDistance(rectangleWidth+10), calculateProportionalSizeOrDistance(rectangleHeight+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2)-calculateProportionalSizeOrDistance(5), borderColor);
 			drawRectangleToScreen(calculateProportionalSizeOrDistance(rectangleWidth), calculateProportionalSizeOrDistance(rectangleHeight), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(rectangleWidth/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(rectangleHeight/2), filling);
-		} else {
+		} else if (currentMode!=3){
 			drawRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, filling);
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, filling,80);
+		} else {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, (int[]){0,0,0},120);
 		}
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH, rectangleHeight, rectangleX, rectangleY, (int[]){0,0,0});
@@ -123,7 +125,7 @@ void showLetter(struct Rom *rom) {
 	if(isdigit(currentGameFirstLetter[0])) {
 		currentGameFirstLetter[0]='#';
 	}
-	if (fullscreenMode||currentMode==1||currentMode==2) {
+	if (fullscreenMode||currentMode==1||currentMode==2||currentMode==3) {
 		int x = 0;
 		int y = calculateProportionalSizeOrDistance(231);
 		if (currentMode==1&&!fullscreenMode) {
@@ -420,7 +422,7 @@ void drawHeader(struct Rom *rom) {
 	char finalString [100];
 	//	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
-	if (!fullscreenMode) {
+	if (!fullscreenMode&&currentMode!=3) {
 		if(MENU_ITEMS_PER_PAGE!=12) {
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), 0, 0, rgbColor);
 		} else {
@@ -631,7 +633,7 @@ void drawFooter(char *text) {
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if(currentMode==2) {
 		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((23*fontSize)/baseFont), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((23*fontSize)/baseFont), rgbColor);
-	} else {
+	} else if (currentMode!=3) {
 		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), rgbColor);
 	}
 	drawTextOnFooter(text);
@@ -847,13 +849,13 @@ void drawSettingsScreen() {
 void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		setupDecorations(rom);
 		if (fullscreenMode) {
 			displayGamePicture(rom);
 		}
 		if (!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
 			displayGamePictureInMenu(rom);
 		}
+		setupDecorations(rom);
 		drawGameList();
 		if (currentMode==0||fullscreenMode==1){
 			displayHeart();

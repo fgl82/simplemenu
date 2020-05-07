@@ -29,6 +29,8 @@ TTF_Font *settingsfont = NULL;
 TTF_Font *settingsHeaderFont = NULL;
 TTF_Font *settingsFooterFont = NULL;
 
+TTF_Font *customHeaderFont = NULL;
+
 SDL_Surface *backgroundImg;
 
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
@@ -110,6 +112,35 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 
 int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align) {
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
+}
+
+void drawCustomText1OnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align){
+	SDL_Surface *msg;
+	char *bufCopy=malloc(300);
+	char *bufCopy1=malloc(300);
+	strcpy(bufCopy,buf);
+	strcpy(bufCopy1,buf);
+	bufCopy1[1]='\0';
+	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+	if (align & HAlignCenter) {
+		x -= msg->w / 2;
+	} else if (align & HAlignRight) {
+		x -= msg->w;
+	}
+
+	if (align & VAlignMiddle) {
+		y -= msg->h / 2;
+	} else if (align & VAlignTop) {
+		y -= msg->h;
+	}
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = msg->w;
+	rect.h = msg->h;
+	SDL_BlitSurface(msg, NULL, screen, &rect);
+	SDL_FreeSurface(msg);
+	free(bufCopy);
 }
 
 void drawShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[], int txtBackgroundColor[]) {
@@ -240,6 +271,9 @@ void drawTextOnHeader(char *text) {
 		case 2:
 			drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInDrunkenMonkey), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 			break;
+		case 3:
+			drawCustomText1OnScreen(customHeaderFont, text1XInCustom, text1YInCustom, text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
+			break;
 	}
 }
 
@@ -344,11 +378,19 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
-	double zoomx = newwidth  / (float)image->w;
-	double zoomy = newheight / (float)image->h;
+//	double zoomx = newwidth  / (float)image->w;
+//	double zoomy = newheight / (float)image->h;
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, smoothing);
-	// If the original had an alpha color key, give it to the new one.
+	SDL_Surface* sized = NULL;
+//	if (newwidth<image->w) {
+//		double zoomx = (float)image->w/newwidth;
+//		double zoomy = (float)image->h/newheight;
+//		sized = shrinkSurface(image, 2, 2);
+//	} else {
+		double zoomx = newwidth  / (float)image->w;
+		double zoomy = newheight / (float)image->h;
+		sized = zoomSurface(image, zoomx, zoomy, smoothing);
+//	}	// If the original had an alpha color key, give it to the new one.
 	if( image->flags & SDL_SRCCOLORKEY ) {
 		// Acquire the original Key
 		Uint32 colorkey = image->format->colorkey;
@@ -374,10 +416,19 @@ int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, i
 int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
-	double zoomx = newwidth  / (float)image->w;
-	double zoomy = newheight / (float)image->h;
+
+
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-	SDL_Surface* sized = zoomSurface( image, zoomx, zoomy, smoothing);
+	SDL_Surface* sized = NULL;
+//	if (newwidth<image->w) {
+//		double zoomx = (float)image->w/newwidth;
+//		double zoomy = (float)image->h/newheight;
+//		sized = shrinkSurface(image, 2, 2);
+//	} else {
+		double zoomx = newwidth  / (float)image->w;
+		double zoomy = newheight / (float)image->h;
+		sized = zoomSurface(image, zoomx, zoomy, smoothing);
+//	}
 	// If the original had an alpha color key, give it to the new one.
 	if( image->flags & SDL_SRCCOLORKEY ) {
 		// Acquire the original Key
@@ -468,14 +519,12 @@ void displayImageOnScreenTraditional(char *fileName) {
 			}
 		}
 	} else {
-		if (strcmp(CURRENT_SECTION.mask,"\0")==0) {
-			if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-				drawRectangleToScreen(calculateProportionalSizeOrDistance(138),calculateProportionalSizeOrDistance(104), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(calculateProportionalSizeOrDistance(134)/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
-				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(134),calculateProportionalSizeOrDistance(100),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(134/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
-			} else {
-				drawRectangleToScreen(calculateProportionalSizeOrDistance(124),calculateProportionalSizeOrDistance(94), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(calculateProportionalSizeOrDistance(120)/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
-				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(120),calculateProportionalSizeOrDistance(90),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(120/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
-			}
+		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
+			drawRectangleToScreen(calculateProportionalSizeOrDistance(138),calculateProportionalSizeOrDistance(104), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(calculateProportionalSizeOrDistance(134)/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
+			drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(134),calculateProportionalSizeOrDistance(100),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(134/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
+		} else {
+			drawRectangleToScreen(calculateProportionalSizeOrDistance(124),calculateProportionalSizeOrDistance(94), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(calculateProportionalSizeOrDistance(120)/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
+			drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(120),calculateProportionalSizeOrDistance(90),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-calculateProportionalSizeOrDistance(120/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
 		}
 		int smoothing = 0;
 		if(hideHeartTimer!=NULL) {
@@ -534,16 +583,16 @@ void displayImageOnScreenCustom(char *fileName) {
 		ratio = w / h;   // get ratio for scaling image
 		h = calculateProportionalSizeOrDistance(artHeightInCustom);
 		w = h*ratio;
-		smoothing = 0;
-		if (w!=artWidthInCustom) {
+		smoothing = 1;
+		if (w<calculateProportionalSizeOrDistance(artWidthInCustom)) {
 			ratio = h / w;   // get ratio for scaling image
 			w = calculateProportionalSizeOrDistance(artWidthInCustom);
 			h = w*ratio;
-			if (h>calculateProportionalSizeOrDistance(artHeightInCustom)) {
-				ratio = w / h;   // get ratio for scaling image
-				h = calculateProportionalSizeOrDistance(artHeightInCustom);
-				w = h*ratio;
-			}
+//			if (h>calculateProportionalSizeOrDistance(artHeightInCustom)) {
+//				ratio = w / h;   // get ratio for scaling image
+//				h = calculateProportionalSizeOrDistance(artHeightInCustom);
+//				w = h*ratio;
+//			}
 			smoothing=1;
 		}
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
@@ -783,7 +832,7 @@ void initializeDisplay() {
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-	backgroundImg = IMG_Load("/home/bittboy/Pictures/mask.png");
+	backgroundImg = IMG_Load("/usr/local/home/.simplemenu/themes/default/resources/general/mask.png");
 }
 
 void refreshScreen() {
@@ -804,6 +853,7 @@ void initializeFonts() {
 	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+18));
 	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+2));
+	customHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(text1FontSizeInCustom));
 }
 
 void freeFonts() {
@@ -811,6 +861,8 @@ void freeFonts() {
 	font = NULL;
 	TTF_CloseFont(headerFont);
 	headerFont = NULL;
+	TTF_CloseFont(customHeaderFont);
+	customHeaderFont = NULL;
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
 	TTF_CloseFont(picModeFont);

@@ -1468,12 +1468,12 @@ The input surface is not modified. The output surface is newly allocated.
 \return The new, shrunken surface.
 */
 /*@null@*/
-SDL_Surface *shrinkSurface(SDL_Surface *src, int factorx, int factory)
+SDL_Surface *shrinkSurface(SDL_Surface *src, double factorx, double factory)
 {
-	int result;
+	double result;
 	SDL_Surface *rz_src;
 	SDL_Surface *rz_dst = NULL;
-	int dstwidth, dstheight;
+	double dstwidth, dstheight;
 	int is32bit;
 	int i, src_converted;
 	int haveError = 0;

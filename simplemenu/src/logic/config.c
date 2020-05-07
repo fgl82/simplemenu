@@ -257,6 +257,18 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "font_size_custom");
 		fontSizeCustom = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+		text1FontSizeInCustom = atoi (value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+		text1XInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+		text1YInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+		text1AlignmentInCustom = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
 
@@ -606,6 +618,22 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
 	fontSizeCustom = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+	text1FontSizeInCustom = atoi (value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+	text1XInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+	text1YInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+	text1AlignmentInCustom = atoi(value);
+
+	//text1_x_in_custom = 2
+	//text1_y_in_custom = 2
+	//text1_alignment_in_custom = 0
+
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
 
@@ -753,7 +781,7 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
-		strcpy(menuSections[menuSectionCounter].mask,"/home/bittboy/Pictures/mask.png");
+		strcpy(menuSections[menuSectionCounter].mask,"/usr/local/home/.simplemenu/themes/default/resources/general/mask.png");
 //		strcpy(menuSections[menuSectionCounter].mask,"\0");
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -868,6 +896,18 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
 	fontSizeCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+	text1FontSizeInCustom = atoi (value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+	text1XInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+	text1YInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+	text1AlignmentInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
@@ -1136,7 +1176,6 @@ void loadLastState() {
 			startInSection=atoi(configurations[0]);
 		} else if (itemsRead==-1) {
 			itemsRead=atoi(configurations[0]);
-			printf("%d\n",itemsRead);
 		}
 		else {
 			if(atoi(configurations[1])==0) {
