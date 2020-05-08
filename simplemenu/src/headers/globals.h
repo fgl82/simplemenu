@@ -73,6 +73,7 @@ int OC_NO;
 int OC_OC;
 int OC_SLEEP;
 int backlightValue;
+int hdmiChanged;
 
 /* THEME */
 char *themes[100];
@@ -247,6 +248,7 @@ int MAGIC_NUMBER;
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
 double SCREEN_RATIO;
+int hdmiEnabled;
 
 /* MISC */
 time_t currRawtime;

@@ -504,14 +504,14 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#ifdef TARGET_RG300
+			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
 			chosenSetting=9;
 			#else
 			chosenSetting=8;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
-		#ifdef TARGET_RG300
+		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
 		if(chosenSetting<9) {
 		#else
 		if(chosenSetting<8) {
@@ -523,7 +523,13 @@ void performSettingsChoosingAction() {
 	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
-		} else if (chosenSetting==SHUTDOWN_OPTION) {
+		}
+		#if defined TARGET_RG350 || TARGET_PC
+		else if (chosenSetting==USB_OPTION) {
+			hdmiChanged=1+hdmiChanged*-1;
+		}
+		#endif
+		else if (chosenSetting==SHUTDOWN_OPTION) {
 			wannaReset=1+(wannaReset*-1);
 		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
 			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
@@ -628,13 +634,15 @@ void performSettingsChoosingAction() {
 			}
 			drawGameList();
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
-			if (keys[BTN_LEFT]) {
-				if (timeoutValue>0) {
-					timeoutValue--;
-				}
-			} else {
-				if (timeoutValue<60) {
-					timeoutValue++;
+			if(!hdmiEnabled) {
+				if (keys[BTN_LEFT]) {
+					if (timeoutValue>0) {
+						timeoutValue--;
+					}
+				} else {
+					if (timeoutValue<60) {
+						timeoutValue++;
+					}
 				}
 			}
 		} else if (chosenSetting==DEFAULT_OPTION) {
@@ -646,7 +654,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
-				#ifdef TARGET_RG350
+				#if defined TARGET_RG350
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
 			} else {
@@ -656,7 +664,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
-				#ifdef TARGET_RG350
+				#if defined TARGET_RG350
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
 				#endif
 			}
@@ -668,7 +676,9 @@ void performSettingsChoosingAction() {
 		}
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
-	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+	}
+	#if defined TARGET_RG300
+	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 		hotKeyPressed=0;
 		int returnedValue = system("./scripts/usb_mode_on.sh>/home/retrofw/apps/test.txt");
 		if (returnedValue==0) {
@@ -677,8 +687,26 @@ void performSettingsChoosingAction() {
 			generateError("USB MODE  NOT AVAILABLE",0);
 		}
 		currentlyChoosing=0;
-	} else if (keys[BTN_START]) {
+	}
+	#endif
+	else if (keys[BTN_START]) {
 		if (currentlyChoosing) {
+			#ifdef TARGET_RG350
+			if (hdmiChanged!=hdmiEnabled) {
+				FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
+				if (fp!=NULL) {
+					fprintf(fp, "%d", hdmiChanged);
+					fclose(fp);
+				}
+				saveLastState();
+				saveFavorites();
+				clearTimer();
+				clearPicModeHideLogoTimer();
+				clearPicModeHideMenuTimer();
+				freeResources();
+				execlp("./simplemenu","invoker",NULL);
+			}
+			#endif
 			currentlyChoosing=0;
 		}
 	}

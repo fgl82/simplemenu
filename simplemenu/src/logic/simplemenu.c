@@ -109,7 +109,6 @@ int main() {
 //		returnTo=atoi(argv[3]);
 //		fullscreenMode=atoi(argv[4]);
 //	}
-
 //	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 
 	switch (currentMode) {

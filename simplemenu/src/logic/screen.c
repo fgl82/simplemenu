@@ -689,7 +689,11 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[THEME_OPTION],"Theme: ");
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
+	#if defined TARGET_RG300
 	strcpy(options[USB_OPTION],"USB mode");
+	#else
+	strcpy(options[USB_OPTION],"HDMI: ");
+	#endif
 	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
 	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
@@ -715,7 +719,11 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
 	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
+	#if defined TARGET_RG300
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
+	#else
+	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
+	#endif
 
 	if (shutDownEnabled&&!wannaReset) {
 		strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
@@ -743,7 +751,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
 	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
-	if (timeoutValue>0) {
+	if (timeoutValue>0&&hdmiEnabled==0) {
 		sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
 	} else {
 		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","ALWAYS ON");
@@ -763,7 +771,15 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		strcpy(values[DEFAULT_OPTION],"NO");
 	}
 	strcpy(values[SHUTDOWN_OPTION],"\0");
+	#if defined TARGET_RG300
 	strcpy(values[USB_OPTION],"\0");
+	#else
+	if (hdmiChanged==1) {
+		strcpy(values[USB_OPTION],"YES");
+	} else {
+		strcpy(values[USB_OPTION],"NO");
+	}
+	#endif
 	if (autoHideLogos) {
 		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"YES");
 	} else {
@@ -797,7 +813,9 @@ void drawSettingsScreen() {
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
 	int nextLine = calculateProportionalSizeOrDistance((baseFont*29)/baseFont);//CHANGE FIRST VALUE FOR FONT SIZE
-	#ifdef TARGET_RG300
+	#if defined TARGET_RG300
+	for (int i=0;i<10;i++) {
+	#elif defined TARGET_RG350 || defined TARGET_RG350 || defined TARGET_PC
 	for (int i=0;i<10;i++) {
 	#else
 	for (int i=0;i<9;i++) {
