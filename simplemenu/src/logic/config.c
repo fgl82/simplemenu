@@ -781,7 +781,11 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
+		#ifdef TARGET_RG350
 		strcpy(menuSections[menuSectionCounter].mask,"/usr/local/home/.simplemenu/themes/default/resources/general/mask.png");
+		#else
+		strcpy(menuSections[menuSectionCounter].mask,"/home/bittboy/.simplemenu/themes/default/resources/general/mask.png");
+		#endif
 //		strcpy(menuSections[menuSectionCounter].mask,"\0");
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {

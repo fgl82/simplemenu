@@ -538,7 +538,6 @@ void drawGameList() {
 				char* temp1 = getAliasWithoutAlternateNameOrParenthesis(rom->alias);
 				strcpy(nameWithoutExtension,temp1);
 				free(temp1);
-//				stripGameNameLeaveExtension(nameWithoutExtension);
 			}
 			strcat(nameWithoutExtension,"\0");
 		} else {
@@ -579,6 +578,7 @@ void drawGameList() {
 					} else if(currentMode==3) {
 						MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidthInCustom);
 						drawShadedGameNameOnScreenCustom(buf, nextLine);
+						drawCustomGameNameUnderPictureOnScreen(buf, 145);
 					} else {
 						drawShadedGameNameOnScreen(buf, nextLine);
 					}
