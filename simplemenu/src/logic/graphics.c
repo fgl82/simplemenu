@@ -31,8 +31,6 @@ TTF_Font *settingsFooterFont = NULL;
 
 TTF_Font *customHeaderFont = NULL;
 
-SDL_Surface *backgroundImg;
-
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	SDL_Color c;
 	c.r = r;
@@ -106,7 +104,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	return msg->w;
 }
 
-void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth) {
+void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation) {
 	SDL_Surface *msg;
 	char *bufCopy=malloc(300);
 	char *wordsInBuf[25];
@@ -147,13 +145,12 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 	//		drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y-1,(int[]){0,0,0},111);
 			genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
 			free(test);
-			y+=calculateProportionalSizeOrDistance(15);
+			y+=calculateProportionalSizeOrDistance(lineSeparation);
 		}
 		if (printCounter==wordCounter) {
-			y-=calculateProportionalSizeOrDistance(15);
+			y-=calculateProportionalSizeOrDistance(lineSeparation);
 			if (msg->w>maxWidth) {
-	//				drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y+calculateProportionalSizeOrDistance(14),(int[]){0,0,0},111);
-				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(15),wordsInBuf[printCounter],txtColor,align,NULL,0);
+				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(lineSeparation),wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
 	} else {
@@ -172,7 +169,7 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtC
 }
 
 void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, int maxWidth) {
-	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, HAlignCenter, maxWidth);
+	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, HAlignCenter, maxWidth, artTextLineSeparationInCustom);
 }
 
 void drawCustomText1OnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align){
@@ -651,7 +648,9 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+w/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+1)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(3),calculateProportionalSizeOrDistance(artWidthInCustom));
+		if(artTextDistanceFromPictureInCustom>0) {
+			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+1)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+		}
 	} else {
 		int smoothing = 0;
 		if(hideHeartTimer!=NULL) {
@@ -927,11 +926,6 @@ void initializeDisplay() {
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME );
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-	#ifdef TARGET_RG350
-	backgroundImg = IMG_Load("/usr/local/home/.simplemenu/themes/default/resources/general/mask.png");
-	#else
-	backgroundImg = IMG_Load("/home/bittboy/.simplemenu/themes/default/resources/general/mask.png");
-	#endif
 }
 
 
@@ -949,7 +943,7 @@ void initializeSettingsFonts() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
-	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize-2));
+	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSizeInCustom));
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
 	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+18));
 	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));

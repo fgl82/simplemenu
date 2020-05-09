@@ -53,4 +53,5 @@ void drawShadedGameNameOnScreenCenter(char *buf, int position);
 void drawNonShadedGameNameOnScreenCenter(char *buf, int position);
 void displayHeart();
 void* thread_func(void *picture);
+void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation);
 #endif

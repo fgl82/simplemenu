@@ -271,6 +271,15 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
 		text1AlignmentInCustom = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+		artTextDistanceFromPictureInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+		artTextLineSeparationInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+		artTextFontSizeInCustom = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
 
@@ -632,9 +641,14 @@ void loadConfig() {
 	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
 	text1AlignmentInCustom = atoi(value);
 
-	//text1_x_in_custom = 2
-	//text1_y_in_custom = 2
-	//text1_alignment_in_custom = 0
+	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+	artTextDistanceFromPictureInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+	artTextLineSeparationInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+	artTextFontSizeInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
@@ -910,6 +924,15 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
 	text1AlignmentInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+	artTextDistanceFromPictureInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+	artTextLineSeparationInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+	artTextFontSizeInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
