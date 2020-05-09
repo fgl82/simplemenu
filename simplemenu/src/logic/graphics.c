@@ -125,31 +125,43 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 
 	int printCounter = 0;
 	char *test=NULL;
-	while(printCounter<wordCounter) {
-		test=malloc(500);
-		strcpy(test,wordsInBuf[printCounter]);
-		msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		while (msg->w<=maxWidth&&printCounter<wordCounter) {
-			printCounter++;
-			strcat(test," ");
-			strcat(test,wordsInBuf[printCounter]);
+	if(wordCounter>0) {
+		while(printCounter<wordCounter) {
+			test=malloc(500);
+			strcpy(test,wordsInBuf[printCounter]);
 			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		}
-		printf("%d - %d\n",printCounter,wordCounter);
-		if (msg->w>maxWidth) {
-			test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
-		}
-//		drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y-1,(int[]){0,0,0},111);
-		genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
-		if (printCounter==wordCounter) {
+			while (msg->w<=maxWidth&&printCounter<wordCounter) {
+				printCounter++;
+				if (strcmp(wordsInBuf[printCounter],"-")!=0) {
+					strcat(test," ");
+					strcat(test,wordsInBuf[printCounter]);
+					msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
+				} else {
+					printCounter++;
+					break;
+				}
+			}
+			printf("%d - %d\n",printCounter,wordCounter);
 			if (msg->w>maxWidth) {
-//				drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y+calculateProportionalSizeOrDistance(14),(int[]){0,0,0},111);
+				test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
+			}
+	//		drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y-1,(int[]){0,0,0},111);
+			genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
+			free(test);
+			y+=calculateProportionalSizeOrDistance(15);
+		}
+		if (printCounter==wordCounter) {
+			y-=calculateProportionalSizeOrDistance(15);
+			if (msg->w>maxWidth) {
+	//				drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y+calculateProportionalSizeOrDistance(14),(int[]){0,0,0},111);
 				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(15),wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
-		free(test);
-		y+=calculateProportionalSizeOrDistance(15);
+	} else {
+		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		genericDrawTextOnScreen(font,x,y,buf,txtColor,align,NULL,0);
 	}
+
 }
 
 int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
@@ -639,7 +651,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
-		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+2)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(2),calculateProportionalSizeOrDistance(artWidthInCustom));
+		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+1)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(3),calculateProportionalSizeOrDistance(artWidthInCustom));
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
