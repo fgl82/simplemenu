@@ -139,9 +139,11 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 		if (msg->w>maxWidth) {
 			test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 		}
+//		drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y-1,(int[]){0,0,0},111);
 		genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
 		if (printCounter==wordCounter) {
 			if (msg->w>maxWidth) {
+//				drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y+calculateProportionalSizeOrDistance(14),(int[]){0,0,0},111);
 				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(15),wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
@@ -637,7 +639,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
-		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h,calculateProportionalSizeOrDistance(artWidthInCustom));
+		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+2)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(2),calculateProportionalSizeOrDistance(artWidthInCustom));
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
