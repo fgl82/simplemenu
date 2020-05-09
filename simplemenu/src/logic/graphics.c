@@ -334,7 +334,9 @@ void drawTextOnHeader(char *text) {
 			drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInDrunkenMonkey), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 			break;
 		case 3:
-			drawCustomText1OnScreen(customHeaderFont, text1XInCustom, text1YInCustom, text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
+			if(text1YInCustom!=-1&&text1XInCustom!=-1) {
+				drawCustomText1OnScreen(customHeaderFont, text1XInCustom, text1YInCustom, text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
+			}
 			break;
 	}
 }

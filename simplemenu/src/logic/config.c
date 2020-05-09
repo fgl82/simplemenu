@@ -156,6 +156,8 @@ void loadTheme(char *theme) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[menuSectionCounter].mask);
+
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
@@ -781,12 +783,8 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
-		#ifdef TARGET_RG350
-		strcpy(menuSections[menuSectionCounter].mask,"/usr/local/home/.simplemenu/themes/default/resources/general/mask.png");
-		#else
-		strcpy(menuSections[menuSectionCounter].mask,"/home/bittboy/.simplemenu/themes/default/resources/general/mask.png");
-		#endif
-//		strcpy(menuSections[menuSectionCounter].mask,"\0");
+		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].mask);
+
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
@@ -968,6 +966,7 @@ int loadSections(char *file) {
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
+	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].mask);
 
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
