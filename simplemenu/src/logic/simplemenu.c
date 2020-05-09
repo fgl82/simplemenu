@@ -92,8 +92,8 @@ int main() {
 	setCPU(OC_NO);
 	#endif
 	initializeGlobals();
-	setupDisplayAndKeys();
 	loadLastState();
+	setupDisplayAndKeys();
 	checkIfDefault();
 	checkThemes();
 	char *temp=malloc(8000);

@@ -52,4 +52,5 @@ void drawNonShadedGameNameOnScreenLeft(char *buf, int position);
 void drawShadedGameNameOnScreenCenter(char *buf, int position);
 void drawNonShadedGameNameOnScreenCenter(char *buf, int position);
 void displayHeart();
+void* thread_func(void *picture);
 #endif

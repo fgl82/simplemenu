@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
+#include <SDL/SDL_image.h>
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
@@ -37,6 +38,19 @@ SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;
 SDL_TimerID hideHeartTimer;
+
+typedef struct thread_picture {
+	  SDL_Surface* display;
+	  SDL_Surface *image;
+	  int x;
+	  int y;
+	  int xx;
+	  int yy;
+	  double newwidth;
+	  double newheight;
+	  int transparent;
+	  int smoothing;
+} threadPicture;
 
 /* QUANTITIES */
 int MAX_GAMES_IN_SECTION;
