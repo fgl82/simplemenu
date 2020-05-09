@@ -129,22 +129,22 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 		test=malloc(500);
 		strcpy(test,wordsInBuf[printCounter]);
 		msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		while (msg->w<calculateProportionalSizeOrDistance(maxWidth)&&printCounter<wordCounter) {
+		while (msg->w<=calculateProportionalSizeOrDistance(maxWidth)&&printCounter<wordCounter) {
 			printCounter++;
 			strcat(test," ");
 			strcat(test,wordsInBuf[printCounter]);
 			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
-		if (msg->w>calculateProportionalSizeOrDistance(maxWidth) ) {
-			printf("%d - %s\n",printCounter, test);
+		printf("%d - %d\n",printCounter,wordCounter);
+		if (msg->w>calculateProportionalSizeOrDistance(maxWidth)) {
 			test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
-			printCounter--;
-			printf("%d - %s\n",printCounter, test);
-		} else {
-			printf("%d - %s\n",printCounter, test);
-			printCounter++;
 		}
 		genericDrawTextOnScreen(font,calculateProportionalSizeOrDistance(x),calculateProportionalSizeOrDistance(y),test,txtColor,align,NULL,0);
+		if (printCounter==wordCounter) {
+			if (msg->w>calculateProportionalSizeOrDistance(maxWidth)) {
+				genericDrawTextOnScreen(font,calculateProportionalSizeOrDistance(x),calculateProportionalSizeOrDistance(y+15),wordsInBuf[printCounter],txtColor,align,NULL,0);
+			}
+		}
 		free(test);
 		y+=15;
 	}
