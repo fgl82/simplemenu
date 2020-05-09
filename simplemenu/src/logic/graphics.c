@@ -632,7 +632,7 @@ void displayImageOnScreenCustom(char *fileName) {
 		h = calculateProportionalSizeOrDistance(artHeightInCustom);
 		w = h*ratio;
 		smoothing = 1;
-		if (w<calculateProportionalSizeOrDistance(artWidthInCustom)) {
+		if (w!=calculateProportionalSizeOrDistance(artWidthInCustom)) {
 			ratio = h / w;   // get ratio for scaling image
 			w = calculateProportionalSizeOrDistance(artWidthInCustom);
 			h = w*ratio;
@@ -870,10 +870,14 @@ void initializeDisplay() {
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
-//	#ifndef TARGET_PC
-	SCREEN_WIDTH = 640;
-	SCREEN_HEIGHT = 480;
-//	#endif
+	#ifdef TARGET_PC
+	SCREEN_WIDTH = 800;
+	SCREEN_HEIGHT = 600;
+	#endif
+	#ifdef TARGET_RG350
+	SCREEN_WIDTH = 320;
+	SCREEN_HEIGHT = 240;
+	#endif
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 //	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
