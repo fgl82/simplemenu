@@ -410,8 +410,10 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	} else {
 		if (currentMode==1) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else {
+		} else if (currentMode==2) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
+		} else {
+			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 	}
 	free(pictureWithFullPath);
@@ -873,6 +875,13 @@ void updateScreen(struct Rom *rom) {
 		if (currentMode==3&&!fullscreenMode) {
 			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 		}
+		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
+			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
+			if (!fullscreenMode) {
+				drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
+			}
+		}
+
 		drawGameList();
 		if (!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
 			displayGamePictureInMenu(rom);

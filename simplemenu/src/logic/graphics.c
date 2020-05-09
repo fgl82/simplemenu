@@ -141,7 +141,6 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 					break;
 				}
 			}
-			printf("%d - %d\n",printCounter,wordCounter);
 			if (msg->w>maxWidth) {
 				test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 			}
@@ -509,10 +508,6 @@ void showHeart(int x, int y) {
 }
 
 void displayImageOnScreenTraditional(char *fileName) {
-	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
-	if (!fullscreenMode) {
-		drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43), 0, calculateProportionalSizeOrDistance(22), rgbColor);
-	}
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
@@ -720,11 +715,6 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 	int screenDivisions=(SCREEN_RATIO*3)/1.33;
 	pthread_t myThread;
 
-	int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
-	if (!fullscreenMode) {
-		drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
-	}
-
 	drawTransparentRectangleToScreen((SCREEN_WIDTH/screenDivisions),SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/baseFont)*2,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions),calculateProportionalSizeOrDistance((22*fontSize)/baseFont),rightRectangleColor,60);
 
 	if (screenshot!=NULL) {
@@ -849,7 +839,7 @@ void* thread_func(void *picture) {
 	SDL_FreeSurface(((threadPicture*)picture)->image);
 
 	pthread_exit(NULL); // you could also return NULL here to exit no difference
-	return 1;
+	return (int*)1;
 }
 
 void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen, int keepRatio) {
