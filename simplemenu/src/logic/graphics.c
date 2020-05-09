@@ -552,8 +552,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -577,8 +577,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -643,12 +643,12 @@ void displayImageOnScreenCustom(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
+					wh = hh*ratioh;
 				}
-				wh = hh*ratioh;
-				drawImage(&myThread, screen, heart, artXInCustom+w/2-(wh/2), artYInCustom+h/2-(hh/2), 0, 0, wh, hh, 0, smoothing);
+				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+w/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+1)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(3),calculateProportionalSizeOrDistance(artWidthInCustom));
@@ -661,8 +661,8 @@ void displayImageOnScreenCustom(char *fileName) {
 				double hh = heart->h;
 				double ratioh = 0;  // Used for aspect ratio
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -695,8 +695,8 @@ void displayHeart() {
 			double ratioh = 0;  // Used for aspect ratio
 			int smoothing = 1;
 			ratioh = wh / hh;   // get ratio for scaling image
-			hh = calculateProportionalSizeOrDistance(64);
-			if(hh!=64) {
+			hh = calculateProportionalSizeOrDistance(heart->h);
+			if(hh!=heart->h) {
 				smoothing = 1;
 			}
 			wh = hh*ratioh;
@@ -742,8 +742,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				double ratioh = 0;  // Used for aspect ratio
 				int smoothing = 1;
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
@@ -768,8 +768,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				double ratioh = 0;  // Used for aspect ratio
 				int smoothing = 1;
 				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(64);
-				if(hh!=64) {
+				hh = calculateProportionalSizeOrDistance(heart->h);
+				if(hh!=heart->h) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
