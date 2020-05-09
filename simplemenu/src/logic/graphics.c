@@ -588,25 +588,24 @@ void displayImageOnScreenTraditional(char *fileName) {
 //		pthread_join(myThread,NULL);
 	}
 
-	if(systemXInCustom>0&&systemYInCustom>0) {
-		SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
-		if (systemImage!=NULL) {
-			double w1 = systemImage->w;
-			double h1 = systemImage->h;
-			double ratio1 = 0;  // Used for aspect ratio
-			ratio1 = w1 / h1;   // get ratio for scaling image
-			h1 = (SCREEN_HEIGHT*90)/240;
-			w1 = h1*ratio1;
-			ratio1 = h1 / w1;   // get ratio for scaling image
-			int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
-			int smoothing=0;
-			if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-				middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
-				smoothing=1;
-			}
-			drawImage1(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
+	if (systemImage!=NULL) {
+		double w1 = systemImage->w;
+		double h1 = systemImage->h;
+		double ratio1 = 0;  // Used for aspect ratio
+		ratio1 = w1 / h1;   // get ratio for scaling image
+		h1 = (SCREEN_HEIGHT*90)/240;
+		w1 = h1*ratio1;
+		ratio1 = h1 / w1;   // get ratio for scaling image
+		int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
+		int smoothing=0;
+		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
+			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
+			smoothing=1;
 		}
-	}}
+		drawImage1(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+	}
+}
 
 void displayImageOnScreenCustom(char *fileName) {
 
@@ -636,7 +635,7 @@ void displayImageOnScreenCustom(char *fileName) {
 		}
 
 		drawImage(&myThread, screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
-//		pthread_join(myThread,NULL);
+//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -649,7 +648,7 @@ void displayImageOnScreenCustom(char *fileName) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
-				drawImage(&myThread, screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(&myThread, screen, heart, artXInCustom+w/2-(wh/2), artYInCustom+h/2-(hh/2), 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+1)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(3),calculateProportionalSizeOrDistance(artWidthInCustom));
