@@ -135,7 +135,7 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 			strcat(test,wordsInBuf[printCounter]);
 			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
-		if (msg->w>calculateProportionalSizeOrDistance(maxWidth)) {
+		if (msg->w>calculateProportionalSizeOrDistance(maxWidth) ) {
 			printf("%d - %s\n",printCounter, test);
 			test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 			printCounter--;
