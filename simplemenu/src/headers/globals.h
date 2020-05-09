@@ -32,6 +32,7 @@ int isUSBMode;
 int activeGroup;
 int beforeTryingToSwitchGroup;
 int chosenSetting;
+char currentGameNameBeingDisplayed [3000];
 SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;

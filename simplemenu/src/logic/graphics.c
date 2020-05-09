@@ -129,24 +129,24 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 		test=malloc(500);
 		strcpy(test,wordsInBuf[printCounter]);
 		msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		while (msg->w<=calculateProportionalSizeOrDistance(maxWidth)&&printCounter<wordCounter) {
+		while (msg->w<=maxWidth&&printCounter<wordCounter) {
 			printCounter++;
 			strcat(test," ");
 			strcat(test,wordsInBuf[printCounter]);
 			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 		printf("%d - %d\n",printCounter,wordCounter);
-		if (msg->w>calculateProportionalSizeOrDistance(maxWidth)) {
+		if (msg->w>maxWidth) {
 			test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 		}
-		genericDrawTextOnScreen(font,calculateProportionalSizeOrDistance(x),calculateProportionalSizeOrDistance(y),test,txtColor,align,NULL,0);
+		genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
 		if (printCounter==wordCounter) {
-			if (msg->w>calculateProportionalSizeOrDistance(maxWidth)) {
-				genericDrawTextOnScreen(font,calculateProportionalSizeOrDistance(x),calculateProportionalSizeOrDistance(y+15),wordsInBuf[printCounter],txtColor,align,NULL,0);
+			if (msg->w>maxWidth) {
+				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(15),wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
 		free(test);
-		y+=15;
+		y+=calculateProportionalSizeOrDistance(15);
 	}
 }
 
@@ -158,8 +158,8 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtC
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
 }
 
-void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int y) {
-	genericDrawMultiLineTextOnScreen(miniFont, 80, y, buf, (int[]){255,255,255}, HAlignCenter, 140);
+void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, int maxWidth) {
+	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, HAlignCenter, maxWidth);
 }
 
 void drawCustomText1OnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align){
@@ -613,15 +613,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 
 void displayImageOnScreenCustom(char *fileName) {
 
-	if (currentMode==3&&!fullscreenMode) {
-		displayCustomMaskOnScreen();
-//		displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
-	}
-
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
-
-	displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
@@ -644,6 +637,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
+		drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h,calculateProportionalSizeOrDistance(artWidthInCustom));
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -871,8 +865,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 800;
-	SCREEN_HEIGHT = 600;
+	SCREEN_WIDTH = 640;
+	SCREEN_HEIGHT = 480;
 	#endif
 	#ifdef TARGET_RG350
 	SCREEN_WIDTH = 320;

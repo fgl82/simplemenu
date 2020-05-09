@@ -577,8 +577,8 @@ void drawGameList() {
 						drawShadedGameNameOnScreenLeft(buf, nextLine);
 					} else if(currentMode==3) {
 						MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidthInCustom);
+						strcpy(currentGameNameBeingDisplayed,buf);
 						drawShadedGameNameOnScreenCustom(buf, nextLine);
-						drawCustomGameNameUnderPictureOnScreen(buf, 145);
 					} else {
 						drawShadedGameNameOnScreen(buf, nextLine);
 					}
@@ -870,11 +870,14 @@ void updateScreen(struct Rom *rom) {
 		if (fullscreenMode) {
 			displayGamePicture(rom);
 		}
+		if (currentMode==3&&!fullscreenMode) {
+			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+		}
+		drawGameList();
 		if (!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
 			displayGamePictureInMenu(rom);
 		}
 		setupDecorations(rom);
-		drawGameList();
 		if (currentMode==0||fullscreenMode==1){
 			displayHeart();
 		}
