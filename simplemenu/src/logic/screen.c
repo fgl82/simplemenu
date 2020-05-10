@@ -19,9 +19,17 @@ char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
-		displayCenteredImageOnScreen(fullscreenBackground, " ",1,0);
+		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
+			displayCenteredImageOnScreen(fullscreenBackground, " ",1,0);
+		} else {
+			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){30,30,30});
+		}
 	} else {
-		displayCenteredImageOnScreen(simpleBackground, " ",1,0);
+		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
+			displayCenteredImageOnScreen(simpleBackground, " ",1,0);
+		} else {
+			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){30,30,30});
+		}
 	}
 }
 
@@ -515,6 +523,9 @@ void drawGameList() {
 				break;
 			case 2:
 				nextLine = calculateProportionalSizeOrDistance(gameListPositionInFullDrunkenMonkey);
+				break;
+			case 3:
+				nextLine = calculateProportionalSizeOrDistance(gameListPositionInFullCustom);
 				break;
 		}
 	}
