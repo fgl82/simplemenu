@@ -857,7 +857,7 @@ SDL_Surface *resizeSurface (SDL_Surface *surface) {
 	ratio = w / h;   // get ratio for scaling image
 	h = SCREEN_HEIGHT;
 	w = h*ratio;
-	if (w>SCREEN_WIDTH) {
+	if (w!=SCREEN_WIDTH) {
 		ratio = h / w;   // get ratio for scaling image
 		w = SCREEN_WIDTH;
 		h = w*ratio;
@@ -867,26 +867,35 @@ SDL_Surface *resizeSurface (SDL_Surface *surface) {
 	double zoomx = SCREEN_WIDTH  / (float)surface->w;
 	double zoomy = SCREEN_HEIGHT / (float)surface->h;
 
-	SDL_Surface* sized = NULL;
-
+	SDL_Surface *sized = NULL;
 	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
 
 	if(surface->flags & SDL_SRCCOLORKEY ) {
 		Uint32 colorkey = surface->format->colorkey;
-		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
+		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey );
 	}
 	free(surface);
+
 	return sized;
 }
 
 void resizeSectionBackground(struct MenuSection *section) {
-	section->background =  resizeSurface(section->background);
+	section->background = resizeSurface(section->background);
+}
+
+void resizeGroupBackground(struct SectionGroup *group) {
+	printf("before %d\n",group->groupBackgroundSurface->w);
+	group->groupBackgroundSurface = resizeSurface(group->groupBackgroundSurface);
+	printf("after %d\n",group->groupBackgroundSurface->w);
 }
 
 void displayCenteredSurface(SDL_Surface *surface) {
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
+	if(surface==NULL) {
+		printf("1asdas\n");
+	}
 	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
 	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
 	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);

@@ -202,6 +202,7 @@ struct SectionGroup {
 	char groupPath[1000];
 	char groupName[25];
 	char groupBackground[1000];
+	SDL_Surface *groupBackgroundSurface;
 };
 
 struct MenuSection {
@@ -211,7 +212,9 @@ struct MenuSection {
 	char filesDirectories[400];
 	char fileExtensions[50];
 	char systemLogo[300];
+	SDL_Surface *systemLogoSurface;
 	char systemPicture[300];
+	SDL_Surface *systemPictureSurface;
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;

@@ -225,7 +225,8 @@ void showCurrentGroup() {
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
-	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1,0);
+//	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1,0);
+	displayCenteredSurface(sectionGroups[activeGroup].groupBackgroundSurface);
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);
 	free(tempString);
@@ -885,7 +886,7 @@ void updateScreen(struct Rom *rom) {
 		}
 		if (currentMode==3&&!fullscreenMode) {
 			displayCenteredSurface(CURRENT_SECTION.background);
-			//displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+//			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};

@@ -2,6 +2,7 @@
 #define GRAPHICS_DEFINED
 
 #include <SDL/SDL_ttf.h>
+#include "../headers/globals.h"
 
 static const int
 HAlignLeft = 1,
@@ -54,4 +55,10 @@ void drawNonShadedGameNameOnScreenCenter(char *buf, int position);
 void displayHeart();
 void* thread_func(void *picture);
 void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation);
+void resizeGroupBackground(struct SectionGroup *group);
+void displayImageOnScreenCustom(char *fileName);
+void drawShadedGameNameOnScreenCustom(char *buf, int position);
+void drawNonShadedGameNameOnScreenCustom(char *buf, int position);
+void displayCenteredSurface(SDL_Surface *surface);
+void resizeSectionBackground(struct MenuSection *section);
 #endif

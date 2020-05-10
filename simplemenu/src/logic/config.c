@@ -721,6 +721,8 @@ void loadConfig() {
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
 		char *temp2 = toUpper(temp1);
 		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
@@ -802,7 +804,6 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].mask);
 		menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
-//		resizeSurface(menuSections[menuSectionCounter].background);
 		resizeSectionBackground(&menuSections[menuSectionCounter]);
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -995,6 +996,8 @@ int loadSections(char *file) {
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].mask);
+	menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
+	resizeSectionBackground(&menuSections[menuSectionCounter]);
 
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
