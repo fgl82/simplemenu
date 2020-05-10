@@ -237,6 +237,7 @@ struct MenuSection {
 	char category[100];
 	char scaling[2];
 	char mask[1000];
+	SDL_Surface *background;
 //	char *fileList[50000];
 };
 

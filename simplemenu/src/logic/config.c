@@ -131,7 +131,10 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
 	if(value==NULL) {
-		strcpy(sectionValueToBeSet,"\0");
+		printf("%s - %s\n", sectionName, valueName);
+		value = ini_get(config, "DEFAULT", valueName);
+		strcpy(sectionValueToBeSet,pathToThemeConfigFile);
+		strcat(sectionValueToBeSet,value);
 		return;
 	}
 	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
@@ -798,7 +801,9 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].mask);
-
+		menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
+//		resizeSurface(menuSections[menuSectionCounter].background);
+		resizeSectionBackground(&menuSections[menuSectionCounter]);
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);

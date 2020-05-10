@@ -884,7 +884,8 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		if (currentMode==3&&!fullscreenMode) {
-			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
+			displayCenteredSurface(CURRENT_SECTION.background);
+			//displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};

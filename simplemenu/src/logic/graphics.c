@@ -801,7 +801,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 			smoothing=1;
 		}
 		pthread_t myThread;
-		drawImage(&myThread, &myThread,screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+		drawImage(&myThread,screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
 	}
 	//	pthread_join(myThread,NULL);
 }
@@ -814,7 +814,7 @@ void* thread_func(void *picture) {
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
 //	printf("%d,%d\n",(int)((threadPicture*)picture)->newwidth,(int)(image->w/2));
 	SDL_Surface* sized = NULL;
-	if (((int)((threadPicture*)picture)->newwidth<(int)(((threadPicture*)picture)->image->w/2))&&(int)(((threadPicture*)picture)->image->w/2)%(int)((threadPicture*)picture)->newwidth==0) {
+	if (((int)((threadPicture*)picture)->newwidth<(int)(((threadPicture*)picture)->image->w/2))&&((int)(((threadPicture*)picture)->image->w/2)%(int)((threadPicture*)picture)->newwidth)==0) {
 //		printf("2\n");
 		zoomx = (float)((threadPicture*)picture)->image->w/((threadPicture*)picture)->newwidth;
 		zoomy = (float)((threadPicture*)picture)->image->h/((threadPicture*)picture)->newheight;
@@ -847,6 +847,49 @@ void* thread_func(void *picture) {
 
 	pthread_exit(NULL); // you could also return NULL here to exit no difference
 	return (int*)1;
+}
+
+SDL_Surface *resizeSurface (SDL_Surface *surface) {
+	double w = surface->w;
+	double h = surface->h;
+	double ratio = 0;  // Used for aspect ratio
+	int smoothing = 0;
+	ratio = w / h;   // get ratio for scaling image
+	h = SCREEN_HEIGHT;
+	w = h*ratio;
+	if (w>SCREEN_WIDTH) {
+		ratio = h / w;   // get ratio for scaling image
+		w = SCREEN_WIDTH;
+		h = w*ratio;
+		smoothing=1;
+	}
+
+	double zoomx = SCREEN_WIDTH  / (float)surface->w;
+	double zoomy = SCREEN_HEIGHT / (float)surface->h;
+
+	SDL_Surface* sized = NULL;
+
+	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
+
+	if(surface->flags & SDL_SRCCOLORKEY ) {
+		Uint32 colorkey = surface->format->colorkey;
+		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
+	}
+	free(surface);
+	return sized;
+}
+
+void resizeSectionBackground(struct MenuSection *section) {
+	section->background =  resizeSurface(section->background);
+}
+
+void displayCenteredSurface(SDL_Surface *surface) {
+	SDL_Rect rectangleDest;
+	rectangleDest.w = 0;
+	rectangleDest.h = 0;
+	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
+	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
+	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
 }
 
 void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleToFullScreen, int keepRatio) {
@@ -932,7 +975,7 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME );
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
