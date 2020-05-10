@@ -1154,12 +1154,6 @@ void loadLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 
-	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
-	if (fpHDMI!=NULL) {
-		read = getline(&line, &len, fpHDMI);
-		hdmiEnabled = atoi(line);
-	}
-	hdmiChanged = hdmiEnabled;
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		saveLastState();

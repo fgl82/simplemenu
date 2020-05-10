@@ -929,7 +929,6 @@ void updateScreen(struct Rom *rom) {
 
 void setupDisplayAndKeys() {
 	//	pumpEvents();
-	initializeDisplay();
 	initializeFonts();
 	initializeKeys();
 }

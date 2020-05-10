@@ -84,6 +84,7 @@ int main() {
 	#if defined(TARGET_NPG) || defined(TARGET_RG350)
 	resetFrameBuffer();
 	#endif
+	initializeDisplay();
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	readInputConfig();

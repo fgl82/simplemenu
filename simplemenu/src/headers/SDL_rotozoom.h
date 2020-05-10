@@ -75,7 +75,7 @@ extern "C" {
 	Shrinking functions
 	*/
 
-	SDL_ROTOZOOM_SCOPE SDL_Surface *shrinkSurface(SDL_Surface * src, double factorx, double factory);
+	SDL_ROTOZOOM_SCOPE SDL_Surface *shrinkSurface(SDL_Surface * src, int factorx, int factory);
 
 	/*
 	Specialized rotation functions

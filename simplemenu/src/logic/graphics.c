@@ -863,16 +863,15 @@ SDL_Surface *resizeSurface (SDL_Surface *surface) {
 		h = w*ratio;
 		smoothing=1;
 	}
-
-	double zoomx = SCREEN_WIDTH  / (float)surface->w;
-	double zoomy = SCREEN_HEIGHT / (float)surface->h;
+	double zoomx = SCREEN_WIDTH / surface->w;
+	double zoomy = SCREEN_HEIGHT / surface->h;
 
 	SDL_Surface *sized = NULL;
 	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
 
 	if(surface->flags & SDL_SRCCOLORKEY ) {
 		Uint32 colorkey = surface->format->colorkey;
-		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey );
+		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
 	}
 	free(surface);
 
@@ -884,18 +883,15 @@ void resizeSectionBackground(struct MenuSection *section) {
 }
 
 void resizeGroupBackground(struct SectionGroup *group) {
-	printf("before %d\n",group->groupBackgroundSurface->w);
+//	printf("before %d\n",group->groupBackgroundSurface->w);
 	group->groupBackgroundSurface = resizeSurface(group->groupBackgroundSurface);
-	printf("after %d\n",group->groupBackgroundSurface->w);
+//	printf("after %d\n",group->groupBackgroundSurface->w);
 }
 
 void displayCenteredSurface(SDL_Surface *surface) {
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
-	if(surface==NULL) {
-		printf("1asdas\n");
-	}
 	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
 	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
 	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
@@ -977,6 +973,22 @@ void initializeDisplay() {
 		SCREEN_WIDTH = 320;
 		SCREEN_HEIGHT = 240;
 	}
+
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+
+	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
+	if (fpHDMI!=NULL) {
+		read = getline(&line, &len, fpHDMI);
+		hdmiEnabled = atoi(line);
+	}
+	fclose(fpHDMI);
+	if (line) {
+		free(line);
+	}
+
+	hdmiChanged = hdmiEnabled;
 	if (hdmiEnabled) {
 		SCREEN_WIDTH = 640;
 		SCREEN_HEIGHT = 480;
