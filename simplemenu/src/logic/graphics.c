@@ -849,42 +849,30 @@ void* thread_func(void *picture) {
 	return (int*)1;
 }
 
-SDL_Surface *resizeSurface (SDL_Surface *surface) {
-	double w = surface->w;
-	double h = surface->h;
-	double ratio = 0;  // Used for aspect ratio
+SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 	int smoothing = 0;
-	ratio = w / h;   // get ratio for scaling image
-	h = SCREEN_HEIGHT;
-	w = h*ratio;
-	if (w!=SCREEN_WIDTH) {
-		ratio = h / w;   // get ratio for scaling image
-		w = SCREEN_WIDTH;
-		h = w*ratio;
+	if (surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) {
 		smoothing=1;
 	}
-	double zoomx = SCREEN_WIDTH / surface->w;
-	double zoomy = SCREEN_HEIGHT / surface->h;
-
+	double zoomx = (float)SCREEN_WIDTH / surface->w;
+	double zoomy = (float)SCREEN_HEIGHT / surface->h;
 	SDL_Surface *sized = NULL;
 	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
-
 	if(surface->flags & SDL_SRCCOLORKEY ) {
 		Uint32 colorkey = surface->format->colorkey;
 		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
 	}
 	free(surface);
-
 	return sized;
 }
 
 void resizeSectionBackground(struct MenuSection *section) {
-	section->background = resizeSurface(section->background);
+	section->background = resizeSurfaceToFitScreen(section->background);
 }
 
 void resizeGroupBackground(struct SectionGroup *group) {
 //	printf("before %d\n",group->groupBackgroundSurface->w);
-	group->groupBackgroundSurface = resizeSurface(group->groupBackgroundSurface);
+	group->groupBackgroundSurface = resizeSurfaceToFitScreen(group->groupBackgroundSurface);
 //	printf("after %d\n",group->groupBackgroundSurface->w);
 }
 
@@ -966,8 +954,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 320;
-	SCREEN_HEIGHT = 240;
+	SCREEN_WIDTH = 1920;
+	SCREEN_HEIGHT = 1080;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -996,7 +984,7 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_FULLSCREEN);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
