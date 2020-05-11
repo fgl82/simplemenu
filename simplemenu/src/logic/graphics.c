@@ -982,8 +982,8 @@ void initializeDisplay() {
 	if (fpHDMI!=NULL) {
 		read = getline(&line, &len, fpHDMI);
 		hdmiEnabled = atoi(line);
+		fclose(fpHDMI);
 	}
-	fclose(fpHDMI);
 	if (line) {
 		free(line);
 	}

@@ -514,7 +514,8 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "theme");
 	snprintf(pathToThemeConfigFile,sizeof(pathToThemeConfigFile),"%s/.simplemenu/",home);
 	strcat(pathToThemeConfigFile, "themes/");
-	strcat(pathToThemeConfigFile, value);
+	printf("%s\n",themes[0]);
+	strcat(pathToThemeConfigFile, getNameWithoutPath(themes[activeTheme]));
 	strcat(pathToThemeConfigFile, "/");
 	strcpy(pathToThemeConfigFilePlusFileName, pathToThemeConfigFile);
 	strcat(pathToThemeConfigFilePlusFileName, "theme.ini");

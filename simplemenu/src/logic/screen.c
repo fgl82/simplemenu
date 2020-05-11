@@ -881,10 +881,10 @@ void drawSettingsScreen() {
 void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		if (fullscreenMode) {
+		if (!currentlyChoosing&&fullscreenMode) {
 			displayGamePicture(rom);
 		}
-		if (currentMode==3&&!fullscreenMode) {
+		if (!currentlyChoosing&&currentMode==3&&!fullscreenMode) {
 			displayCenteredSurface(CURRENT_SECTION.background);
 //			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 		}
@@ -894,13 +894,14 @@ void updateScreen(struct Rom *rom) {
 				drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
 			}
 		}
-
-		drawGameList();
-		if (!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
-			displayGamePictureInMenu(rom);
+		if(!currentlyChoosing) {
+			drawGameList();
 		}
-		setupDecorations(rom);
-		if (currentMode==0||fullscreenMode==1){
+		if (!currentlyChoosing&&!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
+			displayGamePictureInMenu(rom);
+			setupDecorations(rom);
+		}
+		if (!currentlyChoosing&&(currentMode==0||fullscreenMode==1)){
 			displayHeart();
 		}
 		if (currentlyChoosing==3) {

@@ -86,6 +86,8 @@ int main() {
 	#endif
 	initializeDisplay();
 	createConfigFilesInHomeIfTheyDontExist();
+	checkThemes();
+	loadLastState();
 	loadConfig();
 	readInputConfig();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
@@ -93,10 +95,8 @@ int main() {
 	setCPU(OC_NO);
 	#endif
 	initializeGlobals();
-	loadLastState();
 	setupDisplayAndKeys();
 	checkIfDefault();
-	checkThemes();
 	char *temp=malloc(8000);
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
