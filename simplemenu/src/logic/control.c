@@ -443,6 +443,7 @@ int isSelectPressed() {
 }
 
 void performGroupChoosingAction() {
+	int existed = 0;
 	if (keys[BTN_START]) {
 		currentlyChoosing=3;
 		return;
@@ -496,6 +497,8 @@ void performGroupChoosingAction() {
 							resizeSectionSystemLogo(&CURRENT_SECTION);
 							CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
 							resizeSectionBackground(&CURRENT_SECTION);
+							existed = 1;
+
 						}
 						menuSections[sectionCount].currentPage=sectionGroupStates[activeGroup][sectionCount][1];
 						menuSections[sectionCount].currentGameInPage=sectionGroupStates[activeGroup][sectionCount][2];
@@ -507,6 +510,12 @@ void performGroupChoosingAction() {
 					}
 				}
 				loadGameList(0);
+			}
+			if (!existed) {
+				CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+				resizeSectionSystemLogo(&CURRENT_SECTION);
+				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				resizeSectionBackground(&CURRENT_SECTION);
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
