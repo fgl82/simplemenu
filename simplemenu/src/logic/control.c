@@ -318,6 +318,12 @@ void showOrHideFavorites() {
 	if (favoritesSectionSelected) {
 		favoritesSectionSelected=0;
 		currentSectionNumber=returnTo;
+		if (CURRENT_SECTION.systemLogoSurface == NULL) {
+			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+			resizeSectionSystemLogo(&CURRENT_SECTION);
+			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+			resizeSectionBackground(&CURRENT_SECTION);
+		}
 		if (returnTo==0) {
 			if (fullscreenMode) {
 				currentlySectionSwitching=1;
@@ -346,6 +352,12 @@ void showOrHideFavorites() {
 	favoritesSectionSelected=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
+	if (CURRENT_SECTION.systemLogoSurface == NULL) {
+		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+		resizeSectionSystemLogo(&CURRENT_SECTION);
+		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		resizeSectionBackground(&CURRENT_SECTION);
+	}
 	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
