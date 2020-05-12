@@ -267,12 +267,8 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
-	displayCenteredImageOnScreen(CURRENT_SECTION.systemLogo, CURRENT_SECTION.sectionName, 1,0);
+	displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
 }
-
-//void showHeart() {
-//	displayCenteredImageOnScreen(favoriteIndicator, " ", 0);
-//}
 
 void displayGamePicture(struct Rom *rom) {
 //	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0  , (int[]){0,0,0});
@@ -434,7 +430,7 @@ void drawHeader(struct Rom *rom) {
 	//	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
 	if (!fullscreenMode&&currentMode!=3) {
-		if(MENU_ITEMS_PER_PAGE!=12) {
+		if(currentMode!=1) {
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), 0, 0, rgbColor);
 		} else {
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, rgbColor);
@@ -487,7 +483,7 @@ void drawGameList() {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
 	}
-	if (strcmp(CURRENT_SECTION.mask,"\0")==0&&(currentMode==0)) {
+	if (currentMode==0) {
 		int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
 		if (!fullscreenMode) {
 			if(currentMode!=1) {
@@ -897,10 +893,13 @@ void updateScreen(struct Rom *rom) {
 		if(!currentlyChoosing) {
 			drawGameList();
 		}
-		if (!currentlyChoosing&&!fullscreenMode&&(currentMode==1||currentMode==2||currentMode==3)) {
-			displayGamePictureInMenu(rom);
+		if (!currentlyChoosing&&!fullscreenMode) {
+			if((currentMode==1||currentMode==2||currentMode==3)) {
+				displayGamePictureInMenu(rom);
+			}
 			setupDecorations(rom);
 		}
+
 		if (!currentlyChoosing&&(currentMode==0||fullscreenMode==1)){
 			displayHeart();
 		}

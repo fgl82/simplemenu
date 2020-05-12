@@ -24,7 +24,7 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	currentCPU=OC_NO;
+	currentCPU = OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
@@ -70,8 +70,8 @@ void sig_term_handler(int signum)
 //}
 
 int main() {
-//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
-//	exit(0);
+	//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
+	//	exit(0);
 	//	testSectionLoad();
 	//	exit(0);
 	//	lastChargeLevel = getBatteryLevel();
@@ -80,6 +80,7 @@ int main() {
 	//	lastSec=currTime->tm_sec;
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
+	initializeGlobals();
 	signal(SIGTERM, &sig_term_handler);
 	#if defined(TARGET_NPG) || defined(TARGET_RG350)
 	resetFrameBuffer();
@@ -94,7 +95,6 @@ int main() {
 	HW_Init();
 	setCPU(OC_NO);
 	#endif
-	initializeGlobals();
 	setupDisplayAndKeys();
 	checkIfDefault();
 	char *temp=malloc(8000);

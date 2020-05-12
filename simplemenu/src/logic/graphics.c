@@ -866,17 +866,21 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 	return sized;
 }
 
+
+void resizeSectionSystemLogo(struct MenuSection *section) {
+	section->systemLogoSurface = resizeSurfaceToFitScreen(section->systemLogoSurface);
+}
+
 void resizeSectionBackground(struct MenuSection *section) {
 	section->background = resizeSurfaceToFitScreen(section->background);
 }
 
 void resizeGroupBackground(struct SectionGroup *group) {
-//	printf("before %d\n",group->groupBackgroundSurface->w);
 	group->groupBackgroundSurface = resizeSurfaceToFitScreen(group->groupBackgroundSurface);
-//	printf("after %d\n",group->groupBackgroundSurface->w);
 }
 
 void displayCenteredSurface(SDL_Surface *surface) {
+	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){0,0,0});
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
@@ -954,8 +958,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 1920;
-	SCREEN_HEIGHT = 1080;
+	SCREEN_WIDTH = 320;
+	SCREEN_HEIGHT = 240;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -964,15 +968,14 @@ void initializeDisplay() {
 
 	char * line = NULL;
 	size_t len = 0;
-	ssize_t read;
-
 	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
+	ssize_t read;
 	if (fpHDMI!=NULL) {
 		read = getline(&line, &len, fpHDMI);
 		hdmiEnabled = atoi(line);
 		fclose(fpHDMI);
 	}
-	if (line) {
+	if (read!=-1) {
 		free(line);
 	}
 
@@ -984,7 +987,7 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }

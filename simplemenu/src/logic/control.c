@@ -104,6 +104,12 @@ int advanceSection(int showLogo) {
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=0;
 	}
+	if (CURRENT_SECTION.systemLogoSurface == NULL) {
+		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+		resizeSectionSystemLogo(&CURRENT_SECTION);
+		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		resizeSectionBackground(&CURRENT_SECTION);
+	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
@@ -126,6 +132,12 @@ int rewindSection(int showLogo) {
 		currentSectionNumber--;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
+	}
+	if (CURRENT_SECTION.systemLogoSurface == NULL) {
+		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+		resizeSectionSystemLogo(&CURRENT_SECTION);
+		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		resizeSectionBackground(&CURRENT_SECTION);
 	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
@@ -480,6 +492,10 @@ void performGroupChoosingAction() {
 					if(sectionCount!=favoritesSectionNumber) {
 						if (sectionGroupStates[activeGroup][sectionCount][0]==1) {
 							currentSectionNumber=sectionCount;
+							CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+							resizeSectionSystemLogo(&CURRENT_SECTION);
+							CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+							resizeSectionBackground(&CURRENT_SECTION);
 						}
 						menuSections[sectionCount].currentPage=sectionGroupStates[activeGroup][sectionCount][1];
 						menuSections[sectionCount].currentGameInPage=sectionGroupStates[activeGroup][sectionCount][2];
