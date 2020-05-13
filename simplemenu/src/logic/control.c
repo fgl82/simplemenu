@@ -196,7 +196,6 @@ void launchGame(struct Rom *rom) {
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
 		} else {
-			printf("%s\n",tempExecDirPlusFileName);
 			#ifdef TARGET_PC
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], tempExecDirPlusFileName,rom->name);
 			#else

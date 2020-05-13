@@ -131,7 +131,6 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
 	if(value==NULL) {
-		printf("%s - %s\n", sectionName, valueName);
 		value = ini_get(config, "DEFAULT", valueName);
 		strcpy(sectionValueToBeSet,pathToThemeConfigFile);
 		strcat(sectionValueToBeSet,value);
