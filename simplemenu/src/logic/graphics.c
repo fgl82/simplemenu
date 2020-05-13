@@ -65,22 +65,23 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	strcpy(bufCopy,buf);
 	strcpy(bufCopy1,buf);
 	bufCopy1[1]='\0';
+
+	int len=strlen(buf);
+	int width = MAGIC_NUMBER;
+
+	int retW = 0;
+	TTF_SizeText(font, buf, &retW, NULL);
+
+	while (retW>width) {
+		bufCopy[len]='\0';
+		len--;
+		TTF_SizeText(font, bufCopy, &retW, NULL);
+	}
+
 	if (shaded) {
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	} else {
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-	}
-	int len=strlen(buf);
-	int width = MAGIC_NUMBER;
-	while (msg->w>width) {
-		bufCopy[len]='\0';
-		SDL_FreeSurface(msg);
-		if (shaded) {
-			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
-		} else {
-			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		}
-		len--;
 	}
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
@@ -107,7 +108,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation) {
 	SDL_Surface *msg;
 	char *bufCopy=malloc(300);
-	char *wordsInBuf[25];
+	char *wordsInBuf[500];
 	char *ptr = NULL;
 
 	bufCopy=strdup(buf);
@@ -674,6 +675,11 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+artHeightInCustom/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
+		if(artTextDistanceFromPictureInCustom>0) {
+			char temp[500];
+			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
+			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2, calculateProportionalSizeOrDistance(artYInCustom)+artHeightInCustom+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+		}
 	}
 	//	pthread_join(myThread,NULL);
 	if(systemXInCustom>0&&systemYInCustom>0) {
@@ -850,6 +856,9 @@ void* thread_func(void *picture) {
 }
 
 SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
+	if (SCREEN_WIDTH==surface->w&&SCREEN_HEIGHT==surface->h) {
+		return surface;
+	}
 	int smoothing = 0;
 	if (surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) {
 		smoothing=1;

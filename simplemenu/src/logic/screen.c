@@ -558,8 +558,9 @@ void drawGameList() {
 				stripGameName(nameWithoutExtension);
 			} else {
 				char *tempGame=getNameWithoutPath(nameWithoutExtension);
-				strcpy(tempGame,getNameWithoutExtension(tempGame));
-				strcpy(nameWithoutExtension,tempGame);
+				char temp2[2000];
+				strcpy(temp2,getNameWithoutExtension(tempGame));
+				strcpy(nameWithoutExtension,temp2);
 				free(tempGame);
 			}
 		}

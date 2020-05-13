@@ -588,22 +588,22 @@ void performSettingsChoosingAction() {
 					activeTheme=0;
 				}
 			}
-			char *temp=malloc(8000);
-			strcpy(temp,themes[activeTheme]);
-			strcat(temp,"/theme.ini");
-			loadTheme(temp);
-			free(temp);
-			if(fullscreenMode==0) {
-				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
-			} else {
-				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
-			}
-			if (currentSectionNumber!=favoritesSectionNumber) {
-				loadGameList(1);
-			} else {
-				loadFavoritesSectionGameList(1);
-			}
-			drawGameList();
+//			char *temp=malloc(8000);
+//			strcpy(temp,themes[activeTheme]);
+//			strcat(temp,"/theme.ini");
+//			loadTheme(temp);
+//			free(temp);
+//			if(fullscreenMode==0) {
+//				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+//			} else {
+//				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+//			}
+//			if (currentSectionNumber!=favoritesSectionNumber) {
+//				loadGameList(1);
+//			} else {
+//				loadFavoritesSectionGameList(1);
+//			}
+//			drawGameList();
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (currentMode==2) {
@@ -662,14 +662,14 @@ void performSettingsChoosingAction() {
 			} else {
 				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 			}
-			freeFonts();
-			initializeFonts();
-			if (currentSectionNumber!=favoritesSectionNumber) {
-				loadGameList(1);
-			} else {
-				loadFavoritesSectionGameList(1);
-			}
-			drawGameList();
+//			freeFonts();
+//			initializeFonts();
+//			if (currentSectionNumber!=favoritesSectionNumber) {
+//				loadGameList(1);
+//			} else {
+//				loadFavoritesSectionGameList(1);
+//			}
+//			drawGameList();
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if(!hdmiEnabled) {
 				if (keys[BTN_LEFT]) {
@@ -745,6 +745,24 @@ void performSettingsChoosingAction() {
 			}
 			#endif
 			currentlyChoosing=0;
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			free(temp);
+			if(fullscreenMode==0) {
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+			} else {
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			}
+			freeFonts();
+			initializeFonts();
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(1);
+			} else {
+				loadFavoritesSectionGameList(1);
+			}
+//			drawGameList();
 		}
 	}
 }
