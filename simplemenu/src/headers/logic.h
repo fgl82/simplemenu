@@ -4,7 +4,7 @@
 void generateError(char *pErrorMessage, int pThereIsACriticalError);
 void quit();
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath);
-void loadGameList();
+void loadGameList(int refresh);
 void loadFavoritesSectionGameList();
 int countFiles (char* directoryName, char *fileExtensions);
 int countGamesInPage();

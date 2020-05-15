@@ -107,8 +107,6 @@ int advanceSection(int showLogo) {
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
-		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
-		resizeSectionBackground(&CURRENT_SECTION);
 	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
@@ -136,8 +134,6 @@ int rewindSection(int showLogo) {
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
-		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
-		resizeSectionBackground(&CURRENT_SECTION);
 	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
@@ -320,6 +316,8 @@ void showOrHideFavorites() {
 		if (CURRENT_SECTION.systemLogoSurface == NULL) {
 			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 			resizeSectionSystemLogo(&CURRENT_SECTION);
+		}
+		if (CURRENT_SECTION.background == NULL) {
 			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
 			resizeSectionBackground(&CURRENT_SECTION);
 		}
@@ -354,6 +352,8 @@ void showOrHideFavorites() {
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
+	}
+	if (CURRENT_SECTION.background == NULL) {
 		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
 		resizeSectionBackground(&CURRENT_SECTION);
 	}
@@ -726,7 +726,6 @@ void performSettingsChoosingAction() {
 	}
 	#endif
 	else if (keys[BTN_START]) {
-		if (currentlyChoosing) {
 			#ifdef TARGET_RG350
 			if (hdmiChanged!=hdmiEnabled) {
 				FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
@@ -762,7 +761,6 @@ void performSettingsChoosingAction() {
 				loadFavoritesSectionGameList(1);
 			}
 //			drawGameList();
-		}
 	}
 }
 

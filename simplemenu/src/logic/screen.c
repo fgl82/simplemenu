@@ -972,6 +972,10 @@ uint32_t hidePicModeLogo() {
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
 	currentlySectionSwitching=0;
+	if (CURRENT_SECTION.background == NULL) {
+		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		resizeSectionBackground(&CURRENT_SECTION);
+	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {

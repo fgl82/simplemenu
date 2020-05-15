@@ -840,7 +840,7 @@ void loadGameList(int refresh) {
 			for (int i=0;i<n;i++){
 				free(files[i]);
 			}
-			if (loadedFiles==0) {
+			if (loadedFiles==0&&k==(dirCounter-1)) {
 				CURRENT_SECTION.hidden=1;
 				loading=0;
 				return;
@@ -855,6 +855,10 @@ void loadGameList(int refresh) {
 	}
 	loading=0;
 }
+
+//void loadGameList1 (int refresh) {
+//	pthread_create(&myThread, NULL, loadGameList1, &refresh); // no parentheses here
+//}
 
 int countGamesInPage() {
 	int gamesCounter=0;

@@ -89,6 +89,7 @@ int OC_OC;
 int OC_SLEEP;
 int backlightValue;
 int hdmiChanged;
+pthread_t myThread;
 
 /* THEME */
 char *themes[100];

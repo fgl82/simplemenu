@@ -14,6 +14,10 @@ int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
+			if (CURRENT_SECTION.background==NULL) {
+				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				resizeSectionBackground(&CURRENT_SECTION);
+			}
 			return 1;
 		}
 		if (keys[BTN_START]) {
@@ -98,6 +102,10 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=0;
 			int advanced = advanceSection(0);
 			if(advanced) {
+				if (CURRENT_SECTION.background == NULL) {
+					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+					resizeSectionBackground(&CURRENT_SECTION);
+				}
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {
@@ -110,6 +118,10 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=0;
 			int rewinded = rewindSection(0);
 			if(rewinded) {
+				if (CURRENT_SECTION.background == NULL) {
+					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+					resizeSectionBackground(&CURRENT_SECTION);
+				}
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {

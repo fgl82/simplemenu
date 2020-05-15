@@ -173,12 +173,6 @@ void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, i
 	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, HAlignCenter, maxWidth, artTextLineSeparationInCustom);
 }
 
-void drawCustomGameNameUnderPictureOnScreen1(const char buf[300], int x, int y, int maxWidth) {
-	drawTransparentRectangleToScreen(38,15,121, 25,(int[]){0,0,0},180);
-	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, (int[]){0,0,0}, HAlignCenter, maxWidth, artTextLineSeparationInCustom);
-}
-
-
 void drawCustomText1OnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align){
 	SDL_Surface *msg;
 	char *bufCopy=malloc(300);
@@ -672,13 +666,14 @@ void displayImageOnScreenCustom(char *fileName) {
 				}
 				wh = hh*ratioh;
 				pthread_t myThread;
-				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+artHeightInCustom/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		if(artTextDistanceFromPictureInCustom>0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
-			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2, calculateProportionalSizeOrDistance(artYInCustom)+artHeightInCustom+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+			int artHeight = (artWidthInCustom/4)*3;
+			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+calculateProportionalSizeOrDistance(artWidthInCustom)/2, calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
 		}
 	}
 	//	pthread_join(myThread,NULL);
