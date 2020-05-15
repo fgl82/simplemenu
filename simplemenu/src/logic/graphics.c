@@ -625,11 +625,17 @@ void displayImageOnScreenCustom(char *fileName) {
 			ratio = h / w;   // get ratio for scaling image
 			w = calculateProportionalSizeOrDistance(artWidthInCustom);
 			h = w*ratio;
+			if (h>calculateProportionalSizeOrDistance(artHeightInCustom)) {
+				ratio = w / h;   // get ratio for scaling image
+				h = calculateProportionalSizeOrDistance(artHeightInCustom);
+				w = h*ratio;
+				printf("%f2",w);
+			}
 			smoothing=1;
 		}
 		smoothing=0;
 		pthread_t myThread;
-		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
+		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2)-w/2), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
 		//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
@@ -649,7 +655,7 @@ void displayImageOnScreenCustom(char *fileName) {
 		if(artTextDistanceFromPictureInCustom>0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
-			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+w/2, calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2)), calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
 		}
 	} else {
 		int smoothing = 0;
