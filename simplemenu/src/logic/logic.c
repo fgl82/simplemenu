@@ -429,9 +429,9 @@ struct Node *merge(struct Node *first, struct Node *second)
 	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
 		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
 	}
-	if(CURRENT_SECTION.aliasFileName!=NULL) {
-//		stripGameName(noPathS1Alias);
-//		stripGameName(noPathS2Alias);
+	if(strlen(CURRENT_SECTION.aliasFileName)<2) {
+		stripGameName(noPathS1Alias);
+		stripGameName(noPathS2Alias);
 	}
 	if (strcmp(noPathS1Alias, noPathS2Alias)<=0)
 	{
@@ -501,14 +501,46 @@ void loadFavoritesSectionGameList() {
 	}
 }
 
+
+int scanDirectory(char *directory, char* files[])
+{
+	int i = 0;
+    struct dirent *de;
+    DIR *dr = opendir(directory);
+	if (dr==NULL) {
+		return 0;
+	}
+	char * d_name;
+    while ((de = readdir(dr)) != NULL) {
+    	d_name = de->d_name;
+		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (de->d_type & DT_DIR) {
+				char path[PATH_MAX];
+				char * e = strrchr(d_name, '/');
+				if (e==NULL) {
+					strcat(d_name, "/");
+				}
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				i=+scanDirectory(path, files);
+			} else {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				files[i]=malloc(sizeof(path));
+				strcpy(files[i],path);
+				i++;
+			}
+		}
+    }
+    closedir(dr);
+    return i;
+}
+
 int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	DIR * d;
+	printf("%s\n",directory);
 	d = opendir (directory);
 	if (d==NULL) {
-//		printf("%s was null\n",directory);
 		return 0;
-	} else {
-//		printf("%s was NOT null\n",directory);
 	}
 	while (1) {
 		struct dirent *entry;
@@ -518,7 +550,6 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 			break;
 		}
 		d_name = entry->d_name;
-//		printf("%d %s\n", entry->d_type, entry->d_name);
 		if (entry->d_type & DT_DIR) {
 			if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
@@ -533,6 +564,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 			char path[PATH_MAX];
 			snprintf (path, PATH_MAX, "%s%s", directory, d_name);
 			files[i]=malloc(sizeof(path));
+			printf("%s\n",path);
 			strcpy(files[i],path);
 			i++;
 		}
@@ -731,7 +763,8 @@ void loadGameList(int refresh) {
 		}
 		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
-			int n = recursivelyScanDirectory(dirs[k], files, 0);
+//			int n = recursivelyScanDirectory(dirs[k], files, 0);
+			int n = scanDirectory(dirs[k], files);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);

@@ -160,9 +160,9 @@ int main() {
 	}
 	enableKeyRepeat();
 	while (running) {
-		if (myThread!=NULL) {
-			pthread_join(myThread,NULL);
-		}
+//		if (myThread!=NULL) {
+//			pthread_join(myThread,NULL);
+//		}
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {

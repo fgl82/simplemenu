@@ -544,7 +544,7 @@ void loadConfig() {
 	char *files[1000];
 	char tempString[1000];
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
-	int n = recursivelyScanDirectory(tempString, files, 0);
+	int n = scanDirectory(tempString, files);
 
 	for(int i=0;i<n;i++) {
 		if(strstr(files[i],".png")!=NULL) {
