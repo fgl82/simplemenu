@@ -62,4 +62,5 @@ void drawNonShadedGameNameOnScreenCustom(char *buf, int position);
 void displayCenteredSurface(SDL_Surface *surface);
 void resizeSectionBackground(struct MenuSection *section);
 void resizeSectionSystemLogo(struct MenuSection *section);
+void drawCustomGameNumber(const char buf[300], int x, int y);
 #endif

@@ -1,25 +1,25 @@
 Parallel mksquashfs: Using 4 processors
 Creating 4.0 filesystem on SimpleMenu-RG-350.opk, block size 131072.
-[===============================================================|] 262/262 100%
+[===============================================================|] 266/266 100%
 
 Squashfs 4.0 filesystem, gzip compressed, data block size 131072
 	compressed data, compressed metadata, compressed fragments, no xattrs
 	duplicates are removed
-Filesystem size 3396.88 Kbytes (3.32 Mbytes)
-	68.37% of uncompressed filesystem size (4968.22 Kbytes)
-Inode table size 3483 bytes (3.40 Kbytes)
-	33.17% of uncompressed inode table size (10500 bytes)
-Directory table size 2511 bytes (2.45 Kbytes)
-	35.90% of uncompressed directory table size (6995 bytes)
-Number of duplicate files found 4
-Number of inodes 326
-Number of files 255
-Number of fragments 31
+Filesystem size 3315.29 Kbytes (3.24 Mbytes)
+	82.19% of uncompressed filesystem size (4033.60 Kbytes)
+Inode table size 3905 bytes (3.81 Kbytes)
+	35.98% of uncompressed inode table size (10852 bytes)
+Directory table size 2251 bytes (2.20 Kbytes)
+	31.29% of uncompressed directory table size (7194 bytes)
+Number of duplicate files found 2
+Number of inodes 338
+Number of files 263
+Number of fragments 28
 Number of symbolic links  0
 Number of device nodes 0
 Number of fifo nodes 0
 Number of socket nodes 0
-Number of directories 71
+Number of directories 75
 Number of ids (unique uids + gids) 1
 Number of uids 1
 	root (0)

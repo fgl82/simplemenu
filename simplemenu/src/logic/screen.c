@@ -371,7 +371,6 @@ void displayGamePicture(struct Rom *rom) {
 		}
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-		int black[3]={0, 0, 0};
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 200);
 	}
 
@@ -664,13 +663,14 @@ void setupDecorations(struct Rom *rom) {
 			snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+1+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, CURRENT_SECTION.gameCount);
 		}
 		drawFooter(tempString);
-	}
-	if(currentMode==3) {
+		drawHeader();
+	} else {
 		if (text1XInCustom!=-1&&text1YInCustom!=-1) {
 			drawHeader();
 		}
-	} else {
-		drawHeader();
+		char *gameNumber=malloc(10);
+		snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
+		drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2XInCustom), calculateProportionalSizeOrDistance(text2YInCustom));
 	}
 }
 
@@ -897,7 +897,6 @@ void updateScreen(struct Rom *rom) {
 		}
 		if (!currentlyChoosing&&currentMode==3&&!fullscreenMode) {
 			displayCenteredSurface(CURRENT_SECTION.background);
-//			displayCenteredImageOnScreen(CURRENT_SECTION.mask," ",1,0);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};

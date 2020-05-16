@@ -245,19 +245,6 @@ void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
 	drawTextOnScreen(font, centerRomList, position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
 }
 
-void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
-	//	drawShadedTextOnScreen(picModeFont, SCREEN_WIDTH/2, position, buf, make_color(0,0,0), VAlignBottom | HAlignCenter, make_color(255,255,255));
-	int color[3] = {255,255,0};
-	if (favoritesSectionSelected) {
-		color[0]= 0;
-		color[1]= 100;
-		color[2]= 255;
-	}
-	//	TTF_SetFontStyle(font,TTF_STYLE_BOLD);
-	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
-	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
-}
-
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
 	int hAlign = 0;
 	if (gameListAlignmentInCustom==0) {
@@ -286,19 +273,26 @@ void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
 
 void drawNonShadedGameNameOnScreen(char *buf, int position) {
 	drawTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodyTextColor, VAlignBottom | HAlignCenter);
+}
 
+void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
+	int color[3] = {255,255,0};
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
+	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 }
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
-	int color[3] = {255,255,255};
+	int color[3];
+	color[0] = CURRENT_SECTION.headerAndFooterTextColor[0];
+	color[1] = CURRENT_SECTION.headerAndFooterTextColor[1];
+	color[2] = CURRENT_SECTION.headerAndFooterTextColor[2];
 	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 }
 
 void drawPictureTextOnScreen(char *buf) {
-	if(!footerVisibleInFullscreenMode) {
+	if(!footerVisibleInFullscreenMode||!isPicModeMenuHidden) {
 		return;
 	}
-	int white[3]={255, 255, 255};
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
 	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
 }
@@ -626,7 +620,6 @@ void displayImageOnScreenTraditional(char *fileName) {
 }
 
 void displayImageOnScreenCustom(char *fileName) {
-//	printf("%s\n",fileName);
 	SDL_Surface *screenshot = IMG_Load(fileName);
 
 	if (screenshot!=NULL) {
@@ -652,9 +645,6 @@ void displayImageOnScreenCustom(char *fileName) {
 		smoothing=0;
 		pthread_t myThread;
 		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-w/2, calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
-		char *gameNumber=malloc(10);
-		snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.realCurrentGameNumber+1,CURRENT_SECTION.gameCount);
-		drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2XInCustom), calculateProportionalSizeOrDistance(text2YInCustom));
 		//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
