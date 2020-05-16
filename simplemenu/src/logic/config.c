@@ -132,6 +132,9 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	value = ini_get(config, sectionName, valueName);
 	if(value==NULL) {
 		value = ini_get(config, "DEFAULT", valueName);
+		if (value==NULL) {
+			value = ini_get(config, "GENERAL", valueName);
+		}
 		strcpy(sectionValueToBeSet,pathToThemeConfigFile);
 		strcat(sectionValueToBeSet,value);
 		return;
@@ -249,10 +252,10 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
 		gameListPositionInFullCustom = atoi(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_w_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
 		artWidthInCustom = atoi(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_h_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
 		artHeightInCustom = atoi(value);
 
 		value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
@@ -287,6 +290,20 @@ void loadTheme(char *theme) {
 
 		value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
 		text1AlignmentInCustom = atoi(value);
+
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFontCustom);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+		text2FontSizeInCustom = atoi (value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+		text2XInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+		text2YInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+		text2AlignmentInCustom = atoi(value);
 
 		value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
 		artTextDistanceFromPictureInCustom = atoi(value);
@@ -744,10 +761,10 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
 	gameListPositionInFullCustom = atoi(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_w_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
 	artWidthInCustom = atoi(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_h_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
 	artHeightInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
@@ -782,6 +799,20 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
 	text1AlignmentInCustom = atoi(value);
+
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFontCustom);
+	value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+
+	text2FontSizeInCustom = atoi (value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+	text2XInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+	text2YInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+	text2AlignmentInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
 	artTextDistanceFromPictureInCustom = atoi(value);

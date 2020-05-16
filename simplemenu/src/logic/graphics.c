@@ -23,6 +23,7 @@ TTF_Font *miniFont = NULL;
 TTF_Font *picModeFont = NULL;
 TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
+TTF_Font *customCountFont = NULL;
 TTF_Font *footerFont = NULL;
 
 TTF_Font *settingsfont = NULL;
@@ -77,7 +78,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 		len--;
 		TTF_SizeText(font, bufCopy, &retW, NULL);
 	}
-
 	if (shaded) {
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 	} else {
@@ -170,7 +170,17 @@ int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtC
 }
 
 void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, int maxWidth) {
-	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, HAlignCenter, maxWidth, artTextLineSeparationInCustom);
+	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, VAlignBottom|HAlignCenter, maxWidth, artTextLineSeparationInCustom);
+}
+
+void drawCustomGameNumber(const char buf[300], int x, int y) {
+	int hAlign = HAlignLeft;
+	if(text2AlignmentInCustom==1) {
+		hAlign = HAlignCenter;
+	} else if (text2AlignmentInCustom==2) {
+		hAlign = HAlignRight;
+	}
+	genericDrawTextOnScreen(customCountFont, x, y, buf, CURRENT_SECTION.headerAndFooterTextColor, VAlignMiddle|hAlign, CURRENT_SECTION.headerAndFooterBackgroundColor, 0);
 }
 
 void drawCustomText1OnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align){
@@ -629,13 +639,15 @@ void displayImageOnScreenCustom(char *fileName) {
 				ratio = w / h;   // get ratio for scaling image
 				h = calculateProportionalSizeOrDistance(artHeightInCustom);
 				w = h*ratio;
-				printf("%f2",w);
 			}
 			smoothing=1;
 		}
 		smoothing=0;
 		pthread_t myThread;
-		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2)-w/2), calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
+		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-w/2, calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
+		char *gameNumber=malloc(10);
+		snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.realCurrentGameNumber+1,CURRENT_SECTION.gameCount);
+		drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2XInCustom), calculateProportionalSizeOrDistance(text2YInCustom));
 		//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
@@ -1017,13 +1029,13 @@ void initializeSettingsFonts() {
 void initializeFonts() {
 	TTF_Init();
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
-	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSizeInCustom));
+	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize-2));
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
 	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+18));
 	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+2));
-	customHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(text1FontSizeInCustom));
-	//	customCurrentGameFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(text3FontSizeInCustom));
+	customHeaderFont = TTF_OpenFont(textXFontCustom, calculateProportionalSizeOrDistance(text1FontSizeInCustom));
+	customCountFont = TTF_OpenFont(textXFontCustom, calculateProportionalSizeOrDistance(text2FontSizeInCustom));
 }
 
 void freeFonts() {
@@ -1033,6 +1045,8 @@ void freeFonts() {
 	headerFont = NULL;
 	TTF_CloseFont(customHeaderFont);
 	customHeaderFont = NULL;
+	TTF_CloseFont(customCountFont);
+	customCountFont = NULL;
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
 	TTF_CloseFont(picModeFont);

@@ -132,6 +132,7 @@ int footerPositionInDrunkenMonkey;
 int itemsInCustom;
 int itemsInFullCustom;
 int itemsSeparationInCustom;
+char textXFontCustom[1000];
 int text1FontSizeInCustom;
 int text1XInCustom;
 int text1YInCustom;
