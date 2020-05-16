@@ -12,6 +12,10 @@ int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
+			if (CURRENT_SECTION.background==NULL) {
+				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				resizeSectionBackground(&CURRENT_SECTION);
+			}
 			return 1;
 		}
 	}

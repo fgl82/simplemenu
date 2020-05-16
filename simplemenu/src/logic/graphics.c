@@ -668,6 +668,15 @@ void displayImageOnScreenCustom(char *fileName) {
 		}
 	} else {
 		int smoothing = 0;
+		if(artTextDistanceFromPictureInCustom>=0) {
+			char temp[500];
+			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
+			int artHeight = (artWidthInCustom/4)*3;
+			if (CURRENT_SECTION.gameCount>0) {
+				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidthInCustom),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-calculateProportionalSizeOrDistance(artWidthInCustom)/2,calculateProportionalSizeOrDistance(artYInCustom),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+calculateProportionalSizeOrDistance(artWidthInCustom)/2, calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+			}
+		}
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -681,16 +690,7 @@ void displayImageOnScreenCustom(char *fileName) {
 				}
 				wh = hh*ratioh;
 				pthread_t myThread;
-				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
-			}
-		}
-		if(artTextDistanceFromPictureInCustom>=0) {
-			char temp[500];
-			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
-			int artHeight = (artWidthInCustom/4)*3;
-			if (CURRENT_SECTION.gameCount>0) {
-				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidthInCustom),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-calculateProportionalSizeOrDistance(artWidthInCustom)/2,calculateProportionalSizeOrDistance(artYInCustom),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+calculateProportionalSizeOrDistance(artWidthInCustom)/2, calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom+artWidthInCustom/2)-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 	}

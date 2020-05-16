@@ -5,10 +5,10 @@ Creating 4.0 filesystem on SimpleMenu-RG-350.opk, block size 131072.
 Squashfs 4.0 filesystem, gzip compressed, data block size 131072
 	compressed data, compressed metadata, compressed fragments, no xattrs
 	duplicates are removed
-Filesystem size 3315.29 Kbytes (3.24 Mbytes)
-	82.19% of uncompressed filesystem size (4033.60 Kbytes)
-Inode table size 3905 bytes (3.81 Kbytes)
-	35.98% of uncompressed inode table size (10852 bytes)
+Filesystem size 3315.54 Kbytes (3.24 Mbytes)
+	82.20% of uncompressed filesystem size (4033.64 Kbytes)
+Inode table size 3911 bytes (3.82 Kbytes)
+	36.04% of uncompressed inode table size (10852 bytes)
 Directory table size 2251 bytes (2.20 Kbytes)
 	31.29% of uncompressed directory table size (7194 bytes)
 Number of duplicate files found 2
