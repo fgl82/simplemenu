@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #ifdef TARGET_RG350
 #include <shake.h>
@@ -174,7 +175,11 @@ void launchGame(struct Rom *rom) {
 			generateError(error,0);
 			return;
 		}
+		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
+		#else
+		executeCommandPC(favorite.executable,favorite.name);
+		#endif
 	} else if (rom->name!=NULL) {
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
 		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
@@ -190,10 +195,14 @@ void launchGame(struct Rom *rom) {
 			return;
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
+			#ifndef TARGET_PC
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
+			#else
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
+			#endif
 		} else {
 			#ifdef TARGET_PC
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], tempExecDirPlusFileName,rom->name);
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
 			#else
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
 			#endif
@@ -204,9 +213,17 @@ void launchGame(struct Rom *rom) {
 void launchEmulator(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
+		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*");
+		#else
+		executeCommandPC(favorite.executable,"*");
+		#endif
 	} else if (rom->name!=NULL) {
+		#ifndef TARGET_PC
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
+		#else
+		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
+		#endif
 	}
 }
 

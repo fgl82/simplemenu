@@ -77,12 +77,12 @@ else
     FLIST="${FLIST} default.retrofw.desktop"
 fi
 
-rm -f ${OPK_NAME}
-mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports
+rm -f ${OPK_NAME} > log.txt
+mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports >> log.txt
 
 if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ]; then
-    cat default.gcw0.desktop
-    rm -f default.gcw0.desktop
+#    cat default.gcw0.desktop
+    rm -f default.gcw0.desktop >> log.txt
     while true; do
         read -p "Transfer?" yn
         case $yn in
@@ -92,6 +92,6 @@ if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ]; then
         esac
     done
 else
-    cat default.retrofw.desktop
-    rm -f default.retrofw.desktop
+#    cat default.retrofw.desktop
+    rm -f default.retrofw.desktop >> log.txt
 fi

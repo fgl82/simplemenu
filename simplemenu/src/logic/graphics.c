@@ -1,6 +1,5 @@
-#include "../headers/graphics.h"
-#include "../headers/globals.h"
-
+#define _GNU_SOURCE
+#include <stdio.h>
 #include <string.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -16,6 +15,8 @@
 #include "../headers/globals.h"
 #include "../headers/SDL_rotozoom.h"
 #include "../headers/logic.h"
+#include "../headers/graphics.h"
+#include "../headers/globals.h"
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
@@ -298,16 +299,19 @@ void drawPictureTextOnScreen(char *buf) {
 		return;
 	}
 	int white[3]={255, 255, 255};
-	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), (int[]){0,0,0}, 180);
-	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(((17*fontSize)/baseFont)+currentMode+(currentMode>0?0:0)):calculateProportionalSizeOrDistance(239+currentMode), buf, white, VAlignTop | HAlignCenter);
+	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
-	int white[3]={0, 0, 0};
-	drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, white, VAlignMiddle | HAlignCenter);
+	if(!footerVisibleInFullscreenMode) {
+		drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, CURRENT_SECTION.bodyTextColor, VAlignMiddle | HAlignCenter);
+	} else {
+		drawPictureTextOnScreen(fallBackText);
+	}
 }
 
-void drawTextOnFooter(const char text[64]) {
+void drawTextOnFooter(const char text[2000]) {
 	switch (currentMode) {
 	case 0:
 		drawTextOnScreen(footerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(footerPositionInSimple), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
@@ -341,9 +345,7 @@ void drawTextOnHeader(char *text) {
 		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInDrunkenMonkey), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 		break;
 	case 3:
-		if(text1YInCustom!=-1&&text1XInCustom!=-1) {
-			drawCustomText1OnScreen(customHeaderFont, text1XInCustom, text1YInCustom, text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
-		}
+		drawCustomText1OnScreen(customHeaderFont, calculateProportionalSizeOrDistance(text1XInCustom), calculateProportionalSizeOrDistance(text1YInCustom), "NINTENDO ENTERTAINMENT SYSTEM", menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
 		break;
 	}
 }
@@ -434,15 +436,20 @@ void displayBackGroundImage(char *fileName, SDL_Surface *surface) {
 
 void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int opacity) {
 	SDL_Surface *transparentrectangle;
-	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, rgbColor[0], rgbColor[1], rgbColor[2], 0);
-	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, opacity); //128 is the amount of transparency or opacity (dont remember)
+	SDL_Rect rectangleOrig;
 	SDL_Rect rectangleDest;
+	rectangleOrig.w = w;
+	rectangleOrig.h = h;
+	rectangleOrig.x = 0;
+	rectangleOrig.y = 0;
 	rectangleDest.w = w;
 	rectangleDest.h = h;
 	rectangleDest.x = x;
 	rectangleDest.y = y;
-	//	SDL_FillRect(transparentrectangle, &rectangleDest, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
-	SDL_BlitSurface(transparentrectangle, NULL, screen, &rectangleDest);
+	transparentrectangle = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
+	SDL_FillRect(transparentrectangle, &rectangleOrig, SDL_MapRGB(transparentrectangle->format, rgbColor[0], rgbColor[1], rgbColor[2]));
+	SDL_SetAlpha(transparentrectangle, SDL_SRCALPHA, opacity);
+	SDL_BlitSurface(transparentrectangle, &rectangleOrig, screen, &rectangleDest);
 	SDL_FreeSurface(transparentrectangle);
 }
 
@@ -664,7 +671,7 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+w/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-		if(artTextDistanceFromPictureInCustom>0) {
+		if(artTextDistanceFromPictureInCustom>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2)), calculateProportionalSizeOrDistance(artYInCustom)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
@@ -687,11 +694,14 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+artWidthInCustom/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-		if(artTextDistanceFromPictureInCustom>0) {
+		if(artTextDistanceFromPictureInCustom>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidthInCustom/4)*3;
-			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+calculateProportionalSizeOrDistance(artWidthInCustom)/2, calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+			if (CURRENT_SECTION.gameCount>0) {
+				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidthInCustom),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-calculateProportionalSizeOrDistance(artWidthInCustom)/2,calculateProportionalSizeOrDistance(artYInCustom),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artXInCustom)+calculateProportionalSizeOrDistance(artWidthInCustom)/2, calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPictureInCustom),calculateProportionalSizeOrDistance(artWidthInCustom));
+			}
 		}
 	}
 	//	pthread_join(myThread,NULL);
@@ -980,8 +990,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 320;
-	SCREEN_HEIGHT = 240;
+	SCREEN_WIDTH = 640;
+	SCREEN_HEIGHT = 480;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;

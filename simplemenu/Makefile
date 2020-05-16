@@ -20,7 +20,7 @@ else ifeq ($(PLATFORM), RG-300)
 else ifeq ($(PLATFORM), RG-350)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_RG350 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
+	CFLAGS = -DTARGET_RG350 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -std=gnu99
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lz -lbz2
 else ifeq ($(PLATFORM), NPG)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
@@ -31,8 +31,8 @@ else
 	TARGET = simplemenu-x86
 	CC = gcc
 	LINKER   = gcc
-	CFLAGS = -DTARGET_PC -DUSE_GZIP -DTARGET_PC -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra
-	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lz	
+	CFLAGS = -DTARGET_PC -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra -pg
+	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lz 	
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.

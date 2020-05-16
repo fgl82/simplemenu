@@ -178,7 +178,7 @@ void loadTheme(char *theme) {
 		}
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+//		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
@@ -847,7 +847,7 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 	footerOnTop = atoi(value);
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+//	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);

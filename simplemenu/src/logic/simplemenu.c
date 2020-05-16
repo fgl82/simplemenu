@@ -91,7 +91,7 @@ int main() {
 	loadLastState();
 	loadConfig();
 	readInputConfig();
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	setCPU(OC_NO);
 	#endif

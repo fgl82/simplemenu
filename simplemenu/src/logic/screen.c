@@ -19,17 +19,17 @@ char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
-		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
-			displayCenteredImageOnScreen(fullscreenBackground, " ",1,0);
-		} else {
-			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){30,30,30});
-		}
+//		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
+//			displayCenteredImageOnScreen(fullscreenBackground, " ",1,0);
+//		} else {
+			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,CURRENT_SECTION.bodyBackgroundColor);
+//		}
 	} else {
-		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
-			displayCenteredImageOnScreen(simpleBackground, " ",1,0);
-		} else {
-			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){30,30,30});
-		}
+//		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
+//			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){30,30,30});
+//		} else {
+			drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,CURRENT_SECTION.bodyBackgroundColor);
+//		}
 	}
 }
 
@@ -372,7 +372,7 @@ void displayGamePicture(struct Rom *rom) {
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		int black[3]={0, 0, 0};
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black, 210);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 200);
 	}
 
 	free(pictureWithFullPath);
@@ -425,7 +425,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	free(tempGameName);
 }
 
-void drawHeader(struct Rom *rom) {
+void drawHeader() {
 	char finalString [100];
 	//	char timeString[150];
 	int rgbColor[] = {menuSections[currentSectionNumber].headerAndFooterBackgroundColor[0],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[1],menuSections[currentSectionNumber].headerAndFooterBackgroundColor[2]};
@@ -438,21 +438,25 @@ void drawHeader(struct Rom *rom) {
 	}
 	if (currentCPU==OC_UC) {
 		strcpy(finalString,"- ");
-		strcat(finalString,menuSections[currentSectionNumber].sectionName);
+		if(currentSectionNumber==favoritesSectionNumber) {
+			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
+		} else{
+			strcat(finalString,menuSections[currentSectionNumber].sectionName);
+		}
 		strcat(finalString," -");
 	} else if (currentCPU==OC_NO) {
 		if(currentSectionNumber==favoritesSectionNumber) {
-			if(rom!=NULL) {
-				strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
-			} else {
-				strcpy(finalString,CURRENT_SECTION.sectionName);
-			}
+			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
 		} else{
 			strcpy(finalString,menuSections[currentSectionNumber].sectionName);
 		}
 	} else {
 		strcpy(finalString,"+ ");
-		strcat(finalString,menuSections[currentSectionNumber].sectionName);
+		if(currentSectionNumber==favoritesSectionNumber) {
+			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
+		} else{
+			strcat(finalString,menuSections[currentSectionNumber].sectionName);
+		}
 		strcat(finalString," +");
 	}
 	//	strcpy(timeString,(asctime(currTime))+11);
@@ -652,14 +656,22 @@ void drawFooter(char *text) {
 	drawTextOnFooter(text);
 }
 void setupDecorations(struct Rom *rom) {
-	char tempString[200];
-	if (rom==NULL||rom->name==NULL) {
-		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, CURRENT_SECTION.gameCount);
-	} else {
-		snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+1+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, CURRENT_SECTION.gameCount);
+	if(currentMode!=3) {
+		char tempString[200];
+		if (rom==NULL||rom->name==NULL) {
+			snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, CURRENT_SECTION.gameCount);
+		} else {
+			snprintf(tempString,sizeof(tempString),"GAME %d of %d",CURRENT_SECTION.currentGameInPage+1+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage, CURRENT_SECTION.gameCount);
+		}
+		drawFooter(tempString);
 	}
-	drawFooter(tempString);
-	drawHeader(rom);
+	if(currentMode==3) {
+		if (text1XInCustom!=-1&&text1YInCustom!=-1) {
+			drawHeader();
+		}
+	} else {
+		drawHeader();
+	}
 }
 
 void setOptionsAndValues (char **options, char **values, char **hints){

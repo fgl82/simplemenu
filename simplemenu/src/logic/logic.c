@@ -282,7 +282,11 @@ int checkIfEmulatorExists(char *path, char *executable) {
 	return 1;
 }
 
+#ifndef TARGET_PC
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
+#else
+void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
+#endif
 
 	char *exec = malloc(strlen(executable)+100);
 	strcpy(exec, executable);
@@ -333,7 +337,10 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	strcat(exec, fileToBeExecutedWithFullPath);
 	strcat(exec, "\"");
 	printf("%s\n",exec);
-	system(exec);
+	int ret = system(exec);
+	if(ret == -1) {
+		printf("ouch!\n");
+	}
 	free(exec);
 
 	setupDisplayAndKeys();
@@ -937,6 +944,10 @@ void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
+		if (CURRENT_SECTION.background == NULL) {
+			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+			resizeSectionBackground(&CURRENT_SECTION);
+		}
 		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
@@ -949,7 +960,6 @@ void determineStartingScreen(int sectionCount) {
 			determineStartingScreen(sectionCount);
 		}
 	} else {
-//		setBasicGameList();
 		loadGameList(0);
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

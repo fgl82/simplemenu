@@ -3,7 +3,7 @@
 void updateScreen(struct Rom *rom);
 void drawHeader();
 void drawGameList();
-void drawFooter();
+void drawFooter(char *text);
 void setupDisplayAndKeys();
 void setupDecorations();
 void freeResources();
