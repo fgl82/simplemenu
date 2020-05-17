@@ -54,6 +54,10 @@ void checkIfDefault() {
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
+	#ifdef TARGET_NPG
+	fp = fopen("/media/data/local/sbin/frontend_start", "r");
+	fpScripts = fopen("scripts/frontend_start", "r");
+	#endif
 	shutDownEnabled=1;
 	int sameFile=1;
 	int c1, c2;
