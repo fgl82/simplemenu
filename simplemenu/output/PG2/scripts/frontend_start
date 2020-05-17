@@ -3,7 +3,6 @@
 # author MashTec
 # modified by FGL82
 
-
 if [ -f /media/data/SimpleMenu/simplemenu ]; then
     cd /media/data/SimpleMenu
     ./simplemenu
