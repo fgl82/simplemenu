@@ -293,8 +293,14 @@ void drawPictureTextOnScreen(char *buf) {
 	if(!footerVisibleInFullscreenMode||!isPicModeMenuHidden) {
 		return;
 	}
-	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
-	drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
+	if(!favoritesSectionSelected) {
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont),(int[]){0,0,0}, 100);
+		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
+	} else {
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), (int[]){0,0,0}, 180);
+		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
+	}
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {

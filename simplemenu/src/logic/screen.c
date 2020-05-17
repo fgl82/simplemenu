@@ -371,7 +371,12 @@ void displayGamePicture(struct Rom *rom) {
 		}
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 200);
+		if(!favoritesSectionSelected) {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0},100);
+		} else {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0}, 180);
+		}
 	}
 
 	free(pictureWithFullPath);
