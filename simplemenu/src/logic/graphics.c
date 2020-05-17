@@ -293,13 +293,15 @@ void drawPictureTextOnScreen(char *buf) {
 	if(!footerVisibleInFullscreenMode||!isPicModeMenuHidden) {
 		return;
 	}
+	int h = 0;
+	TTF_SizeText(font, buf, NULL, &h);
 	if(!favoritesSectionSelected) {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont),(int[]){0,0,0}, 100);
-		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)),(int[]){0,0,0}, 100);
+		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
 	} else {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance((19*fontSize)/baseFont), 0, footerOnTop?0:SCREEN_HEIGHT-calculateProportionalSizeOrDistance((19*fontSize)/baseFont), (int[]){0,0,0}, 180);
-		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-calculateProportionalSizeOrDistance(2), buf, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignTop|HAlignCenter);
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), (int[]){0,0,0}, 180);
+		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, buf, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
 	}
 }
 
@@ -330,7 +332,7 @@ void drawTextOnFooterWithColor(const char text[64], int txtColor[]) {
 }
 
 void drawTextOnSettingsFooterWithColor(const char text[64], int txtColor[]) {
-	drawTextOnScreen(settingsFooterFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, txtColor, VAlignMiddle| HAlignCenter);
+	drawTextOnScreen(settingsFooterFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(footerPositionInSimple), text, txtColor, VAlignMiddle| HAlignCenter);
 }
 
 void drawTextOnHeader(char *text) {
@@ -355,7 +357,7 @@ void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
 }
 
 void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsHeaderFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(settingsHeaderFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInSimple), text, txtColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
@@ -1027,9 +1029,9 @@ void refreshScreen() {
 }
 
 void initializeSettingsFonts() {
-	settingsfont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(14));
-	settingsHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(20));
-	settingsFooterFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(16));
+	settingsfont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize));
+	settingsHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize+6));
+	settingsFooterFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize+2));
 }
 
 void initializeFonts() {

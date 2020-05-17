@@ -99,6 +99,7 @@ int currentMode;
 char menuFont[1000];
 int baseFont;
 int fontSize;
+int settingsFontSize;
 int transparentShading;
 int footerOnTop;
 char simpleBackground[1000];

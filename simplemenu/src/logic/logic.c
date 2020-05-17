@@ -509,9 +509,8 @@ void loadFavoritesSectionGameList() {
 }
 
 
-int scanDirectory(char *directory, char* files[])
+int scanDirectory(char *directory, char* files[], int i)
 {
-	int i = 0;
     struct dirent *de;
     DIR *dr = opendir(directory);
 	if (dr==NULL) {
@@ -528,7 +527,7 @@ int scanDirectory(char *directory, char* files[])
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i=+scanDirectory(path, files);
+				i+=scanDirectory(path, files, i);
 			} else {
 				char path[PATH_MAX];
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
@@ -571,7 +570,6 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 			char path[PATH_MAX];
 			snprintf (path, PATH_MAX, "%s%s", directory, d_name);
 			files[i]=malloc(sizeof(path));
-			printf("%s\n",path);
 			strcpy(files[i],path);
 			i++;
 		}
@@ -770,8 +768,8 @@ void loadGameList(int refresh) {
 		}
 		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
-//			int n = recursivelyScanDirectory(dirs[k], files, 0);
-			int n = scanDirectory(dirs[k], files);
+			int n = recursivelyScanDirectory(dirs[k], files, 0);
+//			int n = scanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);

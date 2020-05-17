@@ -316,6 +316,7 @@ void loadTheme(char *theme) {
 
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
+		settingsFontSize = baseFont;
 
 		value = ini_get(themeConfig, "GENERAL", "transparent_shading");
 		transparentShading  = atoi(value);
@@ -561,7 +562,7 @@ void loadConfig() {
 	char *files[1000];
 	char tempString[1000];
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
-	int n = scanDirectory(tempString, files);
+	int n = recursivelyScanDirectory(tempString, files, 0);
 
 	for(int i=0;i<n;i++) {
 		if(strstr(files[i],".png")!=NULL) {
@@ -825,6 +826,7 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
+	settingsFontSize = baseFont;
 
 	value = ini_get(themeConfig, "GENERAL", "transparent_shading");
 	transparentShading  = atoi(value);

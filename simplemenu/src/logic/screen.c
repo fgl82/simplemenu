@@ -842,7 +842,7 @@ void drawSettingsScreen() {
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
-	int nextLine = calculateProportionalSizeOrDistance((baseFont*29)/baseFont);//CHANGE FIRST VALUE FOR FONT SIZE
+	int nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
 	#if defined TARGET_RG300
 	for (int i=0;i<10;i++) {
 	#elif defined TARGET_RG350 || defined TARGET_RG350 || defined TARGET_PC
@@ -861,7 +861,7 @@ void drawSettingsScreen() {
 		} else {
 			drawNonShadedSettingsOptionOnScreen(temp, nextLine, darkerAmber);
 		}
-		nextLine+=calculateProportionalSizeOrDistance((baseFont*19)/baseFont);//CHANGE LAST VALUE FOR FONT SIZE
+		nextLine+=calculateProportionalSizeOrDistance(itemsSeparationInSimple);
 	}
 	free(options[TIDY_ROMS_OPTION]);
 	free(options[FULL_SCREEN_FOOTER_OPTION]);
