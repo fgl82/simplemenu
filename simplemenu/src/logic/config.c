@@ -131,7 +131,12 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 	const char *value;
 	value = ini_get(config, sectionName, valueName);
 	if(value==NULL) {
-		strcpy(sectionValueToBeSet,"\0");
+		value = ini_get(config, "DEFAULT", valueName);
+		if (value==NULL) {
+			value = ini_get(config, "GENERAL", valueName);
+		}
+		strcpy(sectionValueToBeSet,pathToThemeConfigFile);
+		strcat(sectionValueToBeSet,value);
 		return;
 	}
 	strcpy(sectionValueToBeSet,pathToThemeConfigFile);
@@ -154,12 +159,28 @@ void loadTheme(char *theme) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].bodyTextColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemBackground", menuSections[i].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
+
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].mask);
+
+		if (menuSections[i].systemLogoSurface!=NULL) {
+			free(menuSections[i].systemLogoSurface);
+			menuSections[i].systemLogoSurface = NULL;
+			free(menuSections[i].background);
+			menuSections[i].background = NULL;
+		}
+
+		if(i==currentSectionNumber) {
+			menuSections[i].systemLogoSurface = IMG_Load(menuSections[i].systemLogo);
+			resizeSectionSystemLogo(&menuSections[i]);
+			menuSections[i].background = IMG_Load(menuSections[i].mask);
+			resizeSectionBackground(&menuSections[i]);
+		}
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+
+//		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+//		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
@@ -186,6 +207,15 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
 		footerPositionInTraditional = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "items_separation_in_simple");
+		itemsSeparationInSimple= atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_separation_in_traditional");
+		itemsSeparationInTraditional = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_separation_in_drunken_monkey");
+		itemsSeparationInDrunkenMonkey = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
 		gameListPositionInDrunkenMonkey = atoi(value);
 
@@ -198,8 +228,98 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
 		footerPositionInDrunkenMonkey = atoi(value);
 
+		value = ini_get(themeConfig, "GENERAL", "items_in_custom");
+		itemsInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_separation_in_custom");
+		itemsSeparationInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "items_in_full_custom");
+		itemsInFullCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_alignment_in_custom");
+		gameListAlignmentInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_x_in_custom");
+		gameListXInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
+		gameListYInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+		gameListWidthInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
+		gameListPositionInFullCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
+		artWidthInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
+		artHeightInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
+		artXInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
+		artYInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+		systemWidthInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+		systemHeightInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
+		systemXInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
+		systemYInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+		fontSizeCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+		text1FontSizeInCustom = atoi (value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+		text1XInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+		text1YInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+		text1AlignmentInCustom = atoi(value);
+
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFontCustom);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+		text2FontSizeInCustom = atoi (value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+		text2XInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+		text2YInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+		text2AlignmentInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+		artTextDistanceFromPictureInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+		artTextLineSeparationInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+		artTextFontSizeInCustom = atoi(value);
+
 		value = ini_get(themeConfig, "GENERAL", "font_size");
 		baseFont = atoi(value);
+		settingsFontSize = baseFont;
+
+		value = ini_get(themeConfig, "GENERAL", "transparent_shading");
+		transparentShading  = atoi(value);
 
 		value = ini_get(themeConfig, "GENERAL", "items_in_simple");
 		itemsInSimple = atoi(value);
@@ -220,27 +340,30 @@ void loadTheme(char *theme) {
 		footerOnTop = atoi(value);
 
 		switch (currentMode) {
-		    case 2:
-		    	fontSize=baseFont-4;
-		    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-		    	currentMode=2;
-		    	break;
 		    case 0:
 		    	fontSize=baseFont;
 		    	currentMode=0;
 		    	MENU_ITEMS_PER_PAGE=itemsInSimple;
 		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
 		        break;
-		    default:
+		    case 1:
 		    	fontSize=baseFont-2;
 		    	currentMode=1;
 		    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
 		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-	//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+		    	break;
+		    case 2:
+		    	fontSize=baseFont-4;
+		    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+		    	currentMode=2;
+		    	break;
+		    default:
+		    	fontSize=fontSizeCustom;
+		    	currentMode=3;
+		    	MENU_ITEMS_PER_PAGE=itemsInCustom;
+		    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
 		}
-
-
 		freeFonts();
 		freeSettingsFonts();
 		initializeSettingsFonts();
@@ -415,95 +538,13 @@ int cmpfnc(const void *f1, const void *f2)
 
 
 void loadConfig() {
-//	snprintf(home,sizeof(home),"%s",getenv("HOME"));
 	char pathToConfigFilePlusFileName[1000];
 	const char *value;
 	snprintf(pathToConfigFilePlusFileName,sizeof(pathToConfigFilePlusFileName),"%s/.simplemenu/config.ini",home);
 	ini_t *config = ini_load(pathToConfigFilePlusFileName);
-	value = ini_get(config, "GENERAL", "theme");
-	snprintf(pathToThemeConfigFile,sizeof(pathToThemeConfigFile),"%s/.simplemenu/",home);
-	strcat(pathToThemeConfigFile, "themes/");
-	strcat(pathToThemeConfigFile, value);
-	strcat(pathToThemeConfigFile, "/");
-	strcpy(pathToThemeConfigFilePlusFileName, pathToThemeConfigFile);
-	strcat(pathToThemeConfigFilePlusFileName, "theme.ini");
-
-	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
-
-	value = ini_get(themeConfig, "GENERAL", "menu_mode_logo_background");
-	snprintf(simpleBackground,sizeof(simpleBackground),"%s%s",pathToThemeConfigFile, value);
-
-	value = ini_get(themeConfig, "GENERAL", "fullscreen_background");
-	snprintf(fullscreenBackground,sizeof(fullscreenBackground),"%s%s",pathToThemeConfigFile, value);
-
-	value = ini_get(themeConfig, "GENERAL", "favorite_indicator");
-	snprintf(favoriteIndicator,sizeof(favoriteIndicator),"%s%s",pathToThemeConfigFile, value);
-
-	value = ini_get(themeConfig, "GENERAL", "no_pic");
-	snprintf(nopic,sizeof(nopic),"%s%s",pathToThemeConfigFile, value);
-
-	value = ini_get(themeConfig, "GENERAL", "font");
-	snprintf(menuFont,sizeof(menuFont),"%s%s",pathToThemeConfigFile, value);
 
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
-	gameListPositionInSimple = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_simple");
-	gameListPositionInFullSimple = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "header_position_in_simple");
-	headerPositionInSimple = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "footer_position_in_simple");
-	footerPositionInSimple = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_traditional");
-	gameListPositionInTraditional = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_traditional");
-	gameListPositionInFullTraditional = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "header_position_in_traditional");
-	headerPositionInTraditional = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
-	footerPositionInTraditional = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
-	gameListPositionInDrunkenMonkey = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_drunken_monkey");
-	gameListPositionInFullDrunkenMonkey = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "header_position_in_drunken_monkey");
-	headerPositionInDrunkenMonkey = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
-	footerPositionInDrunkenMonkey = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "font_size");
-	baseFont = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
-	itemsInSimple = atoi(value);
-	value = ini_get(themeConfig, "GENERAL", "items_in_full_simple");
-	itemsInFullSimple = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "items_in_traditional");
-	itemsInTraditional = atoi(value);
-	value = ini_get(themeConfig, "GENERAL", "items_in_full_traditional");
-	itemsInFullTraditional = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "items_in_drunken_monkey");
-	itemsInDrunkenMonkey = atoi(value);
-	value = ini_get(themeConfig, "GENERAL", "items_in_full_drunken_monkey");
-	itemsInFullDrunkenMonkey = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
-	footerOnTop = atoi(value);
 
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoi(value);
@@ -516,18 +557,6 @@ void loadConfig() {
 
 	value = ini_get(config, "CPU", "sleep_speed");
 	OC_SLEEP=atoi(value);
-
-	value = ini_get(config, "SYSTEM", "screen_timeout_in_seconds");
-	timeoutValue=atoi(value);
-
-	value = ini_get(config, "SYSTEM", "allow_shutdown");
-	shutDownEnabled=atoi(value);
-
-	value = ini_get(config, "FULLSCREEN_MODE", "display_footer");
-	footerVisibleInFullscreenMode=atoi(value);
-
-	value = ini_get(config, "FULLSCREEN_MODE", "display_menu");
-	menuVisibleInFullscreenMode=atoi(value);
 
 	sectionGroupCounter=0;
 	char *files[1000];
@@ -549,6 +578,8 @@ void loadConfig() {
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
 		char *temp2 = toUpper(temp1);
 		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
@@ -626,10 +657,24 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+
+		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
+			free(menuSections[menuSectionCounter].systemLogoSurface);
+			menuSections[menuSectionCounter].systemLogoSurface = NULL;
+			free(menuSections[menuSectionCounter].background);
+			menuSections[menuSectionCounter].background = NULL;
+		}
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
+		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].mask);
+
+		if (menuSectionCounter==currentSectionNumber) {
+			menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
+			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
+			menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
+			resizeSectionBackground(&menuSections[menuSectionCounter]);
+		}
+
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
-//		strcpy(menuSections[menuSectionCounter].mask,"/home/bittboy/Pictures/mask.png");
-		strcpy(menuSections[menuSectionCounter].mask,"\0");
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
@@ -672,6 +717,15 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "footer_position_in_traditional");
 	footerPositionInTraditional = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "items_separation_in_simple");
+	itemsSeparationInSimple= atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_separation_in_traditional");
+	itemsSeparationInTraditional = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_separation_in_drunken_monkey");
+	itemsSeparationInDrunkenMonkey = atoi(value);
+
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_drunken_monkey");
 	gameListPositionInDrunkenMonkey = atoi(value);
 
@@ -684,8 +738,98 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "footer_position_in_drunken_monkey");
 	footerPositionInDrunkenMonkey = atoi(value);
 
+	value = ini_get(themeConfig, "GENERAL", "items_in_custom");
+	itemsInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_separation_in_custom");
+	itemsSeparationInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "items_in_full_custom");
+	itemsInFullCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_alignment_in_custom");
+	gameListAlignmentInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_x_in_custom");
+	gameListXInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
+	gameListYInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+	gameListWidthInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
+	gameListPositionInFullCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
+	artWidthInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
+	artHeightInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
+	artXInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
+	artYInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+	systemWidthInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+	systemHeightInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
+	systemXInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
+	systemYInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+	fontSizeCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+	text1FontSizeInCustom = atoi (value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+	text1XInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+	text1YInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+	text1AlignmentInCustom = atoi(value);
+
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFontCustom);
+	value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+
+	text2FontSizeInCustom = atoi (value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+	text2XInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+	text2YInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+	text2AlignmentInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+	artTextDistanceFromPictureInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+	artTextLineSeparationInCustom = atoi(value);
+
+	value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+	artTextFontSizeInCustom = atoi(value);
+
 	value = ini_get(themeConfig, "GENERAL", "font_size");
 	baseFont = atoi(value);
+	settingsFontSize = baseFont;
+
+	value = ini_get(themeConfig, "GENERAL", "transparent_shading");
+	transparentShading  = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "items_in_simple");
 	itemsInSimple = atoi(value);
@@ -705,10 +849,9 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 	footerOnTop = atoi(value);
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
+//	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
+//	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "no_pic", nopic);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 	freeFonts();
 	initializeFonts();
@@ -736,7 +879,12 @@ int loadSections(char *file) {
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
+//	menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
+//	resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
+	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].mask);
+//	menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
+//	resizeSectionBackground(&menuSections[menuSectionCounter]);
 
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
@@ -892,6 +1040,7 @@ void loadLastState() {
 	ssize_t read;
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
+
 	fp = fopen(pathToStatesFilePlusFileName, "r");
 	if (fp==NULL) {
 		saveLastState();

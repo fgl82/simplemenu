@@ -24,7 +24,7 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	currentCPU=OC_NO;
+	currentCPU = OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
@@ -70,8 +70,8 @@ void sig_term_handler(int signum)
 //}
 
 int main() {
-//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
-//	exit(0);
+	//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
+	//	exit(0);
 	//	testSectionLoad();
 	//	exit(0);
 	//	lastChargeLevel = getBatteryLevel();
@@ -80,22 +80,23 @@ int main() {
 	//	lastSec=currTime->tm_sec;
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
+	initializeGlobals();
 	signal(SIGTERM, &sig_term_handler);
 	#if defined(TARGET_NPG) || defined(TARGET_RG350)
 	resetFrameBuffer();
 	#endif
+	initializeDisplay();
 	createConfigFilesInHomeIfTheyDontExist();
+	checkThemes();
+	loadLastState();
 	loadConfig();
 	readInputConfig();
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	setCPU(OC_NO);
 	#endif
-	initializeGlobals();
 	setupDisplayAndKeys();
-	loadLastState();
 	checkIfDefault();
-	checkThemes();
 	char *temp=malloc(8000);
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
@@ -109,28 +110,33 @@ int main() {
 //		returnTo=atoi(argv[3]);
 //		fullscreenMode=atoi(argv[4]);
 //	}
-
 //	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
 
 	switch (currentMode) {
+	    case 0:
+	    	fontSize=baseFont;
+	    	currentMode=0;
+	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+	    	break;
+	    case 1:
+	    	fontSize=baseFont-2;
+	    	currentMode=1;
+	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+	    	break;
 	    case 2:
 	    	fontSize=baseFont-4;
 	    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
 	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
 	    	currentMode=2;
 	    	break;
-	    case 0:
-	    	fontSize=baseFont;
-	    	currentMode=0;
-	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-        break;
 	    default:
-	    	fontSize=baseFont-2;
-	    	currentMode=1;
-	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-//	    	FULLSCREEN_ITEMS_PER_PAGE-=1;
+	    	fontSize=fontSizeCustom;
+	    	currentMode=3;
+	    	MENU_ITEMS_PER_PAGE=itemsInCustom;
+	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+	    	break;
 	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
@@ -154,6 +160,9 @@ int main() {
 	}
 	enableKeyRepeat();
 	while (running) {
+//		if (myThread!=NULL) {
+//			pthread_join(myThread,NULL);
+//		}
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {

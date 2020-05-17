@@ -282,7 +282,11 @@ int checkIfEmulatorExists(char *path, char *executable) {
 	return 1;
 }
 
+#ifndef TARGET_PC
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath) {
+#else
+void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
+#endif
 
 	char *exec = malloc(strlen(executable)+100);
 	strcpy(exec, executable);
@@ -327,14 +331,16 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 
 	#ifndef TARGET_PC
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
-
 	#else
 
 	strcat(exec, " \"");
 	strcat(exec, fileToBeExecutedWithFullPath);
 	strcat(exec, "\"");
-
-	system(exec);
+	printf("%s\n",exec);
+	int ret = system(exec);
+	if(ret == -1) {
+		printf("ouch!\n");
+	}
 	free(exec);
 
 	setupDisplayAndKeys();
@@ -430,7 +436,7 @@ struct Node *merge(struct Node *first, struct Node *second)
 	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
 		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
 	}
-	if(CURRENT_SECTION.aliasFileName!=NULL) {
+	if(strlen(CURRENT_SECTION.aliasFileName)<2) {
 		stripGameName(noPathS1Alias);
 		stripGameName(noPathS2Alias);
 	}
@@ -502,14 +508,45 @@ void loadFavoritesSectionGameList() {
 	}
 }
 
+
+int scanDirectory(char *directory, char* files[], int i)
+{
+    struct dirent *de;
+    DIR *dr = opendir(directory);
+	if (dr==NULL) {
+		return 0;
+	}
+	char * d_name;
+    while ((de = readdir(dr)) != NULL) {
+    	d_name = de->d_name;
+		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (de->d_type & DT_DIR) {
+				char path[PATH_MAX];
+				char * e = strrchr(d_name, '/');
+				if (e==NULL) {
+					strcat(d_name, "/");
+				}
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				i+=scanDirectory(path, files, i);
+			} else {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				files[i]=malloc(sizeof(path));
+				strcpy(files[i],path);
+				i++;
+			}
+		}
+    }
+    closedir(dr);
+    return i;
+}
+
 int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	DIR * d;
+	printf("%s\n",directory);
 	d = opendir (directory);
 	if (d==NULL) {
-//		printf("%s was null\n",directory);
 		return 0;
-	} else {
-//		printf("%s was NOT null\n",directory);
 	}
 	while (1) {
 		struct dirent *entry;
@@ -519,7 +556,6 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 			break;
 		}
 		d_name = entry->d_name;
-//		printf("%d %s\n", entry->d_type, entry->d_name);
 		if (entry->d_type & DT_DIR) {
 			if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 				char path[PATH_MAX];
@@ -733,6 +769,7 @@ void loadGameList(int refresh) {
 		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
+//			int n = scanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);
@@ -841,7 +878,7 @@ void loadGameList(int refresh) {
 			for (int i=0;i<n;i++){
 				free(files[i]);
 			}
-			if (loadedFiles==0) {
+			if (loadedFiles==0&&k==(dirCounter-1)) {
 				CURRENT_SECTION.hidden=1;
 				loading=0;
 				return;
@@ -856,6 +893,10 @@ void loadGameList(int refresh) {
 	}
 	loading=0;
 }
+
+//void loadGameList1 (int refresh) {
+//	pthread_create(&myThread, NULL, loadGameList1, &refresh); // no parentheses here
+//}
 
 int countGamesInPage() {
 	int gamesCounter=0;
@@ -901,6 +942,10 @@ void determineStartingScreen(int sectionCount) {
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
+		if (CURRENT_SECTION.background == NULL) {
+			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+			resizeSectionBackground(&CURRENT_SECTION);
+		}
 		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
@@ -913,7 +958,6 @@ void determineStartingScreen(int sectionCount) {
 			determineStartingScreen(sectionCount);
 		}
 	} else {
-//		setBasicGameList();
 		loadGameList(0);
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

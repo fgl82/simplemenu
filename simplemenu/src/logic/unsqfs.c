@@ -68,7 +68,7 @@
 // glibc prior to 2.16 and uClibc lack this define
 #define static_assert _Static_assert
 #else
-#warning Compiling without static asserts
+//#warning Compiling without static asserts
 #define static_assert(e, m)
 #endif
 #endif

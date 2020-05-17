@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
+#include <SDL/SDL_image.h>
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
@@ -32,10 +33,24 @@ int isUSBMode;
 int activeGroup;
 int beforeTryingToSwitchGroup;
 int chosenSetting;
+char currentGameNameBeingDisplayed [3000];
 SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;
 SDL_TimerID hideHeartTimer;
+
+typedef struct thread_picture {
+	  SDL_Surface* display;
+	  SDL_Surface *image;
+	  int x;
+	  int y;
+	  int xx;
+	  int yy;
+	  double newwidth;
+	  double newheight;
+	  int transparent;
+	  int smoothing;
+} threadPicture;
 
 /* QUANTITIES */
 int MAX_GAMES_IN_SECTION;
@@ -73,42 +88,84 @@ int OC_NO;
 int OC_OC;
 int OC_SLEEP;
 int backlightValue;
+int hdmiChanged;
+pthread_t myThread;
 
 /* THEME */
 char *themes[100];
 int activeTheme;
 int themeCounter;
+int currentMode;
+char menuFont[1000];
+int baseFont;
+int fontSize;
+int settingsFontSize;
+int transparentShading;
+int footerOnTop;
+char simpleBackground[1000];
+char fullscreenBackground[1000];
+char favoriteIndicator[1000];
 
+int itemsInSimple;
+int itemsInFullSimple;
+int itemsSeparationInSimple;
 int gameListPositionInSimple;
 int gameListPositionInFullSimple;
 int headerPositionInSimple;
 int footerPositionInSimple;
 
+int itemsInTraditional;
+int itemsInFullTraditional;
+int itemsSeparationInTraditional;
 int gameListPositionInTraditional;
 int gameListPositionInFullTraditional;
 int headerPositionInTraditional;
 int footerPositionInTraditional;
 
+int itemsInDrunkenMonkey;
+int itemsInFullDrunkenMonkey;
+int itemsSeparationInDrunkenMonkey;
 int gameListPositionInDrunkenMonkey;
 int gameListPositionInFullDrunkenMonkey;
 int headerPositionInDrunkenMonkey;
 int footerPositionInDrunkenMonkey;
 
-int baseFont;
-int itemsInSimple;
-int itemsInFullSimple;
-int itemsInTraditional;
-int itemsInFullTraditional;
-int itemsInDrunkenMonkey;
-int itemsInFullDrunkenMonkey;
-int currentMode;
-char simpleBackground[1000];
-char fullscreenBackground[1000];
-char favoriteIndicator[1000];
-char nopic[1000];
-char menuFont[1000];
-int fontSize;
-int footerOnTop;
+int itemsInCustom;
+int itemsInFullCustom;
+int itemsSeparationInCustom;
+char textXFontCustom[1000];
+int text1FontSizeInCustom;
+int text1XInCustom;
+int text1YInCustom;
+int text1AlignmentInCustom;
+int text2FontSizeInCustom;
+int text2XInCustom;
+int text2YInCustom;
+int text2AlignmentInCustom;
+int text3FontSizeInCustom;
+int text3XInCustom;
+int text3YInCustom;
+int text3AlignmentInCustom;
+int gameListAlignmentInCustom;
+int gameListXInCustom;
+int gameListYInCustom;
+int gameListWidthInCustom;
+int gameListPositionInFullCustom;
+int artWidthInCustom;
+int artHeightInCustom;
+int artXInCustom;
+int artYInCustom;
+int artTextDistanceFromPictureInCustom;
+int artTextLineSeparationInCustom;
+int artTextFontSizeInCustom;
+//art_text_distance_from_picture_in_custom;
+//art_text_line_separation_in_custom;
+//art_text_font_size_in_custom;
+int systemWidthInCustom;
+int systemHeightInCustom;
+int systemXInCustom;
+int systemYInCustom;
+int fontSizeCustom;
 
 /* STRUCTS */
 struct OPKDesktopFile {
@@ -148,6 +205,7 @@ struct SectionGroup {
 	char groupPath[1000];
 	char groupName[25];
 	char groupBackground[1000];
+	SDL_Surface *groupBackgroundSurface;
 };
 
 struct MenuSection {
@@ -157,7 +215,9 @@ struct MenuSection {
 	char filesDirectories[400];
 	char fileExtensions[50];
 	char systemLogo[300];
+	SDL_Surface *systemLogoSurface;
 	char systemPicture[300];
+	SDL_Surface *systemPictureSurface;
 	char aliasFileName[300];
 	int hidden;
 	int currentPage;
@@ -183,6 +243,7 @@ struct MenuSection {
 	char category[100];
 	char scaling[2];
 	char mask[1000];
+	SDL_Surface *background;
 //	char *fileList[50000];
 };
 
@@ -223,6 +284,7 @@ int MAGIC_NUMBER;
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
 double SCREEN_RATIO;
+int hdmiEnabled;
 
 /* MISC */
 time_t currRawtime;

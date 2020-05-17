@@ -50,7 +50,7 @@ void clearTimer() {
 }
 
 uint32_t suspend() {
-	if(timeoutValue!=0) {
+	if(timeoutValue!=0&&hdmiEnabled==0) {
 		if (!isUSBMode) {
 			clearTimer();
 			oldCPU=currentCPU;
