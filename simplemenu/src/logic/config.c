@@ -927,7 +927,7 @@ void saveLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "w");
-	fprintf(fp, "%d;\n", 56);
+	fprintf(fp, "%d;\n", 60);
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
 	fprintf(fp, "%d;\n", footerVisibleInFullscreenMode);
@@ -1074,7 +1074,7 @@ void loadLastState() {
 		}
 		if (savedVersion==-1) {
 			savedVersion=atoi(configurations[0]);
-			if(savedVersion!=56) {
+			if(savedVersion!=60) {
 				saveLastState();
 				fclose(fp);
 				if (line) {
