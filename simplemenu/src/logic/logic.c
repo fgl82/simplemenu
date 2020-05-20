@@ -509,41 +509,44 @@ void loadFavoritesSectionGameList() {
 }
 
 
+
+
 int scanDirectory(char *directory, char* files[], int i)
 {
-    struct dirent *de;
-    DIR *dr = opendir(directory);
-	if (dr==NULL) {
+    struct dirent myfile;
+    struct dirent *result;
+    int rc;
+    DIR *mydir = opendir(directory);
+	if (mydir==NULL) {
 		return 0;
 	}
 	char * d_name;
-    while ((de = readdir(dr)) != NULL) {
-    	d_name = de->d_name;
+    while ((rc = readdir_r(mydir, &myfile, &result)) == 0 && result != NULL ) {
+    	d_name = result->d_name;
 		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
-			if (de->d_type & DT_DIR) {
+			if (result->d_type & DT_DIR) {
 				char path[PATH_MAX];
 				char * e = strrchr(d_name, '/');
 				if (e==NULL) {
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i+=scanDirectory(path, files, i);
+				i=scanDirectory(path, files, i);
 			} else {
 				char path[PATH_MAX];
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				files[i]=malloc(sizeof(path));
+				files[i]=malloc(sizeof(path)+1);
 				strcpy(files[i],path);
 				i++;
 			}
 		}
     }
-    closedir(dr);
+    closedir(mydir);
     return i;
 }
 
 int recursivelyScanDirectory (char *directory, char* files[], int i) {
 	DIR * d;
-	printf("%s\n",directory);
 	d = opendir (directory);
 	if (d==NULL) {
 		return 0;
@@ -564,7 +567,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i=+recursivelyScanDirectory(path, files, i);
+				i=recursivelyScanDirectory(path, files, i);
 			}
 		} else {
 			char path[PATH_MAX];
@@ -768,8 +771,8 @@ void loadGameList(int refresh) {
 		}
 		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
-			int n = recursivelyScanDirectory(dirs[k], files, 0);
-//			int n = scanDirectory(dirs[k], files, 0);
+//			int n = recursivelyScanDirectory(dirs[k], files, 0);
+			int n = scanDirectory(dirs[k], files, 0);
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);
