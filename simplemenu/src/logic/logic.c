@@ -429,13 +429,16 @@ struct Node *merge(struct Node *first, struct Node *second)
 //	stripGameName(noPathS1Alias);
 //	stripGameName(noPathS2Alias);
 
-	for(unsigned int i=0;i<strlen(noPathS1Alias);i++) {
-		noPathS1Alias[i]=tolower(noPathS1Alias[i]);
-	}
+	for(char *p = noPathS1Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
+	for(char *p = noPathS2Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
 
-	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
-		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
-	}
+//	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
+//		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
+//	}
+//	for(unsigned int i=0;i<strlen(noPathS1Alias);i++) {
+//		noPathS1Alias[i]=tolower(noPathS1Alias[i]);
+//	}
+
 	if(strlen(CURRENT_SECTION.aliasFileName)<2) {
 		stripGameName(noPathS1Alias);
 		stripGameName(noPathS2Alias);
@@ -511,7 +514,7 @@ void loadFavoritesSectionGameList() {
 
 
 
-int scanDirectory(char *directory, char* files[], int i)
+int scanDirectory1(char *directory, char* files[], int i)
 {
     struct dirent myfile;
     struct dirent *result;
@@ -531,7 +534,7 @@ int scanDirectory(char *directory, char* files[], int i)
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i=scanDirectory(path, files, i);
+				i=scanDirectory1(path, files, i);
 			} else {
 				char path[PATH_MAX];
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
@@ -542,6 +545,43 @@ int scanDirectory(char *directory, char* files[], int i)
 		}
     }
     closedir(mydir);
+    return i;
+}
+
+int scanDirectory(char *directory, char* files[], int i)
+{
+    struct dirent **result;
+	char *d_name;
+
+	int j=0;
+	int n = scandir(directory, &result, NULL, alphasort);
+	if (n < 0) {
+	    printf("ERROR: scandir(%s)\n", directory);
+	    return 0;
+	}
+    while (j<n) {
+    	d_name = result[j]->d_name;
+		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+			if (result[j]->d_type & DT_DIR) {
+				char path[PATH_MAX];
+				char * e = strrchr(d_name, '/');
+				if (e==NULL) {
+					strcat(d_name, "/");
+				}
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				CURRENT_SECTION.hasDirs = 1;
+				i=scanDirectory(path, files, i);
+			} else {
+				char path[PATH_MAX];
+				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				files[i]=malloc(sizeof(path)+1);
+				strcpy(files[i],path);
+				i++;
+				free(result[j]);
+			}
+		}
+		j++;
+    }
     return i;
 }
 
@@ -890,7 +930,9 @@ void loadGameList(int refresh) {
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
-		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+		if (strlen(CURRENT_SECTION.aliasFileName)>1 || CURRENT_SECTION.hasDirs) {
+			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}

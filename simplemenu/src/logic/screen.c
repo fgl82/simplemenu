@@ -918,7 +918,6 @@ void updateScreen(struct Rom *rom) {
 			}
 			setupDecorations(rom);
 		}
-
 		if (!currentlyChoosing&&(currentMode==0||fullscreenMode==1)){
 			displayHeart();
 		}

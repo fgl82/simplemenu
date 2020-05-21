@@ -62,6 +62,7 @@ int calculateProportionalHorizontalSizeOrDistance(int number) {
 
 int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
+//	SDL_Surface *msg1;
 	char *bufCopy=malloc(300);
 	char *bufCopy1=malloc(300);
 	strcpy(bufCopy,buf);
@@ -84,6 +85,7 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	} else {
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 	}
+//	msg1 = TTF_RenderText_Blended(font, bufCopy, make_color(0,0,0));
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
 	} else if (align & HAlignRight) {
@@ -95,13 +97,29 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	} else if (align & VAlignTop) {
 		y -= msg->h;
 	}
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = msg->w;
-	rect.h = msg->h;
-	SDL_BlitSurface(msg, NULL, screen, &rect);
+//	SDL_Rect rect;
+//	rect.x = x+1;
+//	rect.y = y+1;
+//	rect.w = msg->w;
+//	rect.h = msg->h;
+//	SDL_BlitSurface(msg1, NULL, screen, &rect);
+
+//	SDL_Rect rect1;
+//	rect1.x = x-1;
+//	rect1.y = y-1;
+//	rect1.w = msg->w;
+//	rect1.h = msg->h;
+//	SDL_BlitSurface(msg1, NULL, screen, &rect1);
+
+	SDL_Rect rect2;
+	rect2.x = x;
+	rect2.y = y;
+	rect2.w = msg->w;
+	rect2.h = msg->h;
+	SDL_BlitSurface(msg, NULL, screen, &rect2);
+
 	SDL_FreeSurface(msg);
+//	SDL_FreeSurface(msg1);
 	free(bufCopy);
 	return msg->w;
 }
@@ -455,7 +473,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	SDL_FreeSurface(transparentrectangle);
 }
 
-int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+int drawImage(pthread_t *myThread, SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
@@ -495,7 +513,7 @@ int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, i
 	return 1;
 }
 
-int drawImage(pthread_t *myThread, SDL_Surface *display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+int drawImage1(pthread_t *myThread, SDL_Surface *display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 
 	threadPicture picture;
 
