@@ -551,6 +551,12 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
 
+	value = ini_get(config, "GENERAL", "logging_enabled");
+
+	if (atoi(value)==1) {
+		enableLogging();
+	}
+
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoi(value);
 
@@ -637,8 +643,13 @@ int loadSections(char *file) {
 		}
 		char* currentExec = strtok(value2,",");
 		while(currentExec!=NULL) {
+			#ifndef TARGET_PC
 			char *tempNameWithoutPath = getNameWithoutPath(currentExec);
 			char *tempPathWithoutName = getRomPath(currentExec);
+			#else
+			char *tempNameWithoutPath = strdup(currentExec);
+			char *tempPathWithoutName = strdup("\0");
+			#endif
 			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(tempNameWithoutPath)+1);
 			strcpy(menuSections[menuSectionCounter].executables[execCounter],tempNameWithoutPath);
 			free(tempNameWithoutPath);

@@ -290,7 +290,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #endif
 
-	char *exec = malloc(strlen(executable)+100);
+	char *exec = malloc(strlen(executable)+5000);
 	strcpy(exec, executable);
 
 	char states[2000]="";
@@ -313,8 +313,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
 	#endif
-
-	freeResources();
+	logMessage("INFO", "Launching Game");
 
 	#ifndef TARGET_PC
 	setCPU(currentCPU);
@@ -332,19 +331,20 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	#endif
 
 	#ifndef TARGET_PC
+	freeResources();
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	#else
-
 	strcat(exec, " \"");
 	strcat(exec, fileToBeExecutedWithFullPath);
 	strcat(exec, "\"");
-	printf("%s\n",exec);
+	logMessage("INFO",exec);
+	freeResources();
 	int ret = system(exec);
 	if(ret == -1) {
-		printf("ouch!\n");
+		logMessage("ERROR","Error executing emulator");
 	}
 	free(exec);
-
+	initializeDisplay();
 	setupDisplayAndKeys();
 	enableKeyRepeat();
 	initializeFonts();

@@ -3,4 +3,5 @@
 void openLogFile();
 void logMessage(const char* tag, const char* message);
 void closeLogFile();
+void enableLogging();
 #endif

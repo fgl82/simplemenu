@@ -57,6 +57,7 @@ void critical_error_handler()
 
 void sig_term_handler()
 {
+    logMessage("WARN","Received SIGTERM");
 	running=0;
 }
 
@@ -89,7 +90,6 @@ int main() {
 	//	lastSec=currTime->tm_sec;
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
-	openLogFile();
 	initializeGlobals();
 	logMessage("INFO","Initialized Globals");
     struct sigaction sa;
