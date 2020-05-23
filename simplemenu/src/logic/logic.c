@@ -331,6 +331,8 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	#endif
 
 	#ifndef TARGET_PC
+	logMessage("INFO",exec);
+	logMessage("INFO",fileToBeExecutedWithFullPath);
 	freeResources();
 	execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 	#else
@@ -350,11 +352,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	initializeFonts();
 	initializeSettingsFonts();
 	#endif
-
-//	#else
-//	printf("%s%s %s\n", emulatorFolder, executable, fileToBeExecutedWithFullPath);
-//	loadLastState();
-//	#endif
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
