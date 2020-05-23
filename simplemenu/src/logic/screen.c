@@ -481,7 +481,7 @@ void drawHeader() {
 void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
-	if (wannaReset) {
+	if (selectedShutDownOption==1) {
 		drawShutDownText("REBOOTING");
 	} else {
 		drawShutDownText("SHUTTING DOWN");
@@ -730,16 +730,25 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
 	if (shutDownEnabled) {
-		if (wannaReset) {
-			strcpy(options[SHUTDOWN_OPTION],"Reboot");
-		} else {
-			strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(options[SHUTDOWN_OPTION],"ShutDown");
+				break;
+			case 1:
+				strcpy(options[SHUTDOWN_OPTION],"Reboot");
+				break;
 		}
 	} else {
-		if (wannaReset) {
-			strcpy(options[SHUTDOWN_OPTION],"Reboot");
-		} else {
-			strcpy(options[SHUTDOWN_OPTION],"Quit");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(options[SHUTDOWN_OPTION],"Quit");
+				break;
+			case 1:
+				strcpy(options[SHUTDOWN_OPTION],"Reboot");
+				break;
+			case 2:
+				strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+				break;
 		}
 	}
 
@@ -757,12 +766,27 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
 	#endif
 
-	if (shutDownEnabled&&!wannaReset) {
-		strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
-	} else if (wannaReset){
-		strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+	if (shutDownEnabled) {
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				break;
+			case 1:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				break;
+		}
 	} else {
-		strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
+				break;
+			case 1:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				break;
+			case 2:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				break;
+		}
 	}
 
 	if (stripGames) {

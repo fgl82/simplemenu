@@ -603,7 +603,32 @@ void performSettingsChoosingAction() {
 		}
 		#endif
 		else if (chosenSetting==SHUTDOWN_OPTION) {
-			wannaReset=1+(wannaReset*-1);
+			if (shutDownEnabled) {
+				selectedShutDownOption=1+selectedShutDownOption*-1;
+			} else {
+				switch (selectedShutDownOption) {
+				case 0:
+					if(keys[BTN_RIGHT]) {
+						selectedShutDownOption = 1;
+					} else {
+						selectedShutDownOption = 2;
+					}
+					break;
+				case 1:
+					if(keys[BTN_RIGHT]) {
+						selectedShutDownOption = 2;
+					} else {
+						selectedShutDownOption = 0;
+					}
+					break;
+				default:
+					if(keys[BTN_RIGHT]) {
+						selectedShutDownOption = 0;
+					} else {
+						selectedShutDownOption = 1;
+					}
+				}
+			}
 		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
 			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==AUTO_HIDE_LOGOS_OPTION) {

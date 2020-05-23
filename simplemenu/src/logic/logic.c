@@ -205,7 +205,8 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 //}
 
 void quit() {
-	if(shutDownEnabled||wannaReset) {
+	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
+	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
 		drawShutDownScreen();
 		refreshScreen();
 	}
@@ -214,23 +215,24 @@ void quit() {
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
-	if(shutDownEnabled||wannaReset) {
+	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
 		sleep(1.5);
 	}
 	freeResources();
-	closeLogFile();
 	if (shutDownEnabled) {
 		#ifdef TARGET_PC
 		exit(0);
 		#endif
-		if (wannaReset) {
+		if (selectedShutDownOption==1) {
 			execlp("sh", "sh", "-c", "sync && reboot", NULL);
 		} else {
 			execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 		}
 	} else {
-		if (wannaReset) {
+		if (selectedShutDownOption==1) {
 			execlp("sh", "sh", "-c", "sync && reboot", NULL);
+		} else if (selectedShutDownOption==2) {
+			execlp("sh", "sh", "-c", "sync && poweroff", NULL);
 		} else {
 			exit(0);
 		}

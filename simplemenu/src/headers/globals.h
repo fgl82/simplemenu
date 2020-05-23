@@ -78,7 +78,7 @@ int ITEMS_PER_PAGE_OPTION;
 char mediaFolder[1000];
 int stripGames;
 int shutDownEnabled;
-int wannaReset;
+int selectedShutDownOption;
 int footerVisibleInFullscreenMode;
 int menuVisibleInFullscreenMode;
 int autoHideLogos;
