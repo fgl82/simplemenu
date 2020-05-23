@@ -227,6 +227,7 @@ void showCurrentGroup() {
 	strcat(tempString,"\0");
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
 //	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1,0);
+	logMessage("INFO", "Displaying group background");
 	displayCenteredSurface(sectionGroups[activeGroup].groupBackgroundSurface);
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);

@@ -117,6 +117,7 @@ int advanceSection(int showLogo) {
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
+		logMessage("INFO","Displaying system logo");
 		showConsole();
 		refreshScreen();
 	}
@@ -147,6 +148,7 @@ int rewindSection(int showLogo) {
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
+		logMessage("INFO","Displaying system logo");
 		showConsole();
 		refreshScreen();
 	}
@@ -353,6 +355,7 @@ void showOrHideFavorites() {
 				resetPicModeHideLogoTimer();
 				currentlySectionSwitching=1;
 				displayBackgroundPicture();
+				logMessage("INFO","Displaying system logo");
 				showConsole();
 			}
 			determineStartingScreen(menuSectionCounter);
@@ -361,6 +364,7 @@ void showOrHideFavorites() {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				displayBackgroundPicture();
+				logMessage("INFO","Displaying system logo");
 				showConsole();
 			}
 			loadGameList(0);
@@ -389,6 +393,7 @@ void showOrHideFavorites() {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
 		displayBackgroundPicture();
+		logMessage("INFO","Displaying system logo");
 		showConsole();
 		refreshScreen();
 	}
