@@ -11,6 +11,7 @@
 #include "../headers/string_utils.h"
 #include "../headers/ini2.h"
 #include "../headers/graphics.h"
+#include "../headers/utils.h"
 
 char home[5000];
 char pathToThemeConfigFile[1000];
@@ -165,25 +166,25 @@ void loadTheme(char *theme) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
-		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].mask);
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
 
 		if (menuSections[i].systemLogoSurface!=NULL) {
 			free(menuSections[i].systemLogoSurface);
 			menuSections[i].systemLogoSurface = NULL;
-			free(menuSections[i].background);
-			menuSections[i].background = NULL;
+			free(menuSections[i].backgroundSurface);
+			menuSections[i].backgroundSurface = NULL;
 		}
 
 		if(i==currentSectionNumber) {
+			logMessage("INFO","Loading system logo");
 			menuSections[i].systemLogoSurface = IMG_Load(menuSections[i].systemLogo);
 			resizeSectionSystemLogo(&menuSections[i]);
-			menuSections[i].background = IMG_Load(menuSections[i].mask);
+			logMessage("INFO","Loading system background");
+			menuSections[i].backgroundSurface = IMG_Load(menuSections[i].background);
 			resizeSectionBackground(&menuSections[i]);
 		}
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 
-//		setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
-//		setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 
@@ -582,6 +583,7 @@ void loadConfig() {
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+		logMessage("INFO","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
 		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
@@ -622,8 +624,8 @@ int loadSections(char *file) {
 	free(tokenizedSectionName);
 	while(menuSectionCounter<sectionCounter) {
 		char *sectionName = sectionNames[menuSectionCounter];
+		logMessage("INFO",sectionName);
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
-
 
 		//READ EXECS
 		int execCounter=0;
@@ -665,16 +667,19 @@ int loadSections(char *file) {
 		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
 			free(menuSections[menuSectionCounter].systemLogoSurface);
 			menuSections[menuSectionCounter].systemLogoSurface = NULL;
-			free(menuSections[menuSectionCounter].background);
-			menuSections[menuSectionCounter].background = NULL;
+			free(menuSections[menuSectionCounter].backgroundSurface);
+			menuSections[menuSectionCounter].backgroundSurface = NULL;
 		}
+
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
-		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].mask);
+		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
 
 		if (menuSectionCounter==currentSectionNumber) {
+			logMessage("INFO","Loading system logo");
 			menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
 			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
-			menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
+			logMessage("INFO","Loading system background");
+			menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
 			resizeSectionBackground(&menuSections[menuSectionCounter]);
 		}
 
@@ -886,7 +891,7 @@ int loadSections(char *file) {
 //	menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
 //	resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
-	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].mask);
+	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
 //	menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
 //	resizeSectionBackground(&menuSections[menuSectionCounter]);
 

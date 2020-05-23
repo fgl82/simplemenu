@@ -12,8 +12,8 @@ int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
-			if (CURRENT_SECTION.background==NULL) {
-				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+			if (CURRENT_SECTION.backgroundSurface==NULL) {
+				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
 			}
 			return 1;
@@ -83,8 +83,8 @@ int performAction(struct Rom *rom) {
 			currentlySectionSwitching=1;
 			int advanced = advanceSection(1);
 			if(advanced) {
-				if (CURRENT_SECTION.background == NULL) {
-					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
 				}
 				loadGameList(0);
@@ -100,8 +100,8 @@ int performAction(struct Rom *rom) {
 			currentlySectionSwitching=1;
 			int rewinded = rewindSection(1);
 			if(rewinded) {
-				if (CURRENT_SECTION.background == NULL) {
-					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
 				}
 				loadGameList(0);

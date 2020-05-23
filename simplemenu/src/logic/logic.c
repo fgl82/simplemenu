@@ -22,6 +22,7 @@
 #include "../headers/opk.h"
 #include "../headers/input.h"
 #include "../headers/doubly_linked_rom_list.h"
+#include "../headers/utils.h"
 
 
 FILE *getCurrentSectionAliasFile() {
@@ -217,6 +218,7 @@ void quit() {
 		sleep(1.5);
 	}
 	freeResources();
+	closeLogFile();
 	if (shutDownEnabled) {
 		#ifdef TARGET_PC
 		exit(0);
@@ -511,42 +513,39 @@ void loadFavoritesSectionGameList() {
 	}
 }
 
-
-
-
-int scanDirectory1(char *directory, char* files[], int i)
-{
-    struct dirent myfile;
-    struct dirent *result;
-    int rc;
-    DIR *mydir = opendir(directory);
-	if (mydir==NULL) {
-		return 0;
-	}
-	char * d_name;
-    while ((rc = readdir_r(mydir, &myfile, &result)) == 0 && result != NULL ) {
-    	d_name = result->d_name;
-		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
-			if (result->d_type & DT_DIR) {
-				char path[PATH_MAX];
-				char * e = strrchr(d_name, '/');
-				if (e==NULL) {
-					strcat(d_name, "/");
-				}
-				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				i=scanDirectory1(path, files, i);
-			} else {
-				char path[PATH_MAX];
-				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-				files[i]=malloc(sizeof(path)+1);
-				strcpy(files[i],path);
-				i++;
-			}
-		}
-    }
-    closedir(mydir);
-    return i;
-}
+//int scanDirectoryDeprecated(char *directory, char* files[], int i)
+//{
+//    struct dirent myfile;
+//    struct dirent *result;
+//    int rc;
+//    DIR *mydir = opendir(directory);
+//	if (mydir==NULL) {
+//		return 0;
+//	}
+//	char * d_name;
+//    while ((rc = readdir_r(mydir, &myfile, &result)) == 0 && result != NULL ) {
+//    	d_name = result->d_name;
+//		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
+//			if (result->d_type & DT_DIR) {
+//				char path[PATH_MAX];
+//				char * e = strrchr(d_name, '/');
+//				if (e==NULL) {
+//					strcat(d_name, "/");
+//				}
+//				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+//				i=scanDirectory1(path, files, i);
+//			} else {
+//				char path[PATH_MAX];
+//				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+//				files[i]=malloc(sizeof(path)+1);
+//				strcpy(files[i],path);
+//				i++;
+//			}
+//		}
+//    }
+//    closedir(mydir);
+//    return i;
+//}
 
 int scanDirectory(char *directory, char* files[], int i)
 {
@@ -577,7 +576,7 @@ int scanDirectory(char *directory, char* files[], int i)
 				files[i]=malloc(sizeof(path)+1);
 				strcpy(files[i],path);
 				i++;
-				free(result[j]);
+//				free(result[j]);
 			}
 		}
 		j++;
@@ -785,13 +784,16 @@ int theSectionHasGames(struct MenuSection *section) {
 
 void loadGameList(int refresh) {
 	int loadedFiles=0;
+	logMessage("INFO","Should we skip this?");
 	if (CURRENT_SECTION.initialized==0||refresh) {
+		logMessage("INFO","No, loading game list");
 		CURRENT_SECTION.initialized=1;
 		//We don't need to reload the alias file if just refreshing
 		if (!refresh) {
 			loadAliasList(currentSectionNumber);
 		}
 		cleanListForSection(&CURRENT_SECTION);
+		logMessage("INFO","Cleaned section list");
 		CURRENT_SECTION.totalPages=0;
 		CURRENT_SECTION.gameCount=0;
 		char *files[MAX_GAMES_IN_SECTION];
@@ -812,7 +814,9 @@ void loadGameList(int refresh) {
 		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
 //			int n = recursivelyScanDirectory(dirs[k], files, 0);
+			logMessage("INFO","Scanning directory");
 			int n = scanDirectory(dirs[k], files, 0);
+			logMessage("INFO","Processing files");
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);
@@ -912,12 +916,14 @@ void loadGameList(int refresh) {
 								game = 0;
 							}
 						}
+						logMessage("INFO",rom->name);
 						InsertAtTail(rom);
 						loadedFiles++;
 						game++;
 					}
 				}
 			}
+			logMessage("INFO","All files loaded");
 			for (int i=0;i<n;i++){
 				free(files[i]);
 			}
@@ -931,6 +937,7 @@ void loadGameList(int refresh) {
 			free (dirs[i]);
 		}
 		if (strlen(CURRENT_SECTION.aliasFileName)>1 || CURRENT_SECTION.hasDirs) {
+			logMessage("INFO","The list needs to be sorted");
 			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
@@ -985,24 +992,32 @@ void determineStartingScreen(int sectionCount) {
 		return;
 	}
 	if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
+		logMessage("INFO","No sections found or favorites was selected");
 		favoritesSectionSelected=1;
 		loadFavoritesSectionGameList();
-		if (CURRENT_SECTION.background == NULL) {
-			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		logMessage("INFO","Favorites loaded");
+		if (CURRENT_SECTION.backgroundSurface == NULL) {
+			logMessage("INFO","Loading system background");
+			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 			resizeSectionBackground(&CURRENT_SECTION);
 		}
+		logMessage("INFO","Section background loaded and resized");
 		int gamesInSection=CURRENT_SECTION.gameCount;
 		int pages = gamesInSection / ITEMS_PER_PAGE;
 		if (gamesInSection%ITEMS_PER_PAGE==0) {
 			pages--;
 		}
+		logMessage("INFO","Pages set");
 		CURRENT_SECTION.totalPages=pages;
-		if (favoritesSize==0) {
+		if (favoritesSize==0&&sectionCount>0) {
+			logMessage("INFO","Favorites was selected but no favorites were found");
 			favoritesSectionSelected=0;
 			currentSectionNumber=0;
+			logMessage("INFO","Trying to determine starting section again");
 			determineStartingScreen(sectionCount);
 		}
 	} else {
+		logMessage("INFO","Loading game list");
 		loadGameList(0);
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

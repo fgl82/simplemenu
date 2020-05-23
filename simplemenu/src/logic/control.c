@@ -18,6 +18,7 @@
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
 #include "../headers/doubly_linked_rom_list.h"
+#include "../headers/utils.h"
 
 int switchToGroup;
 
@@ -97,6 +98,7 @@ void scrollToGame(int gameNumber) {
 }
 
 int advanceSection(int showLogo) {
+	logMessage("INFO","Advancing section");
 	if(currentSectionNumber==favoritesSectionNumber) {
 		return 0;
 	}
@@ -106,6 +108,8 @@ int advanceSection(int showLogo) {
 		currentSectionNumber=0;
 	}
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
+		logMessage("INFO",CURRENT_SECTION.sectionName);
+		logMessage("INFO","Loading system logo");
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
@@ -127,12 +131,15 @@ int advanceSection(int showLogo) {
 }
 
 int rewindSection(int showLogo) {
+	logMessage("INFO","Rewinding section");
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
 		currentSectionNumber--;
 	} else if (currentSectionNumber!=favoritesSectionNumber) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
+		logMessage("INFO",CURRENT_SECTION.sectionName);
+		logMessage("INFO","Loading system logo");
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
@@ -332,10 +339,12 @@ void showOrHideFavorites() {
 		currentSectionNumber=returnTo;
 		if (CURRENT_SECTION.systemLogoSurface == NULL) {
 			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+			logMessage("INFO","Loading system logo");
 			resizeSectionSystemLogo(&CURRENT_SECTION);
 		}
-		if (CURRENT_SECTION.background == NULL) {
-			CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+		if (CURRENT_SECTION.backgroundSurface == NULL) {
+			logMessage("INFO","Loading system background");
+			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 			resizeSectionBackground(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
@@ -368,10 +377,12 @@ void showOrHideFavorites() {
 	currentSectionNumber=favoritesSectionNumber;
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+		logMessage("INFO","Loading system logo");
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	if (CURRENT_SECTION.background == NULL) {
-		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+	if (CURRENT_SECTION.backgroundSurface == NULL) {
+		logMessage("INFO","Loading system background");
+		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
 	}
 	if (fullscreenMode) {
@@ -521,9 +532,11 @@ void performGroupChoosingAction() {
 					if(sectionCount!=favoritesSectionNumber) {
 						if (sectionGroupStates[activeGroup][sectionCount][0]==1) {
 							currentSectionNumber=sectionCount;
+							logMessage("INFO","Loading system logo");
 							CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 							resizeSectionSystemLogo(&CURRENT_SECTION);
-							CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+							logMessage("INFO","Loading system background");
+							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 							resizeSectionBackground(&CURRENT_SECTION);
 							existed = 1;
 
@@ -540,9 +553,11 @@ void performGroupChoosingAction() {
 				loadGameList(0);
 			}
 			if (!existed) {
+				logMessage("INFO","Loading system logo");
 				CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 				resizeSectionSystemLogo(&CURRENT_SECTION);
-				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				logMessage("INFO","Loading system background");
+				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
 			}
 		} else {

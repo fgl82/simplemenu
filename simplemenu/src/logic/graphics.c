@@ -17,6 +17,7 @@
 #include "../headers/logic.h"
 #include "../headers/graphics.h"
 #include "../headers/globals.h"
+#include "../headers/utils.h"
 
 SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
@@ -473,7 +474,7 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 	SDL_FreeSurface(transparentrectangle);
 }
 
-int drawImage(pthread_t *myThread, SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
 	// Zoom function uses doubles for rates of scaling, rather than
 	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
@@ -548,7 +549,7 @@ void displayImageOnScreenTraditional(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
-	pthread_t myThread;
+//	pthread_t myThread;
 
 	drawTransparentRectangleToScreen((SCREEN_WIDTH/screenDivisions)*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)*2,calculateProportionalSizeOrDistance(22),rightRectangleColor,60);
 
@@ -580,8 +581,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 		}
 		drawRectangleToScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
 		drawTransparentRectangleToScreen(w,h,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
-		pthread_t myThread;
-		drawImage(&myThread, screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
+//		pthread_t myThread;
+		drawImage(screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -594,7 +595,7 @@ void displayImageOnScreenTraditional(char *fileName) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
-				drawImage(&myThread, screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		//		pthread_join(myThread,NULL);
@@ -619,12 +620,11 @@ void displayImageOnScreenTraditional(char *fileName) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
-				drawImage(&myThread, screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+calculateProportionalSizeOrDistance(90)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+calculateProportionalSizeOrDistance(90)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		//		pthread_join(myThread,NULL);
 	}
-
 	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
 	if (systemImage!=NULL) {
 		double w1 = systemImage->w;
@@ -640,8 +640,8 @@ void displayImageOnScreenTraditional(char *fileName) {
 			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
 			smoothing=1;
 		}
-		pthread_t myThread;
-		drawImage(&myThread, screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+//		pthread_t myThread;
+		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
 	}
 }
 
@@ -669,8 +669,8 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-		pthread_t myThread;
-		drawImage(&myThread,screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-w/2, calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
+//		pthread_t myThread;
+		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-w/2, calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
 		//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
@@ -684,7 +684,7 @@ void displayImageOnScreenCustom(char *fileName) {
 					smoothing = 1;
 					wh = hh*ratioh;
 				}
-				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+w/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(screen, heart, calculateProportionalSizeOrDistance(artXInCustom)+w/2-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 		if(artTextDistanceFromPictureInCustom>=0) {
@@ -715,8 +715,8 @@ void displayImageOnScreenCustom(char *fileName) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
-				pthread_t myThread;
-				drawImage(&myThread, screen, heart, calculateProportionalSizeOrDistance(artXInCustom+artWidthInCustom/2)-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+//				pthread_t myThread;
+				drawImage(screen, heart, calculateProportionalSizeOrDistance(artXInCustom+artWidthInCustom/2)-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 	}
@@ -731,8 +731,8 @@ void displayImageOnScreenCustom(char *fileName) {
 			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
 			w1 = h1*ratio1;
 			int smoothing=1;
-			pthread_t myThread;
-			drawImage(&myThread,screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
+//			pthread_t myThread;
+			drawImage(screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
 		}
 	}
 }
@@ -752,8 +752,8 @@ void displayHeart() {
 			}
 			wh = hh*ratioh;
 			smoothing = 1;
-			pthread_t myThread;
-			drawImage(&myThread, screen, heart, SCREEN_WIDTH/2-(wh/2), SCREEN_HEIGHT/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+//			pthread_t myThread;
+			drawImage(screen, heart, SCREEN_WIDTH/2-(wh/2), SCREEN_HEIGHT/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			//			pthread_join(myThread,NULL);
 		}
 	}
@@ -763,7 +763,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*3)/1.33;
-	pthread_t myThread;
+//	pthread_t myThread;
 
 	drawTransparentRectangleToScreen((SCREEN_WIDTH/screenDivisions),SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/baseFont)*2,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions),calculateProportionalSizeOrDistance((22*fontSize)/baseFont),rightRectangleColor,60);
 
@@ -784,7 +784,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 		}
 		drawRectangleToScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance((24*fontSize)/baseFont),CURRENT_SECTION.headerAndFooterBackgroundColor);
 		drawTransparentRectangleToScreen(w,h,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w/2),calculateProportionalSizeOrDistance((27*fontSize)/baseFont),rightRectangleColor,125);
-		drawImage(&myThread, screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont), 0, 0, w, h, 0, smoothing);
+		drawImage(screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont), 0, 0, w, h, 0, smoothing);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -799,7 +799,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				}
 				wh = hh*ratioh;
 				smoothing = 1;
-				drawImage(&myThread, screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(wh/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(wh/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 	} else {
@@ -825,7 +825,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 				}
 				wh = hh*ratioh;
 				smoothing = 1;
-				drawImage(&myThread, screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(wh/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont)+calculateProportionalSizeOrDistance(72)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(wh/2), calculateProportionalSizeOrDistance((27*fontSize)/baseFont)+calculateProportionalSizeOrDistance(72)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 	}
@@ -845,8 +845,8 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-h1;
 			smoothing=1;
 		}
-		pthread_t myThread;
-		drawImage(&myThread,screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+//		pthread_t myThread;
+		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
 	}
 	//	pthread_join(myThread,NULL);
 }
@@ -895,6 +895,10 @@ void* thread_func(void *picture) {
 }
 
 SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
+	if (surface==NULL) {
+		logMessage("WARN","Image not found, surface can't be resized");
+		return NULL;
+	}
 	if (SCREEN_WIDTH==surface->w&&SCREEN_HEIGHT==surface->h) {
 		return surface;
 	}
@@ -920,7 +924,7 @@ void resizeSectionSystemLogo(struct MenuSection *section) {
 }
 
 void resizeSectionBackground(struct MenuSection *section) {
-	section->background = resizeSurfaceToFitScreen(section->background);
+	section->backgroundSurface = resizeSurfaceToFitScreen(section->backgroundSurface);
 }
 
 void resizeGroupBackground(struct SectionGroup *group) {
@@ -928,6 +932,10 @@ void resizeGroupBackground(struct SectionGroup *group) {
 }
 
 void displayCenteredSurface(SDL_Surface *surface) {
+	if(surface==NULL) {
+		logMessage("WARN","Image not found, surface can't be displayed");
+		return;
+	}
 	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){0,0,0});
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
@@ -980,8 +988,8 @@ void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleT
 				if ((int)h!=(int)img->h) {
 					smoothing = 1;
 				}
-				pthread_t myThread;
-				drawImage(&myThread, screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
+//				pthread_t myThread;
+				drawImage(screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 			}
 			//			pthread_join(myThread,NULL);
 		}

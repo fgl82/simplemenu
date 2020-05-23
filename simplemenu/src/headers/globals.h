@@ -242,8 +242,8 @@ struct MenuSection {
 	int activeEmulatorDirectory;
 	char category[100];
 	char scaling[2];
-	char mask[1000];
-	SDL_Surface *background;
+	char background[1000];
+	SDL_Surface *backgroundSurface;
 	int hasDirs;
 //	char *fileList[50000];
 };

@@ -13,6 +13,7 @@
 #include "../headers/string_utils.h"
 #include "../headers/opk.h"
 #include "../headers/doubly_linked_rom_list.h"
+#include "../headers/utils.h"
 
 
 char buf[300];
@@ -898,10 +899,12 @@ void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		if (!currentlyChoosing&&fullscreenMode) {
+			logMessage("INFO","Displaying game picture");
 			displayGamePicture(rom);
 		}
 		if (!currentlyChoosing&&currentMode==3&&!fullscreenMode) {
-			displayCenteredSurface(CURRENT_SECTION.background);
+			logMessage("INFO","Displaying system logo");
+			displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
@@ -972,9 +975,11 @@ uint32_t hideFullScreenModeMenu() {
 }
 
 void resetPicModeHideMenuTimer() {
-	isPicModeMenuHidden=0;
-	clearPicModeHideMenuTimer();
-	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hideFullScreenModeMenu, NULL);
+	if (menuVisibleInFullscreenMode) {
+		isPicModeMenuHidden=0;
+		clearPicModeHideMenuTimer();
+		picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hideFullScreenModeMenu, NULL);
+	}
 }
 
 void clearPicModeHideLogoTimer() {
@@ -989,8 +994,9 @@ uint32_t hidePicModeLogo() {
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
 	currentlySectionSwitching=0;
-	if (CURRENT_SECTION.background == NULL) {
-		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+	if (CURRENT_SECTION.backgroundSurface == NULL) {
+		logMessage("INFO","Loading system background");
+		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
