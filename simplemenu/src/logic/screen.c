@@ -269,7 +269,12 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
-	displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
+	if (CURRENT_SECTION.systemLogoSurface!=NULL) {
+		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
+	} else {
+		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
+		drawTextOnScreen(NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
+	}
 }
 
 void displayGamePicture(struct Rom *rom) {

@@ -163,7 +163,10 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 			if (msg->w>maxWidth) {
 				test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 			}
-			//		drawTransparentRectangleToScreen(maxWidth,fontSize,x-x+2,y-1,(int[]){0,0,0},111);
+			int h = 0;
+			int w = 0;
+			TTF_SizeText(miniFont, test, &w, &h);
+//			drawTransparentRectangleToScreen(w,h,x-w/2,y,(int[]){0,0,0},50);
 			genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
 			free(test);
 			y+=calculateProportionalSizeOrDistance(lineSeparation);
@@ -185,7 +188,10 @@ int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], in
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, backgroundColor, 1);
 }
 
-int drawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align) {
+int drawTextOnScreen(TTF_Font *pfont, int x, int y, const char buf[300], int txtColor[], int align) {
+	if (pfont==NULL) {
+		pfont = font;
+	}
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
 }
 
@@ -355,6 +361,7 @@ void drawTextOnSettingsFooterWithColor(const char text[64], int txtColor[]) {
 }
 
 void drawTextOnHeader(char *text) {
+	int Halign = 0;
 	switch (currentMode) {
 	case 0:
 		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInSimple), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
@@ -366,7 +373,18 @@ void drawTextOnHeader(char *text) {
 		drawTextOnScreen(headerFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInDrunkenMonkey), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
 		break;
 	case 3:
-		drawCustomText1OnScreen(customHeaderFont, calculateProportionalSizeOrDistance(text1XInCustom), calculateProportionalSizeOrDistance(text1YInCustom), "NINTENDO ENTERTAINMENT SYSTEM", menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | text1AlignmentInCustom);
+		switch (text1AlignmentInCustom) {
+		case 0:
+			Halign = HAlignLeft;
+			break;
+		case 1:
+			Halign = HAlignCenter;
+			break;
+		case 2:
+			Halign = HAlignRight;
+			break;
+		}
+		drawCustomText1OnScreen(customHeaderFont, calculateProportionalSizeOrDistance(text1XInCustom), calculateProportionalSizeOrDistance(text1YInCustom), CURRENT_SECTION.sectionName, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | Halign);
 		break;
 	}
 }
@@ -647,7 +665,24 @@ void displayImageOnScreenTraditional(char *fileName) {
 
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
+	if(systemXInCustom>0&&systemYInCustom>0) {
+		SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
+		int smoothing=0;
+		if (systemImage!=NULL) {
+			double w1 = systemImage->w;
+			double h1 = systemImage->h;
+			double ratio1 = 0;  // Used for aspect ratio
+			ratio1 = w1 / h1;   // get ratio for scaling image
+			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
+			if ((int)h1!=(int)systemImage->h) {
+				smoothing=1;
+			}
 
+			w1 = h1*ratio1;
+//			pthread_t myThread;
+			drawImage(screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
+		}
+	}
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
 		double h = screenshot->h;
@@ -721,20 +756,6 @@ void displayImageOnScreenCustom(char *fileName) {
 		}
 	}
 	//	pthread_join(myThread,NULL);
-	if(systemXInCustom>0&&systemYInCustom>0) {
-		SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
-		if (systemImage!=NULL) {
-			double w1 = systemImage->w;
-			double h1 = systemImage->h;
-			double ratio1 = 0;  // Used for aspect ratio
-			ratio1 = w1 / h1;   // get ratio for scaling image
-			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
-			w1 = h1*ratio1;
-			int smoothing=1;
-//			pthread_t myThread;
-			drawImage(screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
-		}
-	}
 }
 
 void displayHeart() {
@@ -936,7 +957,7 @@ void displayCenteredSurface(SDL_Surface *surface) {
 		logMessage("WARN","Image not found, surface can't be displayed");
 		return;
 	}
-	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){0,0,0});
+	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
@@ -1014,8 +1035,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 640;
-	SCREEN_HEIGHT = 480;
+	SCREEN_WIDTH = 320;
+	SCREEN_HEIGHT = 240;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1043,7 +1064,7 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
