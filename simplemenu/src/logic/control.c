@@ -778,6 +778,9 @@ void performSettingsChoosingAction() {
 			if (ret==-1) {
 //				generateError("THERE WAS AN ERROR", 0);
 			}
+			if (selectedShutDownOption==2) {
+				selectedShutDownOption = 0;
+			}
 			shutDownEnabled=1+shutDownEnabled*-1;
 		}
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {

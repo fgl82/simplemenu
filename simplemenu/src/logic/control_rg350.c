@@ -159,28 +159,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-//		aKeyComboWasPressed=1;
 		return 0;
-//		hideFullScreenModeMenu();
-//		hotKeyPressed=0;
-//		if (!favoritesSectionSelected) {
-//			currentlySectionSwitching=1;
-//		}
-//		int rewinded = rewindSection(1);
-//		if(rewinded) {
-//			currentlySectionSwitching=1;
-//			displayBackgroundPicture();
-//			showConsole();
-//			refreshScreen();
-//			loadGameList(0);
-//			if(autoHideLogos) {
-//				resetPicModeHideLogoTimer();
-//			}
-//		}
-//		if(CURRENT_SECTION.gameCount>0) {
-//			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-//		}
-//		return 0;
 	}
 
 	if(keys[BTN_R1]) {
@@ -195,28 +174,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-//		aKeyComboWasPressed=1;
 		return 0;
-//		hideFullScreenModeMenu();
-//		hotKeyPressed=0;
-//		if (!favoritesSectionSelected) {
-//			currentlySectionSwitching=1;
-//		}
-//		int advanced = advanceSection(1);
-//		if(advanced) {
-//			currentlySectionSwitching=1;
-//			displayBackgroundPicture();
-//			showConsole();
-//			refreshScreen();
-//			loadGameList(0);
-//			if(autoHideLogos) {
-//				resetPicModeHideLogoTimer();
-//			}
-//		}
-//		if(CURRENT_SECTION.gameCount>0) {
-//			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-//		}
-//		return 0;
 	}
 
 	if (!currentlySectionSwitching&&!hotKeyPressed&&!isUSBMode) {
@@ -236,8 +194,8 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_START]) {
-//			cycleFrequencies();
 			chosenSetting=SHUTDOWN_OPTION;
+			selectedShutDownOption=0;
 			currentlyChoosing=3;
 			return 0;
 		}

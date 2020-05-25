@@ -298,9 +298,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	char *exec = malloc(strlen(executable)+5000);
 	strcpy(exec, executable);
 
-	char states[2000]="";
+	char states[2000];
 	for (int i=0;i<favoritesSectionNumber+1;i++) {
-		char tempString[200]="";
+		char tempString[200];
 		snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
 		strcat(states,tempString);
 	}
@@ -837,6 +837,7 @@ void loadGameList(int refresh) {
 							} else {
 								#ifdef TARGET_RG300
 								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
+									logMessage("WARN", "Non-RetroFW desktop file found");
 									desktopCounter++;
 								}
 								#endif

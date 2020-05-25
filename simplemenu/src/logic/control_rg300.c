@@ -6,40 +6,50 @@
 #include "../headers/graphics.h"
 #include "../headers/logic.h"
 #include "../headers/screen.h"
+#include "../headers/utils.h"
 #include "../headers/system_logic.h"
 
 int performAction(struct Rom *rom) {
+	if(currentlySectionSwitching) {
+		if (keys[BTN_A]) {
+			currentlySectionSwitching=0;
+			if (CURRENT_SECTION.backgroundSurface==NULL) {
+				logMessage("INFO","Loading system background");
+				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+				resizeSectionBackground(&CURRENT_SECTION);
+				logMessage("INFO","Loading system picture");
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
+			}
+			return 1;
+		}
+		if (keys[BTN_START]) {
+			currentlySectionSwitching=0;
+			currentlyChoosing=3;
+			return 1;
+		}
+	}
+	if (rom!=NULL&&keys[BTN_R2]) {
+		hideFullScreenModeMenu();
+		if(currentSectionNumber!=favoritesSectionNumber) {
+			loadGameList(1);
+			return(1);
+		}
+	}
 	if (keys[BTN_START]&&isUSBMode) {
 		hotKeyPressed=0;
 		isUSBMode=0;
-		int ret = system("scripts/usb_mode_off.sh");
+		int ret = system("./usb_mode_off.sh");
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		return 0;
-	} else {
-		if(isUSBMode) {
-			return 0;
-		}
-	}
-	if(currentlySectionSwitching) {
-		if (keys[BTN_A]) {
-			currentlySectionSwitching=0;
-			return 1;
-		}
 	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
 	if(keys[BTN_B]) {
 		hotKeyPressed=1;
-		if (rom!=NULL&&keys[BTN_R]) {
-			hideFullScreenModeMenu();
-			if(currentSectionNumber!=favoritesSectionNumber) {
-				loadGameList(1);
-				return(1);
-			}
-		}
 		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator(rom);
 			aKeyComboWasPressed=1;
@@ -54,10 +64,12 @@ int performAction(struct Rom *rom) {
 			return 1;
 		}
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
-			hotKeyPressed=0;
-			cycleFrequencies();
-			aKeyComboWasPressed=1;
-			return 0;
+			if (keys[BTN_START]&&!currentlySectionSwitching) {
+				hotKeyPressed=0;
+				cycleFrequencies();
+				aKeyComboWasPressed=1;
+				return 0;
+			}
 		}
 		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<25;i++) {
@@ -91,6 +103,13 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=0;
 			int advanced = advanceSection(0);
 			if(advanced) {
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+					resizeSectionBackground(&CURRENT_SECTION);
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
+				}
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {
@@ -103,6 +122,14 @@ int performAction(struct Rom *rom) {
 			hotKeyPressed=0;
 			int rewinded = rewindSection(0);
 			if(rewinded) {
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+					resizeSectionBackground(&CURRENT_SECTION);
+					logMessage("INFO","Loading system picture");
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
+				}
 				loadGameList(0);
 			}
 			if(CURRENT_SECTION.gameCount>0) {
@@ -128,28 +155,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-//		aKeyComboWasPressed=1;
 		return 0;
-//		hideFullScreenModeMenu();
-//		hotKeyPressed=0;
-//		if (!favoritesSectionSelected) {
-//			currentlySectionSwitching=1;
-//		}
-//		int rewinded = rewindSection(1);
-//		if(rewinded) {
-//			currentlySectionSwitching=1;
-//			displayBackgroundPicture();
-//			showConsole();
-//			refreshScreen();
-//			loadGameList(0);
-//			if(autoHideLogos) {
-//				resetPicModeHideLogoTimer();
-//			}
-//		}
-//		if(CURRENT_SECTION.gameCount>0) {
-//			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-//		}
-//		return 0;
 	}
 
 	if(keys[BTN_R1]) {
@@ -164,28 +170,7 @@ int performAction(struct Rom *rom) {
 		if(CURRENT_SECTION.gameCount>0) {
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		}
-//		aKeyComboWasPressed=1;
 		return 0;
-//		hideFullScreenModeMenu();
-//		hotKeyPressed=0;
-//		if (!favoritesSectionSelected) {
-//			currentlySectionSwitching=1;
-//		}
-//		int advanced = advanceSection(1);
-//		if(advanced) {
-//			currentlySectionSwitching=1;
-//			displayBackgroundPicture();
-//			showConsole();
-//			refreshScreen();
-//			loadGameList(0);
-//			if(autoHideLogos) {
-//				resetPicModeHideLogoTimer();
-//			}
-//		}
-//		if(CURRENT_SECTION.gameCount>0) {
-//			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-//		}
-//		return 0;
 	}
 
 	if (!currentlySectionSwitching&&!hotKeyPressed&&!isUSBMode) {
@@ -205,8 +190,8 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_START]) {
-//			cycleFrequencies();
 			chosenSetting=SHUTDOWN_OPTION;
+			selectedShutDownOption=0;
 			currentlyChoosing=3;
 			return 0;
 		}

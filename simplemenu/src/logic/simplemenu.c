@@ -25,7 +25,6 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	currentCPU = OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
@@ -117,22 +116,23 @@ int main() {
 	logMessage("INFO","Config loaded");
 	readInputConfig();
 	logMessage("INFO","Input configured");
+	char temp[300];
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	logMessage("INFO","HW Initialized");
+	currentCPU = OC_NO;
 	setCPU(OC_NO);
-	logMessage("INFO","CPU speed set");
+	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
+	logMessage("INFO",temp);
 	#endif
 	setupDisplayAndKeys();
 	logMessage("INFO","Display and input successfully configured");
 	checkIfDefault();
 	logMessage("INFO","Default state checked");
-	char *temp=malloc(8000);
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
 	logMessage("INFO","Loading theme");
 	loadTheme(temp);
-	free(temp);
 	logMessage("INFO","Loading sections");
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	logMessage("INFO","Loading favorites");

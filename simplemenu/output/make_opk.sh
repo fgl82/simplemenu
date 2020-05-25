@@ -92,6 +92,6 @@ if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ]; then
         esac
     done
 else
-#    cat default.retrofw.desktop
+    cat default.retrofw.desktop >> log.txt
     rm -f default.retrofw.desktop >> log.txt
 fi

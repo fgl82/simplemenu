@@ -247,11 +247,33 @@ void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
-	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
+	drawShadedTextOnScreen(font, SCREEN_WIDTH/2, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	free(temp);
 }
 
 void drawShadedGameNameOnScreenLeft(char *buf, int position) {
-	drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
+	drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(3), position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	free(temp);
 }
 
 void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
@@ -259,9 +281,20 @@ void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenCenter(char *buf, int position) {
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
 	int centerRomList = (SCREEN_WIDTH-2*(SCREEN_WIDTH/screenDivisions))/2;
-	drawShadedTextOnScreen(font, centerRomList, position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	drawShadedTextOnScreen(font, centerRomList, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+	free(temp);
 }
 
 void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
@@ -271,6 +304,16 @@ void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
 	int hAlign = 0;
 	if (gameListAlignmentInCustom==0) {
 		hAlign = HAlignLeft;
@@ -280,10 +323,11 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 		hAlign = HAlignRight;
 	}
 	if (transparentShading) {
-		drawTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign);
+		drawTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign);
 	} else {
-		drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, buf, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+		drawShadedTextOnScreen(font, calculateProportionalSizeOrDistance(gameListXInCustom), position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
 	}
+	free(temp);
 }
 
 void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
@@ -301,9 +345,20 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 }
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
 	int color[3] = {255,255,0};
-	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, temp, color, VAlignMiddle | HAlignLeft);
 	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
+	free(temp);
 }
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
@@ -326,19 +381,46 @@ void drawPictureTextOnScreen(char *buf) {
 	}
 	int h = 0;
 	TTF_SizeText(font, buf, NULL, &h);
+	char *temp = malloc(strlen(buf)+2);
+	if (currentCPU == OC_UC) {
+		strcpy(temp,"-");
+		strcat(temp,buf);
+	} else 	if (currentCPU == OC_OC) {
+		strcpy(temp,"+");
+		strcat(temp,buf);
+	} else {
+		strcpy(temp,buf);
+	}
 	if(!favoritesSectionSelected) {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)),(int[]){0,0,0}, 100);
-		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, buf, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+		if (colorfulFullscreenMenu) {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)),(int[]){0,0,0}, 100);
+			drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, temp, CURRENT_SECTION.headerAndFooterTextColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+		} else {
+			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), (int[]){0,0,0}, 180);
+			drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, temp, (int[]){255,255,255}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+		}
 	} else {
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+calculateProportionalSizeOrDistance(2), 0, footerOnTop?0:SCREEN_HEIGHT-(h+calculateProportionalSizeOrDistance(2)), (int[]){0,0,0}, 180);
-		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, buf, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+		drawTextOnScreen(font, SCREEN_WIDTH/2, footerOnTop?calculateProportionalSizeOrDistance(2):SCREEN_HEIGHT-h, temp, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
 	}
+	free(temp);
 }
 
 void drawImgFallbackTextOnScreen(char *fallBackText) {
 	if(!footerVisibleInFullscreenMode) {
-		drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), fallBackText, CURRENT_SECTION.bodyTextColor, VAlignMiddle | HAlignCenter);
+		char *temp = malloc(strlen(fallBackText)+2);
+		if (currentCPU == OC_UC) {
+			strcpy(temp,"-");
+			strcat(temp,fallBackText);
+		} else 	if (currentCPU == OC_OC) {
+			strcpy(temp,"+");
+			strcat(temp,fallBackText);
+		} else {
+			strcpy(temp,fallBackText);
+		}
+		drawTextOnScreen(font, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(120), temp, CURRENT_SECTION.bodyTextColor, VAlignMiddle | HAlignCenter);
+		free(temp);
 	} else {
 		drawPictureTextOnScreen(fallBackText);
 	}
@@ -1105,8 +1187,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 320;
-	SCREEN_HEIGHT = 240;
+	SCREEN_WIDTH = 1440;
+	SCREEN_HEIGHT = 1080;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1134,10 +1216,9 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_ASYNCBLIT);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-	printf("sdas\n");
 }
 
 
