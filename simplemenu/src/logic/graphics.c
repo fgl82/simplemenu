@@ -308,9 +308,15 @@ void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 
 void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 	int color[3];
-	color[0] = CURRENT_SECTION.headerAndFooterTextColor[0];
-	color[1] = CURRENT_SECTION.headerAndFooterTextColor[1];
-	color[2] = CURRENT_SECTION.headerAndFooterTextColor[2];
+	if (colorfulFullscreenMenu) {
+		color[0] = CURRENT_SECTION.headerAndFooterTextColor[0];
+		color[1] = CURRENT_SECTION.headerAndFooterTextColor[1];
+		color[2] = CURRENT_SECTION.headerAndFooterTextColor[2];
+	} else {
+		color[0] = 255;
+		color[1] = 255;
+		color[2] = 255;
+	}
 	drawTextOnScreen(font, calculateProportionalSizeOrDistance(5), position, buf, color, VAlignMiddle | HAlignLeft);
 }
 

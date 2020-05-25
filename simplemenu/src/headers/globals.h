@@ -158,14 +158,12 @@ int artYInCustom;
 int artTextDistanceFromPictureInCustom;
 int artTextLineSeparationInCustom;
 int artTextFontSizeInCustom;
-//art_text_distance_from_picture_in_custom;
-//art_text_line_separation_in_custom;
-//art_text_font_size_in_custom;
 int systemWidthInCustom;
 int systemHeightInCustom;
 int systemXInCustom;
 int systemYInCustom;
 int fontSizeCustom;
+int colorfulFullscreenMenu;
 
 /* STRUCTS */
 struct OPKDesktopFile {

@@ -200,6 +200,13 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 
+		value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
+		if (value == NULL) {
+			colorfulFullscreenMenu = 0;
+		} else {
+			colorfulFullscreenMenu = atoi(value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
 		gameListPositionInSimple = atoi(value);
 
@@ -729,6 +736,13 @@ int loadSections(char *file) {
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
+	}
+
+	value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
+	if (value == NULL) {
+		colorfulFullscreenMenu = 0;
+	} else {
+		colorfulFullscreenMenu = atoi(value);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
