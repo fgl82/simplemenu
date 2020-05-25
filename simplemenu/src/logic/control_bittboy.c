@@ -13,9 +13,12 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
+				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
-				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				logMessage("INFO","Loading system picture");
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			return 1;
 		}
@@ -85,9 +88,12 @@ int performAction(struct Rom *rom) {
 			int advanced = advanceSection(1);
 			if(advanced) {
 				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
 					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
-					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					logMessage("INFO","Loading system picture");
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION););
 				}
 				loadGameList(0);
 			}
@@ -103,9 +109,12 @@ int performAction(struct Rom *rom) {
 			int rewinded = rewindSection(1);
 			if(rewinded) {
 				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
 					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
-					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					logMessage("INFO","Loading system picture");
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
 				loadGameList(0);
 			}

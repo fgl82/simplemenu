@@ -19,6 +19,7 @@ int performAction(struct Rom *rom) {
 				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
+				logMessage("INFO","Loading system picture");
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
@@ -129,6 +130,7 @@ int performAction(struct Rom *rom) {
 					logMessage("INFO","Loading system background");
 					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
+					logMessage("INFO","Loading system picture");
 					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
