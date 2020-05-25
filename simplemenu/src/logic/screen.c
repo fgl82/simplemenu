@@ -1028,6 +1028,8 @@ uint32_t hidePicModeLogo() {
 		logMessage("INFO","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
+		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);

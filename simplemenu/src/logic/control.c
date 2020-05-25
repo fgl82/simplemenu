@@ -348,6 +348,8 @@ void showOrHideFavorites() {
 			logMessage("INFO","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 			resizeSectionBackground(&CURRENT_SECTION);
+			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
 			if (fullscreenMode) {
@@ -388,6 +390,8 @@ void showOrHideFavorites() {
 		logMessage("INFO","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
+		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
@@ -543,6 +547,8 @@ void performGroupChoosingAction() {
 							logMessage("INFO","Loading system background");
 							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 							resizeSectionBackground(&CURRENT_SECTION);
+							CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+							resizeSectionSystemPicture(&CURRENT_SECTION);
 							existed = 1;
 
 						}
@@ -564,6 +570,8 @@ void performGroupChoosingAction() {
 				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;

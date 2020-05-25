@@ -19,6 +19,8 @@ int performAction(struct Rom *rom) {
 				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			return 1;
 		}
@@ -108,6 +110,8 @@ int performAction(struct Rom *rom) {
 					logMessage("INFO","Loading system background");
 					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
 				loadGameList(0);
 			}
@@ -125,6 +129,8 @@ int performAction(struct Rom *rom) {
 					logMessage("INFO","Loading system background");
 					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
 				loadGameList(0);
 			}

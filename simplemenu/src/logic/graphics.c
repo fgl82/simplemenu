@@ -192,7 +192,7 @@ int drawTextOnScreen(TTF_Font *pfont, int x, int y, const char buf[300], int txt
 	if (pfont==NULL) {
 		pfont = font;
 	}
-	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, NULL, 0);
+	return genericDrawTextOnScreen(pfont, x, y, buf, txtColor, align, NULL, 0);
 }
 
 void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, int maxWidth) {
@@ -666,22 +666,25 @@ void displayImageOnScreenTraditional(char *fileName) {
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	if(systemXInCustom>0&&systemYInCustom>0) {
-		SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
-		int smoothing=0;
-		if (systemImage!=NULL) {
-			double w1 = systemImage->w;
-			double h1 = systemImage->h;
-			double ratio1 = 0;  // Used for aspect ratio
-			ratio1 = w1 / h1;   // get ratio for scaling image
-			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
-			if ((int)h1!=(int)systemImage->h) {
-				smoothing=1;
-			}
-
-			w1 = h1*ratio1;
+//		if (CURRENT_SECTION.systemPictureSurface==NULL) {
+//			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+//		}
+//		int smoothing=0;
+//		if (CURRENT_SECTION.systemPictureSurface!=NULL) {
+//			double w1 = CURRENT_SECTION.systemPictureSurface->w;
+//			double h1 = CURRENT_SECTION.systemPictureSurface->h;
+//			double ratio1 = 0;  // Used for aspect ratio
+//			ratio1 = w1 / h1;   // get ratio for scaling image
+//			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
+//			if ((int)h1!=(int)CURRENT_SECTION.systemPictureSurface->h) {
+//				smoothing=1;
+//			}
+//
+//			w1 = h1*ratio1;
 //			pthread_t myThread;
-			drawImage(screen, systemImage, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
-		}
+			displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom));
+//			drawImage(screen, CURRENT_SECTION.systemPictureSurface, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
+//		}
 	}
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
@@ -939,6 +942,34 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 	return sized;
 }
 
+SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
+	if (surface==NULL) {
+		logMessage("WARN","Image not found, surface can't be resized");
+		return NULL;
+	}
+	int newW = (float)calculateProportionalSizeOrDistance(w);
+	int newH = (float)calculateProportionalSizeOrDistance(h);
+
+	if (newW==surface->w&&newH==surface->h) {
+		return surface;
+	}
+	int smoothing = 0;
+	if (surface->w!=calculateProportionalSizeOrDistance(w) || surface->h!=calculateProportionalSizeOrDistance(h)) {
+		smoothing=1;
+	}
+	double zoomx = (float)(newW / (float)surface->w);
+	double zoomy = (float)(newH / (float)surface->h);
+
+	SDL_Surface *sized = NULL;
+	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
+	if(surface->flags & SDL_SRCCOLORKEY ) {
+		Uint32 colorkey = surface->format->colorkey;
+		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
+	}
+	free(surface);
+	return sized;
+}
+
 
 void resizeSectionSystemLogo(struct MenuSection *section) {
 	section->systemLogoSurface = resizeSurfaceToFitScreen(section->systemLogoSurface);
@@ -952,6 +983,10 @@ void resizeGroupBackground(struct SectionGroup *group) {
 	group->groupBackgroundSurface = resizeSurfaceToFitScreen(group->groupBackgroundSurface);
 }
 
+void resizeSectionSystemPicture(struct MenuSection *section) {
+	section->systemPictureSurface = resizeSurface(section->systemPictureSurface, systemWidthInCustom, systemHeightInCustom);
+}
+
 void displayCenteredSurface(SDL_Surface *surface) {
 	if(surface==NULL) {
 		logMessage("WARN","Image not found, surface can't be displayed");
@@ -963,6 +998,19 @@ void displayCenteredSurface(SDL_Surface *surface) {
 	rectangleDest.h = 0;
 	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
 	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
+	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
+}
+
+void displaySurface(SDL_Surface *surface, int x, int y) {
+	if(surface==NULL) {
+		logMessage("WARN","Image not found, surface can't be displayed");
+		return;
+	}
+	SDL_Rect rectangleDest;
+	rectangleDest.w = 0;
+	rectangleDest.h = 0;
+	rectangleDest.x = x;
+	rectangleDest.y = y;
 	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
 }
 
@@ -1064,9 +1112,10 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME | SDL_ASYNCBLIT);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+	printf("sdas\n");
 }
 
 

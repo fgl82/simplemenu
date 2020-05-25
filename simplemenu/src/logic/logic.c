@@ -106,6 +106,9 @@ char *getRomRealName(char *romName) {
 
 int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 	struct OPK *opk = opk_open(package_path);
+	if (opk==NULL) {
+		return 0;
+	}
 	char *name;
 	char *category;
 	int i=0;
@@ -554,7 +557,7 @@ int scanDirectory(char *directory, char* files[], int i)
 	int j=0;
 	int n = scandir(directory, &result, NULL, alphasort);
 	if (n < 0) {
-	    printf("ERROR: scandir(%s)\n", directory);
+	    logMessage("ERROR: scandir(%s)\n", directory);
 	    return 0;
 	}
     while (j<n) {
@@ -567,6 +570,7 @@ int scanDirectory(char *directory, char* files[], int i)
 					strcat(d_name, "/");
 				}
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
+				logMessage("INFO",d_name);
 				CURRENT_SECTION.hasDirs = 1;
 				i=scanDirectory(path, files, i);
 			} else {
@@ -999,6 +1003,8 @@ void determineStartingScreen(int sectionCount) {
 			logMessage("INFO","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 			resizeSectionBackground(&CURRENT_SECTION);
+			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		logMessage("INFO","Section background loaded and resized");
 		int gamesInSection=CURRENT_SECTION.gameCount;

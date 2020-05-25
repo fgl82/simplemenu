@@ -168,9 +168,18 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
 
+		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+		systemWidthInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+		systemHeightInCustom = atoi(value);
+
+
 		if (menuSections[i].systemLogoSurface!=NULL) {
 			free(menuSections[i].systemLogoSurface);
 			menuSections[i].systemLogoSurface = NULL;
+			free(menuSections[i].systemPictureSurface);
+			menuSections[i].systemPictureSurface = NULL;
 			free(menuSections[i].backgroundSurface);
 			menuSections[i].backgroundSurface = NULL;
 		}
@@ -182,6 +191,9 @@ void loadTheme(char *theme) {
 			logMessage("INFO","Loading system background");
 			menuSections[i].backgroundSurface = IMG_Load(menuSections[i].background);
 			resizeSectionBackground(&menuSections[i]);
+			logMessage("INFO","Loading system picture");
+			menuSections[i].systemPictureSurface = IMG_Load(menuSections[i].systemPicture);
+			resizeSectionSystemPicture(&menuSections[i]);
 		}
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 
@@ -268,12 +280,6 @@ void loadTheme(char *theme) {
 
 		value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
 		artYInCustom = atoi(value);
-
-		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
-		systemWidthInCustom = atoi(value);
-
-		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
-		systemHeightInCustom = atoi(value);
 
 		value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
 		systemXInCustom = atoi(value);
@@ -678,12 +684,21 @@ int loadSections(char *file) {
 		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
 			free(menuSections[menuSectionCounter].systemLogoSurface);
 			menuSections[menuSectionCounter].systemLogoSurface = NULL;
+			free(menuSections[menuSectionCounter].systemPictureSurface);
+			menuSections[menuSectionCounter].systemPictureSurface = NULL;
 			free(menuSections[menuSectionCounter].backgroundSurface);
 			menuSections[menuSectionCounter].backgroundSurface = NULL;
 		}
 
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
+		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
+
+		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+		systemWidthInCustom = atoi(value);
+
+		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+		systemHeightInCustom = atoi(value);
 
 		if (menuSectionCounter==currentSectionNumber) {
 			logMessage("INFO","Loading system logo");
@@ -692,9 +707,12 @@ int loadSections(char *file) {
 			logMessage("INFO","Loading system background");
 			menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
 			resizeSectionBackground(&menuSections[menuSectionCounter]);
+			logMessage("INFO","Loading system picture");
+			menuSections[menuSectionCounter].systemPictureSurface = IMG_Load(menuSections[menuSectionCounter].systemPicture);
+			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
 		}
 
-		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
+
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].aliasFileName,value);
@@ -793,12 +811,6 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
 	artYInCustom = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
-	systemWidthInCustom = atoi(value);
-
-	value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
-	systemHeightInCustom = atoi(value);
 
 	value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
 	systemXInCustom = atoi(value);
@@ -899,10 +911,9 @@ int loadSections(char *file) {
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
-//	menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
-//	resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
+
 //	menuSections[menuSectionCounter].background = IMG_Load(menuSections[menuSectionCounter].mask);
 //	resizeSectionBackground(&menuSections[menuSectionCounter]);
 
