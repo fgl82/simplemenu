@@ -760,7 +760,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
-				#if defined TARGET_RG350
+				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
 			} else {
@@ -770,7 +770,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
-				#if defined TARGET_RG350
+				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
 				#endif
 			}
