@@ -653,13 +653,12 @@ void displayImageOnScreenTraditional(char *fileName) {
 		w1 = h1*ratio1;
 		ratio1 = h1 / w1;   // get ratio for scaling image
 		int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
-		int smoothing=0;
 		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
 			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
-			smoothing=1;
 		}
 //		pthread_t myThread;
-		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+//		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom);
 	}
 }
 
@@ -854,7 +853,7 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 		}
 	}
 
-	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
+	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
 	if (systemImage!=NULL) {
 		double w1 = systemImage->w;
 		double h1 = systemImage->h;
@@ -864,13 +863,12 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 		w1 = h1*ratio1;
 		ratio1 = h1 / w1;   // get ratio for scaling image
 		int middleBottom = SCREEN_HEIGHT-h1-calculateProportionalSizeOrDistance(18);
-		int smoothing=1;
 		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
 			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-h1;
-			smoothing=1;
 		}
 //		pthread_t myThread;
-		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+//		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom);
 	}
 	//	pthread_join(myThread,NULL);
 }
@@ -984,7 +982,25 @@ void resizeGroupBackground(struct SectionGroup *group) {
 }
 
 void resizeSectionSystemPicture(struct MenuSection *section) {
-	section->systemPictureSurface = resizeSurface(section->systemPictureSurface, systemWidthInCustom, systemHeightInCustom);
+	double w1 = section->systemPictureSurface->w;
+	double h1 = section->systemPictureSurface->h;
+	if (currentMode==1) {
+		double ratio1 = 0;  // Used for aspect ratio
+		ratio1 = w1 / h1;   // get ratio for scaling image
+		h1 = (SCREEN_HEIGHT*90)/240;
+		w1 = h1*ratio1;
+		ratio1 = h1 / w1;   // get ratio for scaling image
+		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, w1, h1);
+	} else if (currentMode==2) {
+		double ratio1 = 0;  // Used for aspect ratio
+		ratio1 = w1 / h1;   // get ratio for scaling image
+		h1 = (SCREEN_HEIGHT*72)/240;
+		w1 = h1*ratio1;
+		ratio1 = h1 / w1;   // get ratio for scaling image
+		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, w1, h1);
+	} else {
+		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, systemWidthInCustom, systemHeightInCustom);
+	}
 }
 
 void displayCenteredSurface(SDL_Surface *surface) {
