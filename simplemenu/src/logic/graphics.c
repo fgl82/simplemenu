@@ -731,22 +731,13 @@ void displayImageOnScreenTraditional(char *fileName) {
 		}
 		//		pthread_join(myThread,NULL);
 	}
-	SDL_Surface *systemImage = IMG_Load(CURRENT_SECTION.systemPicture);
+	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
 	if (systemImage!=NULL) {
-		double w1 = systemImage->w;
-		double h1 = systemImage->h;
-		double ratio1 = 0;  // Used for aspect ratio
-		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = (SCREEN_HEIGHT*90)/240;
-		w1 = h1*ratio1;
-		ratio1 = h1 / w1;   // get ratio for scaling image
-		int middleBottom = calculateProportionalSizeOrDistance(168)-h1/2;
+		int middleBottom = calculateProportionalSizeOrDistance(168)-systemImage->h/2;
 		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-			middleBottom = calculateProportionalSizeOrDistance(174)-h1/2;
+			middleBottom = calculateProportionalSizeOrDistance(173)-systemImage->h/2;
 		}
-//		pthread_t myThread;
-//		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
-		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w1/2), middleBottom);
+		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(systemImage->w/2), middleBottom);
 	}
 }
 
@@ -941,22 +932,31 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 		}
 	}
 
+//	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
+//	if (systemImage!=NULL) {
+//		double w1 = systemImage->w;
+//		double h1 = systemImage->h;
+//		double ratio1 = 0;  // Used for aspect ratio
+//		ratio1 = w1 / h1;   // get ratio for scaling image
+//		h1 = (SCREEN_HEIGHT*72)/240;
+//		w1 = h1*ratio1;
+//		ratio1 = h1 / w1;   // get ratio for scaling image
+//		int middleBottom = SCREEN_HEIGHT-h1-calculateProportionalSizeOrDistance(18);
+//		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
+//			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-h1;
+//		}
+////		pthread_t myThread;
+////		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
+//		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom);
+//	}
+
 	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
 	if (systemImage!=NULL) {
-		double w1 = systemImage->w;
-		double h1 = systemImage->h;
-		double ratio1 = 0;  // Used for aspect ratio
-		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = (SCREEN_HEIGHT*72)/240;
-		w1 = h1*ratio1;
-		ratio1 = h1 / w1;   // get ratio for scaling image
-		int middleBottom = SCREEN_HEIGHT-h1-calculateProportionalSizeOrDistance(18);
+		int middleBottom = SCREEN_HEIGHT-systemImage->h-calculateProportionalSizeOrDistance(18);
 		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-h1;
+			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-systemImage->h;
 		}
-//		pthread_t myThread;
-//		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
-		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom);
+		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(systemImage->w/2), middleBottom);
 	}
 	//	pthread_join(myThread,NULL);
 }
@@ -1070,22 +1070,10 @@ void resizeGroupBackground(struct SectionGroup *group) {
 }
 
 void resizeSectionSystemPicture(struct MenuSection *section) {
-	double w1 = section->systemPictureSurface->w;
-	double h1 = section->systemPictureSurface->h;
 	if (currentMode==1) {
-		double ratio1 = 0;  // Used for aspect ratio
-		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = (SCREEN_HEIGHT*90)/240;
-		w1 = h1*ratio1;
-		ratio1 = h1 / w1;   // get ratio for scaling image
-		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, w1, h1);
+		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, 120, 90);
 	} else if (currentMode==2) {
-		double ratio1 = 0;  // Used for aspect ratio
-		ratio1 = w1 / h1;   // get ratio for scaling image
-		h1 = (SCREEN_HEIGHT*72)/240;
-		w1 = h1*ratio1;
-		ratio1 = h1 / w1;   // get ratio for scaling image
-		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, w1, h1);
+		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, 90, 72);
 	} else {
 		section->systemPictureSurface = resizeSurface(section->systemPictureSurface, systemWidthInCustom, systemHeightInCustom);
 	}
@@ -1187,8 +1175,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 1440;
-	SCREEN_HEIGHT = 1080;
+	SCREEN_WIDTH = 1280;
+	SCREEN_HEIGHT = 720;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1215,8 +1203,20 @@ void initializeDisplay() {
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
+	#ifdef TARGET_RG300
+	SCREEN_WIDTH = 480;
+	SCREEN_HEIGHT = 272;
+	//	ipu modes (/proc/jz/ipu):
+	//	0: stretch
+	//	1: aspect
+	//	2: original (fallback to aspect when downscale is needed)
+	//	3: 4:3
+	FILE *fp = fopen("/proc/jz/ipu","w");
+	fprintf(fp,"0");
+	fclose(fp);
+	#endif
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }

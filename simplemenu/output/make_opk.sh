@@ -18,7 +18,7 @@ if [ "$1" = "RG-350" ]; then
 elif [ "$1" = "PG2" ]; then
     make clean
     make PLATFORM=NPG
-else
+elif [ "$1" = "RFW" ]; then
     make clean
     make PLATFORM=RG-300
 fi
@@ -42,7 +42,7 @@ if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ]; then
     var="gcw0"
 fi
 
-if [ "$1" = "RG-300" ]]; then
+if [ "$1" = "RFW" ]]; then
     var="retrofw"
 fi
 
