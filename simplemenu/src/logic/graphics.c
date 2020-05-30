@@ -51,16 +51,6 @@ int calculateProportionalSizeOrDistance(int number) {
 	}
 }
 
-int calculateProportionalHorizontalSizeOrDistance(int number) {
-	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
-		return (SCREEN_WIDTH*number)/320;
-	else {
-		return ((SCREEN_WIDTH-(SCREEN_WIDTH*640/1920))*number)/1280;
-	}
-}
-
-
-
 int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
 //	SDL_Surface *msg1;
@@ -744,25 +734,7 @@ void displayImageOnScreenTraditional(char *fileName) {
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	if(systemXInCustom>0&&systemYInCustom>0) {
-//		if (CURRENT_SECTION.systemPictureSurface==NULL) {
-//			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//		}
-//		int smoothing=0;
-//		if (CURRENT_SECTION.systemPictureSurface!=NULL) {
-//			double w1 = CURRENT_SECTION.systemPictureSurface->w;
-//			double h1 = CURRENT_SECTION.systemPictureSurface->h;
-//			double ratio1 = 0;  // Used for aspect ratio
-//			ratio1 = w1 / h1;   // get ratio for scaling image
-//			h1 = calculateProportionalSizeOrDistance(systemHeightInCustom);
-//			if ((int)h1!=(int)CURRENT_SECTION.systemPictureSurface->h) {
-//				smoothing=1;
-//			}
-//
-//			w1 = h1*ratio1;
-//			pthread_t myThread;
 			displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom));
-//			drawImage(screen, CURRENT_SECTION.systemPictureSurface, calculateProportionalSizeOrDistance(systemXInCustom), calculateProportionalSizeOrDistance(systemYInCustom), 0, 0, w1, h1, 0, smoothing);
-//		}
 	}
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
@@ -931,24 +903,6 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 			}
 		}
 	}
-
-//	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
-//	if (systemImage!=NULL) {
-//		double w1 = systemImage->w;
-//		double h1 = systemImage->h;
-//		double ratio1 = 0;  // Used for aspect ratio
-//		ratio1 = w1 / h1;   // get ratio for scaling image
-//		h1 = (SCREEN_HEIGHT*72)/240;
-//		w1 = h1*ratio1;
-//		ratio1 = h1 / w1;   // get ratio for scaling image
-//		int middleBottom = SCREEN_HEIGHT-h1-calculateProportionalSizeOrDistance(18);
-//		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
-//			middleBottom = SCREEN_HEIGHT-calculateProportionalSizeOrDistance(16)-h1;
-//		}
-////		pthread_t myThread;
-////		drawImage(screen, systemImage, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom, 0, 0, w1, h1, 0, smoothing);
-//		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(w1/2), middleBottom);
-//	}
 
 	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
 	if (systemImage!=NULL) {
