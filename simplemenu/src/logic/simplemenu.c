@@ -51,6 +51,7 @@ void critical_error_handler()
 //    snprintf(command,sizeof(command),"rm %s",pathToLastStateFilePlusFileName);
 //    system(command)
     logMessage("ERROR","Nice, a critical error!!!");
+    closeLogFile();
     exit(0);
 }
 

@@ -346,6 +346,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	strcat(exec, "\"");
 	logMessage("INFO",exec);
 	freeResources();
+//	printf("%s\n",exec);
 	int ret = system(exec);
 	if(ret == -1) {
 		logMessage("ERROR","Error executing emulator");
@@ -786,8 +787,10 @@ int theSectionHasGames(struct MenuSection *section) {
 //}
 
 void loadGameList(int refresh) {
+	logMessage("INFO",CURRENT_SECTION.sectionName);
 	int loadedFiles=0;
 	logMessage("INFO","Should we skip this?");
+	FILE *fp=NULL;
 	if (CURRENT_SECTION.initialized==0||refresh) {
 		logMessage("INFO","No, loading game list");
 		CURRENT_SECTION.initialized=1;
@@ -815,10 +818,70 @@ void loadGameList(int refresh) {
 			dirCounter++;
 		}
 		free(dirsCopy);
+		char sectionCacheName[PATH_MAX];
+		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
+		fp = fopen(sectionCacheName,"r");
+		if (fp!=NULL) {
+			logMessage("INFO","Using cache file");
+		    char currentlineToRead[5000];
+		    while (fgets(currentlineToRead, sizeof(currentlineToRead), fp) != NULL) {
+		    	char *currentline = strdup(currentlineToRead);
+		        files[CURRENT_SECTION.gameCount] = malloc(strlen(currentline)+1);
+				logMessage("INFO",currentline);
+		        struct Rom *rom;
+				rom=malloc(sizeof(struct Rom));
+
+				char *ptr = strtok(currentline,";");
+				rom->alias=malloc(strlen(ptr)+1);
+				if (strcmp(ptr,"(null)")==0) {
+					rom->alias = '\0';
+				} else {
+					strcpy(rom->alias,ptr);
+				}
+
+		        ptr = strtok(NULL,";");
+				rom->directory=malloc(strlen(ptr)+1);
+				strcpy(rom->directory,ptr);
+
+				ptr = strtok(NULL,";");
+				rom->name=malloc(strlen(ptr)+1);
+				strcpy(rom->name,ptr);
+				rom->name[strlen(rom->name)-1]='\0';
+
+				InsertAtTail(rom);
+
+				if (game==ITEMS_PER_PAGE) {
+					CURRENT_SECTION.totalPages++;
+					game = 0;
+				}
+
+				logMessage("INFO",rom->alias);
+				logMessage("INFO",rom->directory);
+				logMessage("INFO",rom->name);
+
+				game++;
+				CURRENT_SECTION.gameCount++;
+		    }
+		    logMessage("INFO","Finished reading cache");
+//			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
+			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
+			if (fp!=NULL) {
+				fclose(fp);
+			}
+			for (int i=0;i<CURRENT_SECTION.gameCount;i++){
+				free(files[i]);
+			}
+			return;
+		}
+		if (fp!=NULL) {
+			fclose(fp);
+		}
 		for(int k=0;k<dirCounter;k++) {
-//			int n = recursivelyScanDirectory(dirs[k], files, 0);
+			int n = 0;
 			logMessage("INFO","Scanning directory");
-			int n = scanDirectory(dirs[k], files, 0);
+//			fp = fopen(sectionCacheName,"w");
+			n = scanDirectory(dirs[k], files, 0);
 			logMessage("INFO","Processing files");
 			int realItemCount = n;
 			for (int i=0;i<n;i++){
@@ -874,6 +937,7 @@ void loadGameList(int refresh) {
 								strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 								#endif
+//								fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 								InsertAtTail(rom);
 								game++;
 								CURRENT_SECTION.gameCount++;
@@ -884,8 +948,7 @@ void loadGameList(int refresh) {
 					}
 					//it's not an opk
 					else {
-						int size = strlen(files[i])+1;
-
+						int size = 2000;
 						struct Rom *rom;
 						rom=malloc(sizeof(struct Rom));
 						rom->name=malloc(size);
@@ -920,8 +983,9 @@ void loadGameList(int refresh) {
 								game = 0;
 							}
 						}
-						logMessage("INFO",rom->name);
+//						logMessage("INFO",rom->name);
 						InsertAtTail(rom);
+//						fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 						loadedFiles++;
 						game++;
 					}
@@ -934,18 +998,36 @@ void loadGameList(int refresh) {
 			if (loadedFiles==0&&k==(dirCounter-1)) {
 				CURRENT_SECTION.hidden=1;
 				loading=0;
+//				if (fp!=NULL) {
+//					fclose(fp);
+//				}
 				return;
 			}
 		}
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
-		if (strlen(CURRENT_SECTION.aliasFileName)>1 || CURRENT_SECTION.hasDirs) {
+//		if (wasOPKSection||strlen(CURRENT_SECTION.aliasFileName)>1 || CURRENT_SECTION.hasDirs) {
 			logMessage("INFO","The list needs to be sorted");
 			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
-		}
+
+//			fclose(fp);
+//			char sectionCacheName[PATH_MAX];
+//			snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
+			fp = fopen(sectionCacheName,"w");
+			for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
+				struct Rom *rom;
+//				rom=malloc(sizeof(struct Rom));
+				rom = GetNthNode(i)->data;
+				fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
+			}
+//		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
+		if (fp!=NULL) {
+			system("sync");
+			fclose(fp);
+		}
 	}
 	loading=0;
 }

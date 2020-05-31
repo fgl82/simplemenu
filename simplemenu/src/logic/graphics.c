@@ -45,9 +45,9 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 
 int calculateProportionalSizeOrDistance(int number) {
 	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
-		return (SCREEN_HEIGHT*number)/240;
+		return ((float)SCREEN_HEIGHT*(float)number)/240;
 	else {
-		return ((SCREEN_HEIGHT-(SCREEN_HEIGHT*60/240))*number)/180;
+		return (((float)SCREEN_HEIGHT-((float)SCREEN_HEIGHT*60/240))*(float)number)/180;
 	}
 }
 
@@ -1129,8 +1129,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 1280;
-	SCREEN_HEIGHT = 720;
+	SCREEN_WIDTH = 1920;
+	SCREEN_HEIGHT = 1080;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1158,8 +1158,8 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	#ifdef TARGET_RG300
-	SCREEN_WIDTH = 480;
-	SCREEN_HEIGHT = 272;
+//	SCREEN_WIDTH = 480;
+//	SCREEN_HEIGHT = 272;
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -1170,7 +1170,7 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
