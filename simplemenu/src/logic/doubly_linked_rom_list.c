@@ -44,7 +44,9 @@ void cleanListForSection(struct MenuSection *section) {
 	struct Node *current = NULL;
 	while ((current = section->head)) {
 		section->head = section->head->next;
-		free(current->data->alias);
+		if (strlen(current->data->alias)>1) {
+			free(current->data->alias);
+		}
 		free(current->data->name);
 		free(current->data->directory);
 		free(current->data);

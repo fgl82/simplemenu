@@ -786,6 +786,41 @@ int theSectionHasGames(struct MenuSection *section) {
 //	}
 //}
 
+
+char * readline(FILE *fp, char *buffer)
+{
+    int ch;
+    int i = 0;
+    size_t buff_len = 0;
+
+    buffer = malloc(buff_len + 1);
+    if (!buffer) return NULL;  // Out of memory
+
+    while ((ch = fgetc(fp)) != '\n' && ch != EOF)
+    {
+        buff_len++;
+        void *tmp = realloc(buffer, buff_len + 1);
+        if (tmp == NULL)
+        {
+            free(buffer);
+            return NULL; // Out of memory
+        }
+        buffer = tmp;
+
+        buffer[i] = (char) ch;
+        i++;
+    }
+    buffer[i] = '\0';
+
+    // Detect end
+    if (ch == EOF && (i == 0 || ferror(fp)))
+    {
+        free(buffer);
+        return NULL;
+    }
+    return buffer;
+}
+
 void loadGameList(int refresh) {
 	logMessage("INFO",CURRENT_SECTION.sectionName);
 	int loadedFiles=0;
@@ -822,56 +857,52 @@ void loadGameList(int refresh) {
 		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 		fp = fopen(sectionCacheName,"r");
 		if (fp!=NULL) {
+		    clock_t t;
+		    t = clock();
 			logMessage("INFO","Using cache file");
-		    char currentlineToRead[5000];
-		    while (fgets(currentlineToRead, sizeof(currentlineToRead), fp) != NULL) {
-		    	char *currentline = strdup(currentlineToRead);
-		        files[CURRENT_SECTION.gameCount] = malloc(strlen(currentline)+1);
-				logMessage("INFO",currentline);
-		        struct Rom *rom;
+		    char currentline[2000];
+		    while (fgets(currentline, sizeof(currentline), fp) != NULL) {
+		    	int size = strlen(currentline)+1;
+
+		    	struct Rom *rom;
 				rom=malloc(sizeof(struct Rom));
 
 				char *ptr = strtok(currentline,";");
-				rom->alias=malloc(strlen(ptr)+1);
+				size = strlen(ptr)+1;
+				rom->alias=malloc(size);
 				if (strcmp(ptr,"(null)")==0) {
-					rom->alias = '\0';
+					rom->alias = "\0";
 				} else {
-					strcpy(rom->alias,ptr);
+					memcpy(rom->alias,ptr,size);
 				}
 
 		        ptr = strtok(NULL,";");
-				rom->directory=malloc(strlen(ptr)+1);
-				strcpy(rom->directory,ptr);
+		        size = strlen(ptr)+1;
+				rom->directory=malloc(size);
+				memcpy(rom->directory,ptr,size);
 
 				ptr = strtok(NULL,";");
-				rom->name=malloc(strlen(ptr)+1);
-				strcpy(rom->name,ptr);
-				rom->name[strlen(rom->name)-1]='\0';
-
-				InsertAtTail(rom);
+				size = strlen(ptr)+1;
+				rom->name=malloc(size);
+				memcpy(rom->name,ptr,size);
 
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
 					game = 0;
 				}
-
-				logMessage("INFO",rom->alias);
-				logMessage("INFO",rom->directory);
-				logMessage("INFO",rom->name);
-
+				InsertAtTail(rom);
 				game++;
 				CURRENT_SECTION.gameCount++;
 		    }
 		    logMessage("INFO","Finished reading cache");
-//			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			if (fp!=NULL) {
 				fclose(fp);
 			}
-			for (int i=0;i<CURRENT_SECTION.gameCount;i++){
-				free(files[i]);
-			}
+		    t = clock() - t;
+		    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+		    printf("fun() took %f seconds to execute \n", time_taken);
 			return;
 		}
 		if (fp!=NULL) {
@@ -880,7 +911,6 @@ void loadGameList(int refresh) {
 		for(int k=0;k<dirCounter;k++) {
 			int n = 0;
 			logMessage("INFO","Scanning directory");
-//			fp = fopen(sectionCacheName,"w");
 			n = scanDirectory(dirs[k], files, 0);
 			logMessage("INFO","Processing files");
 			int realItemCount = n;
