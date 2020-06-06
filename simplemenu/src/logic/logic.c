@@ -827,6 +827,8 @@ void loadGameList(int refresh) {
 	logMessage("INFO","Should we skip this?");
 	FILE *fp=NULL;
 	if (CURRENT_SECTION.initialized==0||refresh) {
+
+		printf("YES\n");
 		logMessage("INFO","No, loading game list");
 		CURRENT_SECTION.initialized=1;
 		//We don't need to reload the alias file if just refreshing
@@ -882,10 +884,11 @@ void loadGameList(int refresh) {
 				memcpy(rom->directory,ptr,size);
 
 				ptr = strtok(NULL,";");
-				size = strlen(ptr)+1;
-				rom->name=malloc(size);
-				memcpy(rom->name,ptr,size);
-
+				size = strlen(ptr);
+				rom->name=malloc(size+1);
+				memcpy(rom->name,ptr,(size));
+				rom->name[size-1] = '\0';
+				printf("cached: %s;%s;%s\n",rom->alias, rom->directory, rom->name);
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
 					game = 0;
@@ -1049,13 +1052,13 @@ void loadGameList(int refresh) {
 				struct Rom *rom;
 //				rom=malloc(sizeof(struct Rom));
 				rom = GetNthNode(i)->data;
+				printf("%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 				fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 			}
 //		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		if (fp!=NULL) {
-			system("sync");
 			fclose(fp);
 		}
 	}

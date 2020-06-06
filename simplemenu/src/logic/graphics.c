@@ -1239,6 +1239,8 @@ void freeResources() {
 	Shake_Close(device);
 	Shake_Quit();
 	#endif
+	#ifndef TARGET_PC
 	closeLogFile();
+	#endif
 	SDL_Quit();
 }

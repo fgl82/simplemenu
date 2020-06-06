@@ -408,12 +408,14 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToAppFiles[3000];
 	char pathToGameFiles[3000];
 	char pathToThemeFiles[3000];
+	char pathToTempFiles[3000];
 	char pathToSectionGroupsFiles[3000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
 	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
 	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
+	snprintf(pathToTempFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/tmp",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[3000];
@@ -450,16 +452,8 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-//		char deleteDirectoriesCommand[3000];
-//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./apps");
-//		ret = system(deleteDirectoriesCommand);
-//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./games");
-//		ret = system(deleteDirectoriesCommand);
-//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./themes");
-//		ret = system(deleteDirectoriesCommand);
-//		snprintf(deleteDirectoriesCommand,sizeof(deleteDirectoriesCommand),"rm -rf ./config");
-//		ret = system(deleteDirectoriesCommand);
 	}
+	mkdir(pathToTempFiles,0700);
 }
 
 void saveFavorites() {
