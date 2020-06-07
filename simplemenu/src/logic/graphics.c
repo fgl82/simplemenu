@@ -53,12 +53,8 @@ int calculateProportionalSizeOrDistance(int number) {
 
 int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-//	SDL_Surface *msg1;
 	char *bufCopy=malloc(300);
-	char *bufCopy1=malloc(300);
 	strcpy(bufCopy,buf);
-	strcpy(bufCopy1,buf);
-	bufCopy1[1]='\0';
 
 	int len=strlen(buf);
 	int width = MAGIC_NUMBER;
@@ -76,7 +72,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	} else {
 		msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 	}
-//	msg1 = TTF_RenderText_Blended(font, bufCopy, make_color(0,0,0));
 	if (align & HAlignCenter) {
 		x -= msg->w / 2;
 	} else if (align & HAlignRight) {
@@ -88,19 +83,6 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	} else if (align & VAlignTop) {
 		y -= msg->h;
 	}
-//	SDL_Rect rect;
-//	rect.x = x+1;
-//	rect.y = y+1;
-//	rect.w = msg->w;
-//	rect.h = msg->h;
-//	SDL_BlitSurface(msg1, NULL, screen, &rect);
-
-//	SDL_Rect rect1;
-//	rect1.x = x-1;
-//	rect1.y = y-1;
-//	rect1.w = msg->w;
-//	rect1.h = msg->h;
-//	SDL_BlitSurface(msg1, NULL, screen, &rect1);
 
 	SDL_Rect rect2;
 	rect2.x = x;
@@ -110,9 +92,8 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	SDL_BlitSurface(msg, NULL, screen, &rect2);
 
 	SDL_FreeSurface(msg);
-//	SDL_FreeSurface(msg1);
 	free(bufCopy);
-	return msg->w;
+	return 1;
 }
 
 void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation) {
@@ -1006,7 +987,8 @@ SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 		Uint32 colorkey = surface->format->colorkey;
 		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
 	}
-	free(surface);
+	SDL_FreeSurface(surface);
+	surface=NULL;
 	return sized;
 }
 
@@ -1129,8 +1111,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 1920;
-	SCREEN_HEIGHT = 1080;
+	SCREEN_WIDTH = 320;
+	SCREEN_HEIGHT = 240;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1170,7 +1152,7 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }

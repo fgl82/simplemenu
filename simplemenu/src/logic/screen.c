@@ -55,6 +55,7 @@ void showErrorMessage(char *errorMessage) {
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
 	drawError(errorMessage, textColor);
 	itsStoppedBecauseOfAnError=1;
+	free(errorMessage);
 }
 
 int letterExistsInGameList(char *letter, char* letters) {
@@ -867,9 +868,9 @@ void drawSettingsScreen() {
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
 
-	char *options[11];
-	char *values[11];
-	char *hints[11];
+	char *options[10];
+	char *values[10];
+	char *hints[10];
 
 	setOptionsAndValues(options, values, hints);
 
@@ -904,9 +905,10 @@ void drawSettingsScreen() {
 	free(options[THEME_OPTION]);
 	free(options[SCREEN_TIMEOUT_OPTION]);
 	free(options[DEFAULT_OPTION]);
-	free(options[USB_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
+	free(options[USB_OPTION]);
 	free(options[ITEMS_PER_PAGE_OPTION]);
+	free(options[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(values[TIDY_ROMS_OPTION]);
 	free(values[FULL_SCREEN_FOOTER_OPTION]);
@@ -917,6 +919,7 @@ void drawSettingsScreen() {
 	free(values[SHUTDOWN_OPTION]);
 	free(values[USB_OPTION]);
 	free(values[ITEMS_PER_PAGE_OPTION]);
+	free(values[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(hints[TIDY_ROMS_OPTION]);
 	free(hints[FULL_SCREEN_FOOTER_OPTION]);
@@ -924,9 +927,10 @@ void drawSettingsScreen() {
 	free(hints[THEME_OPTION]);
 	free(hints[SCREEN_TIMEOUT_OPTION]);
 	free(hints[DEFAULT_OPTION]);
-	free(hints[USB_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
+	free(hints[USB_OPTION]);
 	free(hints[ITEMS_PER_PAGE_OPTION]);
+	free(hints[AUTO_HIDE_LOGOS_OPTION]);
 }
 
 void updateScreen(struct Rom *rom) {

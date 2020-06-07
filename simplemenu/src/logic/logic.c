@@ -827,8 +827,6 @@ void loadGameList(int refresh) {
 	logMessage("INFO","Should we skip this?");
 	FILE *fp=NULL;
 	if (CURRENT_SECTION.initialized==0||refresh) {
-
-		printf("YES\n");
 		logMessage("INFO","No, loading game list");
 		CURRENT_SECTION.initialized=1;
 		//We don't need to reload the alias file if just refreshing
@@ -857,10 +855,15 @@ void loadGameList(int refresh) {
 		free(dirsCopy);
 		char sectionCacheName[PATH_MAX];
 		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
+
+		if (refresh) {
+//			remove(sectionCacheName);
+		}
+
 		fp = fopen(sectionCacheName,"r");
 		if (fp!=NULL) {
-		    clock_t t;
-		    t = clock();
+//		    clock_t t;
+//		    t = clock();
 			logMessage("INFO","Using cache file");
 		    char currentline[2000];
 		    while (fgets(currentline, sizeof(currentline), fp) != NULL) {
@@ -888,7 +891,6 @@ void loadGameList(int refresh) {
 				rom->name=malloc(size+1);
 				memcpy(rom->name,ptr,(size));
 				rom->name[size-1] = '\0';
-				printf("cached: %s;%s;%s\n",rom->alias, rom->directory, rom->name);
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
 					game = 0;
@@ -903,9 +905,9 @@ void loadGameList(int refresh) {
 			if (fp!=NULL) {
 				fclose(fp);
 			}
-		    t = clock() - t;
-		    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
-		    printf("fun() took %f seconds to execute \n", time_taken);
+//		    t = clock() - t;
+//		    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+//		    printf("fun() took %f seconds to execute \n", time_taken);
 			return;
 		}
 		if (fp!=NULL) {
@@ -970,7 +972,6 @@ void loadGameList(int refresh) {
 								strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 								#endif
-//								fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 								InsertAtTail(rom);
 								game++;
 								CURRENT_SECTION.gameCount++;
@@ -1016,9 +1017,7 @@ void loadGameList(int refresh) {
 								game = 0;
 							}
 						}
-//						logMessage("INFO",rom->name);
 						InsertAtTail(rom);
-//						fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
 						loadedFiles++;
 						game++;
 					}
@@ -1031,31 +1030,24 @@ void loadGameList(int refresh) {
 			if (loadedFiles==0&&k==(dirCounter-1)) {
 				CURRENT_SECTION.hidden=1;
 				loading=0;
-//				if (fp!=NULL) {
-//					fclose(fp);
-//				}
+				if (fp!=NULL) {
+					fclose(fp);
+				}
 				return;
 			}
 		}
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
-//		if (wasOPKSection||strlen(CURRENT_SECTION.aliasFileName)>1 || CURRENT_SECTION.hasDirs) {
-			logMessage("INFO","The list needs to be sorted");
-			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+		logMessage("INFO","The list needs to be sorted");
+		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 
-//			fclose(fp);
-//			char sectionCacheName[PATH_MAX];
-//			snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
-			fp = fopen(sectionCacheName,"w");
-			for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
-				struct Rom *rom;
-//				rom=malloc(sizeof(struct Rom));
-				rom = GetNthNode(i)->data;
-				printf("%s;%s;%s\n",rom->alias, rom->directory, rom->name);
-				fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
-			}
-//		}
+		fp = fopen(sectionCacheName,"w");
+		for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
+			struct Rom *rom;
+			rom = GetNthNode(i)->data;
+			fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
+		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		if (fp!=NULL) {
@@ -1138,7 +1130,7 @@ void determineStartingScreen(int sectionCount) {
 			determineStartingScreen(sectionCount);
 		}
 	} else {
-		logMessage("INFO","Loading game list");
+		logMessage("INFO","determineStartingScreen - Loading game list");
 		loadGameList(0);
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

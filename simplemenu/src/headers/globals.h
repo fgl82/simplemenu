@@ -73,7 +73,6 @@ int DEFAULT_OPTION;
 int USB_OPTION;
 int SHUTDOWN_OPTION;
 int AUTO_HIDE_LOGOS_OPTION;
-int FONT_SIZE_OPTION;
 int ITEMS_PER_PAGE_OPTION;
 char mediaFolder[1000];
 int stripGames;
