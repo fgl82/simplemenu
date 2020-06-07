@@ -40,21 +40,23 @@ void InsertAtTail(struct Rom *rom) {
 	newNode->prev = temp;
 }
 
+
 void cleanListForSection(struct MenuSection *section) {
 	struct Node *current = NULL;
 	while ((current = section->head)) {
-		section->head = section->head->next;
-		if (strlen(current->data->alias)>1) {
+		if (current->data->alias!=NULL&&strlen(current->data->alias)>1) {
 			free(current->data->alias);
 		}
 		free(current->data->name);
 		free(current->data->directory);
 		free(current->data);
 		free(current);
+		section->head = section->head->next;
 	}
 }
 
 void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom) {
+	printf("inserting\n");
 	struct Node* temp = section->head;
 	struct Node* newNode = GetNewNode(rom);
 	if(section->head == NULL) {
