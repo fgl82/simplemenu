@@ -674,21 +674,23 @@ int loadSections(char *file) {
 			char *tempNameWithoutPath = getNameWithoutPath(currentExec);
 			char *tempPathWithoutName = getRomPath(currentExec);
 			#else
-			char *tempNameWithoutPath = strdup(currentExec);
-			char *tempPathWithoutName = strdup("\0");
+			char *tempNameWithoutPath = malloc(strlen(currentExec)+1);
+			strcpy(tempNameWithoutPath, currentExec);
+			char *tempPathWithoutName = "\0";
 			#endif
+
 			menuSections[menuSectionCounter].executables[execCounter]=malloc(strlen(tempNameWithoutPath)+1);
 			strcpy(menuSections[menuSectionCounter].executables[execCounter],tempNameWithoutPath);
 			free(tempNameWithoutPath);
-			menuSections[menuSectionCounter].emulatorDirectories[execCounter]=malloc(strlen(tempPathWithoutName)+3);
+
+			menuSections[menuSectionCounter].emulatorDirectories[execCounter]=malloc(strlen(tempPathWithoutName)+2);
 			strcpy(menuSections[menuSectionCounter].emulatorDirectories[execCounter],tempPathWithoutName);
-			free(tempPathWithoutName);
 			strcat(menuSections[menuSectionCounter].emulatorDirectories[execCounter],"/");
-			strcat(menuSections[menuSectionCounter].emulatorDirectories[execCounter],"\0");
+
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
-		free (currentExec);
+//		free (currentExec);
 		free(value2);
 
 //		menuSections[menuSectionCounter].executables[execCounter]=NULL;

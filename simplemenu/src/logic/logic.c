@@ -857,7 +857,7 @@ void loadGameList(int refresh) {
 		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 
 		if (refresh) {
-//			remove(sectionCacheName);
+			remove(sectionCacheName);
 		}
 
 		fp = fopen(sectionCacheName,"r");
