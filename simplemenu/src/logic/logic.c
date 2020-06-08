@@ -893,7 +893,7 @@ void loadGameList(int refresh) {
 		    }
 		    logMessage("INFO","Finished reading cache");
 //		    CURRENT_SECTION.head = GetNthNode(0);
-//			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
+			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			if (fp!=NULL) {
 				fclose(fp);

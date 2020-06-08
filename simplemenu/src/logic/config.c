@@ -695,7 +695,7 @@ int loadSections(char *file) {
 
 //		menuSections[menuSectionCounter].executables[execCounter]=NULL;
 
-		for (int i=execCounter;i<10;i++) {
+		for (int i=execCounter-1;i<10;i++) {
 			menuSections[menuSectionCounter].executables[i]=NULL;
 			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
 		}
@@ -930,7 +930,7 @@ int loadSections(char *file) {
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
 	menuSections[menuSectionCounter].emulatorDirectories[0]=malloc(strlen("/some/folder/")+1);
 	strcpy(menuSections[menuSectionCounter].emulatorDirectories[0],"/some/folder/");
-	strcat(menuSections[menuSectionCounter].emulatorDirectories[0],"\0");
+//	strcat(menuSections[menuSectionCounter].emulatorDirectories[0],"\0");
 	menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 	menuSections[menuSectionCounter].executables[0]=NULL;
 	menuSections[menuSectionCounter].executables[0]=malloc(strlen("favs")+1);

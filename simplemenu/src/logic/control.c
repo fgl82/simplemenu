@@ -541,10 +541,10 @@ void performGroupChoosingAction() {
 
 				int execsNum = sizeof(menuSections[sectionCount].executables) / sizeof(menuSections[sectionCount].executables[0]);
 				for (int j=0;j<execsNum;j++) {
-					if (menuSections[sectionCount].executables[j]!=NULL&&strlen(menuSections[sectionCount].emulatorDirectories[j])>1) {
+					if (menuSections[sectionCount].executables[j]!=NULL&&strlen(menuSections[sectionCount].executables[j])>0) {
 						free(menuSections[sectionCount].executables[j]);
 					}
-					if (menuSections[sectionCount].emulatorDirectories[j]!=NULL&&strlen(menuSections[sectionCount].emulatorDirectories[j])>1) {
+					if (menuSections[sectionCount].emulatorDirectories[j]!=NULL&&strlen(menuSections[sectionCount].emulatorDirectories[j])>0) {
 						free(menuSections[sectionCount].emulatorDirectories[j]);
 					}
 				}
