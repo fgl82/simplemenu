@@ -540,12 +540,14 @@ void performGroupChoosingAction() {
 				}
 
 				int execsNum = sizeof(menuSections[sectionCount].executables) / sizeof(menuSections[sectionCount].executables[0]);
-				for (int j=0;j<execsNum;j++) {
-					if (menuSections[sectionCount].executables[j]!=NULL&&strlen(menuSections[sectionCount].executables[j])>0) {
-						free(menuSections[sectionCount].executables[j]);
-					}
-					if (menuSections[sectionCount].emulatorDirectories[j]!=NULL&&strlen(menuSections[sectionCount].emulatorDirectories[j])>0) {
-						free(menuSections[sectionCount].emulatorDirectories[j]);
+				for (int j=0;j<execsNum-1;j++) {
+					if (sectionCount!=favoritesSectionNumber) {
+						if (menuSections[sectionCount].executables[j]!=NULL&&strlen(menuSections[sectionCount].executables[j])>0) {
+							free(menuSections[sectionCount].executables[j]);
+						}
+						if (menuSections[sectionCount].emulatorDirectories[j]!=NULL&&strlen(menuSections[sectionCount].emulatorDirectories[j])>0) {
+							free(menuSections[sectionCount].emulatorDirectories[j]);
+						}
 					}
 				}
 			}
@@ -826,7 +828,7 @@ void performSettingsChoosingAction() {
 			ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 		}
 		if (currentSectionNumber!=favoritesSectionNumber) {
-//			loadGameList(1);
+			loadGameList(2);
 		} else {
 			loadFavoritesSectionGameList(1);
 		}

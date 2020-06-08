@@ -849,7 +849,9 @@ void loadGameList(int refresh) {
 
 		if (refresh) {
 			cleanListForSection(&CURRENT_SECTION);
-			remove(sectionCacheName);
+			if (refresh==1) {
+				remove(sectionCacheName);
+			}
 		}
 
 		fp = fopen(sectionCacheName,"r");
@@ -882,7 +884,7 @@ void loadGameList(int refresh) {
 				size = strlen(ptr)+1;
 				rom->name=malloc(size);
 				memcpy(rom->name,ptr,(size));
-				rom->name[size-1] = '\0';
+				rom->name[size-2] = '\0';
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
 					game = 0;

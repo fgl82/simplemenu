@@ -695,7 +695,7 @@ int loadSections(char *file) {
 
 //		menuSections[menuSectionCounter].executables[execCounter]=NULL;
 
-		for (int i=execCounter-1;i<10;i++) {
+		for (int i=execCounter;i<10;i++) {
 			menuSections[menuSectionCounter].executables[i]=NULL;
 			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
 		}

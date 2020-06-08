@@ -56,7 +56,6 @@ void cleanListForSection(struct MenuSection *section) {
 }
 
 void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom) {
-	printf("inserting\n");
 	struct Node* temp = section->head;
 	struct Node* newNode = GetNewNode(rom);
 	if(section->head == NULL) {
