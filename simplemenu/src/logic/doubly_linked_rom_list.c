@@ -50,8 +50,8 @@ void cleanListForSection(struct MenuSection *section) {
 		free(current->data->name);
 		free(current->data->directory);
 		free(current->data);
-		free(current);
 		section->head = section->head->next;
+		free(current);
 	}
 }
 

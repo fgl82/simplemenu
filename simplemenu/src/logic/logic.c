@@ -834,7 +834,6 @@ void loadGameList(int refresh) {
 		if (!refresh) {
 			loadAliasList(currentSectionNumber);
 		}
-		logMessage("INFO","Cleaned section list");
 		CURRENT_SECTION.totalPages=0;
 		CURRENT_SECTION.gameCount=0;
 		char *files[MAX_GAMES_IN_SECTION];
@@ -849,11 +848,11 @@ void loadGameList(int refresh) {
 
 		if (refresh) {
 			cleanListForSection(&CURRENT_SECTION);
+			logMessage("INFO","Cleaned section list");
 			if (refresh==1) {
 				remove(sectionCacheName);
 			}
 		}
-
 		fp = fopen(sectionCacheName,"r");
 		if (fp!=NULL) {
 //		    clock_t t;

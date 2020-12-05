@@ -141,6 +141,9 @@ typedef long long		squashfs_block;
 #define ZLIB_COMPRESSION	1
 #define LZO_COMPRESSION		3
 
+#define false 0
+#define true 1
+
 struct squashfs_super_block {
 	unsigned int		s_magic;
 	unsigned int		inodes;
