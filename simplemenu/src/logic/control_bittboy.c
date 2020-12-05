@@ -49,6 +49,15 @@ int performAction(struct Rom *rom) {
 			aKeyComboWasPressed=1;
 			return 1;
 		}
+
+		if (rom!=NULL&&keys[BTN_Y]) {
+			hideFullScreenModeMenu();
+			if(currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(1);
+				return(1);
+			}
+		}
+
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
 			cycleFrequencies();
