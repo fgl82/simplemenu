@@ -14,6 +14,7 @@
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
+#include "../headers/utils.h"
 
 
 void initializeGlobals() {
@@ -24,7 +25,6 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=50000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	currentCPU = OC_NO;
 	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
@@ -43,11 +43,21 @@ void resetFrameBuffer () {
 	}
 }
 
-void sig_term_handler(int signum)
+void critical_error_handler()
 {
-	if (signum==1) {
+//    char command[300];
+//	char pathToLastStateFilePlusFileName[300];
+//	snprintf(pathToLastStateFilePlusFileName,sizeof(pathToLastStateFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
+//    snprintf(command,sizeof(command),"rm %s",pathToLastStateFilePlusFileName);
+//    system(command)
+    logMessage("ERROR","Nice, a critical error!!!");
+    closeLogFile();
+    exit(0);
+}
 
-	}
+void sig_term_handler()
+{
+    logMessage("WARN","Received SIGTERM");
 	running=0;
 }
 
@@ -81,37 +91,53 @@ int main() {
 	//	pthread_mutex_init(&lock, NULL);
 	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	initializeGlobals();
+	logMessage("INFO","Initialized Globals");
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(struct sigaction));
+    sigemptyset(&sa.sa_mask);
+    sa.sa_sigaction = critical_error_handler;
+    sa.sa_flags   = SA_SIGINFO;
+    sigaction(SIGSEGV, &sa, NULL);
+    sigaction(SIGABRT, &sa, NULL);
+    sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
 	#if defined(TARGET_NPG) || defined(TARGET_RG350)
 	resetFrameBuffer();
+	logMessage("INFO","Reset Framebuffer");
 	#endif
 	initializeDisplay();
+	logMessage("INFO","Initialized Display");
 	createConfigFilesInHomeIfTheyDontExist();
+	logMessage("INFO","Validated configuration existence");
 	checkThemes();
+	logMessage("INFO","Themes checked");
 	loadLastState();
+	logMessage("INFO","Last state loaded");
 	loadConfig();
+	logMessage("INFO","Config loaded");
 	readInputConfig();
+	logMessage("INFO","Input configured");
+	char temp[300];
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
+	logMessage("INFO","HW Initialized");
+	currentCPU = OC_NO;
 	setCPU(OC_NO);
+	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
+	logMessage("INFO",temp);
 	#endif
 	setupDisplayAndKeys();
+	logMessage("INFO","Display and input successfully configured");
 	checkIfDefault();
-	char *temp=malloc(8000);
+	logMessage("INFO","Default state checked");
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
+	logMessage("INFO","Loading theme");
 	loadTheme(temp);
-	free(temp);
+	logMessage("INFO","Loading sections");
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
+	logMessage("INFO","Loading favorites");
 	loadFavorites();
-//	if (argv[1]!=NULL) {
-//		setSectionsState(argv[1]);
-//		currentSectionNumber=atoi(argv[2]);
-//		returnTo=atoi(argv[3]);
-//		fullscreenMode=atoi(argv[4]);
-//	}
-//	FULLSCREEN_ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE+(MENU_ITEMS_PER_PAGE*2/10);
-
 	switch (currentMode) {
 	    case 0:
 	    	fontSize=baseFont;
@@ -146,9 +172,12 @@ int main() {
 	freeFonts();
 	initializeFonts();
 	initializeSettingsFonts();
+	logMessage("INFO","Fonts initialized");
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
 	initSuspendTimer();
+	logMessage("INFO","Suspend timer initialized");
 	#endif
+	logMessage("INFO","Determining starting screen");
 	determineStartingScreen(sectionCount);
 	while(strlen(CURRENT_SECTION.sectionName)<1) {
 		advanceSection(0);

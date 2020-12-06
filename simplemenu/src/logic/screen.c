@@ -13,9 +13,8 @@
 #include "../headers/string_utils.h"
 #include "../headers/opk.h"
 #include "../headers/doubly_linked_rom_list.h"
+#include "../headers/utils.h"
 
-
-char buf[300];
 
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
@@ -54,6 +53,7 @@ void showErrorMessage(char *errorMessage) {
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
 	drawError(errorMessage, textColor);
 	itsStoppedBecauseOfAnError=1;
+	free(errorMessage);
 }
 
 int letterExistsInGameList(char *letter, char* letters) {
@@ -226,6 +226,7 @@ void showCurrentGroup() {
 	strcat(tempString,"\0");
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
 //	displayCenteredImageOnScreen(sectionGroups[activeGroup].groupBackground," ",1,0);
+	logMessage("INFO", "Displaying group background");
 	displayCenteredSurface(sectionGroups[activeGroup].groupBackgroundSurface);
 	drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 	drawCurrentSectionGroup(tempString, textColor);
@@ -267,7 +268,12 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
-	displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
+	if (CURRENT_SECTION.systemLogoSurface!=NULL) {
+		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
+	} else {
+		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
+		drawTextOnScreen(NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
+	}
 }
 
 void displayGamePicture(struct Rom *rom) {
@@ -372,8 +378,12 @@ void displayGamePicture(struct Rom *rom) {
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		if(!favoritesSectionSelected) {
-			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
-			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0},100);
+			if (colorfulFullscreenMenu) {
+				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0},100);
+			} else {
+				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0}, 180);
+			}
 		} else {
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0}, 180);
 		}
@@ -479,7 +489,7 @@ void drawHeader() {
 void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
-	if (wannaReset) {
+	if (selectedShutDownOption==1) {
 		drawShutDownText("REBOOTING");
 	} else {
 		drawShutDownText("SHUTTING DOWN");
@@ -543,6 +553,7 @@ void drawGameList() {
 //	}
 	char *nameWithoutExtension;
 	struct Node* currentNode;
+	char *buf;
 	currentNode = GetNthNode(ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (currentNode==NULL) {
@@ -550,35 +561,38 @@ void drawGameList() {
 		}
 		struct Rom* rom = currentNode->data;
 		gamesInPage++;
-		sprintf(buf,"%s", "");
+		buf = malloc(3000);
+//		strcpy(buf, "");
 		if (rom->alias!=NULL &&  (strlen(rom->alias)>2)) {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
 			strcpy(nameWithoutExtension,rom->alias);
 			if(stripGames) {
 				char* temp1 = getAliasWithoutAlternateNameOrParenthesis(rom->alias);
+				free(nameWithoutExtension);
+				nameWithoutExtension=malloc(strlen(temp1)+1);
 				strcpy(nameWithoutExtension,temp1);
 				free(temp1);
 			}
-			strcat(nameWithoutExtension,"\0");
+//			strcat(nameWithoutExtension,"\0");
 		} else {
 			nameWithoutExtension=malloc(strlen(rom->name)+1);
 			strcpy(nameWithoutExtension,rom->name);
-			strcat(nameWithoutExtension,"\0");
+//			strcat(nameWithoutExtension,"\0");
 			if(stripGames) {
-				stripGameName(nameWithoutExtension);
+				char* temp1 = strdup(nameWithoutExtension);
+				stripGameName(temp1);
+				free(nameWithoutExtension);
+				nameWithoutExtension=malloc(strlen(temp1)+1);
+				strcpy(nameWithoutExtension,temp1);
+				free(temp1);
 			} else {
-				char *tempGame=getNameWithoutPath(nameWithoutExtension);
-				char temp2[2000];
-				strcpy(temp2,getNameWithoutExtension(tempGame));
-				strcpy(nameWithoutExtension,temp2);
-				free(tempGame);
+				char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+				free(nameWithoutExtension);
+				nameWithoutExtension=getNameWithoutExtension(nameWithoutPath);
+				free(nameWithoutPath);
 			}
 		}
-		if (fullscreenMode) {
-			sprintf(buf,"%s", nameWithoutExtension);
-		} else {
-			sprintf(buf,"%s", nameWithoutExtension);
-		}
+		buf=strdup(nameWithoutExtension);
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
@@ -645,6 +659,7 @@ void drawGameList() {
 			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/baseFont);
 		}
 		free(nameWithoutExtension);
+		free(buf);
 		currentNode = currentNode->next;
 	}
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
@@ -676,6 +691,7 @@ void setupDecorations(struct Rom *rom) {
 		char *gameNumber=malloc(10);
 		snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
 		drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2XInCustom), calculateProportionalSizeOrDistance(text2YInCustom));
+		free(gameNumber);
 	}
 }
 
@@ -728,16 +744,25 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
 	if (shutDownEnabled) {
-		if (wannaReset) {
-			strcpy(options[SHUTDOWN_OPTION],"Reboot");
-		} else {
-			strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(options[SHUTDOWN_OPTION],"ShutDown");
+				break;
+			case 1:
+				strcpy(options[SHUTDOWN_OPTION],"Reboot");
+				break;
 		}
 	} else {
-		if (wannaReset) {
-			strcpy(options[SHUTDOWN_OPTION],"Reboot");
-		} else {
-			strcpy(options[SHUTDOWN_OPTION],"Quit");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(options[SHUTDOWN_OPTION],"Quit");
+				break;
+			case 1:
+				strcpy(options[SHUTDOWN_OPTION],"Reboot");
+				break;
+			case 2:
+				strcpy(options[SHUTDOWN_OPTION],"Shutdown");
+				break;
 		}
 	}
 
@@ -755,12 +780,27 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
 	#endif
 
-	if (shutDownEnabled&&!wannaReset) {
-		strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
-	} else if (wannaReset){
-		strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+	if (shutDownEnabled) {
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				break;
+			case 1:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				break;
+		}
 	} else {
-		strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
+		switch (selectedShutDownOption) {
+			case 0:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
+				break;
+			case 1:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				break;
+			case 2:
+				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				break;
+		}
 	}
 
 	if (stripGames) {
@@ -832,9 +872,9 @@ void drawSettingsScreen() {
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
 
-	char *options[11];
-	char *values[11];
-	char *hints[11];
+	char *options[10];
+	char *values[10];
+	char *hints[10];
 
 	setOptionsAndValues(options, values, hints);
 
@@ -869,9 +909,10 @@ void drawSettingsScreen() {
 	free(options[THEME_OPTION]);
 	free(options[SCREEN_TIMEOUT_OPTION]);
 	free(options[DEFAULT_OPTION]);
-	free(options[USB_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
+	free(options[USB_OPTION]);
 	free(options[ITEMS_PER_PAGE_OPTION]);
+	free(options[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(values[TIDY_ROMS_OPTION]);
 	free(values[FULL_SCREEN_FOOTER_OPTION]);
@@ -882,6 +923,7 @@ void drawSettingsScreen() {
 	free(values[SHUTDOWN_OPTION]);
 	free(values[USB_OPTION]);
 	free(values[ITEMS_PER_PAGE_OPTION]);
+	free(values[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(hints[TIDY_ROMS_OPTION]);
 	free(hints[FULL_SCREEN_FOOTER_OPTION]);
@@ -889,19 +931,22 @@ void drawSettingsScreen() {
 	free(hints[THEME_OPTION]);
 	free(hints[SCREEN_TIMEOUT_OPTION]);
 	free(hints[DEFAULT_OPTION]);
-	free(hints[USB_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
+	free(hints[USB_OPTION]);
 	free(hints[ITEMS_PER_PAGE_OPTION]);
+	free(hints[AUTO_HIDE_LOGOS_OPTION]);
 }
 
 void updateScreen(struct Rom *rom) {
 	//    pthread_mutex_lock(&lock);
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
 		if (!currentlyChoosing&&fullscreenMode) {
+			logMessage("INFO","Displaying game picture");
 			displayGamePicture(rom);
 		}
 		if (!currentlyChoosing&&currentMode==3&&!fullscreenMode) {
-			displayCenteredSurface(CURRENT_SECTION.background);
+			logMessage("INFO","Displaying system logo");
+			displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
 			int rgbColor[] = {menuSections[currentSectionNumber].bodyBackgroundColor[0],menuSections[currentSectionNumber].bodyBackgroundColor[1],menuSections[currentSectionNumber].bodyBackgroundColor[2]};
@@ -918,7 +963,6 @@ void updateScreen(struct Rom *rom) {
 			}
 			setupDecorations(rom);
 		}
-
 		if (!currentlyChoosing&&(currentMode==0||fullscreenMode==1)){
 			displayHeart();
 		}
@@ -973,9 +1017,11 @@ uint32_t hideFullScreenModeMenu() {
 }
 
 void resetPicModeHideMenuTimer() {
-	isPicModeMenuHidden=0;
-	clearPicModeHideMenuTimer();
-	picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hideFullScreenModeMenu, NULL);
+	if (menuVisibleInFullscreenMode) {
+		isPicModeMenuHidden=0;
+		clearPicModeHideMenuTimer();
+		picModeHideMenuTimer=SDL_AddTimer(0.6 * 1e3, hideFullScreenModeMenu, NULL);
+	}
 }
 
 void clearPicModeHideLogoTimer() {
@@ -990,9 +1036,12 @@ uint32_t hidePicModeLogo() {
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
 	currentlySectionSwitching=0;
-	if (CURRENT_SECTION.background == NULL) {
-		CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+	if (CURRENT_SECTION.backgroundSurface == NULL) {
+		logMessage("INFO","Loading system background");
+		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
+		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
 		updateScreen(CURRENT_SECTION.currentGameNode->data);

@@ -321,7 +321,7 @@ void clearTimer() {
 	timeoutTimer = NULL;
 }
 
-uint32_t suspend(uint32_t interval, void *param) {
+uint32_t suspend() {
 	if(timeoutValue!=0) {
 		if (!isUSBMode) {
 			clearTimer();

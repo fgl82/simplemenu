@@ -22,8 +22,6 @@ Vamastah/Szymor: https://github.com/szymor
 
 Pingflood: https://github.com/pingflood
 
-Rafa Vico: https://github.com/RafaVico
-
 # People who provided excellent suggestions
 Dancero643: https://www.youtube.com/channel/UCM_EKCNx0qwGC7CCOBjhyLg
 

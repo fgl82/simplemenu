@@ -18,7 +18,7 @@ if [ "$1" = "RG-350" ]; then
 elif [ "$1" = "PG2" ]; then
     make clean
     make PLATFORM=NPG
-else
+elif [ "$1" = "RFW" ]; then
     make clean
     make PLATFORM=RG-300
 fi
@@ -42,7 +42,7 @@ if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ]; then
     var="gcw0"
 fi
 
-if [ "$1" = "RG-300" ]]; then
+if [ "$1" = "RFW" ]]; then
     var="retrofw"
 fi
 
@@ -81,17 +81,17 @@ rm -f ${OPK_NAME} > log.txt
 mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports >> log.txt
 
 if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ]; then
-#    cat default.gcw0.desktop
+    cat default.gcw0.desktop >> log.txt
     rm -f default.gcw0.desktop >> log.txt
     while true; do
         read -p "Transfer?" yn
         case $yn in
-            [Yy]* ) scp SimpleMenu-${1}.opk root@10.1.1.2:/media/data/apps/SimpleMenu-${1}.opk; break;;
+            [Yy]* ) scp SimpleMenu-${1}.opk root@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac
     done
 else
-#    cat default.retrofw.desktop
+    cat default.retrofw.desktop >> log.txt
     rm -f default.retrofw.desktop >> log.txt
 fi

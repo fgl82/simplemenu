@@ -40,16 +40,16 @@ extern SDL_TimerID picModeHideLogoTimer;
 extern SDL_TimerID hideHeartTimer;
 
 typedef struct thread_picture {
-  SDL_Surface* display;
-  SDL_Surface *image;
-  int x;
-  int y;
-  int xx;
-  int yy;
-  double newwidth;
-  double newheight;
-  int transparent;
-  int smoothing;
+	  SDL_Surface* display;
+	  SDL_Surface *image;
+	  int x;
+	  int y;
+	  int xx;
+	  int yy;
+	  double newwidth;
+	  double newheight;
+	  int transparent;
+	  int smoothing;
 } threadPicture;
 
 /* QUANTITIES */
@@ -73,12 +73,11 @@ extern int DEFAULT_OPTION;
 extern int USB_OPTION;
 extern int SHUTDOWN_OPTION;
 extern int AUTO_HIDE_LOGOS_OPTION;
-extern int FONT_SIZE_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern char mediaFolder[1000];
 extern int stripGames;
 extern int shutDownEnabled;
-extern int wannaReset;
+extern int selectedShutDownOption;
 extern int footerVisibleInFullscreenMode;
 extern int menuVisibleInFullscreenMode;
 extern int autoHideLogos;
@@ -158,14 +157,12 @@ extern int artYInCustom;
 extern int artTextDistanceFromPictureInCustom;
 extern int artTextLineSeparationInCustom;
 extern int artTextFontSizeInCustom;
-//art_text_distance_from_picture_in_custom;
-//art_text_line_separation_in_custom;
-//art_text_font_size_in_custom;
 extern int systemWidthInCustom;
 extern int systemHeightInCustom;
 extern int systemXInCustom;
 extern int systemYInCustom;
 extern int fontSizeCustom;
+extern int colorfulFullscreenMenu;
 
 /* STRUCTS */
 struct OPKDesktopFile {
@@ -242,8 +239,9 @@ struct MenuSection {
 	int activeEmulatorDirectory;
 	char category[100];
 	char scaling[2];
-	char mask[1000];
-	SDL_Surface *background;
+	char background[1000];
+	SDL_Surface *backgroundSurface;
+	int hasDirs;
 //	char *fileList[50000];
 };
 

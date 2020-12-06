@@ -40,14 +40,20 @@ void InsertAtTail(struct Rom *rom) {
 	newNode->prev = temp;
 }
 
+
 void cleanListForSection(struct MenuSection *section) {
 	struct Node *current = NULL;
 	while ((current = section->head)) {
-		section->head = section->head->next;
-		free(current->data->alias);
+		if (!current) {
+			break;
+		}
+		if (current->data->alias!=NULL&&strlen(current->data->alias)>1) {
+			free(current->data->alias);
+		}
 		free(current->data->name);
 		free(current->data->directory);
 		free(current->data);
+		section->head = section->head->next;
 		free(current);
 	}
 }

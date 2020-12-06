@@ -1,7 +1,10 @@
 /simplemenu
-/SimpleMenu-PG2.opk
-/SimpleMenu-RG-350.opk
-/SimpleMenu-RG-300.opk
+/*.opk
 /invoker.dge
 /simplemenu-x86
 /invoker-x86.dge
+/log.txt
+./gmon.out
+/SimpleMenu-RG-350m.opk
+/SimpleMenu-RFW.opk
+/gmon.out

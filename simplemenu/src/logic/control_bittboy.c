@@ -7,14 +7,19 @@
 #include "../headers/logic.h"
 #include "../headers/screen.h"
 #include "../headers/system_logic.h"
+#include "../headers/utils.h"
 
 int performAction(struct Rom *rom) {
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
-			if (CURRENT_SECTION.background==NULL) {
-				CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+			if (CURRENT_SECTION.backgroundSurface==NULL) {
+				logMessage("INFO","Loading system background");
+				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
+				logMessage("INFO","Loading system picture");
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			return 1;
 		}
@@ -44,6 +49,15 @@ int performAction(struct Rom *rom) {
 			aKeyComboWasPressed=1;
 			return 1;
 		}
+
+		if (rom!=NULL&&keys[BTN_Y]) {
+			hideFullScreenModeMenu();
+			if(currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(1);
+				return(1);
+			}
+		}
+
 		if (keys[BTN_START]&&!currentlySectionSwitching) {
 			hotKeyPressed=0;
 			cycleFrequencies();
@@ -83,9 +97,13 @@ int performAction(struct Rom *rom) {
 			currentlySectionSwitching=1;
 			int advanced = advanceSection(1);
 			if(advanced) {
-				if (CURRENT_SECTION.background == NULL) {
-					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
+					logMessage("INFO","Loading system picture");
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
 				loadGameList(0);
 			}
@@ -100,9 +118,13 @@ int performAction(struct Rom *rom) {
 			currentlySectionSwitching=1;
 			int rewinded = rewindSection(1);
 			if(rewinded) {
-				if (CURRENT_SECTION.background == NULL) {
-					CURRENT_SECTION.background = IMG_Load(CURRENT_SECTION.mask);
+				if (CURRENT_SECTION.backgroundSurface == NULL) {
+					logMessage("INFO","Loading system background");
+					CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 					resizeSectionBackground(&CURRENT_SECTION);
+					logMessage("INFO","Loading system picture");
+					CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+					resizeSectionSystemPicture(&CURRENT_SECTION);
 				}
 				loadGameList(0);
 			}
@@ -206,8 +228,8 @@ int performAction(struct Rom *rom) {
 			return 0;
 		}
 		if (keys[BTN_START]) {
-//			cycleFrequencies();
 			chosenSetting=SHUTDOWN_OPTION;
+			selectedShutDownOption=0;
 			currentlyChoosing=3;
 			return 0;
 		}
