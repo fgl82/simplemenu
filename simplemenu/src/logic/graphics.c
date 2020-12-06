@@ -113,6 +113,7 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, char *buf, i
 	while(ptr!=NULL) {
 		wordCounter++;
 		wordsInBuf[wordCounter]=strdup(ptr);
+		printf("empieza %s\n", wordsInBuf[wordCounter]);
 		ptr = strtok(NULL," ");
 	}
 	free (bufCopy);
@@ -157,12 +158,14 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, char *buf, i
 		}
 		SDL_FreeSurface(msg);
 		for (int i=0;i<=wordCounter;i++) {
+			printf("%s\n", wordsInBuf[i]);
 			free(wordsInBuf[i]);
 		}
 
 	} else {
 		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		genericDrawTextOnScreen(font,x,y,buf,txtColor,align,NULL,0);
+		free(wordsInBuf[0]);
 		SDL_FreeSurface(msg);
 	}
 }
