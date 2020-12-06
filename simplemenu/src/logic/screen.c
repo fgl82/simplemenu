@@ -561,7 +561,7 @@ void drawGameList() {
 		}
 		struct Rom* rom = currentNode->data;
 		gamesInPage++;
-		buf = malloc(3000);
+//		buf = malloc(3000);
 //		strcpy(buf, "");
 		if (rom->alias!=NULL &&  (strlen(rom->alias)>2)) {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
