@@ -51,21 +51,25 @@ int calculateProportionalSizeOrDistance(int number) {
 	}
 }
 
-int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[], int shaded) {
+int genericDrawTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
+
 	SDL_Surface *msg;
-	char *bufCopy=malloc(300);
+	char *bufCopy=malloc(strlen(buf)+1);
 	strcpy(bufCopy,buf);
 
 	int len=strlen(buf);
 	int width = MAGIC_NUMBER;
 
-	int retW = 0;
-	TTF_SizeText(font, buf, &retW, NULL);
+	int retW = 1;
+
+	TTF_SizeText(font, (const char *) buf, &retW, NULL);
 
 	while (retW>width) {
 		bufCopy[len]='\0';
+		char *bufCopy1=strdup(bufCopy);
 		len--;
-		TTF_SizeText(font, bufCopy, &retW, NULL);
+		TTF_SizeText(font, (const char *) bufCopy1, &retW, NULL);
+		free(bufCopy1);
 	}
 	if (shaded) {
 		msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
@@ -96,35 +100,38 @@ int genericDrawTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], i
 	return 1;
 }
 
-void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int maxWidth, int lineSeparation) {
+void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align, int maxWidth, int lineSeparation) {
 	SDL_Surface *msg;
-	char *bufCopy=malloc(300);
+	char *bufCopy;
 	char *wordsInBuf[500];
 	char *ptr = NULL;
 
-	bufCopy=strdup(buf);
+	bufCopy = strdup(buf);
 
 	ptr = strtok(bufCopy," ");
 	int wordCounter = -1;
 	while(ptr!=NULL) {
 		wordCounter++;
-		wordsInBuf[wordCounter]=malloc(strlen(ptr)+1);
-		strcpy(wordsInBuf[wordCounter],ptr);
+		wordsInBuf[wordCounter]=strdup(ptr);
 		ptr = strtok(NULL," ");
 	}
-
+	free (bufCopy);
 	int printCounter = 0;
 	char *test=NULL;
 	if(wordCounter>0) {
 		while(printCounter<wordCounter) {
 			test=malloc(500);
 			strcpy(test,wordsInBuf[printCounter]);
+			if (printCounter>0) {
+				SDL_FreeSurface(msg);
+			}
 			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 			while (msg->w<=maxWidth&&printCounter<wordCounter) {
 				printCounter++;
 				if (strcmp(wordsInBuf[printCounter],"-")!=0) {
 					strcat(test," ");
 					strcat(test,wordsInBuf[printCounter]);
+					SDL_FreeSurface(msg);
 					msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 				} else {
 					printCounter++;
@@ -148,29 +155,35 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, const char b
 				genericDrawTextOnScreen(font,x,y+calculateProportionalSizeOrDistance(lineSeparation),wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
+		SDL_FreeSurface(msg);
+		for (int i=0;i<=wordCounter;i++) {
+			free(wordsInBuf[i]);
+		}
+
 	} else {
 		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		genericDrawTextOnScreen(font,x,y,buf,txtColor,align,NULL,0);
+		SDL_FreeSurface(msg);
 	}
-
 }
 
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, const char buf[300], int txtColor[], int align, int backgroundColor[]) {
+int drawShadedTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[]) {
 	return genericDrawTextOnScreen(font, x, y, buf, txtColor, align, backgroundColor, 1);
 }
 
-int drawTextOnScreen(TTF_Font *pfont, int x, int y, const char buf[300], int txtColor[], int align) {
+int drawTextOnScreen(TTF_Font *pfont, int x, int y, char *buf, int txtColor[], int align) {
 	if (pfont==NULL) {
+		initializeFonts();
 		pfont = font;
 	}
 	return genericDrawTextOnScreen(pfont, x, y, buf, txtColor, align, NULL, 0);
 }
 
-void drawCustomGameNameUnderPictureOnScreen(const char buf[300], int x, int y, int maxWidth) {
+void drawCustomGameNameUnderPictureOnScreen(char *buf, int x, int y, int maxWidth) {
 	genericDrawMultiLineTextOnScreen(miniFont, x, y, buf, CURRENT_SECTION.bodyTextColor, VAlignBottom|HAlignCenter, maxWidth, artTextLineSeparationInCustom);
 }
 
-void drawCustomGameNumber(const char buf[300], int x, int y) {
+void drawCustomGameNumber(char *buf, int x, int y) {
 	int hAlign = HAlignLeft;
 	if(text2AlignmentInCustom==1) {
 		hAlign = HAlignCenter;
@@ -397,7 +410,7 @@ void drawImgFallbackTextOnScreen(char *fallBackText) {
 	}
 }
 
-void drawTextOnFooter(const char text[2000]) {
+void drawTextOnFooter(char *text) {
 	switch (currentMode) {
 	case 0:
 		drawTextOnScreen(footerFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(footerPositionInSimple), text, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | HAlignCenter);
@@ -411,11 +424,11 @@ void drawTextOnFooter(const char text[2000]) {
 	}
 }
 
-void drawTextOnFooterWithColor(const char text[64], int txtColor[]) {
+void drawTextOnFooterWithColor(char *text, int txtColor[]) {
 	drawTextOnScreen(footerFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(9), text, txtColor, VAlignMiddle| HAlignCenter);
 }
 
-void drawTextOnSettingsFooterWithColor(const char text[64], int txtColor[]) {
+void drawTextOnSettingsFooterWithColor(char *text, int txtColor[]) {
 	drawTextOnScreen(settingsFooterFont, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(footerPositionInSimple), text, txtColor, VAlignMiddle| HAlignCenter);
 }
 
@@ -468,7 +481,7 @@ void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	}
 }
 
-void drawShutDownText(const char text[64]) {
+void drawShutDownText(char *text) {
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(BIGFont, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
 }
@@ -557,10 +570,8 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 	double zoomx = newwidth  / (float)image->w;
 	double zoomy = newheight / (float)image->h;
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-//	printf("%d,%d\n",(int)newwidth,(int)(image->w/2));
 	SDL_Surface* sized = NULL;
 	if (((int)newwidth<(int)(image->w/2))&&(int)(image->w/2)%(int)newwidth==0) {
-//		printf("2\n");
 		zoomx = (float)image->w/newwidth;
 		zoomy = (float)image->h/newheight;
 		sized = shrinkSurface(image, zoomx, zoomy);
@@ -902,10 +913,8 @@ void* thread_func(void *picture) {
 	double zoomx = ((threadPicture*)picture)->newwidth  / (float)((threadPicture*)picture)->image->w;
 	double zoomy = ((threadPicture*)picture)->newheight / (float)((threadPicture*)picture)->image->h;
 	// This function assumes no smoothing, so that any colorkeys wont bleed.
-//	printf("%d,%d\n",(int)((threadPicture*)picture)->newwidth,(int)(image->w/2));
 	SDL_Surface* sized = NULL;
 	if (((int)((threadPicture*)picture)->newwidth<(int)(((threadPicture*)picture)->image->w/2))&&((int)(((threadPicture*)picture)->image->w/2)%(int)((threadPicture*)picture)->newwidth)==0) {
-//		printf("2\n");
 		zoomx = (float)((threadPicture*)picture)->image->w/((threadPicture*)picture)->newwidth;
 		zoomy = (float)((threadPicture*)picture)->image->h/((threadPicture*)picture)->newheight;
 		sized = shrinkSurface(((threadPicture*)picture)->image, zoomx, zoomy);

@@ -44,6 +44,9 @@ void InsertAtTail(struct Rom *rom) {
 void cleanListForSection(struct MenuSection *section) {
 	struct Node *current = NULL;
 	while ((current = section->head)) {
+		if (!current) {
+			break;
+		}
 		if (current->data->alias!=NULL&&strlen(current->data->alias)>1) {
 			free(current->data->alias);
 		}

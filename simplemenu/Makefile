@@ -25,7 +25,7 @@ else ifeq ($(PLATFORM), RG-350)
 else ifeq ($(PLATFORM), NPG)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_NPG -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -std=gnu99
+	CFLAGS = -DTARGET_NPG -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lpthread -lz -lbz2	
 else
 	TARGET = simplemenu-x86
@@ -39,7 +39,7 @@ endif
 CFLAGS +=  -I.
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
-#DEBUG=YES
+DEBUG=YES
 ifeq ($(DEBUG), YES)
 	CFLAGS +=  -DDEBUG -g3
 else

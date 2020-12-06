@@ -182,7 +182,11 @@ char *getFileNameOrAlias(struct Rom *rom) {
 	}
 	if(strcmp(displayName, rom->name)==0) {
 //				if(stripGames) {
-		stripGameName(displayName);
+		char *dup = strdup(displayName);
+		free(displayName);
+		stripGameName(dup);
+		displayName = strdup(dup);
+		free(dup);
 //				} else {
 //					char tmp[300];
 //					strcpy(tmp, getNameWithoutPath(displayName));
@@ -616,8 +620,7 @@ int recursivelyScanDirectory (char *directory, char* files[], int i) {
 		} else {
 			char path[PATH_MAX];
 			snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-			files[i]=malloc(sizeof(path));
-			strcpy(files[i],path);
+			files[i]=strdup(path);
 			i++;
 		}
 	}
@@ -840,9 +843,12 @@ void loadGameList(int refresh) {
 		int game = -1;
 		int dirCounter=0;
 		char *dirs[10];
-		char* ptr=NULL;
-		char *dirsCopy=malloc(strlen(CURRENT_SECTION.filesDirectories)+1);
-		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+		char *ptr=NULL;
+//		char *dirsCopy=malloc(strlen(CURRENT_SECTION.filesDirectories)+1);
+//		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
+
+//		char *dirsCopy=strdup(CURRENT_SECTION.filesDirectories);
+
 		char sectionCacheName[PATH_MAX];
 		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 
@@ -869,6 +875,7 @@ void loadGameList(int refresh) {
 				size = strlen(ptr)+1;
 				rom->alias=malloc(size);
 				if (strcmp(ptr,"(null)")==0) {
+					free(rom->alias);
 					rom->alias = "\0";
 				} else {
 					memcpy(rom->alias,ptr,size);
@@ -876,13 +883,13 @@ void loadGameList(int refresh) {
 
 		        ptr = strtok(NULL,";");
 		        size = strlen(ptr)+1;
-				rom->directory=malloc(size);
-				memcpy(rom->directory,ptr,size);
+				rom->directory=strdup(ptr);
+//				memcpy(rom->directory,ptr,size);
 
 				ptr = strtok(NULL,";");
 				size = strlen(ptr)+1;
-				rom->name=malloc(size);
-				memcpy(rom->name,ptr,(size));
+				rom->name=strdup(ptr);
+//				memcpy(rom->name,ptr,(size));
 				rom->name[size-2] = '\0';
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
@@ -907,15 +914,14 @@ void loadGameList(int refresh) {
 		if (fp!=NULL) {
 			fclose(fp);
 		}
-		ptr = strtok(dirsCopy, ",");
+		ptr = strtok(CURRENT_SECTION.filesDirectories, ",");
 		loading=1;
 		while (ptr!=NULL) {
-			dirs[dirCounter]=malloc(strlen(ptr)+1);
-			strcpy(dirs[dirCounter],ptr);
+			dirs[dirCounter]=strdup(ptr);
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
-		free(dirsCopy);
+//		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
 			int n = 0;
 			logMessage("INFO","Scanning directory");

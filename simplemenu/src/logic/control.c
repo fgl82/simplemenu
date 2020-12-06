@@ -470,6 +470,7 @@ void markAsFavorite(struct Rom *rom) {
 				strcpy(favorites[favoritesSize].name, getGameName(rom->name));
 			} else {
 				strcpy(favorites[favoritesSize].name, rom->name);
+				printf("%s\n", favorites[favoritesSize].name);
 			}
 			if(rom->alias!=NULL&&strlen(rom->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, rom->alias);

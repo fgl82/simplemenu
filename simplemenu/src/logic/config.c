@@ -163,10 +163,13 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 
 void loadTheme(char *theme) {
 	strcpy(pathToThemeConfigFilePlusFileName,theme);
-	char *temp = getRomPath(theme);
+	char *romPath = getRomPath(theme);
+	char *temp = malloc(3000);
+	strcpy(temp,romPath);
 	strcat(temp,"/");
 	strcpy(pathToThemeConfigFile,temp);
 	free(temp);
+	free(romPath);
 	ini_t *themeConfig = ini_load(theme);
 	const char *value;
 	for (int i=0;i<menuSectionCounter;i++) {
@@ -611,8 +614,9 @@ void loadConfig() {
 		char *temp = getNameWithoutPath((files[i]));
 		char *temp1 = getNameWithoutExtension(temp);
 
+		char *romPath = getRomPath(files[i]);
 		char *temp3 = malloc(3000);
-		strcpy(temp3, getRomPath(files[i]));
+		strcpy(temp3,romPath);
 		strcat(temp3,"/");
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
@@ -626,8 +630,15 @@ void loadConfig() {
 		free(temp);
 		free(temp1);
 		free(temp2);
+		free(temp3);
+		free(romPath);
 		sectionGroupCounter++;
 	}
+
+	for (int i=0;i<n;i++){
+		free(files[i]);
+	}
+
 	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
 	ini_free(config);
 }
@@ -928,13 +939,12 @@ int loadSections(char *file) {
 	initializeFonts();
 
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
-	menuSections[menuSectionCounter].emulatorDirectories[0]=malloc(strlen("/some/folder/")+1);
-	strcpy(menuSections[menuSectionCounter].emulatorDirectories[0],"/some/folder/");
+	menuSections[menuSectionCounter].emulatorDirectories[0]=strdup("/some/folder/");
 //	strcat(menuSections[menuSectionCounter].emulatorDirectories[0],"\0");
 	menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 	menuSections[menuSectionCounter].executables[0]=NULL;
-	menuSections[menuSectionCounter].executables[0]=malloc(strlen("favs")+1);
-	strcpy(menuSections[menuSectionCounter].executables[0],"favs");
+//	menuSections[menuSectionCounter].executables[0]=strdup("favs");
+//	strcpy(menuSections[menuSectionCounter].executables[0],"favs");
 	menuSections[menuSectionCounter].activeExecutable=0;
 	strcpy(menuSections[menuSectionCounter].filesDirectories,"/some/folder");
 	strcpy(menuSections[menuSectionCounter].fileExtensions,".zzz");
@@ -968,7 +978,7 @@ int countSections(char *file) {
 
 	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char *consoles1 = strdup(consoles);
-	char *sectionNames[10000];
+//	char *sectionNames[10000];
 	const char *value;
 	int sectionCounter=0;
 
@@ -977,12 +987,13 @@ int countSections(char *file) {
 	while(tokenizedSectionName!=NULL) {
 		value = ini_get(config, tokenizedSectionName, "execs");
 		if(value!=NULL) {
-			sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
-			strcpy(sectionNames[sectionCounter], tokenizedSectionName);
+//			sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
+//			strcpy(sectionNames[sectionCounter], tokenizedSectionName);
 			sectionCounter++;
 		}
 		tokenizedSectionName=strtok(NULL,",");
 	}
+	free(consoles1);
 	ini_free(config);
 	return sectionCounter;
 }

@@ -16,8 +16,6 @@
 #include "../headers/utils.h"
 
 
-char buf[300];
-
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
 //		if(SCREEN_WIDTH==320&&SCREEN_HEIGHT==240) {
@@ -555,6 +553,7 @@ void drawGameList() {
 //	}
 	char *nameWithoutExtension;
 	struct Node* currentNode;
+	char *buf;
 	currentNode = GetNthNode(ITEMS_PER_PAGE*CURRENT_SECTION.currentPage);
 	for (int i=0;i<ITEMS_PER_PAGE;i++) {
 		if (currentNode==NULL) {
@@ -562,35 +561,38 @@ void drawGameList() {
 		}
 		struct Rom* rom = currentNode->data;
 		gamesInPage++;
-		sprintf(buf,"%s", "");
+		buf = malloc(3000);
+//		strcpy(buf, "");
 		if (rom->alias!=NULL &&  (strlen(rom->alias)>2)) {
 			nameWithoutExtension=malloc(strlen(rom->alias)+1);
 			strcpy(nameWithoutExtension,rom->alias);
 			if(stripGames) {
 				char* temp1 = getAliasWithoutAlternateNameOrParenthesis(rom->alias);
+				free(nameWithoutExtension);
+				nameWithoutExtension=malloc(strlen(temp1)+1);
 				strcpy(nameWithoutExtension,temp1);
 				free(temp1);
 			}
-			strcat(nameWithoutExtension,"\0");
+//			strcat(nameWithoutExtension,"\0");
 		} else {
 			nameWithoutExtension=malloc(strlen(rom->name)+1);
 			strcpy(nameWithoutExtension,rom->name);
-			strcat(nameWithoutExtension,"\0");
+//			strcat(nameWithoutExtension,"\0");
 			if(stripGames) {
-				stripGameName(nameWithoutExtension);
+				char* temp1 = strdup(nameWithoutExtension);
+				stripGameName(temp1);
+				free(nameWithoutExtension);
+				nameWithoutExtension=malloc(strlen(temp1)+1);
+				strcpy(nameWithoutExtension,temp1);
+				free(temp1);
 			} else {
-				char *tempGame=getNameWithoutPath(nameWithoutExtension);
-				char temp2[2000];
-				strcpy(temp2,getNameWithoutExtension(tempGame));
-				strcpy(nameWithoutExtension,temp2);
-				free(tempGame);
+				char *nameWithoutPath=getNameWithoutPath(nameWithoutExtension);
+				free(nameWithoutExtension);
+				nameWithoutExtension=getNameWithoutExtension(nameWithoutPath);
+				free(nameWithoutPath);
 			}
 		}
-		if (fullscreenMode) {
-			sprintf(buf,"%s", nameWithoutExtension);
-		} else {
-			sprintf(buf,"%s", nameWithoutExtension);
-		}
+		buf=strdup(nameWithoutExtension);
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
@@ -657,6 +659,7 @@ void drawGameList() {
 			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/baseFont);
 		}
 		free(nameWithoutExtension);
+		free(buf);
 		currentNode = currentNode->next;
 	}
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
@@ -688,6 +691,7 @@ void setupDecorations(struct Rom *rom) {
 		char *gameNumber=malloc(10);
 		snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
 		drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2XInCustom), calculateProportionalSizeOrDistance(text2YInCustom));
+		free(gameNumber);
 	}
 }
 
