@@ -163,6 +163,7 @@ extern int systemXInCustom;
 extern int systemYInCustom;
 extern int fontSizeCustom;
 extern int colorfulFullscreenMenu;
+extern int displaySectionGroupName;
 
 /* STRUCTS */
 struct OPKDesktopFile {
@@ -288,6 +289,7 @@ extern int hdmiEnabled;
 extern time_t currRawtime;
 extern struct tm * currTime;
 extern int lastSec;
+extern int lastMin;
 extern int lastChargeLevel;
 extern pthread_t clockThread;
 extern pthread_mutex_t lock;

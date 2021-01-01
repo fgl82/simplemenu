@@ -18,4 +18,5 @@ void clearPicModeHideMenuTimer();
 void clearPicModeHideLogoTimer();
 void clearHideHeartTimer();
 void resetHideHeartTimer();
+void drawSettingsScreen();
 #endif

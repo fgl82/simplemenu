@@ -167,7 +167,7 @@ int rewindSection(int showLogo) {
 
 void launchGame(struct Rom *rom) {
 	FILE *file=NULL;
-	char error[3000];
+	char *error=malloc(3000);
 	char tempExec[3000];
 
 	char tempExecDirPlusFileName[3000];
@@ -266,13 +266,10 @@ void advancePage(struct Rom *rom) {
 			CURRENT_SECTION.currentGameInPage=0;
 		}
 	}
-//	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
-//	showCurrentGames(CURRENT_SECTION.realCurrentGameNumber,CURRENT_SECTION.realCurrentGameNumber+10);
 }
 
 void rewindPage(struct Rom *rom) {
-//	struct Node* currentGameNode = getCurrentNode();
 	if (rom==NULL||rom->name==NULL) {
 		return;
 	}
@@ -331,7 +328,6 @@ void rewindPage(struct Rom *rom) {
 			scrollUp();
 		}
 	}
-//	gamesInPage=countGamesInPage();
 	CURRENT_SECTION.realCurrentGameNumber=CURRENT_GAME_NUMBER;
 }
 
@@ -375,7 +371,7 @@ void showOrHideFavorites() {
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		return;
 	}
-	if(strlen(favorites[0].name)<2) {
+	if(strlen(favorites[0].name)<1) {
 		return;
 	}
 	favoritesSectionSelected=1;
@@ -495,6 +491,7 @@ void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
 		currentlyChoosing=3;
+		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
 	if (keys[BTN_UP]||keys[BTN_L1]) {
@@ -801,6 +798,7 @@ void performSettingsChoosingAction() {
 	}
 	#endif
 	else if (keys[BTN_START]) {
+		pthread_cancel(clockThread);
 		#ifdef TARGET_RG350
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
@@ -833,7 +831,6 @@ void performSettingsChoosingAction() {
 		} else {
 			loadFavoritesSectionGameList(1);
 		}
-//			drawGameList();
 	}
 }
 

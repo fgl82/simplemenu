@@ -62,27 +62,6 @@ char *search(char* arr[], int n, char *x)
 	return "Not Found";
 }
 
-void wowser(){
-//	if(stripGames) {
-//		while (nameTakenFromAlias[charNumber]) {
-//			if (nameTakenFromAlias[charNumber]=='('||nameTakenFromAlias[charNumber]=='[') {
-//				nameTakenFromAlias[charNumber-1]='\0';
-//				break;
-//			}
-//			charNumber++;
-//		}
-//		charNumber=0;
-//		while (nameTakenFromAlias[charNumber]) {
-//			if (nameTakenFromAlias[charNumber]=='/') {
-//				nameTakenFromAlias[charNumber-1]='\0';
-//				break;
-//			}
-//			charNumber++;
-//		}
-//		free(strippedNameWithoutExtension);
-//	}
-}
-
 char *getRomRealName(char *romName) {
 	char *nameTakenFromAlias;
 	char* strippedNameWithoutExtension = malloc(strlen(romName)+1);
@@ -155,14 +134,12 @@ char *getAlias(char *romName) {
 		if(currentSectionNumber==favoritesSectionNumber) {
 			struct Favorite favorite = findFavorite(alias);
 			if (strlen(favorite.alias)<2) {
-//				stripGameName(alias);
 			}
 		} else {
 			char *ext = getExtension(romName);
 			if (strcmp(ext,".opk")==0) {
 				strcpy (alias, romName);
 			}
-//			stripGameName(alias);
 		}
 	}
 	return alias;
@@ -181,18 +158,11 @@ char *getFileNameOrAlias(struct Rom *rom) {
 		strcpy(displayName, rom->name);
 	}
 	if(strcmp(displayName, rom->name)==0) {
-//				if(stripGames) {
 		char *dup = strdup(displayName);
 		free(displayName);
 		stripGameName(dup);
 		displayName = strdup(dup);
 		free(dup);
-//				} else {
-//					char tmp[300];
-//					strcpy(tmp, getNameWithoutPath(displayName));
-//					strcpy(displayName, tmp);
-//					printf("returning %s\n",displayName);
-//				}
 	}
 	return displayName;
 }
@@ -202,14 +172,6 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 	errorMessage=pErrorMessage;
 	thereIsACriticalError=pThereIsACriticalError;
 }
-
-//char *getCurrentGameName() {
-//	struct Rom* currentGame = GetNthElement(CURRENT_GAME_NUMBER);
-//	char * name = malloc(strlen(currentGame->name)+1);
-//	strcpy(name, currentGame->name);
-//	stripGameName(name);
-//	return name;
-//}
 
 void quit() {
 	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
@@ -350,7 +312,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	strcat(exec, "\"");
 	logMessage("INFO",exec);
 	freeResources();
-//	printf("%s\n",exec);
 	int ret = system(exec);
 	if(ret == -1) {
 		logMessage("ERROR","Error executing emulator");
@@ -429,24 +390,11 @@ struct Node *merge(struct Node *first, struct Node *second)
 		strcpy(s2Alias,second->data->name);
 	}
 
-//	if(strstr(first->data->name,"pwr")!=NULL) {
-//		printf("2- %s\n",s1Alias);
-//	}
 	char * noPathS1Alias=strdup(s1Alias);
 	char * noPathS2Alias=strdup(s2Alias);
-//	printf("%s vs %s\n",noPathS1Alias, noPathS2Alias);
-//	stripGameName(noPathS1Alias);
-//	stripGameName(noPathS2Alias);
 
 	for(char *p = noPathS1Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
 	for(char *p = noPathS2Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
-
-//	for(unsigned int i=0;i<strlen(noPathS2Alias);i++) {
-//		noPathS2Alias[i]=tolower(noPathS2Alias[i]);
-//	}
-//	for(unsigned int i=0;i<strlen(noPathS1Alias);i++) {
-//		noPathS1Alias[i]=tolower(noPathS1Alias[i]);
-//	}
 
 	if(strlen(CURRENT_SECTION.aliasFileName)<2) {
 		stripGameName(noPathS1Alias);
@@ -519,40 +467,6 @@ void loadFavoritesSectionGameList() {
 		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
 	}
 }
-
-//int scanDirectoryDeprecated(char *directory, char* files[], int i)
-//{
-//    struct dirent myfile;
-//    struct dirent *result;
-//    int rc;
-//    DIR *mydir = opendir(directory);
-//	if (mydir==NULL) {
-//		return 0;
-//	}
-//	char * d_name;
-//    while ((rc = readdir_r(mydir, &myfile, &result)) == 0 && result != NULL ) {
-//    	d_name = result->d_name;
-//		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
-//			if (result->d_type & DT_DIR) {
-//				char path[PATH_MAX];
-//				char * e = strrchr(d_name, '/');
-//				if (e==NULL) {
-//					strcat(d_name, "/");
-//				}
-//				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-//				i=scanDirectory1(path, files, i);
-//			} else {
-//				char path[PATH_MAX];
-//				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-//				files[i]=malloc(sizeof(path)+1);
-//				strcpy(files[i],path);
-//				i++;
-//			}
-//		}
-//    }
-//    closedir(mydir);
-//    return i;
-//}
 
 int scanDirectory(char *directory, char* files[], int i)
 {
@@ -753,44 +667,6 @@ int theSectionHasGames(struct MenuSection *section) {
 	return !value;
 }
 
-//void setBasicGameList() {
-//	char *files[MAX_GAMES_IN_SECTION];
-//	int dirCounter;
-//	char *dirs[10];
-//	char* ptr;
-//	char dirsCopy[1000];
-//	strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
-//	ptr = strtok(dirsCopy, ",");
-//	loading=1;
-//	while (ptr!=NULL) {
-//		dirs[dirCounter]=malloc(strlen(ptr)+1);
-//		strcpy(dirs[dirCounter],ptr);
-//		ptr = strtok(NULL, ",");
-//		dirCounter++;
-//	}
-//	for(int k=0;k<dirCounter;k++) {
-//		int n = recursivelyScanDirectory(dirs[k], files, 0);
-//		qsort(files, n, sizeof(char *), sortStringArray);
-//		for (int i=0;i<n;i++){
-//			char *ext = getExtension(files[i]);
-//			if (ext&&strcmp((files[i]),"..")!=0 &&
-//					strcmp((files[i]),".")!=0 &&
-//					isExtensionValid(ext,CURRENT_SECTION.fileExtensions)){
-//				CURRENT_SECTION.fileList[i]=malloc(1000);
-//				strcpy(CURRENT_SECTION.fileList[i],files[i]);
-//				CURRENT_SECTION.gameCount=+1;
-//			}
-//		}
-//		for (int i=0;i<n;i++){
-//			free(files[i]);
-//		}
-//	}
-//	for (int i=0;i<dirCounter;i++){
-//		free (dirs[i]);
-//	}
-//}
-
-
 char * readline(FILE *fp, char *buffer)
 {
     int ch;
@@ -844,10 +720,6 @@ void loadGameList(int refresh) {
 		int dirCounter=0;
 		char *dirs[10];
 		char *ptr=NULL;
-//		char *dirsCopy=malloc(strlen(CURRENT_SECTION.filesDirectories)+1);
-//		strcpy(dirsCopy,CURRENT_SECTION.filesDirectories);
-
-//		char *dirsCopy=strdup(CURRENT_SECTION.filesDirectories);
 
 		char sectionCacheName[PATH_MAX];
 		snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
@@ -861,8 +733,6 @@ void loadGameList(int refresh) {
 		}
 		fp = fopen(sectionCacheName,"r");
 		if (fp!=NULL) {
-//		    clock_t t;
-//		    t = clock();
 			logMessage("INFO","Using cache file");
 		    char currentline[2000];
 		    while (fgets(currentline, sizeof(currentline), fp) != NULL) {
@@ -884,12 +754,10 @@ void loadGameList(int refresh) {
 		        ptr = strtok(NULL,";");
 		        size = strlen(ptr)+1;
 				rom->directory=strdup(ptr);
-//				memcpy(rom->directory,ptr,size);
 
 				ptr = strtok(NULL,";");
 				size = strlen(ptr)+1;
 				rom->name=strdup(ptr);
-//				memcpy(rom->name,ptr,(size));
 				rom->name[size-2] = '\0';
 				if (game==ITEMS_PER_PAGE) {
 					CURRENT_SECTION.totalPages++;
@@ -900,15 +768,11 @@ void loadGameList(int refresh) {
 				CURRENT_SECTION.gameCount++;
 		    }
 		    logMessage("INFO","Finished reading cache");
-//		    CURRENT_SECTION.head = GetNthNode(0);
 			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			if (fp!=NULL) {
 				fclose(fp);
 			}
-//		    t = clock() - t;
-//		    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
-//		    printf("fun() took %f seconds to execute \n", time_taken);
 			return;
 		}
 		if (fp!=NULL) {
@@ -921,7 +785,6 @@ void loadGameList(int refresh) {
 			ptr = strtok(NULL, ",");
 			dirCounter++;
 		}
-//		free(dirsCopy);
 		for(int k=0;k<dirCounter;k++) {
 			int n = 0;
 			logMessage("INFO","Scanning directory");
@@ -1066,10 +929,6 @@ void loadGameList(int refresh) {
 	loading=0;
 }
 
-//void loadGameList1 (int refresh) {
-//	pthread_create(&myThread, NULL, loadGameList1, &refresh); // no parentheses here
-//}
-
 int countGamesInPage() {
 	int gamesCounter=0;
 	struct Node *node;
@@ -1091,15 +950,6 @@ int countGamesInPage() {
 	}
 	return gamesCounter;
 }
-
-//int getFirstNonHiddenSection(int sectionCount) {
-//	for (int i=0;i<sectionCount;i++) {
-//		if (menuSections[i].hidden==0) {
-//			return i;
-//		}
-//	}
-//	return 0;
-//}
 
 void selectRandomGame() {
 	int game = rand() % CURRENT_SECTION.gameCount;

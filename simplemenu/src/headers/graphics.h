@@ -65,4 +65,5 @@ void resizeSectionSystemLogo(struct MenuSection *section);
 void drawCustomGameNumber(char *buf, int x, int y);
 void displaySurface(SDL_Surface *surface, int x, int y);
 void resizeSectionSystemPicture(struct MenuSection *section);
+void *updateClock(void *x_void_ptr);
 #endif

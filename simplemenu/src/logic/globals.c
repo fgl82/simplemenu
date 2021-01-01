@@ -163,6 +163,7 @@ typedef struct thread_picture {
  int systemYInCustom;
  int fontSizeCustom;
  int colorfulFullscreenMenu;
+ int displaySectionGroupName;
 
 /* STRUCTS */
 struct OPKDesktopFile {
@@ -242,7 +243,6 @@ struct MenuSection {
 	char background[1000];
 	SDL_Surface *backgroundSurface;
 	int hasDirs;
-//	char *fileList[50000];
 };
 
  struct SectionGroup sectionGroups[100];
@@ -252,7 +252,6 @@ struct MenuSection {
 
 /* CONTROL */
  uint8_t *keys;
-// SDL_Joystick *joystick;
  int BTN_Y;
  int BTN_B;
  int BTN_A;
@@ -288,6 +287,7 @@ struct MenuSection {
  time_t currRawtime;
  struct tm * currTime;
  int lastSec;
+ int lastMin;
  int lastChargeLevel;
  pthread_t clockThread;
  pthread_mutex_t lock;

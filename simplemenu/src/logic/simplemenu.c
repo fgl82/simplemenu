@@ -45,11 +45,6 @@ void resetFrameBuffer () {
 
 void critical_error_handler()
 {
-//    char command[300];
-//	char pathToLastStateFilePlusFileName[300];
-//	snprintf(pathToLastStateFilePlusFileName,sizeof(pathToLastStateFilePlusFileName),"%s/.simplemenu/last_state.sav",getenv("HOME"));
-//    snprintf(command,sizeof(command),"rm %s",pathToLastStateFilePlusFileName);
-//    system(command)
     logMessage("ERROR","Nice, a critical error!!!");
     closeLogFile();
     exit(0);
@@ -61,35 +56,7 @@ void sig_term_handler()
 	running=0;
 }
 
-
-//void *checkClock(void *x_void_ptr) {
-//	while (1) {
-//		currRawtime = time (NULL);
-//		currTime = localtime(&currRawtime);
-//		if(currTime->tm_sec>lastSec) {
-//			lastSec=currTime->tm_sec;
-//			if(!isSuspended&&!leftOrRightPressed&&!isUSBMode) {
-//				printf("iupdate last\n");
-//				lastChargeLevel = getBatteryLevel();
-//				updateScreen();
-//			}
-//		}
-//		free (currTime);
-//	}
-//	printf("pepe\n");
-//}
-
 int main() {
-	//	printf("%s\n",getAliasWithoutAlternateName("pepe en u. 12/12]"));
-	//	exit(0);
-	//	testSectionLoad();
-	//	exit(0);
-	//	lastChargeLevel = getBatteryLevel();
-	//	currRawtime = time(NULL);
-	//	currTime = localtime(&currRawtime);
-	//	lastSec=currTime->tm_sec;
-	//	pthread_mutex_init(&lock, NULL);
-	//	pthread_create(&clockThread, NULL, checkClock,NULL);
 	initializeGlobals();
 	logMessage("INFO","Initialized Globals");
     struct sigaction sa;
@@ -189,9 +156,9 @@ int main() {
 	}
 	enableKeyRepeat();
 	while (running) {
-//		if (myThread!=NULL) {
-//			pthread_join(myThread,NULL);
-//		}
+		if (currentlyChoosing==3) {
+			updateScreen(NULL);
+		}
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
 				if (!isSuspended) {
@@ -245,12 +212,6 @@ int main() {
 					aKeyComboWasPressed=0;
 				}
 				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
-//					if (stripGames) {
-//						stripGames=0;
-//					} else {
-//						stripGames=1;
-//					}
-//					currentlyChoosing=3;
 					if (CURRENT_SECTION.currentGameNode!=NULL) {
 						updateScreen(CURRENT_SECTION.currentGameNode->data);
 					} else {
@@ -260,6 +221,5 @@ int main() {
 			}
 		}
 	}
-//	PrintDoublyLinkedRomList(CURRENT_SECTION.head);
 	quit();
 }
