@@ -21,13 +21,11 @@ int isLeftOrRight() {
 int isUp() {
 	const int JOYSTICK_DEAD_ZONE = 0;
 	return (event.jaxis.axis == 1&&event.jaxis.value < JOYSTICK_DEAD_ZONE);
-	//return (event.jhat.value & SDL_HAT_UP);
 }
 
 int isDown() {
 	const int JOYSTICK_DEAD_ZONE = 0;
 	return (event.jaxis.axis == 1&&event.jaxis.value > JOYSTICK_DEAD_ZONE);
-	//return (event.jhat.value & SDL_HAT_UP);
 }
 
 
@@ -58,12 +56,6 @@ void enableKeyRepeat() {
 
 void initializeKeys() {
 	keys = SDL_GetKeyState(NULL);
-//	SDL_JoystickEventState(SDL_ENABLE);
-//	for (int i = 0; i < SDL_NumJoysticks(); i++)
-//	{
-//		if (strcmp(SDL_JoystickName(i), "linkdev device (Analog 2-axis 8-button 2-hat)") == 0)
-//			joystick = SDL_JoystickOpen(i);
-//	}
 }
 
 void pumpEvents() {

@@ -229,6 +229,13 @@ void loadTheme(char *theme) {
 			colorfulFullscreenMenu = atoi(value);
 		}
 
+		value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
+		if (value == NULL) {
+			displaySectionGroupName = 0;
+		} else {
+			displaySectionGroupName = atoi(value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
 		gameListPositionInSimple = atoi(value);
 
@@ -495,7 +502,6 @@ void saveFavorites() {
 			if(linesWritten>0) {
 				fprintf(fp,"\n");
 			}
-//			favorite=findFavorite(favorite.alias);
 			fprintf(fp,"%s;",favorite.section);
 			fprintf(fp,"%s;",favorite.name);
 			if(favorite.alias[0]=='\0') {
@@ -701,10 +707,7 @@ int loadSections(char *file) {
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
-//		free (currentExec);
 		free(value2);
-
-//		menuSections[menuSectionCounter].executables[execCounter]=NULL;
 
 		for (int i=execCounter;i<10;i++) {
 			menuSections[menuSectionCounter].executables[i]=NULL;
@@ -779,6 +782,13 @@ int loadSections(char *file) {
 		colorfulFullscreenMenu = 0;
 	} else {
 		colorfulFullscreenMenu = atoi(value);
+	}
+
+	value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
+	if (value == NULL) {
+		displaySectionGroupName = 0;
+	} else {
+		displaySectionGroupName = atoi(value);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
@@ -931,8 +941,6 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 	footerOnTop = atoi(value);
 
-//	setThemeResourceValueInSection (themeConfig, "GENERAL", "menu_mode_logo_background", simpleBackground);
-//	setThemeResourceValueInSection (themeConfig, "GENERAL", "fullscreen_background", fullscreenBackground);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 	freeFonts();
@@ -940,11 +948,8 @@ int loadSections(char *file) {
 
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
 	menuSections[menuSectionCounter].emulatorDirectories[0]=strdup("/some/folder/");
-//	strcat(menuSections[menuSectionCounter].emulatorDirectories[0],"\0");
 	menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 	menuSections[menuSectionCounter].executables[0]=NULL;
-//	menuSections[menuSectionCounter].executables[0]=strdup("favs");
-//	strcpy(menuSections[menuSectionCounter].executables[0],"favs");
 	menuSections[menuSectionCounter].activeExecutable=0;
 	strcpy(menuSections[menuSectionCounter].filesDirectories,"/some/folder");
 	strcpy(menuSections[menuSectionCounter].fileExtensions,".zzz");
@@ -971,14 +976,12 @@ int loadSections(char *file) {
 }
 
 int countSections(char *file) {
-//	menuSectionCounter=0;
 	char pathToSectionsFilePlusFileName[1000];
 	snprintf(pathToSectionsFilePlusFileName,sizeof(pathToSectionsFilePlusFileName),"%s",file);
 	ini_t *config = ini_load(pathToSectionsFilePlusFileName);
 
 	const char *consoles = ini_get(config, "CONSOLES", "consoleList");
 	char *consoles1 = strdup(consoles);
-//	char *sectionNames[10000];
 	const char *value;
 	int sectionCounter=0;
 
@@ -987,8 +990,6 @@ int countSections(char *file) {
 	while(tokenizedSectionName!=NULL) {
 		value = ini_get(config, tokenizedSectionName, "execs");
 		if(value!=NULL) {
-//			sectionNames[sectionCounter]=malloc(strlen(tokenizedSectionName)+1);
-//			strcpy(sectionNames[sectionCounter], tokenizedSectionName);
 			sectionCounter++;
 		}
 		tokenizedSectionName=strtok(NULL,",");

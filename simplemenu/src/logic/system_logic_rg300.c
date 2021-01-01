@@ -102,3 +102,7 @@ void cycleFrequencies() {
 		currentCPU = OC_UC;
 	}
 }
+
+int getBatteryLevel() {
+	return -1;
+}

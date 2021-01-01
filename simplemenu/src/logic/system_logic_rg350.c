@@ -55,7 +55,6 @@ uint32_t suspend() {
 			clearTimer();
 			oldCPU=currentCPU;
 			turnScreenOnOrOff(0);
-	//		setCPU(OC_SLEEP);
 			isSuspended=1;
 		} else {
 			resetScreenOffTimer();
@@ -66,7 +65,6 @@ uint32_t suspend() {
 
 void resetScreenOffTimer() {
 	if(isSuspended) {
-//		setCPU(oldCPU);
 		turnScreenOnOrOff(1);
 		currentCPU=oldCPU;
 		isSuspended=0;
@@ -90,27 +88,6 @@ void HW_Init()
 	effect_id=Shake_UploadEffect(device, &effect);
 	effect_id1=Shake_UploadEffect(device, &effect1);
 	#endif
-//    uint32_t soundDev = open("/dev/mixer", O_RDWR);
-//    int32_t vol = (100 << 8) | 100;
-//
-//    /* Init memory registers, pretty much required for anthing RS-97 specific */
-//    memdev = open("/dev/mem", O_RDWR);
-//    if (memdev > 0)
-//    {
-//        memregs = (uint32_t*)mmap(0, 0x20000, PROT_READ | PROT_WRITE, MAP_SHARED, memdev, 0x10000000);
-//        if (memregs == MAP_FAILED)
-//        {
-//            printf("Could not mmap hardware registers!\n");
-//            close(memdev);
-//        }
-//    }
-//
-//    /* Setting Volume to max, that will avoid issues, i think */
-//    ioctl(soundDev, SOUND_MIXER_WRITE_VOLUME, &vol);
-//    close(soundDev);
-//
-//    /* Set CPU clock to its default */
-//    setCPU(OC_NO);
 }
 
 void cycleFrequencies() {
@@ -128,21 +105,32 @@ void rumble() {
 }
 
 int getBatteryLevel() {
-	#ifndef TARGET_PC
-	FILE *f = fopen("/sys/class/power_supply/usb/online", "r");
-	int online;
-	fscanf(f, "%i", &online);
-	fclose(f);
-	if (online) {
-		return -1;
-	} else {
-		FILE *f = fopen("/sys/class/power_supply/battery/capacity", "r");
-		int battery_level;
-		fscanf(f, "%i", &battery_level);
+	#ifdef TARGET_RG350_BETA
+
+		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
+		int max_voltage;
+		fscanf(f, "%i", &max_voltage);
 		fclose(f);
-		return battery_level;
-	}
+
+		f = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
+		int min_voltage;
+		fscanf(f, "%i", &min_voltage);
+		fclose(f);
+
+		f = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
+		int voltage_now;
+		fscanf(f, "%i", &voltage_now);
+		fclose(f);
+
+		int total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+		if (total > 100 ) {
+			return 100;
+		}
+		return total;
+
+	#elif TARGET_PC
+		return 100;
 	#else
-	return -1;
+		return -1;
 	#endif
 }

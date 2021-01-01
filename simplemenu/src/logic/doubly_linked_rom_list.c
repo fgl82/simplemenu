@@ -15,17 +15,6 @@ struct Node* GetNewNode(struct Rom *rom) {
 	return newNode;
 }
 
-//void InsertAtHead(struct Rom* rom) {
-//	struct Node* newNode = GetNewNode(rom);
-//	if(CURRENT_SECTION.head == NULL) {
-//		CURRENT_SECTION.head = newNode;
-//		return;
-//	}
-//	CURRENT_SECTION.head->prev = newNode;
-//	newNode->next = CURRENT_SECTION.head;
-//	CURRENT_SECTION.head = newNode;
-//}
-
 void InsertAtTail(struct Rom *rom) {
 	struct Node* temp = CURRENT_SECTION.head;
 	struct Node* newNode = GetNewNode(rom);

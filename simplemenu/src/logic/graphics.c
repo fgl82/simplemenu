@@ -6,6 +6,7 @@
 #include <SDL/SDL_mouse.h>
 #include <SDL/SDL_stdinc.h>
 #include <SDL/SDL_video.h>
+#include "../headers/screen.h"
 
 #ifdef TARGET_RG350
 #include <shake.h>
@@ -31,8 +32,34 @@ TTF_Font *footerFont = NULL;
 TTF_Font *settingsfont = NULL;
 TTF_Font *settingsHeaderFont = NULL;
 TTF_Font *settingsFooterFont = NULL;
+TTF_Font *settingsStatusFont = NULL;
 
 TTF_Font *customHeaderFont = NULL;
+
+void *updateClock(void *x_void_ptr) {
+	int brighterAmber[3]= {243,197,31};
+	int darkerAmber[3]={150,102,15};
+	char clock[20];
+	char batt[20];
+	int flag = 0;
+	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+	while (1) {
+		currRawtime = time(NULL);
+		currTime = localtime(&currRawtime);
+		if(currTime->tm_min!=lastMin || flag==0) {
+			lastMin=currTime->tm_min;
+			lastChargeLevel = getBatteryLevel();
+			snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
+			snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
+			drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
+			drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
+			drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
+			flag = 1;
+		}
+	}
+	return NULL;
+}
 
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	SDL_Color c;
@@ -144,7 +171,6 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, char *buf, i
 			int h = 0;
 			int w = 0;
 			TTF_SizeText(miniFont, test, &w, &h);
-//			drawTransparentRectangleToScreen(w,h,x-w/2,y,(int[]){0,0,0},50);
 			genericDrawTextOnScreen(font,x,y,test,txtColor,align,NULL,0);
 			free(test);
 			y+=calculateProportionalSizeOrDistance(lineSeparation);
@@ -470,6 +496,14 @@ void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
 	drawTextOnScreen(settingsHeaderFont, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(headerPositionInSimple), text, txtColor, VAlignMiddle | HAlignCenter);
 }
 
+void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]) {
+	drawTextOnScreen(settingsStatusFont, 5, calculateProportionalSizeOrDistance(headerPositionInSimple), text, txtColor, VAlignMiddle | HAlignLeft);
+}
+
+void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]) {
+	drawTextOnScreen(settingsStatusFont, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(headerPositionInSimple), text, txtColor, VAlignMiddle | HAlignRight);
+}
+
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	if (!fullscreenMode) {
 		if (currentMode==0) {
@@ -638,7 +672,6 @@ void displayImageOnScreenTraditional(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*5)/1.33;
-//	pthread_t myThread;
 
 	drawTransparentRectangleToScreen((SCREEN_WIDTH/screenDivisions)*2,SCREEN_HEIGHT-calculateProportionalSizeOrDistance(43),SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)*2,calculateProportionalSizeOrDistance(22),rightRectangleColor,60);
 
@@ -670,7 +703,6 @@ void displayImageOnScreenTraditional(char *fileName) {
 		}
 		drawRectangleToScreen(w+calculateProportionalSizeOrDistance(4),	h+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
 		drawTransparentRectangleToScreen(w,h,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2),calculateProportionalSizeOrDistance(26),rightRectangleColor,125);
-//		pthread_t myThread;
 		drawImage(screen, screenshot, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(w/2), calculateProportionalSizeOrDistance(26), 0, 0, w, h, 0, smoothing);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
@@ -687,7 +719,6 @@ void displayImageOnScreenTraditional(char *fileName) {
 				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-		//		pthread_join(myThread,NULL);
 	} else {
 		if(!(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)) {
 			drawRectangleToScreen(calculateProportionalSizeOrDistance(138),calculateProportionalSizeOrDistance(104), SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(calculateProportionalSizeOrDistance(134)/2)-calculateProportionalSizeOrDistance(2), calculateProportionalSizeOrDistance(24),CURRENT_SECTION.headerAndFooterBackgroundColor);
@@ -712,7 +743,6 @@ void displayImageOnScreenTraditional(char *fileName) {
 				drawImage(screen, heart, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions)-(wh/2), calculateProportionalSizeOrDistance(26)+calculateProportionalSizeOrDistance(90)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
-		//		pthread_join(myThread,NULL);
 	}
 	SDL_Surface *systemImage = CURRENT_SECTION.systemPictureSurface;
 	if (systemImage!=NULL) {
@@ -750,9 +780,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-//		pthread_t myThread;
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artXInCustom+(artWidthInCustom/2))-w/2, calculateProportionalSizeOrDistance(artYInCustom), 0, 0, w, h, 0, smoothing);
-		//	h	pthread_join(myThread,NULL);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
 			if (heart!=NULL) {
@@ -796,12 +824,10 @@ void displayImageOnScreenCustom(char *fileName) {
 					smoothing = 1;
 				}
 				wh = hh*ratioh;
-//				pthread_t myThread;
 				drawImage(screen, heart, calculateProportionalSizeOrDistance(artXInCustom+artWidthInCustom/2)-(wh/2), calculateProportionalSizeOrDistance(artYInCustom)+calculateProportionalSizeOrDistance((artWidthInCustom/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
 			}
 		}
 	}
-	//	pthread_join(myThread,NULL);
 }
 
 void displayHeart() {
@@ -819,9 +845,7 @@ void displayHeart() {
 			}
 			wh = hh*ratioh;
 			smoothing = 1;
-//			pthread_t myThread;
 			drawImage(screen, heart, SCREEN_WIDTH/2-(wh/2), SCREEN_HEIGHT/2-hh/2, 0, 0, wh, hh, 0, smoothing);
-			//			pthread_join(myThread,NULL);
 		}
 	}
 }
@@ -830,7 +854,6 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	int rightRectangleColor[3] = {80, 80, 80};
 	int screenDivisions=(SCREEN_RATIO*3)/1.33;
-//	pthread_t myThread;
 
 	drawTransparentRectangleToScreen((SCREEN_WIDTH/screenDivisions),SCREEN_HEIGHT-calculateProportionalSizeOrDistance((22*fontSize)/baseFont)*2,SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions),calculateProportionalSizeOrDistance((22*fontSize)/baseFont),rightRectangleColor,60);
 
@@ -905,7 +928,6 @@ void displayImageOnScreenDrunkenMonkey(char *fileName) {
 		}
 		displaySurface(CURRENT_SECTION.systemPictureSurface, SCREEN_WIDTH-(SCREEN_WIDTH/screenDivisions/2)-(systemImage->w/2), middleBottom);
 	}
-	//	pthread_join(myThread,NULL);
 }
 
 void* thread_func(void *picture) {
@@ -923,7 +945,7 @@ void* thread_func(void *picture) {
 		zoomx = ((threadPicture*)picture)->newwidth  / (float)((threadPicture*)picture)->image->w;
 		zoomy = ((threadPicture*)picture)->newheight / (float)((threadPicture*)picture)->image->h;
 		sized = zoomSurface(((threadPicture*)picture)->image, zoomx, zoomy, ((threadPicture*)picture)->smoothing);
-	}	// If the original had an alpha color key, give it to the new one.
+	}
 	// If the original had an alpha color key, give it to the new one.
 	if(((threadPicture*)picture)->image->flags & SDL_SRCCOLORKEY ) {
 		// Acquire the original Key
@@ -1095,10 +1117,8 @@ void displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleT
 				if ((int)h!=(int)img->h) {
 					smoothing = 1;
 				}
-//				pthread_t myThread;
 				drawImage(screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 			}
-			//			pthread_join(myThread,NULL);
 		}
 	}
 }
@@ -1121,8 +1141,8 @@ void initializeDisplay() {
 	SCREEN_WIDTH = info->current_w;
 	SCREEN_HEIGHT = info->current_h;
 	#ifdef TARGET_PC
-	SCREEN_WIDTH = 320;
-	SCREEN_HEIGHT = 240;
+	SCREEN_WIDTH = 1024;
+	SCREEN_HEIGHT = 768;
 	#endif
 	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
 		SCREEN_WIDTH = 320;
@@ -1150,8 +1170,6 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
 	#ifdef TARGET_RG300
-//	SCREEN_WIDTH = 480;
-//	SCREEN_HEIGHT = 272;
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -1161,8 +1179,11 @@ void initializeDisplay() {
 	fprintf(fp,"0");
 	fclose(fp);
 	#endif
-	//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	#ifdef TARGET_PC
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME );
+	#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	#endif
 	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
@@ -1176,6 +1197,7 @@ void refreshScreen() {
 void initializeSettingsFonts() {
 	settingsfont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize));
 	settingsHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize+6));
+	settingsStatusFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize));
 	settingsFooterFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(settingsFontSize+2));
 }
 
@@ -1217,11 +1239,11 @@ void freeSettingsFonts() {
 	settingsHeaderFont = NULL;
 	TTF_CloseFont(settingsFooterFont);
 	settingsFooterFont = NULL;
+	TTF_CloseFont(settingsStatusFont);
+	settingsStatusFont = NULL;
 }
 
 void freeResources() {
-	//    pthread_join(clockThread, NULL);
-	//    pthread_mutex_destroy(&lock);
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
