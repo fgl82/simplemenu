@@ -106,30 +106,54 @@ int main() {
 	logMessage("INFO","Loading favorites");
 	loadFavorites();
 	switch (currentMode) {
-	    case 0:
-	    	fontSize=baseFont;
-	    	currentMode=0;
-	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-	    	break;
-	    case 1:
-	    	fontSize=baseFont-2;
-	    	currentMode=1;
-	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-	    	break;
-	    case 2:
-	    	fontSize=baseFont-4;
-	    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-	    	currentMode=2;
-	    	break;
-	    default:
-	    	fontSize=fontSizeCustom;
-	    	currentMode=3;
-	    	MENU_ITEMS_PER_PAGE=itemsInCustom;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-	    	break;
+		case 0:
+			if (itemsInSimple>0) {
+				fontSize=baseFont;
+				currentMode=0;
+				MENU_ITEMS_PER_PAGE=itemsInSimple;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		case 1:
+			if (itemsInTraditional>0) {
+				fontSize=baseFont-2;
+				currentMode=1;
+				MENU_ITEMS_PER_PAGE=itemsInTraditional;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		case 2:
+			if (itemsInDrunkenMonkey>0) {
+				fontSize=baseFont-4;
+				MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+				currentMode=2;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		default:
+			fontSize=fontSizeCustom;
+			currentMode=3;
+			MENU_ITEMS_PER_PAGE=itemsInCustom;
+			FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+			break;
 	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

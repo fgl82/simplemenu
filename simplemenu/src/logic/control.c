@@ -680,45 +680,72 @@ void performSettingsChoosingAction() {
 					activeTheme=0;
 				}
 			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			free(temp);
+			currentMode=3;
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
-				if (currentMode==2) {
-					MENU_ITEMS_PER_PAGE=itemsInTraditional;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-					currentMode=1;
-				} else if (currentMode==1) {
-					MENU_ITEMS_PER_PAGE=itemsInSimple;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-					currentMode=0;
-				}  else if (currentMode==0) {
-					MENU_ITEMS_PER_PAGE=itemsInCustom;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-					currentMode=3;
-				} else {
-					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-					currentMode=2;
+				int items = 0;
+				while (items == 0) {
+					if (currentMode==0) {
+						items = itemsInCustom;
+						MENU_ITEMS_PER_PAGE=itemsInCustom;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+						currentMode=3;
+					} else if (currentMode==3) {
+						items = itemsInDrunkenMonkey;
+						MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+						currentMode=2;
+					} else if (currentMode==2) {
+						items = itemsInTraditional;
+						MENU_ITEMS_PER_PAGE=itemsInTraditional;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+						currentMode=1;
+					} else {
+						items = itemsInSimple;
+						MENU_ITEMS_PER_PAGE=itemsInSimple;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+						currentMode=0;
+						break;
+					}
 				}
 			}
 			if (keys[BTN_RIGHT]) {
-				if (currentMode==0) {
-					MENU_ITEMS_PER_PAGE=itemsInTraditional;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-					currentMode=1;
-				} else if (currentMode==1) {
-					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-					currentMode=2;
-				} else if (currentMode==2) {
-					MENU_ITEMS_PER_PAGE=itemsInCustom;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-					currentMode=3;
-				} else {
-					MENU_ITEMS_PER_PAGE=itemsInSimple;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-					currentMode=0;
+				int items = 0;
+				while (items == 0) {
+					if (currentMode==2) {
+						items = itemsInCustom;
+						MENU_ITEMS_PER_PAGE=itemsInCustom;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+						currentMode=3;
+					} else if (currentMode==1) {
+						items = itemsInDrunkenMonkey;
+						MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+						currentMode=2;
+					} else if (currentMode==0) {
+						items = itemsInTraditional;
+						MENU_ITEMS_PER_PAGE=itemsInTraditional;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+						currentMode=1;
+					} else {
+						items = itemsInSimple;
+						MENU_ITEMS_PER_PAGE=itemsInSimple;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+						currentMode=0;
+						break;
+					}
 				}
 			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			free(temp);
 			switch (currentMode)
 			{
 		    	case 0:
@@ -816,11 +843,11 @@ void performSettingsChoosingAction() {
 		}
 		#endif
 		currentlyChoosing=0;
-		char *temp=malloc(8000);
-		strcpy(temp,themes[activeTheme]);
-		strcat(temp,"/theme.ini");
-		loadTheme(temp);
-		free(temp);
+//		char *temp=malloc(8000);
+//		strcpy(temp,themes[activeTheme]);
+//		strcat(temp,"/theme.ini");
+//		loadTheme(temp);
+//		free(temp);
 		if(fullscreenMode==0) {
 			ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 		} else {

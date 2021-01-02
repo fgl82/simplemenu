@@ -407,18 +407,18 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
-		if (currentMode==1) {
+		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else if (currentMode==2) {
+		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
 			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 		free(tempDisplayName);
 	} else {
-		if (currentMode==1) {
+		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else if (currentMode==2) {
+		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
 			displayImageOnScreenCustom(pictureWithFullPath);
