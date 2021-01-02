@@ -211,7 +211,7 @@ struct MenuSection {
 	char *emulatorDirectories[10];
 	char *executables[10];
 	char filesDirectories[400];
-	char fileExtensions[50];
+	char fileExtensions[150];
 	char systemLogo[300];
 	SDL_Surface *systemLogoSurface;
 	char systemPicture[300];
