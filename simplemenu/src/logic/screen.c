@@ -846,10 +846,20 @@ void drawSettingsScreen() {
 	char *values[10];
 	char *hints[10];
 
+	char clock[20];
+	char batt[20];
+
 	setOptionsAndValues(options, values, hints);
 
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), brighterAmber);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
+
+	snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
+	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
+	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
+	drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
+	drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
 
 	int nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
 	#if defined TARGET_RG300

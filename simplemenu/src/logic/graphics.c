@@ -49,12 +49,6 @@ void *updateClock(void *x_void_ptr) {
 		if(currTime->tm_min!=lastMin || flag==0) {
 			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
-			snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
-			snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
-			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
-			drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
-			drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
-			drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
 			flag = 1;
 		}
 	}
