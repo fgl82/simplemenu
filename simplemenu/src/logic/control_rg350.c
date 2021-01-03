@@ -1,4 +1,4 @@
-#ifdef TARGET_RG350
+#if defined (TARGET_RG350) || defined (TARGET_RG350_BETA)
 #include <shake.h>
 #endif
 #include <stdlib.h>
@@ -30,7 +30,11 @@ int performAction(struct Rom *rom) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentlyChoosing=3;
-			pthread_create(&clockThread, NULL, updateClock,NULL);
+			currRawtime = time(NULL);
+			currTime = localtime(&currRawtime);
+			lastMin=currTime->tm_min;
+			lastChargeLevel = getBatteryLevel();
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 1;
 		}
 	}
@@ -200,7 +204,11 @@ int performAction(struct Rom *rom) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentlyChoosing=3;
-			pthread_create(&clockThread, NULL, updateClock,NULL);
+			currRawtime = time(NULL);
+			currTime = localtime(&currRawtime);
+			lastMin=currTime->tm_min;
+			lastChargeLevel = getBatteryLevel();
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}
 		if (keys[BTN_L2]) {

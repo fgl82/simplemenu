@@ -846,25 +846,29 @@ void drawSettingsScreen() {
 	char *values[10];
 	char *hints[10];
 
+	setOptionsAndValues(options, values, hints);
+
 	char clock[20];
 	char batt[20];
 
-	setOptionsAndValues(options, values, hints);
+	currRawtime = time(NULL);
+	currTime = localtime(&currRawtime);
+//	if(currTime->tm_min!=lastMin) {
+		snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
+		snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+//	}
 
-	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), brighterAmber);
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
-
-	snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
-	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
 	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
 	drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
 	drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), brighterAmber);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 
 	int nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
 	#if defined TARGET_RG300
 	for (int i=0;i<10;i++) {
-	#elif defined TARGET_RG350 || defined TARGET_RG350 || defined TARGET_PC
+	#elif defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
 	for (int i=0;i<10;i++) {
 	#else
 	for (int i=0;i<9;i++) {

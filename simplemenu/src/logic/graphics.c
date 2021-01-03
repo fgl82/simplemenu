@@ -8,7 +8,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/screen.h"
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -42,15 +42,9 @@ void *updateClock(void *x_void_ptr) {
 	char clock[20];
 	char batt[20];
 	int flag = 0;
-	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+//	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
 	while (1) {
-		currRawtime = time(NULL);
-		currTime = localtime(&currRawtime);
-		if(currTime->tm_min!=lastMin || flag==0) {
-			lastMin=currTime->tm_min;
-			lastChargeLevel = getBatteryLevel();
-			flag = 1;
-		}
+
 	}
 	return NULL;
 }
@@ -1241,7 +1235,7 @@ void freeResources() {
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
-	#ifdef TARGET_RG350
+	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);

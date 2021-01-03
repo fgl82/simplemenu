@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -268,7 +268,7 @@ struct MenuSection {
  int BTN_L2;
  int BTN_R2;
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
  Shake_Device *device;
  Shake_Effect effect;
  int effect_id;

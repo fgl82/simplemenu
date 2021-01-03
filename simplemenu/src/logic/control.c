@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -403,7 +403,7 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		#ifdef TARGET_RG350
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 		Shake_Play(device, effect_id1);
 		#endif	
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
@@ -457,7 +457,7 @@ void markAsFavorite(struct Rom *rom) {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(rom->name)) {
 			resetHideHeartTimer();
-			#ifdef TARGET_RG350
+			#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 			Shake_Play(device, effect_id);
 			msleep(200);
 			Shake_Play(device, effect_id);
@@ -466,7 +466,7 @@ void markAsFavorite(struct Rom *rom) {
 				strcpy(favorites[favoritesSize].name, getGameName(rom->name));
 			} else {
 				strcpy(favorites[favoritesSize].name, rom->name);
-				printf("%s\n", favorites[favoritesSize].name);
+//				printf("%s\n", favorites[favoritesSize].name);
 			}
 			if(rom->alias!=NULL&&strlen(rom->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, rom->alias);
@@ -491,7 +491,7 @@ void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
 		currentlyChoosing=3;
-		pthread_create(&clockThread, NULL, updateClock,NULL);
+//		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
 	if (keys[BTN_UP]||keys[BTN_L1]) {
@@ -608,14 +608,14 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
+			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
 			chosenSetting=9;
 			#else
 			chosenSetting=8;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
-		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
+		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
 		if(chosenSetting<9) {
 		#else
 		if(chosenSetting<8) {
@@ -628,7 +628,7 @@ void performSettingsChoosingAction() {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
 		}
-		#if defined TARGET_RG350 || TARGET_PC
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA || TARGET_PC
 		else if (chosenSetting==USB_OPTION) {
 			hdmiChanged=1+hdmiChanged*-1;
 		}
@@ -686,6 +686,8 @@ void performSettingsChoosingAction() {
 			loadTheme(temp);
 			free(temp);
 			currentMode=3;
+			MENU_ITEMS_PER_PAGE=itemsInCustom;
+			FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
 				int items = 0;
@@ -786,7 +788,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_NPG
+				#if defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_NPG
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
 			} else {
@@ -796,7 +798,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_NPG
+				#if defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_NPG
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
 				#endif
 			}
@@ -825,8 +827,8 @@ void performSettingsChoosingAction() {
 	}
 	#endif
 	else if (keys[BTN_START]) {
-		pthread_cancel(clockThread);
-		#ifdef TARGET_RG350
+//		pthread_cancel(clockThread);
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
 			if (fp!=NULL) {

@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -270,7 +270,7 @@ extern int BTN_R1;
 extern int BTN_L2;
 extern int BTN_R2;
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 extern Shake_Device *device;
 extern Shake_Effect effect;
 extern int effect_id;

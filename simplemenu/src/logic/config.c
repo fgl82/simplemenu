@@ -60,7 +60,7 @@ void checkIfDefault() {
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
-	#ifdef TARGET_RG350
+	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
