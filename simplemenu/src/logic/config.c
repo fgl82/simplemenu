@@ -60,9 +60,15 @@ void checkIfDefault() {
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
-	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+	#if defined TARGET_RG350
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
+	#endif
+	#if defined TARGET_RG350_BETA
+	fp = fopen("/media/data/local/home/.autostart", "r");
+	printf("asdsad\n");
+	fpScripts = fopen("scripts/frontend_start", "r");
+	printf("asdsad11111\n");
 	#endif
 	#ifdef TARGET_NPG
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
@@ -92,6 +98,7 @@ void checkIfDefault() {
 	if (fpScripts!=NULL) {
 		fclose(fpScripts);
 	}
+	printf("%d\n",sameFile);
 }
 
 uint32_t hex2int(char *hex) {

@@ -788,8 +788,11 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_NPG
+				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
+				#endif
+				#if defined TARGET_RG350_BETA
+				snprintf(command,sizeof(command),"rm /media/data/local/home/.autostart");
 				#endif
 			} else {
 				#ifdef TARGET_BITTBOY
@@ -798,8 +801,11 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_NPG
+				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
+				#endif
+				#if defined TARGET_RG350_BETA
+				snprintf(command,sizeof(command),"cp ./scripts/frontend_start /media/data/local/home/.autostart");
 				#endif
 			}
 			int ret = system(command);
