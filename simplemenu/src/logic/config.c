@@ -713,10 +713,17 @@ void loadSectionGroups() {
 	sectionGroupCounter=0;
 	char *files[1000];
 	char tempString[1000];
-	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
-	int n = recursivelyScanDirectory(tempString, files, 0);
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsFolder);
+
+	if (strlen(sectionGroupsPicturesFolder)>1) {
+		snprintf(tempString,sizeof(tempString),"%s",sectionGroupsPicturesFolder);
+//		strcpy(tempString,sectionGroupsPicturesFolder);
+	} else {
+		snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
+	}
+
+	int n = recursivelyScanDirectory(tempString, files, 0);
 
 	for(int i=0;i<n;i++) {
 		if(strstr(files[i],".png")!=NULL) {
@@ -729,7 +736,7 @@ void loadSectionGroups() {
 		char *temp1 = getNameWithoutExtension(temp);
 		char *sectionGroupPath = getRomPath(files[i]);
 
-		if (strlen(sectionGroupsPicturesFolder)>1) {
+		if (strlen(sectionGroupsFolder)>1) {
 			strcpy(temp3,sectionGroupsPicturesFolder);
 		} else {
 			strcpy(temp3,sectionGroupPath);
