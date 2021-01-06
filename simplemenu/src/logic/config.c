@@ -238,7 +238,7 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
 		value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
 		if (value == NULL) {
@@ -714,11 +714,10 @@ void loadSectionGroups() {
 	char *files[1000];
 	char tempString[1000];
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsFolder);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
-	if (strlen(sectionGroupsPicturesFolder)>1) {
-		snprintf(tempString,sizeof(tempString),"%s",sectionGroupsPicturesFolder);
-//		strcpy(tempString,sectionGroupsPicturesFolder);
+	if (strlen(sectionGroupsFolder)>1) {
+		snprintf(tempString,sizeof(tempString),"%s",sectionGroupsFolder);
 	} else {
 		snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
 	}
@@ -737,7 +736,7 @@ void loadSectionGroups() {
 		char *sectionGroupPath = getRomPath(files[i]);
 
 		if (strlen(sectionGroupsFolder)>1) {
-			strcpy(temp3,sectionGroupsPicturesFolder);
+			strcpy(temp3,sectionGroupsFolder);
 		} else {
 			strcpy(temp3,sectionGroupPath);
 			strcat(temp3,"/");
@@ -1062,7 +1061,7 @@ int loadSections(char *file) {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
 	freeFonts();
 	initializeFonts();

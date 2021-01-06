@@ -104,7 +104,7 @@ extern int footerOnTop;
 extern char simpleBackground[1000];
 extern char fullscreenBackground[1000];
 extern char favoriteIndicator[1000];
-extern char sectionGroupsPicturesFolder[1000];
+extern char sectionGroupsFolder[1000];
 
 extern int itemsInSimple;
 extern int itemsInFullSimple;
