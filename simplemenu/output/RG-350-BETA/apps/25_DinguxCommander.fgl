@@ -1,0 +1,4 @@
+title=DinguxCmdr
+description=Two-pane file manager
+exec=/usr/bin/DinguxCommander
+icon=skin:icons/dinguxcmdr.png

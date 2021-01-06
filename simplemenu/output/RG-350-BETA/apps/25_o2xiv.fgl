@@ -1,0 +1,4 @@
+title=o2xiv
+description=Simple image viewer
+exec=/usr/bin/o2xiv
+icon=skin:icons/imgv.png
