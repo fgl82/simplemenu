@@ -1125,17 +1125,6 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
-	SCREEN_WIDTH = info->current_w;
-	SCREEN_HEIGHT = info->current_h;
-	#ifdef TARGET_PC
-	SCREEN_WIDTH = 640;
-	SCREEN_HEIGHT = 480;
-	#endif
-	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
-		SCREEN_WIDTH = 320;
-		SCREEN_HEIGHT = 240;
-	}
 
 	char * line = NULL;
 	size_t len = 0;

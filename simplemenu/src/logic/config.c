@@ -66,9 +66,7 @@ void checkIfDefault() {
 	#endif
 	#if defined TARGET_RG350_BETA
 	fp = fopen("/media/data/local/home/.autostart", "r");
-	printf("asdsad\n");
 	fpScripts = fopen("scripts/frontend_start", "r");
-	printf("asdsad11111\n");
 	#endif
 	#ifdef TARGET_NPG
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
@@ -98,7 +96,6 @@ void checkIfDefault() {
 	if (fpScripts!=NULL) {
 		fclose(fpScripts);
 	}
-	printf("%d\n",sameFile);
 }
 
 uint32_t hex2int(char *hex) {
@@ -167,6 +164,10 @@ void setThemeResourceValueInSection(ini_t *config, char *sectionName, char *valu
 		value = ini_get(config, "DEFAULT", valueName);
 		if (value==NULL) {
 			value = ini_get(config, "GENERAL", valueName);
+		}
+		if (value==NULL) {
+			strcpy(sectionValueToBeSet, "");
+			return;
 		}
 		strcpy(sectionValueToBeSet,pathToThemeConfigFile);
 		strcat(sectionValueToBeSet,value);
@@ -237,6 +238,7 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
 
 		value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
 		if (value == NULL) {
@@ -622,26 +624,120 @@ void loadConfig() {
 	value = ini_get(config, "CPU", "sleep_speed");
 	OC_SLEEP=atoifgl(value);
 
+	value = ini_get(config, "SCREEN", "width");
+	SCREEN_WIDTH=atoifgl(value);
+
+	value = ini_get(config, "SCREEN", "height");
+	SCREEN_HEIGHT=atoifgl(value);
+
+	value = ini_get(config, "CONTROLS", "A");
+	if (value) {
+		BTN_A = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "B");
+	if (value) {
+		BTN_B = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "X");
+	if (value) {
+		BTN_X = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "Y");
+	if (value) {
+		BTN_Y = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "L1");
+	if (value) {
+		BTN_L1 = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "L2");
+	if (value) {
+		BTN_L2 = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R1");
+	if (value) {
+		BTN_R1 = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R2");
+	if (value) {
+		BTN_R2 = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "UP");
+	if (value) {
+		BTN_UP = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "DOWN");
+	if (value) {
+		BTN_DOWN = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "LEFT");
+	if (value) {
+		BTN_LEFT = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "RIGHT");
+	if (value) {
+		BTN_RIGHT = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "START");
+	if (value) {
+		BTN_START = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "SELECT");
+	if (value) {
+		BTN_SELECT = atoifgl(value);
+	}
+
+	value = ini_get(config, "CONTROLS", "R");
+	if (value) {
+		BTN_R = atoifgl(value);
+	}
+
+	ini_free(config);
+}
+
+void loadSectionGroups() {
+	ini_t *themeConfig = ini_load(pathToThemeConfigFilePlusFileName);
 	sectionGroupCounter=0;
 	char *files[1000];
 	char tempString[1000];
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
 	int n = recursivelyScanDirectory(tempString, files, 0);
 
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
+
 	for(int i=0;i<n;i++) {
 		if(strstr(files[i],".png")!=NULL) {
 			continue;
 		}
 		strcpy(sectionGroups[sectionGroupCounter].groupPath, files[i]);
+
+		char *temp3 = malloc(3000);
 		char *temp = getNameWithoutPath((files[i]));
 		char *temp1 = getNameWithoutExtension(temp);
+		char *sectionGroupPath = getRomPath(files[i]);
 
-		char *romPath = getRomPath(files[i]);
-		char *temp3 = malloc(3000);
-		strcpy(temp3,romPath);
-		strcat(temp3,"/");
+		if (strlen(sectionGroupsPicturesFolder)>1) {
+			strcpy(temp3,sectionGroupsPicturesFolder);
+		} else {
+			strcpy(temp3,sectionGroupPath);
+			strcat(temp3,"/");
+		}
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
+
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
 		logMessage("INFO","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
@@ -653,7 +749,7 @@ void loadConfig() {
 		free(temp1);
 		free(temp2);
 		free(temp3);
-		free(romPath);
+		free(sectionGroupPath);
 		sectionGroupCounter++;
 	}
 
@@ -662,7 +758,7 @@ void loadConfig() {
 	}
 
 	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
-	ini_free(config);
+	ini_free(themeConfig);
 }
 
 int loadSections(char *file) {
@@ -959,6 +1055,8 @@ int loadSections(char *file) {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_pictures_folder", sectionGroupsPicturesFolder);
+
 	freeFonts();
 	initializeFonts();
 
@@ -1046,89 +1144,6 @@ void saveLastState() {
 		}
 	}
 	fclose(fp);
-}
-
-void readInputConfig() {
-	char pathToInputFilePlusFileName[5000];
-	snprintf(pathToInputFilePlusFileName,sizeof(pathToInputFilePlusFileName),"%s/.simplemenu/input.ini",home);
-	ini_t *config = ini_load(pathToInputFilePlusFileName);
-	const char *value = NULL;
-
-	value = ini_get(config, "CONTROLS", "A");
-	if (value) {
-		BTN_A = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "B");
-	if (value) {
-		BTN_B = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "X");
-	if (value) {
-		BTN_X = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "Y");
-	if (value) {
-		BTN_Y = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "L1");
-	if (value) {
-		BTN_L1 = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "L2");
-	if (value) {
-		BTN_L2 = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "R1");
-	if (value) {
-		BTN_R1 = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "R2");
-	if (value) {
-		BTN_R2 = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "UP");
-	if (value) {
-		BTN_UP = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "DOWN");
-	if (value) {
-		BTN_DOWN = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "LEFT");
-	if (value) {
-		BTN_LEFT = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "RIGHT");
-	if (value) {
-		BTN_RIGHT = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "START");
-	if (value) {
-		BTN_START = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "SELECT");
-	if (value) {
-		BTN_SELECT = atoifgl(value);
-	}
-
-	value = ini_get(config, "CONTROLS", "R");
-	if (value) {
-		BTN_R = atoifgl(value);
-	}
-	ini_free(config);
 }
 
 void loadLastState() {

@@ -72,8 +72,6 @@ int main() {
 	resetFrameBuffer();
 	logMessage("INFO","Reset Framebuffer");
 	#endif
-	initializeDisplay();
-	logMessage("INFO","Initialized Display");
 	createConfigFilesInHomeIfTheyDontExist();
 	logMessage("INFO","Validated configuration existence");
 	checkThemes();
@@ -82,8 +80,8 @@ int main() {
 	logMessage("INFO","Last state loaded");
 	loadConfig();
 	logMessage("INFO","Config loaded");
-	readInputConfig();
-	logMessage("INFO","Input configured");
+	initializeDisplay();
+	logMessage("INFO","Initialized Display");
 	char temp[300];
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
@@ -101,6 +99,8 @@ int main() {
 	strcat(temp,"/theme.ini");
 	logMessage("INFO","Loading theme");
 	loadTheme(temp);
+	logMessage("INFO","Loading section groups");
+	loadSectionGroups();
 	logMessage("INFO","Loading sections");
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	logMessage("INFO","Loading favorites");

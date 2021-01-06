@@ -104,6 +104,7 @@ typedef struct thread_picture {
  char simpleBackground[1000];
  char fullscreenBackground[1000];
  char favoriteIndicator[1000];
+ char sectionGroupsPicturesFolder[1000];
 
  int itemsInSimple;
  int itemsInFullSimple;
