@@ -254,6 +254,13 @@ void loadTheme(char *theme) {
 			displaySectionGroupName = atoifgl(value);
 		}
 
+		value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
+		if (value == NULL) {
+			displaySectionGroupName = 0;
+		} else {
+			displaySectionGroupName = atoi(value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");
 		gameListPositionInSimple = atoifgl(value);
 
@@ -907,6 +914,13 @@ int loadSections(char *file) {
 		displaySectionGroupName = 0;
 	} else {
 		displaySectionGroupName = atoifgl(value);
+	}
+
+	value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
+	if (value == NULL) {
+		displaySectionGroupName = 0;
+	} else {
+		displaySectionGroupName = atoi(value);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_simple");

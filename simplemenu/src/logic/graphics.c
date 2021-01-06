@@ -1125,7 +1125,6 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-
 	char * line = NULL;
 	size_t len = 0;
 	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
