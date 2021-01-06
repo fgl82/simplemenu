@@ -684,8 +684,8 @@ void performSettingsChoosingAction() {
 			strcpy(temp,themes[activeTheme]);
 			strcat(temp,"/theme.ini");
 			loadTheme(temp);
-			free(temp);
 			loadSectionGroups();
+			free(temp);
 			currentMode=3;
 			MENU_ITEMS_PER_PAGE=itemsInCustom;
 			FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
