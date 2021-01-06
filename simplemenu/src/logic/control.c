@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -403,7 +403,7 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		#ifdef TARGET_RG350
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 		Shake_Play(device, effect_id1);
 		#endif	
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
@@ -457,7 +457,7 @@ void markAsFavorite(struct Rom *rom) {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(rom->name)) {
 			resetHideHeartTimer();
-			#ifdef TARGET_RG350
+			#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 			Shake_Play(device, effect_id);
 			msleep(200);
 			Shake_Play(device, effect_id);
@@ -466,7 +466,7 @@ void markAsFavorite(struct Rom *rom) {
 				strcpy(favorites[favoritesSize].name, getGameName(rom->name));
 			} else {
 				strcpy(favorites[favoritesSize].name, rom->name);
-				printf("%s\n", favorites[favoritesSize].name);
+//				printf("%s\n", favorites[favoritesSize].name);
 			}
 			if(rom->alias!=NULL&&strlen(rom->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, rom->alias);
@@ -491,7 +491,7 @@ void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
 		currentlyChoosing=3;
-		pthread_create(&clockThread, NULL, updateClock,NULL);
+//		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
 	if (keys[BTN_UP]||keys[BTN_L1]) {
@@ -608,14 +608,14 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
+			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
 			chosenSetting=9;
 			#else
 			chosenSetting=8;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
-		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_PC
+		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
 		if(chosenSetting<9) {
 		#else
 		if(chosenSetting<8) {
@@ -628,7 +628,7 @@ void performSettingsChoosingAction() {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
 		}
-		#if defined TARGET_RG350 || TARGET_PC
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA || TARGET_PC
 		else if (chosenSetting==USB_OPTION) {
 			hdmiChanged=1+hdmiChanged*-1;
 		}
@@ -680,45 +680,76 @@ void performSettingsChoosingAction() {
 					activeTheme=0;
 				}
 			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			loadSectionGroups();
+			free(temp);
+			currentMode=3;
+			MENU_ITEMS_PER_PAGE=itemsInCustom;
+			FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
 		} else if (chosenSetting==ITEMS_PER_PAGE_OPTION) {
 			if (keys[BTN_LEFT]) {
-				if (currentMode==2) {
-					MENU_ITEMS_PER_PAGE=itemsInTraditional;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-					currentMode=1;
-				} else if (currentMode==1) {
-					MENU_ITEMS_PER_PAGE=itemsInSimple;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-					currentMode=0;
-				}  else if (currentMode==0) {
-					MENU_ITEMS_PER_PAGE=itemsInCustom;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-					currentMode=3;
-				} else {
-					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-					currentMode=2;
+				int items = 0;
+				while (items == 0) {
+					if (currentMode==0) {
+						items = itemsInCustom;
+						MENU_ITEMS_PER_PAGE=itemsInCustom;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+						currentMode=3;
+					} else if (currentMode==3) {
+						items = itemsInDrunkenMonkey;
+						MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+						currentMode=2;
+					} else if (currentMode==2) {
+						items = itemsInTraditional;
+						MENU_ITEMS_PER_PAGE=itemsInTraditional;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+						currentMode=1;
+					} else {
+						items = itemsInSimple;
+						MENU_ITEMS_PER_PAGE=itemsInSimple;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+						currentMode=0;
+						break;
+					}
 				}
 			}
 			if (keys[BTN_RIGHT]) {
-				if (currentMode==0) {
-					MENU_ITEMS_PER_PAGE=itemsInTraditional;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-					currentMode=1;
-				} else if (currentMode==1) {
-					MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-					currentMode=2;
-				} else if (currentMode==2) {
-					MENU_ITEMS_PER_PAGE=itemsInCustom;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-					currentMode=3;
-				} else {
-					MENU_ITEMS_PER_PAGE=itemsInSimple;
-					FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-					currentMode=0;
+				int items = 0;
+				while (items == 0) {
+					if (currentMode==2) {
+						items = itemsInCustom;
+						MENU_ITEMS_PER_PAGE=itemsInCustom;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+						currentMode=3;
+					} else if (currentMode==1) {
+						items = itemsInDrunkenMonkey;
+						MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+						currentMode=2;
+					} else if (currentMode==0) {
+						items = itemsInTraditional;
+						MENU_ITEMS_PER_PAGE=itemsInTraditional;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+						currentMode=1;
+					} else {
+						items = itemsInSimple;
+						MENU_ITEMS_PER_PAGE=itemsInSimple;
+						FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+						currentMode=0;
+						break;
+					}
 				}
 			}
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			loadSectionGroups();
+			free(temp);
 			switch (currentMode)
 			{
 		    	case 0:
@@ -762,6 +793,9 @@ void performSettingsChoosingAction() {
 				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
+				#if defined TARGET_RG350_BETA
+				snprintf(command,sizeof(command),"rm /media/data/local/home/.autostart");
+				#endif
 			} else {
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"mv /mnt/autoexec.sh /mnt/autoexec.sh.bck;cp scripts/autoexec.sh /mnt");
@@ -771,6 +805,9 @@ void performSettingsChoosingAction() {
 				#endif
 				#if defined TARGET_RG350 || defined TARGET_NPG
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
+				#endif
+				#if defined TARGET_RG350_BETA
+				snprintf(command,sizeof(command),"cp ./scripts/frontend_start /media/data/local/home/.autostart");
 				#endif
 			}
 			int ret = system(command);
@@ -798,8 +835,8 @@ void performSettingsChoosingAction() {
 	}
 	#endif
 	else if (keys[BTN_START]) {
-		pthread_cancel(clockThread);
-		#ifdef TARGET_RG350
+//		pthread_cancel(clockThread);
+		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
 			if (fp!=NULL) {
@@ -816,11 +853,11 @@ void performSettingsChoosingAction() {
 		}
 		#endif
 		currentlyChoosing=0;
-		char *temp=malloc(8000);
-		strcpy(temp,themes[activeTheme]);
-		strcat(temp,"/theme.ini");
-		loadTheme(temp);
-		free(temp);
+//		char *temp=malloc(8000);
+//		strcpy(temp,themes[activeTheme]);
+//		strcat(temp,"/theme.ini");
+//		loadTheme(temp);
+//		free(temp);
 		if(fullscreenMode==0) {
 			ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 		} else {

@@ -10,7 +10,7 @@
 #include "../headers/logic.h"
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -80,7 +80,7 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-	#ifdef TARGET_RG350
+	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	Shake_Init();
 	device = Shake_Open(0);
 	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SQUARE, 0.5, 0.1, 0.05, 0.1);
@@ -105,8 +105,7 @@ void rumble() {
 }
 
 int getBatteryLevel() {
-	#ifdef TARGET_RG350_BETA
-
+	#if defined TARGET_RG350_BETA
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 		int max_voltage;
 		fscanf(f, "%i", &max_voltage);

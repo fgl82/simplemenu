@@ -407,18 +407,18 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
-		if (currentMode==1) {
+		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else if (currentMode==2) {
+		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
 			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 		free(tempDisplayName);
 	} else {
-		if (currentMode==1) {
+		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
-		} else if (currentMode==2) {
+		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
 			displayImageOnScreenCustom(pictureWithFullPath);
@@ -675,7 +675,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[USB_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
 	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
-	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
+//	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	values[TIDY_ROMS_OPTION]= malloc(4);
 	values[FULL_SCREEN_FOOTER_OPTION]= malloc(4);
@@ -686,7 +686,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[USB_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(30);
 	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
-	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
+//	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
 	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
@@ -697,7 +697,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[USB_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
 	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
-	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
+//	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
 	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Display fullscreen rom names: ");
@@ -711,7 +711,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[USB_OPTION],"HDMI: ");
 	#endif
 	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
-	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
+//	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
 
 	if (shutDownEnabled) {
 		switch (selectedShutDownOption) {
@@ -743,7 +743,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
-	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
+//	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
 	#if defined TARGET_RG300
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
 	#else
@@ -796,15 +796,15 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	} else {
 		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","ALWAYS ON");
 	}
-	if(currentMode==0) {
-		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
-	} else if (currentMode==1) {
-		strcpy(values[ITEMS_PER_PAGE_OPTION],"TRADITIONAL");
-	} else if (currentMode==2) {
-		strcpy(values[ITEMS_PER_PAGE_OPTION],"DRUNKEN MONKEY");
-	} else {
-		strcpy(values[ITEMS_PER_PAGE_OPTION],"CUSTOM");
-	}
+//	if(currentMode==0) {
+//		strcpy(values[ITEMS_PER_PAGE_OPTION],"SIMPLE MENU");
+//	} else if (currentMode==1) {
+//		strcpy(values[ITEMS_PER_PAGE_OPTION],"TRADITIONAL");
+//	} else if (currentMode==2) {
+//		strcpy(values[ITEMS_PER_PAGE_OPTION],"DRUNKEN MONKEY");
+//	} else {
+//		strcpy(values[ITEMS_PER_PAGE_OPTION],"CUSTOM");
+//	}
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"YES");
 	} else {
@@ -835,9 +835,9 @@ void drawSettingsScreen() {
 	AUTO_HIDE_LOGOS_OPTION=4;
 	FULL_SCREEN_FOOTER_OPTION=5;
 	FULL_SCREEN_MENU_OPTION=6;
-	ITEMS_PER_PAGE_OPTION=7;
-	DEFAULT_OPTION=8;
-	USB_OPTION=9;
+//	ITEMS_PER_PAGE_OPTION=7;
+	DEFAULT_OPTION=7;
+	USB_OPTION=8;
 
 	int darkerAmber[3]={150,102,15};
 	int brighterAmber[3]= {243,197,31};
@@ -848,16 +848,30 @@ void drawSettingsScreen() {
 
 	setOptionsAndValues(options, values, hints);
 
+	char clock[20];
+	char batt[20];
+
+	currRawtime = time(NULL);
+	currTime = localtime(&currRawtime);
+//	if(currTime->tm_min!=lastMin) {
+		snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
+		snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+//	}
+
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
+	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
+	drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
+	drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), brighterAmber);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
 
 	int nextLine = calculateProportionalSizeOrDistance(gameListPositionInSimple);
 	#if defined TARGET_RG300
-	for (int i=0;i<10;i++) {
-	#elif defined TARGET_RG350 || defined TARGET_RG350 || defined TARGET_PC
-	for (int i=0;i<10;i++) {
-	#else
 	for (int i=0;i<9;i++) {
+	#elif defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
+	for (int i=0;i<9;i++) {
+	#else
+	for (int i=0;i<8;i++) {
 	#endif
 		char temp[300];
 		strcpy(temp,options[i]);
@@ -880,7 +894,7 @@ void drawSettingsScreen() {
 	free(options[DEFAULT_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
 	free(options[USB_OPTION]);
-	free(options[ITEMS_PER_PAGE_OPTION]);
+//	free(options[ITEMS_PER_PAGE_OPTION]);
 	free(options[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(values[TIDY_ROMS_OPTION]);
@@ -891,7 +905,7 @@ void drawSettingsScreen() {
 	free(values[DEFAULT_OPTION]);
 	free(values[SHUTDOWN_OPTION]);
 	free(values[USB_OPTION]);
-	free(values[ITEMS_PER_PAGE_OPTION]);
+//	free(values[ITEMS_PER_PAGE_OPTION]);
 	free(values[AUTO_HIDE_LOGOS_OPTION]);
 
 	free(hints[TIDY_ROMS_OPTION]);
@@ -902,7 +916,7 @@ void drawSettingsScreen() {
 	free(hints[DEFAULT_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[USB_OPTION]);
-	free(hints[ITEMS_PER_PAGE_OPTION]);
+//	free(hints[ITEMS_PER_PAGE_OPTION]);
 	free(hints[AUTO_HIDE_LOGOS_OPTION]);
 }
 

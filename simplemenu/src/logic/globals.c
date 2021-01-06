@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -104,6 +104,7 @@ typedef struct thread_picture {
  char simpleBackground[1000];
  char fullscreenBackground[1000];
  char favoriteIndicator[1000];
+ char sectionGroupsFolder[1000];
 
  int itemsInSimple;
  int itemsInFullSimple;
@@ -211,7 +212,7 @@ struct MenuSection {
 	char *emulatorDirectories[10];
 	char *executables[10];
 	char filesDirectories[400];
-	char fileExtensions[50];
+	char fileExtensions[150];
 	char systemLogo[300];
 	SDL_Surface *systemLogoSurface;
 	char systemPicture[300];
@@ -268,7 +269,7 @@ struct MenuSection {
  int BTN_L2;
  int BTN_R2;
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
  Shake_Device *device;
  Shake_Effect effect;
  int effect_id;

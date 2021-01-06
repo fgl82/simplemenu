@@ -8,7 +8,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/screen.h"
 
-#ifdef TARGET_RG350
+#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 #include <shake.h>
 #endif
 
@@ -42,21 +42,9 @@ void *updateClock(void *x_void_ptr) {
 	char clock[20];
 	char batt[20];
 	int flag = 0;
-	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
+//	snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
 	while (1) {
-		currRawtime = time(NULL);
-		currTime = localtime(&currRawtime);
-		if(currTime->tm_min!=lastMin || flag==0) {
-			lastMin=currTime->tm_min;
-			lastChargeLevel = getBatteryLevel();
-			snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
-			snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
-			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
-			drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
-			drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
-			drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
-			flag = 1;
-		}
+
 	}
 	return NULL;
 }
@@ -1137,18 +1125,6 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
-	SCREEN_WIDTH = info->current_w;
-	SCREEN_HEIGHT = info->current_h;
-	#ifdef TARGET_PC
-	SCREEN_WIDTH = 1024;
-	SCREEN_HEIGHT = 768;
-	#endif
-	if (SCREEN_WIDTH<320||SCREEN_HEIGHT<240) {
-		SCREEN_WIDTH = 320;
-		SCREEN_HEIGHT = 240;
-	}
-
 	char * line = NULL;
 	size_t len = 0;
 	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
@@ -1180,7 +1156,7 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	#ifdef TARGET_PC
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME );
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
 	#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
@@ -1247,7 +1223,7 @@ void freeResources() {
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
-	#ifdef TARGET_RG350
+	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);

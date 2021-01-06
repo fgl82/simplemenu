@@ -1,0 +1,4 @@
+title=Gmenu2x
+description=Gmenu2x
+exec=/usr/bin/gmenu2x
+icon=skin:icons/reboot.png

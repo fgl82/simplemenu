@@ -68,12 +68,10 @@ int main() {
     sigaction(SIGABRT, &sa, NULL);
     sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#if defined(TARGET_NPG) || defined(TARGET_RG350)
+	#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
 	resetFrameBuffer();
 	logMessage("INFO","Reset Framebuffer");
 	#endif
-	initializeDisplay();
-	logMessage("INFO","Initialized Display");
 	createConfigFilesInHomeIfTheyDontExist();
 	logMessage("INFO","Validated configuration existence");
 	checkThemes();
@@ -82,10 +80,10 @@ int main() {
 	logMessage("INFO","Last state loaded");
 	loadConfig();
 	logMessage("INFO","Config loaded");
-	readInputConfig();
-	logMessage("INFO","Input configured");
+	initializeDisplay();
+	logMessage("INFO","Initialized Display");
 	char temp[300];
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG) || defined(TARGET_PC)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	logMessage("INFO","HW Initialized");
 	currentCPU = OC_NO;
@@ -101,35 +99,61 @@ int main() {
 	strcat(temp,"/theme.ini");
 	logMessage("INFO","Loading theme");
 	loadTheme(temp);
+	logMessage("INFO","Loading section groups");
+	loadSectionGroups();
 	logMessage("INFO","Loading sections");
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	logMessage("INFO","Loading favorites");
 	loadFavorites();
 	switch (currentMode) {
-	    case 0:
-	    	fontSize=baseFont;
-	    	currentMode=0;
-	    	MENU_ITEMS_PER_PAGE=itemsInSimple;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
-	    	break;
-	    case 1:
-	    	fontSize=baseFont-2;
-	    	currentMode=1;
-	    	MENU_ITEMS_PER_PAGE=itemsInTraditional;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
-	    	break;
-	    case 2:
-	    	fontSize=baseFont-4;
-	    	MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
-	    	currentMode=2;
-	    	break;
-	    default:
-	    	fontSize=fontSizeCustom;
-	    	currentMode=3;
-	    	MENU_ITEMS_PER_PAGE=itemsInCustom;
-	    	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
-	    	break;
+		case 0:
+			if (itemsInSimple>0) {
+				fontSize=baseFont;
+				currentMode=0;
+				MENU_ITEMS_PER_PAGE=itemsInSimple;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullSimple;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		case 1:
+			if (itemsInTraditional>0) {
+				fontSize=baseFont-2;
+				currentMode=1;
+				MENU_ITEMS_PER_PAGE=itemsInTraditional;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullTraditional;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		case 2:
+			if (itemsInDrunkenMonkey>0) {
+				fontSize=baseFont-4;
+				MENU_ITEMS_PER_PAGE=itemsInDrunkenMonkey;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullDrunkenMonkey;
+				currentMode=2;
+				break;
+			} else {
+				fontSize=fontSizeCustom;
+				currentMode=3;
+				MENU_ITEMS_PER_PAGE=itemsInCustom;
+				FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+				break;
+			}
+		default:
+			fontSize=fontSizeCustom;
+			currentMode=3;
+			MENU_ITEMS_PER_PAGE=itemsInCustom;
+			FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+			break;
 	}
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
@@ -140,7 +164,7 @@ int main() {
 	initializeFonts();
 	initializeSettingsFonts();
 	logMessage("INFO","Fonts initialized");
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_NPG)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG)
 	initSuspendTimer();
 	logMessage("INFO","Suspend timer initialized");
 	#endif
@@ -157,7 +181,17 @@ int main() {
 	enableKeyRepeat();
 	while (running) {
 		if (currentlyChoosing==3) {
-			updateScreen(NULL);
+			currRawtime = time(NULL);
+			currTime = localtime(&currRawtime);
+			int batt = getBatteryLevel();
+			if (lastChargeLevel > batt || batt > lastChargeLevel + 1) {
+				lastChargeLevel = batt;
+				updateScreen(NULL);
+			}
+			if(currTime->tm_min!=lastMin) {
+				lastMin=currTime->tm_min;
+				updateScreen(NULL);
+			}
 		}
 		while(pollEvent()){
 			if(getEventType()==getKeyDown()){
