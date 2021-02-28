@@ -1,3 +1,4 @@
+#include "../headers/globals.h"
 #ifndef SCREEN_DEFINED
 #define SCREEN_DEFINED
 void updateScreen(struct Rom *rom);

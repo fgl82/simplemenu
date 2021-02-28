@@ -233,6 +233,7 @@ struct MenuSection {
 	int bodyTextColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
+	int pictureTextColor[3];
 	struct Node* currentGameNode;
 	struct Node *head;
 	struct Node *tail;

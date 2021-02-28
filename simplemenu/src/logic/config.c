@@ -196,6 +196,7 @@ void loadTheme(char *theme) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].bodyTextColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemBackground", menuSections[i].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "pictureTextFont", menuSections[i].pictureTextColor);
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
@@ -825,15 +826,16 @@ int loadSections(char *file) {
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
+		logMessage("INFO","Current exec ready");
 		free(value2);
-
+		logMessage("INFO","free as a bird");
 		for (int i=execCounter;i<10;i++) {
 			menuSections[menuSectionCounter].executables[i]=NULL;
 			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
 		}
-
+		logMessage("INFO","free as a bird 2");
 		menuSections[menuSectionCounter].activeExecutable=0;
-
+		logMessage("INFO","Executable set");
 		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories,"\0");
 		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions,"\0");
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"3");
@@ -843,7 +845,7 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-
+		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
 		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
 			SDL_FreeSurface(menuSections[menuSectionCounter].systemLogoSurface);
 			menuSections[menuSectionCounter].systemLogoSurface = NULL;
@@ -852,7 +854,7 @@ int loadSections(char *file) {
 			SDL_FreeSurface(menuSections[menuSectionCounter].backgroundSurface);
 			menuSections[menuSectionCounter].backgroundSurface = NULL;
 		}
-
+		logMessage("INFO","Setting logo, background and system");
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
@@ -875,6 +877,7 @@ int loadSections(char *file) {
 			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
 		}
 
+		logMessage("INFO","Set");
 
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -893,8 +896,8 @@ int loadSections(char *file) {
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
 		free(sectionName);
+		logMessage("INFO","Out");
 	}
-
 	value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
 	if (value == NULL) {
 		colorfulFullscreenMenu = 0;
@@ -1084,10 +1087,10 @@ int loadSections(char *file) {
 	setRGBColorInSection(themeConfig, "FAVORITES", "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+	setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
-
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	ini_free(config);

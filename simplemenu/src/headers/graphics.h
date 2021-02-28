@@ -12,8 +12,8 @@ VAlignTop = 8,
 VAlignBottom = 16,
 VAlignMiddle = 32;
 int calculateProportionalSizeOrDistance(int number);
-int drawShadedTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[]);
-int drawTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align);
+int drawShadedTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[]);
+int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align);
 void drawShadedGameNameOnScreen(char *buf, int position);
 void drawNonShadedGameNameOnScreen(char *buf, int position);
 void drawPictureTextOnScreen(char *buf);
@@ -54,7 +54,7 @@ void drawShadedGameNameOnScreenCenter(char *buf, int position);
 void drawNonShadedGameNameOnScreenCenter(char *buf, int position);
 void displayHeart();
 void* thread_func(void *picture);
-void genericDrawMultiLineTextOnScreen(TTF_Font *font, int x, int y, char *buf, int txtColor[], int align, int maxWidth, int lineSeparation);
+void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int maxWidth, int lineSeparation);
 void resizeGroupBackground(struct SectionGroup *group);
 void displayImageOnScreenCustom(char *fileName);
 void drawShadedGameNameOnScreenCustom(char *buf, int position);
@@ -66,4 +66,6 @@ void drawCustomGameNumber(char *buf, int x, int y);
 void displaySurface(SDL_Surface *surface, int x, int y);
 void resizeSectionSystemPicture(struct MenuSection *section);
 void *updateClock(void *x_void_ptr);
+void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]);
+void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]);
 #endif

@@ -262,7 +262,7 @@ void showConsole() {
 		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
-		drawTextOnScreen(NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
+		drawTextOnScreen(NULL,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
 	}
 }
 
@@ -406,26 +406,31 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
+		printf("1\n");
 		char *tempDisplayName = getFileNameOrAlias(rom);
 		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
 		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
+			printf("1.1\n");
 			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 		free(tempDisplayName);
 	} else {
+		printf("2\n");
 		if (currentMode==1 && itemsInTraditional > 0) {
 			displayImageOnScreenTraditional(pictureWithFullPath);
 		} else if (currentMode==2 && itemsInDrunkenMonkey > 0) {
 			displayImageOnScreenDrunkenMonkey(pictureWithFullPath);
 		} else {
+			printf("2.1\n");
 			displayImageOnScreenCustom(pictureWithFullPath);
 		}
 	}
 	free(pictureWithFullPath);
 	free(tempGameName);
+	printf("3\n");
 }
 
 void drawHeader() {
@@ -927,7 +932,7 @@ void updateScreen(struct Rom *rom) {
 			displayGamePicture(rom);
 		}
 		if (!currentlyChoosing&&currentMode==3&&!fullscreenMode) {
-			logMessage("INFO","Displaying system logo");
+			logMessage("INFO","update screen - Displaying system logo");
 			displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
 		}
 		if(!fullscreenMode&&(currentMode==1||currentMode==2)) {
@@ -936,13 +941,16 @@ void updateScreen(struct Rom *rom) {
 				drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance((43*fontSize)/baseFont), 0, calculateProportionalSizeOrDistance((22*fontSize)/baseFont), rgbColor);
 			}
 		}
+		logMessage("INFO","update screen - drawing game list");
 		if(!currentlyChoosing) {
 			drawGameList();
 		}
+		logMessage("INFO","update screen - displaying game picture");
 		if (!currentlyChoosing&&!fullscreenMode) {
 			if((currentMode==1||currentMode==2||currentMode==3)) {
 				displayGamePictureInMenu(rom);
 			}
+			logMessage("INFO","update screen - setting up decorations");
 			setupDecorations(rom);
 		}
 		if (!currentlyChoosing&&(currentMode==0||fullscreenMode==1)){

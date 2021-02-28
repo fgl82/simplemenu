@@ -10,5 +10,6 @@ void loadAliasList(int sectionNumber);
 void createConfigFilesInHomeIfTheyDontExist();
 void checkIfDefault();
 void loadTheme(char *theme);
+void loadSectionGroups();
 void checkThemes();
 #endif

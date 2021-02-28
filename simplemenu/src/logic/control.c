@@ -609,16 +609,16 @@ void performSettingsChoosingAction() {
 			chosenSetting--;
 		} else {
 			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
-			chosenSetting=9;
-			#else
 			chosenSetting=8;
+			#else
+			chosenSetting=7;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
 		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
-		if(chosenSetting<9) {
-		#else
 		if(chosenSetting<8) {
+		#else
+		if(chosenSetting<7) {
 		#endif
 			chosenSetting++;
 		} else {
