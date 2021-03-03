@@ -106,7 +106,6 @@ void rumble() {
 
 int getBatteryLevel() {
 	#if defined TARGET_RG350_BETA
-
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 		int max_voltage;
 		fscanf(f, "%i", &max_voltage);

@@ -46,6 +46,7 @@ CFLAGS +=  -I.
 LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
 
 DEBUG=NO
+
 ifeq ($(DEBUG), NO)
 	CFLAGS +=  -DDEBUG -g3
 else

@@ -344,7 +344,6 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 		footerOnTop = atoifgl(value);
 
-    	fontSize=fontSize;
     	currentMode=3;
     	MENU_ITEMS_PER_PAGE=itemsPerPage;
     	FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
