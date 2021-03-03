@@ -105,31 +105,59 @@ void rumble() {
 }
 
 int getBatteryLevel() {
+	int max_voltage;
+	int min_voltage;
+	int voltage_now;
+	int total;
 	#if defined TARGET_RG350_BETA
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
-		int max_voltage;
 		fscanf(f, "%i", &max_voltage);
 		fclose(f);
 
 		f = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
-		int min_voltage;
 		fscanf(f, "%i", &min_voltage);
 		fclose(f);
 
 		f = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
-		int voltage_now;
 		fscanf(f, "%i", &voltage_now);
 		fclose(f);
 
-		int total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+		total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
 		if (total > 100 ) {
 			return 100;
 		}
 		return total;
+	#elif TARGET_RG350
+		FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
+		fscanf(f, "%i", &max_voltage);
+		fclose(f);
 
-	#elif TARGET_PC
-		return 100;
+		f = fopen("/sys/class/power_supply/battery/voltage_min_design", "r");
+		fscanf(f, "%i", &min_voltage);
+		fclose(f);
+
+		f = fopen("/sys/class/power_supply/battery/voltage_now", "r");
+		fscanf(f, "%i", &voltage_now);
+		fclose(f);
+
+		total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+		if (total > 100 ) {
+			return 100;
+		}
+		return total;
 	#else
-		return -1;
+		FILE *f = fopen("/sys/class/power_supply/BAT0/charge_full", "r");
+		fscanf(f, "%i", &max_voltage);
+		fclose(f);
+
+		f = fopen("/sys/class/power_supply/BAT0/charge_now", "r");
+		fscanf(f, "%i", &voltage_now);
+		fclose(f);
+
+		total = (voltage_now*100)/(max_voltage);
+		if (total > 100 ) {
+			return 100;
+		}
+		return total;
 	#endif
 }

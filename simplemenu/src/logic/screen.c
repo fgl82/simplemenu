@@ -477,7 +477,6 @@ void drawGameList() {
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
-					printf("1\n");
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 						drawShadedGameNameOnScreenPicMode(buf, nextLine);
 					}
@@ -490,7 +489,6 @@ void drawGameList() {
 		} else {
 			if(strlen(buf)>1) {
 				if(fullscreenMode) {
-					printf("2\n");
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 						drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
 					}
