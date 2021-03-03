@@ -105,10 +105,10 @@ int main() {
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	logMessage("INFO","Loading favorites");
 	loadFavorites();
-	fontSize=fontSizeCustom;
+	fontSize=fontSize;
 	currentMode=3;
-	MENU_ITEMS_PER_PAGE=itemsInCustom;
-	FULLSCREEN_ITEMS_PER_PAGE=itemsInFullCustom;
+	MENU_ITEMS_PER_PAGE=itemsPerPage;
+	FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
 	if(fullscreenMode==0) {
 		ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 	} else {
