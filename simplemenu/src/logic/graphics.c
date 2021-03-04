@@ -88,10 +88,8 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		}
 	} else {
-		if (outline != NULL && fontOutline > 0) {
+		if (currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
-		}
-		if(currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
 			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
@@ -114,7 +112,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	rect2.w = msg->w;
 	rect2.h = msg->h;
 
-	if (outline!=NULL && fontOutline>0) {
+	if(currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
 		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
 		SDL_BlitSurface(msg, NULL, msg1, &rect);
 		SDL_BlitSurface(msg1, NULL, screen, &rect2);
