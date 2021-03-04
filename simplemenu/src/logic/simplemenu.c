@@ -105,7 +105,6 @@ int main() {
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	logMessage("INFO","Loading favorites");
 	loadFavorites();
-	fontSize=fontSize;
 	currentMode=3;
 	MENU_ITEMS_PER_PAGE=itemsPerPage;
 	FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;

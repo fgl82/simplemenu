@@ -138,6 +138,7 @@ extern int systemX;
 extern int systemY;
 extern int fontSize;
 extern int colorfulFullscreenMenu;
+extern int fontOutline;
 extern int displaySectionGroupName;
 
 /* STRUCTS */

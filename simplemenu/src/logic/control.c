@@ -693,11 +693,11 @@ void performSettingsChoosingAction() {
 			if(!hdmiEnabled) {
 				if (keys[BTN_LEFT]) {
 					if (timeoutValue>0) {
-						timeoutValue--;
+						timeoutValue-=5;
 					}
 				} else {
 					if (timeoutValue<60) {
-						timeoutValue++;
+						timeoutValue+=5;
 					}
 				}
 			}

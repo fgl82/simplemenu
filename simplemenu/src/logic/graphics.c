@@ -81,17 +81,22 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 		free(bufCopy1);
 	}
 	if (shaded) {
-		if (outline != NULL) {
+		if (outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
 			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		}
 	} else {
-		if (outline != NULL) {
+		if (outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 		}
-		msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		printf("%d\n", currentlyChoosing);
+		if(currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
+			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		} else {
+			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		}
 	}
 
 	if (align & HAlignCenter) {
@@ -110,8 +115,8 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	rect2.w = msg->w;
 	rect2.h = msg->h;
 
-	if (outline!=NULL) {
-		SDL_Rect rect = {1, 1, msg1->w, msg1->h};
+	if (outline!=NULL && fontOutline>0) {
+		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
 		SDL_BlitSurface(msg, NULL, msg1, &rect);
 		SDL_BlitSurface(msg1, NULL, screen, &rect2);
 		SDL_FreeSurface(msg1);
@@ -254,12 +259,34 @@ void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, co
 	free(bufCopy);
 }
 
-void drawShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[], int txtBackgroundColor[]) {
-	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH/2, position, buf, txtColor, VAlignBottom | HAlignCenter, txtBackgroundColor);
+void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
+	int retW=1;
+	int retW2=1;
+	int retW3=3;
+	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
+	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
+	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
+//	drawShadedTextOnScreen(settingsfont, NULL, retW+retW2, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
+	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
+//	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(70), position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
+//	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(130), position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
+}
+
+void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
+	int retW=1;
+	int retW2=1;
+	int retW3=3;
+	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
+	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
+	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
+//	drawTextOnScreen(settingsfont, NULL, retW+retW2, position, value, txtColor, VAlignBottom | HAlignLeft);
+	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft);
+//	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(70), position, value, txtColor, VAlignBottom | HAlignLeft);
+//	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(130), position, value, txtColor, VAlignBottom | HAlignLeft);
 }
 
 void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
-	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH/2, position, buf, txtColor, VAlignBottom | HAlignCenter);
+	drawTextOnScreen(settingsfont, NULL, calculateProportionalSizeOrDistance(5), position, buf, txtColor, VAlignBottom | HAlignLeft);
 }
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
@@ -448,7 +475,7 @@ void drawTextOnFooterWithColor(char *text, int txtColor[]) {
 }
 
 void drawTextOnSettingsFooterWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH/2, calculateProportionalSizeOrDistance(232), text, txtColor, VAlignMiddle| HAlignCenter);
+	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(231), text, txtColor, VAlignMiddle| HAlignLeft);
 }
 
 void drawTextOnHeader(char *text) {
@@ -473,15 +500,19 @@ void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
 }
 
 void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsHeaderFont, NULL, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(settingsStatusFont, NULL, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, 5, calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(settingsHeaderFont, NULL, calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(24), text, txtColor, VAlignMiddle | HAlignLeft);
 }
 
 void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]) {
 	drawTextOnScreen(settingsStatusFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignRight);
+}
+
+void drawTextOnSettingsHeaderRightWithColor1(char *text, int x, int txtColor[]) {
+	drawTextOnScreen(settingsStatusFont, NULL, x, calculateProportionalSizeOrDistance(33), text, txtColor, VAlignMiddle | HAlignRight);
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
@@ -968,7 +999,7 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	#ifdef TARGET_PC
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
@@ -983,9 +1014,9 @@ void refreshScreen() {
 }
 
 void initializeSettingsFonts() {
-	settingsfont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
-	settingsHeaderFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(20));
-	settingsStatusFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(14));
+	settingsfont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
+	settingsHeaderFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(27));
+	settingsStatusFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
 	settingsFooterFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));
 }
 
@@ -998,7 +1029,7 @@ void initializeFonts() {
 	outlineMiniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSize));
 
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
-	BIGFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+18));
+	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(fontSize+18));
 	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 	outlineHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 
@@ -1011,12 +1042,12 @@ void initializeFonts() {
 	customCountFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text2FontSize));
 	outlineCustomCountFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text2FontSize));
 	if (menuFont!=NULL && strlen(menuFont)>2) {
-		TTF_SetFontOutline(outlineFont,1);
-		TTF_SetFontOutline(outlineMiniFont,1);
-		TTF_SetFontOutline(outlineHeaderFont,1);
-		TTF_SetFontOutline(outlineFooterFont,1);
-		TTF_SetFontOutline(outlineCustomHeaderFont,1);
-		TTF_SetFontOutline(outlineCustomCountFont,1);
+		TTF_SetFontOutline(outlineFont,fontOutline);
+		TTF_SetFontOutline(outlineMiniFont,fontOutline);
+		TTF_SetFontOutline(outlineHeaderFont,fontOutline);
+		TTF_SetFontOutline(outlineFooterFont,fontOutline);
+		TTF_SetFontOutline(outlineCustomHeaderFont,fontOutline);
+		TTF_SetFontOutline(outlineCustomCountFont,fontOutline);
 	}
 
 }

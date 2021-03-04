@@ -248,6 +248,13 @@ void loadTheme(char *theme) {
 			colorfulFullscreenMenu = atoifgl(value);
 		}
 
+		value = ini_get(themeConfig, "GENERAL", "font_outline");
+		if (value == NULL) {
+			fontOutline = 0;
+		} else {
+			fontOutline = atoifgl(value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
 		if (value == NULL) {
 			displaySectionGroupName = 0;
@@ -821,6 +828,13 @@ int loadSections(char *file) {
 		colorfulFullscreenMenu = 0;
 	} else {
 		colorfulFullscreenMenu = atoifgl(value);
+	}
+
+	value = ini_get(themeConfig, "GENERAL", "font_outline");
+	if (value == NULL) {
+		fontOutline = 0;
+	} else {
+		fontOutline = atoifgl(value);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "display_section_group_name");

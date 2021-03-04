@@ -93,7 +93,7 @@ if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ] || [ "$1" = 'RG-350-BETA' ]; then
     while true; do
         read -p "Transfer?" yn
         case $yn in
-            [Yy]* ) scp SimpleMenu-${1}.opk od@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
+            [Yy]* ) scp SimpleMenu-${1}.opk root@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac

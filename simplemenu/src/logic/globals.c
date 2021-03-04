@@ -137,6 +137,7 @@ typedef struct thread_picture {
  int systemY;
  int fontSize;
  int colorfulFullscreenMenu;
+ int fontOutline;
  int displaySectionGroupName;
 
 /* STRUCTS */

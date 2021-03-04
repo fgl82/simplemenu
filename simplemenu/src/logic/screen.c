@@ -532,15 +532,15 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 //	options[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
-	values[TIDY_ROMS_OPTION]= malloc(4);
-	values[FULL_SCREEN_FOOTER_OPTION]= malloc(4);
-	values[FULL_SCREEN_MENU_OPTION]= malloc(4);
+	values[TIDY_ROMS_OPTION]= malloc(10);
+	values[FULL_SCREEN_FOOTER_OPTION]= malloc(10);
+	values[FULL_SCREEN_MENU_OPTION]= malloc(10);
 	values[THEME_OPTION]= malloc(2000);
 	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
 	values[DEFAULT_OPTION]= malloc(4);
 	values[USB_OPTION]= malloc(4);
 	values[SHUTDOWN_OPTION]= malloc(30);
-	values[AUTO_HIDE_LOGOS_OPTION]= malloc(4);
+	values[AUTO_HIDE_LOGOS_OPTION]= malloc(10);
 //	values[ITEMS_PER_PAGE_OPTION]=malloc(30);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
@@ -554,48 +554,26 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
 //	hints[ITEMS_PER_PAGE_OPTION]= malloc(100);
 
-	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names: ");
-	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Display fullscreen rom names: ");
-	strcpy(options[FULL_SCREEN_MENU_OPTION],"Display fullscreen menu: ");
-	strcpy(options[THEME_OPTION],"Theme: ");
-	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout: ");
-	strcpy(options[DEFAULT_OPTION],"Default launcher: ");
+	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names ");
+	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Fullscreen rom names ");
+	strcpy(options[FULL_SCREEN_MENU_OPTION],"Fullscreen menu ");
+	strcpy(options[THEME_OPTION],"Theme ");
+	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout ");
+	strcpy(options[DEFAULT_OPTION],"Default launcher  ");
 	#if defined TARGET_RG300
-	strcpy(options[USB_OPTION],"USB mode");
+	strcpy(options[USB_OPTION],"USB mode ");
 	#else
-	strcpy(options[USB_OPTION],"HDMI: ");
+	strcpy(options[USB_OPTION],"HDMI ");
 	#endif
-	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos: ");
-//	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout: ");
+	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos ");
+//	strcpy(options[ITEMS_PER_PAGE_OPTION],"Layout ");
 
-	if (shutDownEnabled) {
-		switch (selectedShutDownOption) {
-			case 0:
-				strcpy(options[SHUTDOWN_OPTION],"ShutDown");
-				break;
-			case 1:
-				strcpy(options[SHUTDOWN_OPTION],"Reboot");
-				break;
-		}
-	} else {
-		switch (selectedShutDownOption) {
-			case 0:
-				strcpy(options[SHUTDOWN_OPTION],"Quit");
-				break;
-			case 1:
-				strcpy(options[SHUTDOWN_OPTION],"Reboot");
-				break;
-			case 2:
-				strcpy(options[SHUTDOWN_OPTION],"Shutdown");
-				break;
-		}
-	}
-
+	strcpy(options[SHUTDOWN_OPTION],"Session ");
 	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
 	strcpy(hints[FULL_SCREEN_FOOTER_OPTION],"DISPLAY THE CURRENT ROM NAME");
 	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRANSLUCENT MENU");
 	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
-	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECS UNTIL THE SCREEN TURNS OFF");
+	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECONDS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
 //	strcpy(hints[ITEMS_PER_PAGE_OPTION],"LAYOUT TYPE");
@@ -604,44 +582,45 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	#else
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
 	#endif
-
+	strcpy(hints[SHUTDOWN_OPTION],"A TO CONFIRM - LEFT/RIGHT TO CHOOSE");
 	if (shutDownEnabled) {
 		switch (selectedShutDownOption) {
 			case 0:
-				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				strcpy(values[SHUTDOWN_OPTION],"shutdown");
 				break;
 			case 1:
-				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				strcpy(values[SHUTDOWN_OPTION],"reboot");
 				break;
 		}
 	} else {
 		switch (selectedShutDownOption) {
 			case 0:
-				strcpy(hints[SHUTDOWN_OPTION],"A TO QUIT, LEFT/RIGHT->CHOOSE");
+				strcpy(values[SHUTDOWN_OPTION],"quit");
 				break;
 			case 1:
-				strcpy(hints[SHUTDOWN_OPTION],"A TO REBOOT, LEFT/RIGHT->CHOOSE");
+				strcpy(values[SHUTDOWN_OPTION],"reboot");
 				break;
 			case 2:
-				strcpy(hints[SHUTDOWN_OPTION],"A TO SHUTDOWN, LEFT/RIGHT->CHOOSE");
+				strcpy(values[SHUTDOWN_OPTION],"shutdown");
 				break;
 		}
 	}
 
+
 	if (stripGames) {
-		strcpy(values[TIDY_ROMS_OPTION],"YES");
+		strcpy(values[TIDY_ROMS_OPTION],"enabled");
 	} else {
-		strcpy(values[TIDY_ROMS_OPTION],"NO");
+		strcpy(values[TIDY_ROMS_OPTION],"disabled");
 	}
 	if (footerVisibleInFullscreenMode) {
-		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"YES");
+		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"enabled");
 	} else {
-		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"NO");
+		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"disabled");
 	}
 	if (menuVisibleInFullscreenMode) {
-		strcpy(values[FULL_SCREEN_MENU_OPTION],"YES");
+		strcpy(values[FULL_SCREEN_MENU_OPTION],"enabled");
 	} else {
-		strcpy(values[FULL_SCREEN_MENU_OPTION],"NO");
+		strcpy(values[FULL_SCREEN_MENU_OPTION],"disabled");
 	}
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
 	strcpy(values[THEME_OPTION],themeName);
@@ -649,28 +628,28 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	if (timeoutValue>0&&hdmiEnabled==0) {
 		sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
 	} else {
-		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","ALWAYS ON");
+		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","always on");
 	}
 
 	if (shutDownEnabled) {
-		strcpy(values[DEFAULT_OPTION],"YES");
+		strcpy(values[DEFAULT_OPTION],"yes");
 	} else {
-		strcpy(values[DEFAULT_OPTION],"NO");
+		strcpy(values[DEFAULT_OPTION],"no");
 	}
-	strcpy(values[SHUTDOWN_OPTION],"\0");
+//	strcpy(values[SHUTDOWN_OPTION],"\0");
 	#if defined TARGET_RG300
 	strcpy(values[USB_OPTION],"\0");
 	#else
 	if (hdmiChanged==1) {
-		strcpy(values[USB_OPTION],"YES");
+		strcpy(values[USB_OPTION],"enabled");
 	} else {
-		strcpy(values[USB_OPTION],"NO");
+		strcpy(values[USB_OPTION],"disabled");
 	}
 	#endif
 	if (autoHideLogos) {
-		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"YES");
+		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"enabled");
 	} else {
-		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"NO");
+		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"disabled");
 	}
 }
 
@@ -686,8 +665,35 @@ void drawSettingsScreen() {
 	DEFAULT_OPTION=7;
 	USB_OPTION=8;
 
-	int darkerAmber[3]={150,102,15};
-	int brighterAmber[3]= {243,197,31};
+	int headerAndFooterBackground[3]={37,50,56};
+	int headerAndFooterText[3]={255,255,255};
+	int bodyText[3]= {90,90,90};
+	int bodyHighlightedText[3]= {0,147,131};
+	int bodyHighlightedTextForeground[3]= {183,224,218};
+	int bodyBackground[3]={250,250,250};
+
+	int batteryLevel100[] = {1,255,1};
+	int batteryLevel90[] = {51,255,0};
+	int batteryLevel80[] = {101,255,0};
+	int batteryLevel70[] = {153,254,0};
+	int batteryLevel60[] = {202,253,0};
+	int batteryLevel50[] = {255,254,3};
+	int batteryLevel40[] = {255,204,0};
+	int batteryLevel30[] = {255,152,1};
+	int batteryLevel20[] = {255,102,0};
+	int batteryLevel10[] = {255,51,0};
+
+	int *levels[10];
+	levels[0] = batteryLevel10;
+	levels[1] = batteryLevel20;
+	levels[2] = batteryLevel30;
+	levels[3] = batteryLevel40;
+	levels[4] = batteryLevel50;
+	levels[5] = batteryLevel60;
+	levels[6] = batteryLevel70;
+	levels[7] = batteryLevel80;
+	levels[8] = batteryLevel90;
+	levels[9] = batteryLevel100;
 
 	char *options[10];
 	char *values[10];
@@ -701,18 +707,25 @@ void drawSettingsScreen() {
 	currRawtime = time(NULL);
 	currTime = localtime(&currRawtime);
 //	if(currTime->tm_min!=lastMin) {
-		snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
+//		snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
 		snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
 //	}
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), bodyBackground);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
+	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
+//	drawTextOnSettingsHeaderWithColor(clock,headerAndFooterText);
 
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, 0, darkerAmber);
-	drawTextOnSettingsHeaderWithColor("SETTINGS",brighterAmber);
-	drawTextOnSettingsHeaderRightWithColor(clock,brighterAmber);
-	drawTextOnSettingsHeaderLeftWithColor(batt,brighterAmber);
-	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), brighterAmber);
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), darkerAmber);
+//	int pos = (lastChargeLevel/10)-1;
+	int pos = (100/10)-1;
+	for (int i=pos;i>=0;i--) {
+//		drawRectangleToScreen(calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(2), SCREEN_WIDTH-10-calculateProportionalSizeOrDistance(7*i), 10, levels[i]);
+		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);
+	}
+//	drawTextOnSettingsHeaderRightWithColor1(batt,SCREEN_WIDTH-14-calculateProportionalSizeOrDistance(7*pos),headerAndFooterText);
 
-	int nextLine = calculateProportionalSizeOrDistance(23);
+	int nextLine = calculateProportionalSizeOrDistance(50);
+	int nextLineText = calculateProportionalSizeOrDistance(50);
+	int selected=0;
 	#if defined TARGET_RG300
 	for (int i=0;i<9;i++) {
 	#elif defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
@@ -726,13 +739,29 @@ void drawSettingsScreen() {
 			strcat(temp,values[i]);
 		}
 		if(i==chosenSetting) {
-			drawShadedSettingsOptionOnScreen(temp, nextLine,brighterAmber,darkerAmber);
-			drawTextOnSettingsFooterWithColor(hints[i], brighterAmber);
+//			drawRectangleToScreen(5, 20, 0, nextLine-3, bodyHighlightedText);
+			int lineColor[] = { 219,219,219};
+			if (i==0) {
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, nextLine-calculateProportionalSizeOrDistance(4), lineColor);
+			} else if (i==8){
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(21), 0, nextLine-calculateProportionalSizeOrDistance(4), lineColor);
+			} else {
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(20), 0, nextLine-calculateProportionalSizeOrDistance(4), lineColor);
+			}
+			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
+			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,lineColor);
+			selected=i;
 		} else {
-			drawNonShadedSettingsOptionOnScreen(temp, nextLine, darkerAmber);
+			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
+			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,bodyBackground);
 		}
-		nextLine+=calculateProportionalSizeOrDistance(10);
+		int lineColor[] = { 229,229,229};
+		if (i<8) drawRectangleToScreen(SCREEN_WIDTH, 2, 0, nextLine+calculateProportionalSizeOrDistance(15), lineColor);
+		nextLine+=calculateProportionalSizeOrDistance(19);
+		nextLineText+=calculateProportionalSizeOrDistance(19);
 	}
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
+	drawTextOnSettingsFooterWithColor(hints[selected], bodyBackground);
 	free(options[TIDY_ROMS_OPTION]);
 	free(options[FULL_SCREEN_FOOTER_OPTION]);
 	free(options[FULL_SCREEN_MENU_OPTION]);
