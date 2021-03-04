@@ -715,8 +715,8 @@ void drawSettingsScreen() {
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
 //	drawTextOnSettingsHeaderWithColor(clock,headerAndFooterText);
 
-//	int pos = (lastChargeLevel/10)-1;
-	int pos = (40/10)-1;
+	int pos = (lastChargeLevel/10)-1;
+//	int pos = (100/10)-1;
 
 	int gray[] = {125,125,125};
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray);
