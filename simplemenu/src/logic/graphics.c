@@ -91,7 +91,6 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 		if (outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 		}
-		printf("%d\n", currentlyChoosing);
 		if(currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
