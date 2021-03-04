@@ -81,7 +81,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 		free(bufCopy1);
 	}
 	if (shaded) {
-		if (outline != NULL && fontOutline > 0) {
+		if (currentlyChoosing==0  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
