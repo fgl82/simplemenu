@@ -22,7 +22,7 @@ void initializeGlobals() {
 	currentSectionNumber=0;
 	gamesInPage=0;
 	CURRENT_SECTION.totalPages=0;
-	MAX_GAMES_IN_SECTION=50000;
+	MAX_GAMES_IN_SECTION=500000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
 	favoritesSectionSelected=0;

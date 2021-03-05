@@ -672,28 +672,32 @@ void drawSettingsScreen() {
 	int bodyHighlightedTextForeground[3]= {183,224,218};
 	int bodyBackground[3]={250,250,250};
 
-	int batteryLevel100[] = {1,255,1};
-	int batteryLevel90[] = {51,255,0};
-	int batteryLevel80[] = {101,255,0};
-	int batteryLevel70[] = {153,254,0};
-	int batteryLevel60[] = {202,253,0};
-	int batteryLevel50[] = {255,254,3};
-	int batteryLevel40[] = {255,204,0};
-	int batteryLevel30[] = {255,152,1};
-	int batteryLevel20[] = {255,102,0};
-	int batteryLevel10[] = {255,51,0};
+	int batteryLevel90to100[] = {1,255,1};
+	int batteryLevel80to90[] = {51,255,0};
+	int batteryLevel70to80[] = {101,255,0};
+	int batteryLevel60to70[] = {153,254,0};
+	int batteryLevel50to60[] = {202,253,0};
+	int batteryLevel40to50[] = {255,254,3};
+	int batteryLevel30to40[] = {255,204,0};
+	int batteryLevel20to30[] = {255,152,1};
+	int batteryLevel10to20[] = {255,102,0};
+	int batteryLevel0to10[] = {255,51,0};
 
-	int *levels[10];
-	levels[0] = batteryLevel10;
-	levels[1] = batteryLevel20;
-	levels[2] = batteryLevel30;
-	levels[3] = batteryLevel40;
-	levels[4] = batteryLevel50;
-	levels[5] = batteryLevel60;
-	levels[6] = batteryLevel70;
-	levels[7] = batteryLevel80;
-	levels[8] = batteryLevel90;
-	levels[9] = batteryLevel100;
+
+	int gray5[]={121, 121, 121};
+
+	int *levels[11];
+	levels[0] = batteryLevel0to10;
+	levels[1] = batteryLevel10to20;
+	levels[2] = batteryLevel20to30;
+	levels[3] = batteryLevel30to40;
+	levels[4] = batteryLevel40to50;
+	levels[5] = batteryLevel50to60;
+	levels[6] = batteryLevel60to70;
+	levels[7] = batteryLevel70to80;
+	levels[8] = batteryLevel80to90;
+	levels[9] = batteryLevel90to100;
+	levels[10] = batteryLevel90to100;
 
 	char *options[10];
 	char *values[10];
@@ -715,11 +719,12 @@ void drawSettingsScreen() {
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
 //	drawTextOnSettingsHeaderWithColor(clock,headerAndFooterText);
 
-	int pos = (lastChargeLevel/10)-1;
-//	int pos = (100/10)-1;
+	int pos = (lastChargeLevel/10);
+//	int pos = (59/10);
 
-	int gray[] = {125,125,125};
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray);
+
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
+
 	for (int i=pos;i>=0;i--) {
 //		drawRectangleToScreen(calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(2), SCREEN_WIDTH-10-calculateProportionalSizeOrDistance(7*i), 10, levels[i]);
 		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);

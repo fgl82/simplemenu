@@ -260,7 +260,6 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #else
 void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #endif
-
 	char *exec = malloc(strlen(executable)+5000);
 	strcpy(exec, executable);
 
@@ -277,7 +276,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 	snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
 	saveLastState();
-	
 	#ifndef TARGET_PC
 	saveFavorites();
 	clearTimer();
@@ -285,11 +283,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	clearPicModeHideMenuTimer();
 	#endif
 	logMessage("INFO", "Launching Game");
-
 	#ifndef TARGET_PC
 	setCPU(currentCPU);
 	#endif
-
 	#ifdef TARGET_RG300
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
@@ -300,7 +296,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	fprintf(fp,CURRENT_SECTION.scaling);
 	fclose(fp);
 	#endif
-
 	#ifndef TARGET_PC
 	logMessage("INFO",exec);
 	logMessage("INFO",fileToBeExecutedWithFullPath);
@@ -312,6 +307,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	strcat(exec, "\"");
 	logMessage("INFO",exec);
 	freeResources();
+	printf("36\n");
 	int ret = system(exec);
 	if(ret == -1) {
 		logMessage("ERROR","Error executing emulator");
@@ -471,7 +467,6 @@ void loadFavoritesSectionGameList() {
 int scanDirectory(char *directory, char* files[], int i)
 {
     struct dirent **result;
-	char *d_name;
 	int j=0;
 	int n = scandir(directory, &result, NULL, alphasort);
 	if (n < 0) {
@@ -479,7 +474,8 @@ int scanDirectory(char *directory, char* files[], int i)
 	    return 0;
 	}
     while (j<n) {
-    	d_name = result[j]->d_name;
+    	char *d_name = malloc(3000);
+    	strcpy(d_name, result[j]->d_name);
 		if (strcmp(d_name, mediaFolder) != 0 && strcmp (d_name, "..") != 0 && strcmp (d_name, ".") != 0) {
 			if (result[j]->d_type & DT_DIR) {
 				char path[PATH_MAX];
@@ -496,10 +492,12 @@ int scanDirectory(char *directory, char* files[], int i)
 				char path[PATH_MAX];
 				snprintf (path, PATH_MAX, "%s%s", directory, d_name);
 				files[i]=malloc(sizeof(path)+1);
+				logMessage("INFO",path);
 				strcpy(files[i],path);
 				i++;
 			}
 		}
+		free (d_name);
 		free(result[j]);
 		j++;
     }
@@ -731,53 +729,53 @@ void loadGameList(int refresh) {
 				remove(sectionCacheName);
 			}
 		}
-		fp = fopen(sectionCacheName,"r");
-		if (fp!=NULL) {
-			logMessage("INFO","Using cache file");
-		    char currentline[2000];
-		    while (fgets(currentline, sizeof(currentline), fp) != NULL) {
-		    	int size = strlen(currentline)+1;
-
-		    	struct Rom *rom;
-				rom=malloc(sizeof(struct Rom));
-
-				char *ptr = strtok(currentline,";");
-				size = strlen(ptr)+1;
-				rom->alias=malloc(size);
-				if (strcmp(ptr,"(null)")==0) {
-					free(rom->alias);
-					rom->alias = "\0";
-				} else {
-					memcpy(rom->alias,ptr,size);
-				}
-
-		        ptr = strtok(NULL,";");
-		        size = strlen(ptr)+1;
-				rom->directory=strdup(ptr);
-
-				ptr = strtok(NULL,";");
-				size = strlen(ptr)+1;
-				rom->name=strdup(ptr);
-				rom->name[size-2] = '\0';
-				if (game==ITEMS_PER_PAGE) {
-					CURRENT_SECTION.totalPages++;
-					game = 0;
-				}
-				InsertAtTail(rom);
-				game++;
-				CURRENT_SECTION.gameCount++;
-		    }
-		    logMessage("INFO","Finished reading cache");
-			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
-			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-			if (fp!=NULL) {
-				fclose(fp);
-			}
-			return;
-		}
-		if (fp!=NULL) {
-			fclose(fp);
-		}
+//		fp = fopen(sectionCacheName,"r");
+//		if (fp!=NULL) {
+//			logMessage("INFO","Using cache file");
+//		    char currentline[2000];
+//		    while (fgets(currentline, sizeof(currentline), fp) != NULL) {
+//		    	int size = strlen(currentline)+1;
+//
+//		    	struct Rom *rom;
+//				rom=malloc(sizeof(struct Rom));
+//
+//				char *ptr = strtok(currentline,";");
+//				size = strlen(ptr)+1;
+//				rom->alias=malloc(size);
+//				if (strcmp(ptr,"(null)")==0) {
+//					free(rom->alias);
+//					rom->alias = "\0";
+//				} else {
+//					memcpy(rom->alias,ptr,size);
+//				}
+//
+//		        ptr = strtok(NULL,";");
+//		        size = strlen(ptr)+1;
+//				rom->directory=strdup(ptr);
+//
+//				ptr = strtok(NULL,";");
+//				size = strlen(ptr)+1;
+//				rom->name=strdup(ptr);
+//				rom->name[size-2] = '\0';
+//				if (game==ITEMS_PER_PAGE) {
+//					CURRENT_SECTION.totalPages++;
+//					game = 0;
+//				}
+//				InsertAtTail(rom);
+//				game++;
+//				CURRENT_SECTION.gameCount++;
+//		    }
+//		    logMessage("INFO","Finished reading cache");
+//			CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
+//			scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
+//			if (fp!=NULL) {
+//				fclose(fp);
+//			}
+//			return;
+//		}
+//		if (fp!=NULL) {
+//			fclose(fp);
+//		}
 		ptr = strtok(CURRENT_SECTION.filesDirectories, ",");
 		loading=1;
 		while (ptr!=NULL) {
@@ -914,12 +912,12 @@ void loadGameList(int refresh) {
 		logMessage("INFO","The list needs to be sorted");
 		CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
 
-		fp = fopen(sectionCacheName,"w");
-		for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
-			struct Rom *rom;
-			rom = GetNthNode(i)->data;
-			fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
-		}
+//		fp = fopen(sectionCacheName,"w");
+//		for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
+//			struct Rom *rom;
+//			rom = GetNthNode(i)->data;
+//			fprintf(fp,"%s;%s;%s\n",rom->alias, rom->directory, rom->name);
+//		}
 		CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 		if (fp!=NULL) {

@@ -183,7 +183,7 @@ struct SectionGroup {
 };
 
 struct MenuSection {
-	char sectionName[25];
+	char sectionName[250];
 	char *emulatorDirectories[10];
 	char *executables[10];
 	char filesDirectories[400];

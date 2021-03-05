@@ -166,6 +166,7 @@ int rewindSection(int showLogo) {
 }
 
 void launchGame(struct Rom *rom) {
+	printf("1\n");
 	FILE *file=NULL;
 	char *error=malloc(3000);
 	char tempExec[3000];

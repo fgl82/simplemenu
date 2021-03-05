@@ -694,6 +694,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
+//		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY), 0, 0, w, h, 0, smoothing);
 		if(hideHeartTimer!=NULL) {
 			SDL_Surface *heart = IMG_Load(favoriteIndicator);
@@ -996,7 +997,7 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	#ifdef TARGET_PC
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
 	#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
@@ -1065,11 +1066,13 @@ void freeFonts() {
 	TTF_CloseFont(miniFont);
 	miniFont = NULL;
 	TTF_CloseFont(BIGFont);
-	footerFont = NULL;
+	BIGFont = NULL;
 	TTF_CloseFont(outlineCustomHeaderFont);
 	outlineCustomHeaderFont = NULL;
-	TTF_CloseFont(outlineFont);
-	outlineFont = NULL;
+	printf("11\n");
+//	TTF_CloseFont(outlineFont);
+//	outlineFont = NULL;
+	printf("12\n");
 	TTF_CloseFont(outlineMiniFont);
 	outlineMiniFont = NULL;
 	TTF_CloseFont(outlineHeaderFont);
@@ -1092,8 +1095,11 @@ void freeSettingsFonts() {
 }
 
 void freeResources() {
+	printf("2\n");
 	freeFonts();
+	printf("3\n");
 	freeSettingsFonts();
+	printf("4\n");
 	TTF_Quit();
 	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	Shake_Stop(device, effect_id);
