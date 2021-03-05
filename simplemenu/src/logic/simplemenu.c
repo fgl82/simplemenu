@@ -132,7 +132,8 @@ int main() {
 		updateScreen(NULL);
 	}
 	enableKeyRepeat();
-	while (running) {
+	SDL_Event event;
+	while (SDL_WaitEvent(&event) && running) {
 		if (currentlyChoosing==3) {
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
@@ -146,8 +147,8 @@ int main() {
 				updateScreen(NULL);
 			}
 		}
-		while(pollEvent()){
-			if(getEventType()==getKeyDown()){
+//		while(SDL_WaitEvent(&event)){
+			if(event.type==getKeyDown()){
 				if (!isSuspended) {
 					if (currentlyChoosing==0) {
 						if (CURRENT_SECTION.currentGameNode!=NULL) {
@@ -173,8 +174,8 @@ int main() {
 				} else {
 					updateScreen(NULL);
 				}
-			} else if (getEventType()==getKeyUp()&&!isUSBMode) {
-				if(getPressedKey()==BTN_B&&!currentlyChoosing) {
+			} else if (event.type==getKeyUp()&&!isUSBMode) {
+				if(event.key.keysym.sym==BTN_B&&!currentlyChoosing) {
 					if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
 						currentlyChoosing=2;
@@ -198,7 +199,7 @@ int main() {
 					}
 					aKeyComboWasPressed=0;
 				}
-				if(getPressedKey()==BTN_SELECT&&!hotKeyPressed) {
+				if(event.key.keysym.sym==BTN_SELECT&&!hotKeyPressed) {
 					if (CURRENT_SECTION.currentGameNode!=NULL) {
 						updateScreen(CURRENT_SECTION.currentGameNode->data);
 					} else {
@@ -206,7 +207,7 @@ int main() {
 					}
 				}
 			}
-		}
+//		}
 	}
 	quit();
 }

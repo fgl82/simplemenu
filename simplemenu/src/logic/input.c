@@ -7,7 +7,7 @@
 SDL_Event event;
 
 int pollEvent() {
-	return SDL_PollEvent(&event);
+	return SDL_WaitEvent(&event);
 }
 
 int getEventType() {

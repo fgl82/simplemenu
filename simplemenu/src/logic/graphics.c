@@ -1069,10 +1069,8 @@ void freeFonts() {
 	BIGFont = NULL;
 	TTF_CloseFont(outlineCustomHeaderFont);
 	outlineCustomHeaderFont = NULL;
-	printf("11\n");
 //	TTF_CloseFont(outlineFont);
 //	outlineFont = NULL;
-	printf("12\n");
 	TTF_CloseFont(outlineMiniFont);
 	outlineMiniFont = NULL;
 	TTF_CloseFont(outlineHeaderFont);
@@ -1095,11 +1093,8 @@ void freeSettingsFonts() {
 }
 
 void freeResources() {
-	printf("2\n");
 	freeFonts();
-	printf("3\n");
 	freeSettingsFonts();
-	printf("4\n");
 	TTF_Quit();
 	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
 	Shake_Stop(device, effect_id);

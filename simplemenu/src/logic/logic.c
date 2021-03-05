@@ -307,7 +307,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	strcat(exec, "\"");
 	logMessage("INFO",exec);
 	freeResources();
-	printf("36\n");
 	int ret = system(exec);
 	if(ret == -1) {
 		logMessage("ERROR","Error executing emulator");
