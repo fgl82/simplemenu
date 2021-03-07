@@ -230,7 +230,7 @@ extern struct Favorite favorites[2000];
 
 /* CONTROL */
 extern uint8_t *keys;
-//extern SDL_Joystick *joystick;
+extern SDL_Joystick *joystick;
 extern int BTN_Y;
 extern int BTN_B;
 extern int BTN_A;
@@ -259,6 +259,8 @@ extern int effect_id1;
 extern int MAGIC_NUMBER;
 extern int SCREEN_HEIGHT;
 extern int SCREEN_WIDTH;
+extern int HDMI_WIDTH;
+extern int HDMI_HEIGHT;
 extern double SCREEN_RATIO;
 extern int hdmiEnabled;
 
