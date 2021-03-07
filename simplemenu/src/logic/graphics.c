@@ -795,7 +795,7 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 		return surface;
 	}
 	int smoothing = 0;
-	if (surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) {
+	if ((surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) && !(SCREEN_WIDTH%surface->w==0 && SCREEN_HEIGHT%surface->h==0)) {
 		smoothing=1;
 	}
 	double zoomx = (float)SCREEN_WIDTH / surface->w;
