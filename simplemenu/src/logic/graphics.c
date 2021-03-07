@@ -637,26 +637,6 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 	return 1;
 }
 
-int drawImage1(pthread_t *myThread, SDL_Surface *display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
-
-	threadPicture picture;
-
-	picture.display = display;
-	picture.image=image;
-	picture.x=x;
-	picture.y=y;
-	picture.xx=xx;
-	picture.yy=yy;
-	picture.newwidth=newwidth;
-	picture.newheight=newheight;
-	picture.transparent=transparent;
-	picture.smoothing=smoothing;
-
-	pthread_create(myThread, NULL, thread_func, &picture); // no parentheses here
-	pthread_join(*myThread,NULL);
-	return 1;
-}
-
 void showHeart(int x, int y) {
 	SDL_Surface *img = IMG_Load(favoriteIndicator);
 	SDL_Rect rectangleDest;
@@ -671,7 +651,7 @@ void showHeart(int x, int y) {
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	if(systemX>0&&systemY>0) {
-			displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemX), calculateProportionalSizeOrDistance(systemY));
+		displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemX), calculateProportionalSizeOrDistance(systemY));
 	}
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
@@ -837,12 +817,11 @@ SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 	}
 	int newW = (float)calculateProportionalSizeOrDistance(w);
 	int newH = (float)calculateProportionalSizeOrDistance(h);
-
 	if (newW==surface->w&&newH==surface->h) {
 		return surface;
 	}
 	int smoothing = 0;
-	if (surface->w!=calculateProportionalSizeOrDistance(w) || surface->h!=calculateProportionalSizeOrDistance(h)) {
+	if ((surface->w!=calculateProportionalSizeOrDistance(w) || surface->h!=calculateProportionalSizeOrDistance(h)) && !(calculateProportionalSizeOrDistance(w)%surface->w==0 && calculateProportionalSizeOrDistance(h)%surface->h==0)) {
 		smoothing=1;
 	}
 	double zoomx = (float)(newW / (float)surface->w);
@@ -965,7 +944,11 @@ void drawUSBScreen() {
 }
 
 void initializeDisplay() {
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
+
+    SDL_JoystickEventState(SDL_ENABLE);
+    joystick = SDL_JoystickOpen(0);
+
 	char * line = NULL;
 	size_t len = 0;
 	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
@@ -974,15 +957,15 @@ void initializeDisplay() {
 		read = getline(&line, &len, fpHDMI);
 		hdmiEnabled = atoi(line);
 		fclose(fpHDMI);
-	}
-	if (read!=-1) {
-		free(line);
+		if (read!=-1) {
+			free(line);
+		}
 	}
 
 	hdmiChanged = hdmiEnabled;
 	if (hdmiEnabled) {
-		SCREEN_WIDTH = 640;
-		SCREEN_HEIGHT = 480;
+		SCREEN_WIDTH = HDMI_WIDTH;
+		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	SDL_ShowCursor(0);
@@ -997,7 +980,12 @@ void initializeDisplay() {
 	fclose(fp);
 	#endif
 	#ifdef TARGET_PC
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
+//	SCREEN_HEIGHT = info->current_h;
+	SCREEN_HEIGHT = 480;
+	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
+	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
 	#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
@@ -1101,6 +1089,7 @@ void freeResources() {
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
+	SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
 	#ifndef TARGET_PC
 	closeLogFile();
