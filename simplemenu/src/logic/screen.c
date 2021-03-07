@@ -501,7 +501,7 @@ void drawGameList() {
 		if (!fullscreenMode) {
 			nextLine+=calculateProportionalSizeOrDistance(itemsSeparation);
 		} else {
-			nextLine+=calculateProportionalSizeOrDistance((fontSize*20)/fontSize);
+			nextLine+=calculateProportionalSizeOrDistance(itemsSeparation);
 		}
 		free(nameWithoutExtension);
 		free(buf);
