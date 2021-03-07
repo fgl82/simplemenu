@@ -203,6 +203,7 @@ void loadTheme(char *theme) {
 			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].pictureTextColor);
 		}
 
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
 
