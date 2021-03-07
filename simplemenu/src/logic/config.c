@@ -192,11 +192,16 @@ void loadTheme(char *theme) {
 	for (int i=0;i<menuSectionCounter;i++) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerBackGround", menuSections[i].headerAndFooterBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerFont", menuSections[i].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyBackground", menuSections[i].bodyBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].bodyTextColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemBackground", menuSections[i].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "pictureTextFont", menuSections[i].pictureTextColor);
+
+		value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+		if (value!=NULL) {
+			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "pictureTextFont", menuSections[i].pictureTextColor);
+		} else {
+			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].pictureTextColor);
+		}
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
@@ -556,6 +561,12 @@ void loadConfig() {
 	value = ini_get(config, "SCREEN", "height");
 	SCREEN_HEIGHT=atoifgl(value);
 
+	value = ini_get(config, "SCREEN", "hdmi_width");
+	HDMI_WIDTH=atoifgl(value);
+
+	value = ini_get(config, "SCREEN", "hdmi_height");
+	HDMI_HEIGHT=atoifgl(value);
+
 	value = ini_get(config, "CONTROLS", "A");
 	if (value) {
 		BTN_A = atoifgl(value);
@@ -766,11 +777,17 @@ int loadSections(char *file) {
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"3");
 		setRGBColorInSection(themeConfig, sectionName, "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, sectionName, "bodyBackground", menuSections[menuSectionCounter].bodyBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+
+		value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+		if (value!=NULL) {
+			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+		} else {
+			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "bodyFont", menuSections[menuSectionCounter].pictureTextColor);
+		}
+
 		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
 			SDL_FreeSurface(menuSections[menuSectionCounter].systemLogoSurface);
 			menuSections[menuSectionCounter].systemLogoSurface = NULL;
@@ -954,11 +971,15 @@ int loadSections(char *file) {
 	menuSections[menuSectionCounter].currentGameInPage=0;
 	setRGBColorInSection(themeConfig, "FAVORITES", "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "bodyBackground", menuSections[menuSectionCounter].bodyBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-	setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+	value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+	if (value!=NULL) {
+		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+	} else {
+		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "bodyFont", menuSections[menuSectionCounter].pictureTextColor);
+	}
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
