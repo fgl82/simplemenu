@@ -147,67 +147,65 @@ int main() {
 				updateScreen(NULL);
 			}
 		}
-//		while(SDL_WaitEvent(&event)){
-			if(event.type==getKeyDown()){
-				if (!isSuspended) {
-					if (currentlyChoosing==0) {
-						if (CURRENT_SECTION.currentGameNode!=NULL) {
-							performAction(CURRENT_SECTION.currentGameNode->data);
-						} else {
-							performAction(NULL);
-						}
+		if(event.type==getKeyDown()){
+			if (!isSuspended) {
+				if (currentlyChoosing==0) {
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						performAction(CURRENT_SECTION.currentGameNode->data);
 					} else {
-						if (currentlyChoosing==1) {
-							performChoosingAction();
-						} else if (currentlyChoosing==2) {
-							performGroupChoosingAction();
-						} else if (currentlyChoosing==3) {
-							performSettingsChoosingAction();
-						}
+						performAction(NULL);
+					}
+				} else {
+					if (currentlyChoosing==1) {
+						performChoosingAction();
+					} else if (currentlyChoosing==2) {
+						performGroupChoosingAction();
+					} else if (currentlyChoosing==3) {
+						performSettingsChoosingAction();
 					}
 				}
-				#ifndef TARGET_PC
-				resetScreenOffTimer();
-				#endif
+			}
+			#ifndef TARGET_PC
+			resetScreenOffTimer();
+			#endif
+			if (CURRENT_SECTION.currentGameNode!=NULL) {
+				updateScreen(CURRENT_SECTION.currentGameNode->data);
+			} else {
+				updateScreen(NULL);
+			}
+		} else if (event.type==getKeyUp()&&!isUSBMode) {
+			if(event.key.keysym.sym==BTN_B&&!currentlyChoosing) {
+				if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+					beforeTryingToSwitchGroup = activeGroup;
+					currentlyChoosing=2;
+					}
+				hotKeyPressed=0;
+				if(fullscreenMode) {
+					if(currentlySectionSwitching) {
+						hideFullScreenModeMenu();
+					} else if (CURRENT_SECTION.alphabeticalPaging) {
+						resetPicModeHideMenuTimer();
+					}
+				}
+				CURRENT_SECTION.alphabeticalPaging=0;
+				if (aKeyComboWasPressed) {
+					currentlySectionSwitching=0;
+				}
 				if (CURRENT_SECTION.currentGameNode!=NULL) {
 					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				} else {
 					updateScreen(NULL);
 				}
-			} else if (event.type==getKeyUp()&&!isUSBMode) {
-				if(event.key.keysym.sym==BTN_B&&!currentlyChoosing) {
-					if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
-						beforeTryingToSwitchGroup = activeGroup;
-						currentlyChoosing=2;
-					}
-					hotKeyPressed=0;
-					if(fullscreenMode) {
-						if(currentlySectionSwitching) {
-							hideFullScreenModeMenu();
-						} else if (CURRENT_SECTION.alphabeticalPaging) {
-							resetPicModeHideMenuTimer();
-						}
-					}
-					CURRENT_SECTION.alphabeticalPaging=0;
-					if (aKeyComboWasPressed) {
-						currentlySectionSwitching=0;
-					}
-					if (CURRENT_SECTION.currentGameNode!=NULL) {
-						updateScreen(CURRENT_SECTION.currentGameNode->data);
-					} else {
-						updateScreen(NULL);
-					}
-					aKeyComboWasPressed=0;
-				}
-				if(event.key.keysym.sym==BTN_SELECT&&!hotKeyPressed) {
-					if (CURRENT_SECTION.currentGameNode!=NULL) {
-						updateScreen(CURRENT_SECTION.currentGameNode->data);
-					} else {
-						updateScreen(NULL);
-					}
+				aKeyComboWasPressed=0;
+			}
+			if(event.key.keysym.sym==BTN_SELECT&&!hotKeyPressed) {
+				if (CURRENT_SECTION.currentGameNode!=NULL) {
+					updateScreen(CURRENT_SECTION.currentGameNode->data);
+				} else {
+					updateScreen(NULL);
 				}
 			}
-//		}
+		}
 	}
 	quit();
 }
