@@ -7,7 +7,13 @@ echo ${OPK_NAME}
 if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ] || [ "$1" = "RG-350-BETA" ]; then
     var="gcw0";
 else
-    var="retrofw"
+    var="retrofw";
+fi
+
+if [ "$1" = "RG-350-BETA" ]; then
+    user_name="od";
+else
+    user_name="root";
 fi
 
 cd /home/bittboy/git/simplemenu/simplemenu/
@@ -93,7 +99,7 @@ if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ] || [ "$1" = 'RG-350-BETA' ]; then
     while true; do
         read -p "Transfer?" yn
         case $yn in
-            [Yy]* ) scp SimpleMenu-${1}.opk root@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
+            [Yy]* ) scp SimpleMenu-${1}.opk $user_name@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac
