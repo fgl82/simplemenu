@@ -374,5 +374,19 @@ void cycleFrequencies() {
 }
 
 int getBatteryLevel() {
-	return -1;
+	int max_voltage = 4050;
+	int min_voltage = 3480;
+	int voltage_now;
+	int total;
+	FILE *f = fopen("/sys/class/power_supply/miyoo-battery/voltage_max_design", "r");
+
+	f = fopen("/sys/class/power_supply/miyoo-battery/voltage_now", "r");
+	fscanf(f, "%i", &voltage_now);
+	fclose(f);
+
+	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+	if (total > 100 ) {
+		return 100;
+	}
+	return total;
 }

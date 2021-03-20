@@ -185,9 +185,9 @@ void launchGame(struct Rom *rom) {
 			return;
 		}
 		#ifndef TARGET_PC
-		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name);
+		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp);
 		#else
-		executeCommandPC(favorite.executable,favorite.name);
+		executeCommandPC(favorite.executable,favorite.name, favorite.isConsoleApp);
 		#endif
 	} else if (rom->name!=NULL) {
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
@@ -205,15 +205,15 @@ void launchGame(struct Rom *rom) {
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			#ifndef TARGET_PC
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name), rom->isConsoleApp);
 			#else
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name), rom->isConsoleApp);
 			#endif
 		} else {
 			#ifdef TARGET_PC
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name, rom->isConsoleApp);
 			#else
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name, rom->isConsoleApp);
 			#endif
 		}
 	}
@@ -223,13 +223,13 @@ void launchEmulator(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		#ifndef TARGET_PC
-		executeCommand(favorite.emulatorFolder,favorite.executable,"*");
+		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp);
 		#else
 		executeCommandPC(favorite.executable,"*");
 		#endif
 	} else if (rom->name!=NULL) {
 		#ifndef TARGET_PC
-		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
+		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*", 0);
 		#else
 		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
 		#endif
@@ -413,6 +413,7 @@ void removeFavorite() {
 			strcpy(favorites[i].filesDirectory,favorites[i+1].filesDirectory);
 			strcpy(favorites[i].name,favorites[i+1].name);
 			strcpy(favorites[i].alias,favorites[i+1].alias);
+			favorites[i].isConsoleApp = favorites[i+1].isConsoleApp;
 		}
 		strcpy(favorites[favoritesSize-1].section,"\0");
 		strcpy(favorites[favoritesSize-1].emulatorFolder,"\0");
@@ -420,6 +421,7 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
+		favorites[favoritesSize-1].isConsoleApp = 0;
 		favoritesSize--;
 		if (CURRENT_GAME_NUMBER==favoritesSize) {
 			FAVORITES_SECTION.realCurrentGameNumber--;
@@ -477,6 +479,7 @@ void markAsFavorite(struct Rom *rom) {
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
 			strcpy(favorites[favoritesSize].filesDirectory,rom->directory);
+			favorites[favoritesSize].isConsoleApp = rom->isConsoleApp;
 			favoritesSize++;
 			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}

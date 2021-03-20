@@ -1,3 +1,13 @@
+#include <pthread.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <SDL/SDL_events.h>
+#include <SDL/SDL_joystick.h>
+#include <SDL/SDL_timer.h>
+#include <unistd.h>
+
+#include "../headers/string_utils.h"
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
@@ -44,6 +54,12 @@ TTF_Font *settingsStatusFont = NULL;
 TTF_Font *customHeaderFont = NULL;
 TTF_Font *outlineCustomHeaderFont = NULL;
 
+TTF_Font *getBigFont() {
+	char *akashi = "resources/akashi.ttf";
+	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
+	return BIGFont;
+}
+
 SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	SDL_Color c;
 	c.r = r;
@@ -73,6 +89,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	int retW = 1;
 
 	TTF_SizeText(font, (const char *) buf, &retW, NULL);
+
 	while (retW>width) {
 		bufCopy[len]='\0';
 		char *bufCopy1=strdup(bufCopy);
@@ -80,6 +97,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 		TTF_SizeText(font, (const char *) bufCopy1, &retW, NULL);
 		free(bufCopy1);
 	}
+
 	if (shaded) {
 		if (currentlyChoosing==0  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
@@ -553,11 +571,15 @@ void drawError(char *errorMessage, int textColor[]) {
 }
 
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]) {
+	char temp[500];
+	snprintf(temp,sizeof(temp),"%d - %d - %d - %d - {%d,%d,%d}", width, height, x, y, rgbColor[0], rgbColor[1], rgbColor[2]);
+	logMessage("INFO",temp);
 	SDL_Rect rectangle;
 	rectangle.w = width;
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
+	logMessage("INFO","FIlling");
 	SDL_FillRect(screen, &rectangle, SDL_MapRGB(screen->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	return(rectangle);
 }
@@ -703,7 +725,7 @@ void displayImageOnScreenCustom(char *fileName) {
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidth/4)*3;
 			if (CURRENT_SECTION.gameCount>0) {
-				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidth),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
+//				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidth),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
@@ -944,6 +966,7 @@ void drawUSBScreen() {
 }
 
 void initializeDisplay() {
+	SDL_ShowCursor(0);
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
 
     SDL_JoystickEventState(SDL_ENABLE);
@@ -968,7 +991,7 @@ void initializeDisplay() {
 		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	SDL_ShowCursor(0);
+
 	#ifdef TARGET_RG300
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
@@ -986,10 +1009,12 @@ void initializeDisplay() {
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
+	SDL_ShowCursor(0);
 	#else
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_NOFRAME);
+	SDL_ShowCursor(0);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE | SDL_FULLSCREEN);
 	#endif
-	TTF_Init();
+//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
 }
 
@@ -1000,14 +1025,17 @@ void refreshScreen() {
 }
 
 void initializeSettingsFonts() {
-	settingsfont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
-	settingsHeaderFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(27));
-	settingsStatusFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(15));
-	settingsFooterFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(16));
+	char *akashi = "resources/akashi.ttf";
+	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
+	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));
+	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
+	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(16));
 }
 
 void initializeFonts() {
 	TTF_Init();
+	char *akashi = "resources/akashi.ttf";
+
 	font = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));
 	outlineFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize));;
 
@@ -1015,7 +1043,7 @@ void initializeFonts() {
 	outlineMiniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSize));
 
 	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
-	BIGFont = TTF_OpenFont("resources/akashi.ttf", calculateProportionalSizeOrDistance(fontSize+18));
+	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(fontSize+18));
 	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 	outlineHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
 
@@ -1089,7 +1117,6 @@ void freeResources() {
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
-	SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE | SDL_NOFRAME);
 	#endif
 	#ifndef TARGET_PC
 	closeLogFile();

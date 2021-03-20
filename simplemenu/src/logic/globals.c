@@ -73,9 +73,9 @@ int DEFAULT_OPTION;
 int USB_OPTION;
 int SHUTDOWN_OPTION;
 int AUTO_HIDE_LOGOS_OPTION;
-int ITEMS_PER_PAGE_OPTION;
 char mediaFolder[1000];
 int stripGames;
+int useCache;
 int shutDownEnabled;
 int selectedShutDownOption;
 int footerVisibleInFullscreenMode;
@@ -146,11 +146,13 @@ struct OPKDesktopFile {
 	char name[200];
 	char displayName[200];
 	char category[200];
+	int isConsoleApp;
 };
 
 struct StolenGMenuFile {
 	char title[200];
 	char exec[200];
+	int isConsoleApp;
 };
 
 struct Favorite {
@@ -160,12 +162,14 @@ struct Favorite {
 	char emulatorFolder[200];
 	char executable[200];
 	char filesDirectory[400];
+	int isConsoleApp;
 };
 
 struct Rom {
 	char *name;
 	char *alias;
 	char *directory;
+	int isConsoleApp;
 };
 
 struct Node  {

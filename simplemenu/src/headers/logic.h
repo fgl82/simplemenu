@@ -4,9 +4,9 @@
 void generateError(char *pErrorMessage, int pThereIsACriticalError);
 void quit();
 #ifndef TARGET_PC
-void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath);
+void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath, int isConsoleApp);
 #else
-void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath);
+void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath, int isConsoleApp);
 #endif
 void loadGameList(int refresh);
 void loadFavoritesSectionGameList();

@@ -400,35 +400,35 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[5000];
-		snprintf(copyCommand,sizeof(copyCommand),"cp ./config/* %s/.simplemenu/",home);
+		snprintf(copyCommand,sizeof(copyCommand),"cp config/* %s/.simplemenu",home);
 		int ret = system(copyCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		char copyAppsCommand[5000];
 		mkdir(pathToAppFiles,0700);
-		snprintf(copyAppsCommand,sizeof(copyAppsCommand),"cp ./apps/* %s/.simplemenu/apps",home);
+		snprintf(copyAppsCommand,sizeof(copyAppsCommand),"cp apps %s/.simplemenu",home);
 		ret = system(copyAppsCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		char copyGamesCommand[5000];
 		mkdir(pathToGameFiles,0700);
-		snprintf(copyGamesCommand,sizeof(copyGamesCommand),"cp ./games/* %s/.simplemenu/games",home);
+		snprintf(copyGamesCommand,sizeof(copyGamesCommand),"cp games %s/.simplemenu",home);
 		ret = system(copyGamesCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		char copyThemesCommand[5000];
 		mkdir(pathToThemeFiles,0700);
-		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r ./themes/* %s/.simplemenu/themes",home);
+		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r themes %s/.simplemenu",home);
 		ret = system(copyThemesCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
 		char copySectionGroupsCommand[5000];
 		mkdir(pathToSectionGroupsFiles,0700);
-		snprintf(copySectionGroupsCommand,sizeof(copySectionGroupsCommand),"cp -r ./section_groups/* %s/.simplemenu/section_groups",home);
+		snprintf(copySectionGroupsCommand,sizeof(copySectionGroupsCommand),"cp -r section_groups %s/.simplemenu",home);
 		ret = system(copySectionGroupsCommand);
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
@@ -461,6 +461,7 @@ void saveFavorites() {
 			}
 			fprintf(fp,"%s;",favorite.emulatorFolder);
 			fprintf(fp,"%s;",favorite.executable);
+			fprintf(fp,"%d;",favorite.isConsoleApp);
 			fprintf(fp,"%s",favorite.filesDirectory);
 			linesWritten++;
 		}
@@ -481,7 +482,7 @@ void loadFavorites() {
 		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
 		return;
 	}
-	char *configurations[6];
+	char *configurations[7];
 	char *ptr;
 	favoritesSize=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -497,7 +498,8 @@ void loadFavorites() {
 		strcpy(favorites[favoritesSize].alias,configurations[2]);
 		strcpy(favorites[favoritesSize].emulatorFolder,configurations[3]);
 		strcpy(favorites[favoritesSize].executable,configurations[4]);
-		strcpy(favorites[favoritesSize].filesDirectory,configurations[5]);
+		favorites[favoritesSize].isConsoleApp = atoi(configurations[5]);
+		strcpy(favorites[favoritesSize].filesDirectory,configurations[6]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';
@@ -543,6 +545,9 @@ void loadConfig() {
 	if (atoifgl(value)==1) {
 		enableLogging();
 	}
+
+	value = ini_get(config, "GENERAL", "cache");
+	useCache = atoifgl(value);
 
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoifgl(value);

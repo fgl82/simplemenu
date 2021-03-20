@@ -7,3 +7,11 @@
 ./gmon.out
 /*.opk
 /gmon.out
+/themes/*
+/themes/0A/*
+/themes/default/*
+RG-350/themes/*
+RG-350-BETA/themes/*
+./RG-350-BETA/section_groups/*
+/autotest/
+/RG-350/

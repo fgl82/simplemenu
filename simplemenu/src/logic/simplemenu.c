@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
+#include <dirent.h>
 
 #include "../headers/config.h"
 #include "../headers/control.h"
@@ -31,7 +33,9 @@ void initializeGlobals() {
 	MENU_ITEMS_PER_PAGE=10;
 	ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 	isPicModeMenuHidden=1;
-	autoHideLogos=1;
+	footerVisibleInFullscreenMode=1;
+	menuVisibleInFullscreenMode=1;
+	autoHideLogos=0;
 	stripGames=1;
 	srand(time(0));
 }
@@ -73,14 +77,22 @@ int main() {
 	logMessage("INFO","Reset Framebuffer");
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
+	loadConfig();
+	logMessage("INFO","Config loaded");
+	initializeDisplay();
+	int color[3] = {255,255,255} ;
+//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0 , 0, color);
+
+//	char *akashi = "resources/akashi.ttf";
+//	TTF_Font *fonti = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
+//	drawTextOnScreen(fonti, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "HELLO", color, VAlignMiddle|HAlignCenter);
+//	refreshScreen();
+
 	logMessage("INFO","Validated configuration existence");
 	checkThemes();
 	logMessage("INFO","Themes checked");
 	loadLastState();
 	logMessage("INFO","Last state loaded");
-	loadConfig();
-	logMessage("INFO","Config loaded");
-	initializeDisplay();
 	logMessage("INFO","Initialized Display");
 	char temp[300];
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
