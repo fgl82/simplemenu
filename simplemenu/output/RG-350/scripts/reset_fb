@@ -1,13 +1,10 @@
 #!/bin/sh
-export HOME=`cat /etc/passwd |head -1 |cut -d':' -f 6`
 /usr/sbin/unlockvt > /dev/null
 /usr/bin/reset
 echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind
 if [ -f /sys/devices/platform/jz-lcd.0/allow_downscaling ] ; then
-	echo 0 > /sys/devices/platform/jz-lcd.0/allow_downscaling
+	echo 1 > /sys/devices/platform/jz-lcd.0/allow_downscaling
 fi
 if [ -f /sys/devices/platform/linkdev/alt_key_map ] ; then
 	echo 0 > /sys/devices/platform/linkdev/alt_key_map
 fi
-/usr/sbin/gsensor --stop
-. /etc/profile
