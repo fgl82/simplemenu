@@ -67,7 +67,7 @@ Comment=A simple launcher
 Exec=simplemenu
 Terminal=true
 Type=Application
-StartupNotify=false
+StartupNotify=true
 Icon=simplemenu
 Categories=applications;
 EOF
