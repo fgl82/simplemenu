@@ -284,7 +284,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #endif
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
-
+		unsetenv("SDL_FBCON_DONT_CLEAR");
 		char states[2000];
 //		for (int i=0;i<favoritesSectionNumber+1;i++) {
 //			char tempString[200];
@@ -321,13 +321,14 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #ifndef TARGET_PC
 		logMessage("INFO",exec);
 		logMessage("INFO",fileToBeExecutedWithFullPath);
+		SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 		SDL_ShowCursor(1);
 		freeResources();
 		SDL_ShowCursor(1);
 		resetFrameBuffer1();
 
 		if (consoleApp) {
-#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
+		#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
 			/* Enable the framebuffer console */
 			char c = '1';
 			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
@@ -346,9 +347,8 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					printf("Unable to activate tty1\n");
 				close(fd);
 			}
-#endif
+		#endif
 		}
-
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
 		strcat(exec, " \"");
@@ -802,16 +802,16 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			char *ptr=NULL;
 
 			char sectionCacheName[PATH_MAX];
-			snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 
 			if (refresh) {
 				cleanListForSection(&CURRENT_SECTION);
 				logMessage("INFO","Cleaned section list");
-				if (refresh==1) {
-					remove(sectionCacheName);
-				}
 			}
 			if (useCache==1) {
+				if (refresh) {
+					remove(sectionCacheName);
+				}
+				snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 				fp = fopen(sectionCacheName,"r");
 				if (fp!=NULL) {
 					logMessage("INFO","Using cache file");
@@ -860,13 +860,15 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					fclose(fp);
 				}
 			}
-			ptr = strtok(CURRENT_SECTION.filesDirectories, ",");
+			char *filesDirectoriesCopy = strdup(CURRENT_SECTION.filesDirectories);
+			ptr = strtok(filesDirectoriesCopy, ",");
 			loading=1;
 			while (ptr!=NULL) {
 				dirs[dirCounter]=strdup(ptr);
 				ptr = strtok(NULL, ",");
 				dirCounter++;
 			}
+			free(filesDirectoriesCopy);
 			for(int k=0;k<dirCounter;k++) {
 				int n = 0;
 				logMessage("INFO","Scanning directory");
