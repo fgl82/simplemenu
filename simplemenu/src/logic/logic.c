@@ -271,11 +271,8 @@ int checkIfEmulatorExists(char *path, char *executable) {
 }
 
 void resetFrameBuffer1 () {
-	printf("asd0\n");
 	int ret = system("./scripts/reset_fb");
-	printf("asd1\n");
 	if (ret==-1) {
-		printf("asd2\n");
 		generateError("FATAL ERROR", 1);
 	}
 }
@@ -289,11 +286,11 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		strcpy(exec, executable);
 
 		char states[2000];
-		for (int i=0;i<favoritesSectionNumber+1;i++) {
-			char tempString[200];
-			snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
-			strcat(states,tempString);
-		}
+//		for (int i=0;i<favoritesSectionNumber+1;i++) {
+//			char tempString[200];
+//			snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
+//			strcat(states,tempString);
+//		}
 		char pReturnTo[3];
 		snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
 		char pSectionNumber[3]="";
@@ -324,7 +321,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #ifndef TARGET_PC
 		logMessage("INFO",exec);
 		logMessage("INFO",fileToBeExecutedWithFullPath);
+		SDL_ShowCursor(1);
 		freeResources();
+		SDL_ShowCursor(1);
 		resetFrameBuffer1();
 
 		if (consoleApp) {
@@ -652,28 +651,53 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		size_t len = 0;
 		ssize_t read;
 		fp = fopen(fileName, "r");
+		int paramsFlag = 0;
 		while ((read = getline(&line, &len, fp)) != -1) {
 			char *ptr;
 			if(strstr(line,"title")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
 				strcpy(stolenFile->title,ptr);
-				stolenFile->title[strlen(stolenFile->title)-1]='\0';
-				logMessage("INFO", "CONSOLE APP FGL");
-				logMessage("INFO", ptr);
+				logMessage("INFO", "STOLEN FILE title");
+				if (stolenFile->title[strlen(stolenFile->title)-1]=='\n') {
+					logMessage("INFO", "HAD ENTER");
+					stolenFile->title[strlen(stolenFile->title)-1]='\0';
+				}
+				logMessage("INFO", stolenFile->title);
 			} else if(strstr(line,"exec")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
 				strcpy(stolenFile->exec,ptr);
-				stolenFile->exec[strlen(stolenFile->exec)-1]='\0';
-				logMessage("INFO", ptr);
+				logMessage("INFO", "STOLEN FILE exec");
+				if (stolenFile->exec[strlen(stolenFile->exec)-1]=='\n') {
+					logMessage("INFO", "HAD ENTER");
+					stolenFile->exec[strlen(stolenFile->exec)-1]='\0';
+				} else {
+					stolenFile->exec[strlen(stolenFile->exec)]='\0';
+				}
+				logMessage("INFO", stolenFile->exec);
+			} else if(strstr(line,"params")!=NULL) {
+				ptr = strtok(line, "=");
+				ptr = strtok(NULL, "=");
+				strcpy(stolenFile->params,ptr);
+				logMessage("INFO", "STOLEN FILE params");
+				if (stolenFile->params[strlen(stolenFile->params)-1]=='\n') {
+					logMessage("INFO", "HAD ENTER");
+					stolenFile->params[strlen(stolenFile->params)-1]='\0';
+				}
+				logMessage("INFO", stolenFile->params);
+				paramsFlag=1;
 			} else if(strstr(line,"consoleapp")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
+				logMessage("INFO", "STOLEN FILE isConsoleApp");
 				stolenFile->isConsoleApp=strcmp("false",ptr);
-				logMessage("INFO", ptr);
+				logMessage("INFO", (stolenFile->isConsoleApp==0?"false":"true"));
 				break;
 			}
+		}
+		if (paramsFlag==0) {
+			strcpy(stolenFile->params,"\0" );
 		}
 		fclose(fp);
 		if(line) {
@@ -927,6 +951,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 								logMessage("INFO", "STOLEN FILE!!!");
 								fillUpStolenGMenuFile(&stolenFile, files[i]);
 								strcpy(rom->name,stolenFile.exec);
+								if(stolenFile.params[0]!='\0') {
+									strcat(rom->name," ");
+									strcat(rom->name,stolenFile.params);
+								}
+								logMessage("INFO", "FINAL NAME");
+								logMessage("INFO", rom->name);
 								rom->alias=malloc(strlen(stolenFile.title)+1);
 								strcpy(rom->alias, stolenFile.title);
 								rom->isConsoleApp=stolenFile.isConsoleApp;

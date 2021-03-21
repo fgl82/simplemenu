@@ -225,13 +225,13 @@ void launchEmulator(struct Rom *rom) {
 		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp);
 		#else
-		executeCommandPC(favorite.executable,"*");
+		executeCommandPC(favorite.executable,"*",0);
 		#endif
 	} else if (rom->name!=NULL) {
 		#ifndef TARGET_PC
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*", 0);
 		#else
-		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
+		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*",0);
 		#endif
 	}
 }

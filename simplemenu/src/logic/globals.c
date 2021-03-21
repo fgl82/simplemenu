@@ -152,6 +152,7 @@ struct OPKDesktopFile {
 struct StolenGMenuFile {
 	char title[200];
 	char exec[200];
+	char params[600];
 	int isConsoleApp;
 };
 
