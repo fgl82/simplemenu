@@ -967,6 +967,13 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 //	SDL_ShowCursor(0);
+
+	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
+
+	SDL_Init(SDL_INIT_VIDEO);
+	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
+	SDL_FreeSurface(screen);
+	SDL_Quit();
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
 
     SDL_JoystickEventState(SDL_ENABLE);
@@ -1012,7 +1019,7 @@ void initializeDisplay() {
 	SDL_ShowCursor(0);
 	#else
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
 	#endif
 //	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
