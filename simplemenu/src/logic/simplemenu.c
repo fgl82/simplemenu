@@ -145,14 +145,12 @@ int main() {
 	}
 	enableKeyRepeat();
 	SDL_Event event;
-	int wasNull=0;
 
-	 const int GAME_FPS=60;
-	  Uint32 start_time;
+	const int GAME_FPS=60;
+ 	Uint32 start_time;
 
 	while (SDL_WaitEvent(&event) && running) {
-		wasNull = 0;
-	    start_time=SDL_GetTicks();
+		start_time=SDL_GetTicks();
 		if (currentlyChoosing==3) {
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
@@ -190,7 +188,6 @@ int main() {
 			if (CURRENT_SECTION.currentGameNode!=NULL) {
 				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			} else {
-				wasNull=1;
 				updateScreen(NULL);
 			}
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
@@ -214,7 +211,6 @@ int main() {
 				if (CURRENT_SECTION.currentGameNode!=NULL) {
 					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				} else {
-					wasNull=1;
 					updateScreen(NULL);
 				}
 				aKeyComboWasPressed=0;
@@ -223,7 +219,6 @@ int main() {
 				if (CURRENT_SECTION.currentGameNode!=NULL) {
 					updateScreen(CURRENT_SECTION.currentGameNode->data);
 				} else {
-					wasNull=1;
 					updateScreen(NULL);
 				}
 			}
