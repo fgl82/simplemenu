@@ -970,14 +970,14 @@ void initializeDisplay() {
 
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
 	SDL_Quit();
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
-    SDL_JoystickEventState(SDL_ENABLE);
-    joystick = SDL_JoystickOpen(0);
+//    SDL_JoystickEventState(SDL_ENABLE);
+//    joystick = SDL_JoystickOpen(0);
 
 	char * line = NULL;
 	size_t len = 0;
@@ -1015,7 +1015,7 @@ void initializeDisplay() {
 	SCREEN_HEIGHT = 480;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE|SDL_DOUBLEBUF);
 	SDL_ShowCursor(0);
 	#else
 	SDL_ShowCursor(0);
