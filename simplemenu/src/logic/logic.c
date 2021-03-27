@@ -284,7 +284,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #endif
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
+//#ifndef TARGET_RG350_BETA
 		unsetenv("SDL_FBCON_DONT_CLEAR");
+//#endif
 		char states[2000];
 //		for (int i=0;i<favoritesSectionNumber+1;i++) {
 //			char tempString[200];
@@ -318,6 +320,15 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		fprintf(fp,CURRENT_SECTION.scaling);
 		fclose(fp);
 #endif
+#ifdef TARGET_RG350_BETA
+		if (strcmp(CURRENT_SECTION.scaling,"0")==0) { //0: stretch
+			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=0");
+		} else if (strcmp(CURRENT_SECTION.scaling,"1")==0) { //1: aspect
+			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=1");
+		} else {
+			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=2"); //2: integer scaling
+		}
+#endif
 #ifndef TARGET_PC
 		logMessage("INFO",exec);
 		logMessage("INFO",fileToBeExecutedWithFullPath);
@@ -325,7 +336,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		SDL_ShowCursor(1);
 		freeResources();
 		SDL_ShowCursor(1);
+//#ifndef TARGET_RG350_BETA
 		resetFrameBuffer1();
+//#endif
 
 		if (consoleApp) {
 		#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA

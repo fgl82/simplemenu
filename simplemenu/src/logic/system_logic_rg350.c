@@ -14,20 +14,47 @@
 #include <shake.h>
 #endif
 
+#if defined TARGET_RG350_BETA
+#define SYSFS_CPUFREQ_DIR "/sys/devices/system/cpu/cpu0/cpufreq"
+#define SYSFS_CPUFREQ_LIST SYSFS_CPUFREQ_DIR "/scaling_available_frequencies"
+#define SYSFS_CPUFREQ_SET SYSFS_CPUFREQ_DIR "/scaling_setspeed"
+#define SYSFS_CPUFREQ_CUR SYSFS_CPUFREQ_DIR "/scaling_cur_freq"
+#endif
 
 volatile uint32_t *memregs;
 int32_t memdev = 0;
 int oldCPU;
 
+void to_string(char str[], int num)
+{
+    int i, rem, len = 0, n;
+
+    n = num;
+    while (n != 0)
+    {
+        len++;
+        n /= 10;
+    }
+    for (i = 0; i < len; i++)
+    {
+        rem = num % 10;
+        num = num / 10;
+        str[len - (i + 1)] = rem + '0';
+    }
+    str[len] = '\0';
+}
+
 void setCPU(uint32_t mhz)
 {
 	currentCPU = mhz;
 	#ifndef TARGET_PC
-    if (memdev > 0)
-    {
-        uint32_t m = mhz / 6;
-        memregs[0x10 >> 2] = (m << 24) | 0x090520;
-    }
+		#if defined TARGET_RG350_BETA
+			char strMhz[10];
+			int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
+			to_string(strMhz, (mhz * 1000));
+			int ret = write(fd, strMhz, strlen(strMhz));
+			close(fd);
+		#endif
 	#endif
 }
 

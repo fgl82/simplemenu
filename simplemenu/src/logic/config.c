@@ -780,7 +780,11 @@ int loadSections(char *file) {
 		logMessage("INFO","Executable set");
 		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories,"\0");
 		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions,"\0");
+		#ifdef TARGET_RG300
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"3");
+		#else
+		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"0");
+		#endif
 		setRGBColorInSection(themeConfig, sectionName, "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
 		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);

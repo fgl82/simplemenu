@@ -60,6 +60,12 @@ int performAction(struct Rom *rom) {
 	}
 	if(keys[BTN_B]) {
 		hotKeyPressed=1;
+		if (keys[BTN_START]&&!currentlySectionSwitching) {
+			hotKeyPressed=0;
+			cycleFrequencies();
+			aKeyComboWasPressed=1;
+			return 0;
+		}
 		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
 			launchEmulator(rom);
 			aKeyComboWasPressed=1;

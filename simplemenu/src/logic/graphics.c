@@ -969,11 +969,12 @@ void initializeDisplay() {
 //	SDL_ShowCursor(0);
 
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
-
+	#ifndef TARGET_RG350_BETA
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
 	SDL_Quit();
+	#endif
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
 //    SDL_JoystickEventState(SDL_ENABLE);
