@@ -119,11 +119,11 @@ void HW_Init()
 
 void cycleFrequencies() {
 	if(currentCPU==OC_UC) {
-		setCPU(OC_NO);
+		currentCPU = OC_NO;
 	} else if (currentCPU==OC_NO) {
-		setCPU(OC_OC);
+		currentCPU = OC_OC;
 	} else {
-		setCPU(OC_UC);
+		currentCPU = OC_UC;
 	}
 }
 
