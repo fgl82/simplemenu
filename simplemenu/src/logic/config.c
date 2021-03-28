@@ -435,6 +435,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		}
 		system("scripts/consoles.sh");
 		system("scripts/handhelds.sh");
+		system("scripts/arcades.sh");
 		mkdir(pathToTempFiles,0700);
 	}
 }
