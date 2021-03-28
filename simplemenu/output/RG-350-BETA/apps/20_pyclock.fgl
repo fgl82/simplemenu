@@ -1,4 +1,0 @@
-title=Clock
-description=Clock, alarm, timer, calendar
-exec=/usr/bin/pyclock
-icon=skin:icons/pyclock.png
