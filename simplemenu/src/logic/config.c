@@ -433,8 +433,10 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
+		system("scripts/consoles.sh");
+		system("scripts/handhelds.sh");
+		mkdir(pathToTempFiles,0700);
 	}
-	mkdir(pathToTempFiles,0700);
 }
 
 void saveFavorites() {
