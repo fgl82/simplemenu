@@ -6,13 +6,9 @@
 if [ -f /media/data/SimpleMenu/simplemenu ]; then
     cd /media/data/SimpleMenu
     ./simplemenu
-elif [ -f /media/data/apps/SimpleMenu-RG-350.opk ]; then
-    /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/SimpleMenu-OD.opk
-elif [ -f /media/sdcard/apps/SimpleMenu-RG-350.opk ]; then
-    /usr/bin/opkrun -m default.gcw0.desktop /media/sdcard/apps/SimpleMenu-OD.opk
-elif [ -f /media/sdcard/apps/SimpleMenu-RG-350-BETA.opk ]; then
+elif [ -f /media/sdcard/apps/SimpleMenu-OD-BETA.opk ]; then
     /usr/bin/opkrun -m default.gcw0.desktop /media/sdcard/apps/SimpleMenu-OD-BETA.opk
-elif [ -f /media/data/apps/SimpleMenu-RG-350-BETA.opk ]; then
+elif [ -f /media/data/apps/SimpleMenu-OD-BETA.opk ]; then
     /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/SimpleMenu-OD-BETA.opk
 elif [ -f /media/data/apps/SimpleMenu-PG2.opk ]; then
     /usr/bin/opkrun -m default.gcw0.desktop /media/data/apps/SimpleMenu-PG2.opk
