@@ -60,11 +60,11 @@ void checkIfDefault() {
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
-	#if defined TARGET_RG350
+	#if defined TARGET_OD
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
-	#if defined TARGET_RG350_BETA
+	#if defined TARGET_OD_BETA
 	fp = fopen("/media/data/local/home/.autostart", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
@@ -372,7 +372,7 @@ void loadTheme(char *theme) {
 void checkThemes() {
 	char *files[1000];
 	char tempString[1000];
-	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/themes/",getenv("HOME"));
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/themes/%dx%d/",getenv("HOME"),SCREEN_WIDTH,SCREEN_HEIGHT);
 	int n = findDirectoriesInDirectory(tempString, files, 0);
 	qsort(files, n, sizeof(const char*), sortStringArray);
 	for(int i=0;i<n;i++) {

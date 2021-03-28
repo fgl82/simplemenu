@@ -72,7 +72,7 @@ int main() {
     sigaction(SIGABRT, &sa, NULL);
     sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
+	#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 	resetFrameBuffer();
 	logMessage("INFO","Reset Framebuffer");
 	#endif
@@ -95,7 +95,7 @@ int main() {
 	logMessage("INFO","Last state loaded");
 	logMessage("INFO","Initialized Display");
 	char temp[300];
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	logMessage("INFO","HW Initialized");
 	currentCPU = OC_NO;
@@ -129,7 +129,7 @@ int main() {
 	initializeFonts();
 	initializeSettingsFonts();
 	logMessage("INFO","Fonts initialized");
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_RG350) || defined(TARGET_RG350_BETA) || defined(TARGET_NPG)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
 	initSuspendTimer();
 	logMessage("INFO","Suspend timer initialized");
 	#endif

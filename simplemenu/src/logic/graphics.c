@@ -18,7 +18,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/screen.h"
 
-#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+#if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
 
@@ -969,7 +969,7 @@ void initializeDisplay() {
 //	SDL_ShowCursor(0);
 
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
-	#ifndef TARGET_RG350_BETA
+	#ifndef TARGET_OD_BETA
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
@@ -1120,7 +1120,7 @@ void freeResources() {
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
-	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+	#if defined TARGET_OD || defined TARGET_OD_BETA
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);

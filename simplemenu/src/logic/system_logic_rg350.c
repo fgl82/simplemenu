@@ -10,11 +10,11 @@
 #include "../headers/logic.h"
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
-#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+#if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
 
-#if defined TARGET_RG350_BETA
+#if defined TARGET_OD_BETA
 #define SYSFS_CPUFREQ_DIR "/sys/devices/system/cpu/cpu0/cpufreq"
 #define SYSFS_CPUFREQ_LIST SYSFS_CPUFREQ_DIR "/scaling_available_frequencies"
 #define SYSFS_CPUFREQ_SET SYSFS_CPUFREQ_DIR "/scaling_setspeed"
@@ -48,7 +48,7 @@ void setCPU(uint32_t mhz)
 {
 	currentCPU = mhz;
 	#ifndef TARGET_PC
-		#if defined TARGET_RG350_BETA
+		#if defined TARGET_OD_BETA
 			char strMhz[10];
 			int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
 			to_string(strMhz, (mhz * 1000));
@@ -107,7 +107,7 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-	#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+	#if defined TARGET_OD || defined TARGET_OD_BETA
 	Shake_Init();
 	device = Shake_Open(0);
 	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SQUARE, 0.5, 0.1, 0.05, 0.1);
@@ -136,7 +136,7 @@ int getBatteryLevel() {
 	int min_voltage;
 	int voltage_now;
 	int total;
-	#if defined TARGET_RG350_BETA
+	#if defined TARGET_OD_BETA
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);
 		fclose(f);
@@ -154,7 +154,7 @@ int getBatteryLevel() {
 			return 100;
 		}
 		return total;
-	#elif TARGET_RG350
+	#elif TARGET_OD
 		FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);
 		fclose(f);

@@ -751,7 +751,7 @@ void drawSettingsScreen() {
 	int selected=0;
 	#if defined TARGET_RG300
 	int max = 9;
-	#elif defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
+	#elif defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 	int max = 9;
 	#else
 	int max = 8;

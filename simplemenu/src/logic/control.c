@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+#if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
 
@@ -403,7 +403,7 @@ void showOrHideFavorites() {
 void removeFavorite() {
 	favoritesChanged=1;
 	if (favoritesSize>0) {
-		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+		#if defined TARGET_OD || defined TARGET_OD_BETA
 		Shake_Play(device, effect_id1);
 		#endif	
 		for (int i=CURRENT_GAME_NUMBER;i<favoritesSize;i++) {
@@ -459,7 +459,7 @@ void markAsFavorite(struct Rom *rom) {
 	if (favoritesSize<FAVORITES_SIZE) {
 		if (!doesFavoriteExist(rom->name)) {
 			resetHideHeartTimer();
-			#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+			#if defined TARGET_OD || defined TARGET_OD_BETA
 			Shake_Play(device, effect_id);
 			msleep(200);
 			Shake_Play(device, effect_id);
@@ -611,14 +611,14 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
+			#if defined TARGET_RG300 || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 			chosenSetting=8;
 			#else
 			chosenSetting=7;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
-		#if defined TARGET_RG300 || defined TARGET_RG350 || defined TARGET_RG350_BETA || defined TARGET_PC
+		#if defined TARGET_RG300 || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 		if(chosenSetting<8) {
 		#else
 		if(chosenSetting<7) {
@@ -631,7 +631,7 @@ void performSettingsChoosingAction() {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
 		}
-		#if defined TARGET_RG350 || defined TARGET_RG350_BETA || TARGET_PC
+		#if defined TARGET_OD || defined TARGET_OD_BETA || TARGET_PC
 		else if (chosenSetting==USB_OPTION) {
 			hdmiChanged=1+hdmiChanged*-1;
 		}
@@ -713,10 +713,10 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_NPG
+				#if defined TARGET_OD || defined TARGET_NPG
 				snprintf(command,sizeof(command),"rm /usr/local/sbin/frontend_start;mv /usr/local/sbin/frontend_start.bck /usr/local/sbin/frontend_start");
 				#endif
-				#if defined TARGET_RG350_BETA
+				#if defined TARGET_OD_BETA
 				snprintf(command,sizeof(command),"rm /media/data/local/home/.autostart");
 				#endif
 			} else {
@@ -726,10 +726,10 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_RG300
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
-				#if defined TARGET_RG350 || defined TARGET_NPG
+				#if defined TARGET_OD || defined TARGET_NPG
 				snprintf(command,sizeof(command),"mv /usr/local/sbin/frontend_start /usr/local/sbin/frontend_start.bck;cp scripts/frontend_start /usr/local/sbin/");
 				#endif
-				#if defined TARGET_RG350_BETA
+				#if defined TARGET_OD_BETA
 				snprintf(command,sizeof(command),"cp ./scripts/frontend_start /media/data/local/home/.autostart");
 				#endif
 			}
@@ -759,7 +759,7 @@ void performSettingsChoosingAction() {
 	#endif
 	else if (keys[BTN_START]) {
 //		pthread_cancel(clockThread);
-		#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+		#if defined TARGET_OD || defined TARGET_OD_BETA
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
 			if (fp!=NULL) {

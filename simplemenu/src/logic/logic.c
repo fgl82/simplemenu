@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #include <sys/ioctl.h>
-#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
+#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 #include <linux/vt.h>
 #endif
 #include <fcntl.h>
@@ -284,7 +284,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #endif
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
-//#ifndef TARGET_RG350_BETA
+//#ifndef TARGET_OD_BETA
 		unsetenv("SDL_FBCON_DONT_CLEAR");
 //#endif
 		char states[2000];
@@ -320,7 +320,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		fprintf(fp,CURRENT_SECTION.scaling);
 		fclose(fp);
 #endif
-#ifdef TARGET_RG350_BETA
+#ifdef TARGET_OD_BETA
 		if (strcmp(CURRENT_SECTION.scaling,"0")==0) { //0: stretch
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=0");
 		} else if (strcmp(CURRENT_SECTION.scaling,"1")==0) { //1: aspect
@@ -336,12 +336,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		SDL_ShowCursor(1);
 		freeResources();
 		SDL_ShowCursor(1);
-//#ifndef TARGET_RG350_BETA
+//#ifndef TARGET_OD_BETA
 		resetFrameBuffer1();
 //#endif
 
 		if (consoleApp) {
-		#if defined(TARGET_NPG) || defined(TARGET_RG350) || defined TARGET_RG350_BETA
+		#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 			/* Enable the framebuffer console */
 			char c = '1';
 			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);

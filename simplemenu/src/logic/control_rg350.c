@@ -1,4 +1,4 @@
-#if defined (TARGET_RG350) || defined (TARGET_RG350_BETA)
+#if defined (TARGET_OD) || defined (TARGET_OD_BETA)
 #include <shake.h>
 #endif
 #include <stdlib.h>

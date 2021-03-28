@@ -2,8 +2,8 @@
 TARGET = simplemenu
 #PLATFORM = BITTBOY
 #PLATFORM = RG-300
-#PLATFORM = RG-350
-#PLATFORM = RG-350-BETA
+#PLATFORM = OD
+#PLATFORM = OD-BETA
 #PLATFORM = NPG
 PLATFORM = PC
 
@@ -18,15 +18,15 @@ else ifeq ($(PLATFORM), RG-300)
 	LINKER = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
 	CFLAGS = -DTARGET_RG300 -DUSE_GZIP -ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz
-else ifeq ($(PLATFORM), RG-350)
+else ifeq ($(PLATFORM), OD)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_RG350 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -std=gnu99
+	CFLAGS = -DTARGET_OD -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -std=gnu99
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lz
-else ifeq ($(PLATFORM), RG-350-BETA)
+else ifeq ($(PLATFORM), OD-BETA)
 	CC = /home/bittboy/Downloads/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /home/bittboy/Downloads/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_RG350_BETA -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra 
+	CFLAGS = -DTARGET_OD_BETA -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra 
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lz	
 else ifeq ($(PLATFORM), NPG)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
@@ -59,21 +59,21 @@ BINDIR   = output
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 
 ifeq ($(PLATFORM), BITTBOY)
-	SOURCES := $(filter-out src/logic/control_rg350.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg350.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))	
 else ifeq ($(PLATFORM), RG-300)
-	SOURCES := $(filter-out src/logic/control_rg350.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg350.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))		
-else ifeq ($(PLATFORM), RG-350)  
+else ifeq ($(PLATFORM), OD)  
 	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
-else ifeq ($(PLATFORM), RG-350-BETA)  
+else ifeq ($(PLATFORM), OD-BETA)  
 	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))

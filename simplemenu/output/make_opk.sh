@@ -4,13 +4,15 @@ OPK_NAME="SimpleMenu-${1}.opk"
 
 echo ${OPK_NAME}
 
-if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ] || [ "$1" = "RG-350-BETA" ]; then
+resolution=$2
+
+if [ "$1" = "OD" ] || [ "$1" = "PG2" ] || [ "$1" = "OD-BETA" ]; then
     var="gcw0";
 else
     var="retrofw";
 fi
 
-if [ "$1" = "RG-350-BETA" ]; then
+if [ "$1" = "OD-BETA" ]; then
     user_name="od";
 else
     user_name="root";
@@ -18,12 +20,12 @@ fi
 
 cd /home/bittboy/git/simplemenu/simplemenu/
 
-if [ "$1" = "RG-350" ]; then
+if [ "$1" = "OD" ]; then
     make clean
-    make PLATFORM=RG-350
-elif [ "$1" = "RG-350-BETA" ]; then
+    make PLATFORM=OD
+elif [ "$1" = "OD-BETA" ]; then
     make clean
-    make PLATFORM=RG-350-BETA
+    make PLATFORM=OD-BETA
 elif [ "$1" = "PG2" ]; then
     make clean
     make PLATFORM=NPG
@@ -34,12 +36,12 @@ fi
 
 cd /home/bittboy/git/invoker/invoker/
 
-if [ "$1" = "RG-350" ]; then
+if [ "$1" = "OD" ]; then
     make clean
-    make PLATFORM=RG-350
-elif [ "$1" = "RG-350-BETA" ]; then
+    make PLATFORM=OD
+elif [ "$1" = "OD-BETA" ]; then
     make clean
-    make PLATFORM=RG-350-BETA
+    make PLATFORM=OD-BETA
 elif [ "$1" = "PG2" ]; then
     make clean
     make PLATFORM=NPG
@@ -50,7 +52,7 @@ fi
 
 cp invoker.dge /home/bittboy/git/simplemenu/simplemenu/output
 
-if [ "$1" = "RG-350" ] || [ "$1" = "PG2" ] || [ "$1" = "RG-350-BETA" ]; then
+if [ "$1" = "OD" ] || [ "$1" = "PG2" ] || [ "$1" = "OD-BETA" ]; then
     var="gcw0"
 fi
 
@@ -84,7 +86,7 @@ FLIST="${FLIST} invoker.dge"
 FLIST="${FLIST} simplemenu"
 FLIST="${FLIST} usb.png"
 FLIST="${FLIST} simplemenu.png"
-if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ] || [ "$1" = "RG-350-BETA" ]; then
+if [ "$1" = 'OD' ] || [ "$1" = 'PG2' ] || [ "$1" = "OD-BETA" ]; then
     FLIST="${FLIST} default.gcw0.desktop"
 else
     FLIST="${FLIST} default.retrofw.desktop"
@@ -93,7 +95,7 @@ fi
 rm -f ${OPK_NAME} > log.txt
 mksquashfs ${FLIST} ${OPK_NAME} -all-root -no-xattrs -noappend -no-exports >> log.txt
 
-if [ "$1" = 'RG-350' ] || [ "$1" = 'PG2' ] || [ "$1" = 'RG-350-BETA' ]; then
+if [ "$1" = 'OD' ] || [ "$1" = 'PG2' ] || [ "$1" = 'OD-BETA' ]; then
     cat default.gcw0.desktop >> log.txt
     rm -f default.gcw0.desktop >> log.txt
     while true; do

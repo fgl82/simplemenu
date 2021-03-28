@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+#if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
 
@@ -250,7 +250,7 @@ int BTN_R1;
 int BTN_L2;
 int BTN_R2;
 
-#if defined TARGET_RG350 || defined TARGET_RG350_BETA
+#if defined TARGET_OD || defined TARGET_OD_BETA
  Shake_Device *device;
  Shake_Effect effect;
  int effect_id;
