@@ -190,27 +190,27 @@ void loadTheme(char *theme) {
 	ini_t *themeConfig = ini_load(theme);
 	const char *value;
 	for (int i=0;i<menuSectionCounter;i++) {
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerBackGround", menuSections[i].headerAndFooterBackgroundColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "headerFont", menuSections[i].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].bodyTextColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemBackground", menuSections[i].bodySelectedTextBackgroundColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selectedItemFont", menuSections[i].bodySelectedTextTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_background_color", menuSections[i].headerAndFooterBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_font_color", menuSections[i].headerAndFooterTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "items_font_color", menuSections[i].bodyTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_background_color", menuSections[i].bodySelectedTextBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_font_color", menuSections[i].bodySelectedTextTextColor);
 
-		value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+		value = ini_get(themeConfig, "GENERAL", "art_font_color");
 		if (value!=NULL) {
-			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "pictureTextFont", menuSections[i].pictureTextColor);
+			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "art_font_color", menuSections[i].pictureTextColor);
 		} else {
-			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "bodyFont", menuSections[i].pictureTextColor);
+			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "items_font_color", menuSections[i].pictureTextColor);
 		}
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
 
-		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_w");
 		systemWidth = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_h");
 		systemHeight = atoifgl(value);
 
 		if (menuSections[i].systemLogoSurface!=NULL) {
@@ -268,84 +268,84 @@ void loadTheme(char *theme) {
 			displaySectionGroupName = atoifgl(value);
 		}
 
-		value = ini_get(themeConfig, "GENERAL", "items_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "items");
 		itemsPerPage = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "items_separation_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "items_separation");
 		itemsSeparation = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "items_in_full_custom");
+		value = ini_get(themeConfig, "GENERAL", "items_in_fullscreen_mode");
 		itemsPerPageFullscreen = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "game_list_alignment_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "game_list_alignment");
 		gameListAlignment = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "game_list_x_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "game_list_x");
 		gameListX = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "game_list_y");
 		gameListY = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "game_list_w");
 		gameListWidth = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
+		value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full");
 		gameListPositionFullScreen = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_max_w");
 		artWidth = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_max_h");
 		artHeight = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_x");
 		artX = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_y");
 		artY = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_x");
 		systemX = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_y");
 		systemY = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+		value = ini_get(themeConfig, "GENERAL", "font_size");
 		fontSize = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text1_font_size");
 		text1FontSize = atoi (value);
 
-		value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text1_x");
 		text1X = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text1_y");
 		text1Y = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text1_alignment");
 		text1Alignment = atoifgl(value);
 
-		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFont);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
-		value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 		text2FontSize = atoi (value);
 
-		value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text2_x");
 		text2X = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text2_y");
 		text2Y = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "text2_alignment");
 		text2Alignment = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture");
 		artTextDistanceFromPicture = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_text_line_separation");
 		artTextLineSeparation = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "art_text_font_size");
 		artTextFontSize = atoifgl(value);
 
 		value = ini_get(themeConfig, "GENERAL", "font_size");
@@ -785,17 +785,17 @@ int loadSections(char *file) {
 		#else
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"0");
 		#endif
-		setRGBColorInSection(themeConfig, sectionName, "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
-		setRGBColorInSection(themeConfig, sectionName, "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, sectionName, "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
-		setRGBColorInSection(themeConfig, sectionName, "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
-		setRGBColorInSection(themeConfig, sectionName, "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_background_color", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_font_color", menuSections[menuSectionCounter].headerAndFooterTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "items_font_color", menuSections[menuSectionCounter].bodyTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 
-		value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+		value = ini_get(themeConfig, "GENERAL", "art_font_color");
 		if (value!=NULL) {
-			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "art_font_color", menuSections[menuSectionCounter].pictureTextColor);
 		} else {
-			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "bodyFont", menuSections[menuSectionCounter].pictureTextColor);
+			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "items_font_color", menuSections[menuSectionCounter].pictureTextColor);
 		}
 
 		if (menuSections[menuSectionCounter].systemLogoSurface!=NULL) {
@@ -811,10 +811,10 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
 
-		value = ini_get(themeConfig, "GENERAL", "system_w_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_w");
 		systemWidth = atoifgl(value);
 
-		value = ini_get(themeConfig, "GENERAL", "system_h_in_custom");
+		value = ini_get(themeConfig, "GENERAL", "system_h");
 		systemHeight = atoifgl(value);
 
 		if (menuSectionCounter==currentSectionNumber) {
@@ -871,84 +871,84 @@ int loadSections(char *file) {
 		displaySectionGroupName = atoifgl(value);
 	}
 
-	value = ini_get(themeConfig, "GENERAL", "items_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "items");
 	itemsPerPage = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "items_separation_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "items_separation");
 	itemsSeparation = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "items_in_full_custom");
+	value = ini_get(themeConfig, "GENERAL", "items_in_fullscreen_mode");
 	itemsPerPageFullscreen = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "game_list_alignment_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "game_list_alignment");
 	gameListAlignment = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "game_list_x_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "game_list_x");
 	gameListX = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "game_list_y_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "game_list_y");
 	gameListY = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "game_list_w_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "game_list_w");
 	gameListWidth = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full_custom");
+	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full");
 	gameListPositionFullScreen = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_max_w_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_max_w");
 	artWidth = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_max_h_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_max_h");
 	artHeight = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_x_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_x");
 	artX = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_y_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_y");
 	artY = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "system_x_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "system_x");
 	systemX = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "system_y_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "system_y");
 	systemY = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "font_size_custom");
+	value = ini_get(themeConfig, "GENERAL", "font_size");
 	fontSize = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "text1_font_size_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text1_font_size");
 	text1FontSize = atoi (value);
 
-	value = ini_get(themeConfig, "GENERAL", "text1_x_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text1_x");
 	text1X = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "text1_y_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text1_y");
 	text1Y = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "text1_alignment_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text1_alignment");
 	text1Alignment = atoifgl(value);
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font_custom", textXFont);
-	value = ini_get(themeConfig, "GENERAL", "text2_font_size_in_custom");
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
+	value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 
 	text2FontSize = atoi (value);
 
-	value = ini_get(themeConfig, "GENERAL", "text2_x_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text2_x");
 	text2X = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "text2_y_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text2_y");
 	text2Y = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "text2_alignment_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "text2_alignment");
 	text2Alignment = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_text_distance_from_picture");
 	artTextDistanceFromPicture = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_text_line_separation_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_text_line_separation");
 	artTextLineSeparation = atoifgl(value);
 
-	value = ini_get(themeConfig, "GENERAL", "art_text_font_size_in_custom");
+	value = ini_get(themeConfig, "GENERAL", "art_text_font_size");
 	artTextFontSize = atoifgl(value);
 
 	value = ini_get(themeConfig, "GENERAL", "font_size");
@@ -979,16 +979,16 @@ int loadSections(char *file) {
 	menuSections[menuSectionCounter].hidden=0;
 	menuSections[menuSectionCounter].currentPage=0;
 	menuSections[menuSectionCounter].currentGameInPage=0;
-	setRGBColorInSection(themeConfig, "FAVORITES", "headerBackGround", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "headerFont", menuSections[menuSectionCounter].headerAndFooterTextColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "bodyFont", menuSections[menuSectionCounter].bodyTextColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemBackground", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "selectedItemFont", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-	value = ini_get(themeConfig, "GENERAL", "pictureTextFont");
+	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_background_color", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_font_color", menuSections[menuSectionCounter].headerAndFooterTextColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "items_font_color", menuSections[menuSectionCounter].bodyTextColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
+	value = ini_get(themeConfig, "GENERAL", "art_font_color");
 	if (value!=NULL) {
-		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "pictureTextFont", menuSections[menuSectionCounter].pictureTextColor);
+		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "art_font_color", menuSections[menuSectionCounter].pictureTextColor);
 	} else {
-		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "bodyFont", menuSections[menuSectionCounter].pictureTextColor);
+		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "items_font_color", menuSections[menuSectionCounter].pictureTextColor);
 	}
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
