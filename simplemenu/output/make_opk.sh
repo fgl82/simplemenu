@@ -4,8 +4,6 @@ OPK_NAME="SimpleMenu-${1}.opk"
 
 echo ${OPK_NAME}
 
-resolution=$2
-
 if [ "$1" = "OD" ] || [ "$1" = "PG2" ] || [ "$1" = "OD-BETA" ]; then
     var="gcw0";
 else
@@ -73,6 +71,9 @@ StartupNotify=true
 Icon=simplemenu
 Categories=applications;
 EOF
+
+#copy the right config
+cp $1/config-$2/* $1/config
 
 # create opk
 FLIST="$1/apps"
