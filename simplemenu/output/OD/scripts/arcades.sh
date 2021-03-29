@@ -18,10 +18,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .zip" >> ${consoles}
-var=$(find /media/sdcard/ROMS/MAME/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/MAME/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/MAME/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/MAME/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -49,10 +49,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .zip" >> ${consoles}
-var=$(find /media/sdcard/ROMS/FBA/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/FBA/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/FBA/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/FBA/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -80,10 +80,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .zip" >> ${consoles}
-var=$(find /media/sdcard/ROMS/DAPHNE/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/DAPHNE/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/DAPHNE/ -type f  -iname \*.gb -o -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/DAPHNE/ -type f -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then

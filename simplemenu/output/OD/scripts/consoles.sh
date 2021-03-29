@@ -38,6 +38,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -75,6 +76,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -120,6 +122,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> "$consoles"
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -165,6 +168,7 @@ then
 else
 	echo "romDirs = ""$var""/" >>  "$consoles"
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -202,6 +206,7 @@ then
 else
 	echo "romDirs = ""$var""/"  >> "$consoles"
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -240,6 +245,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> "$consoles"
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -256,20 +262,20 @@ then
 	var=none
 fi
 echo "execs = ""$var" >> ${consoles}
-echo "romExts = .bin,.pbp,.chd,.zip,.cue,.img,.iso" >> ${consoles}
+echo "romExts = .bin,.pbp,.chd,.zip,.img,.iso" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/PS/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.cue -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/PS/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/sdcard/ROMS/PSX/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.cue -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/sdcard/ROMS/PSX/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/PS/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.cue -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/PS/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/PSX/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.cue -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/PSX/ -type f  -iname \*.bin -o -iname \*.pbp -o -iname \*.chd -o -iname \*.zip -o -iname \*.img -iname \*.iso  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -278,6 +284,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -324,6 +331,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -354,6 +362,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -384,6 +393,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -414,6 +424,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -432,10 +443,10 @@ fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .a78,.rom,.zip" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/7800/ -type f  -iname \*.zip -o -iname \*.bin -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/7800/ -type f  -iname \*.a78 -o -iname \*.zip -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/7800/ -type f  -iname \*.zip -o -iname \*.bin -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/7800/ -type f  -iname \*.a78 -o -iname \*.zip -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -444,4 +455,5 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 0" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

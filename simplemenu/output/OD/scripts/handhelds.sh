@@ -38,6 +38,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -75,6 +76,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -104,6 +106,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> "$consoles"
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -149,6 +152,7 @@ then
 else
 	echo "romDirs = ""$var""/" >>  "$consoles"
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -166,10 +170,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .ngp,.ngf,.zip" >> ${consoles}
-var=$(find /media/sdcard/ROMS/NGP/ -type f  -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/NGP/ -type f -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NGP/ -type f  -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/NGP/ -type f -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -178,6 +182,7 @@ then
 else
 	echo "romDirs = ""$var""/"  >> "$consoles"
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
@@ -195,10 +200,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .zip,.ngc" >> ${consoles}
-var=$(find /media/sdcard/ROMS/NGPC/ -type f  -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/NGPC/ -type f -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NGPC/ -type f  -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/NGPC/ -type f -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -207,12 +212,12 @@ then
 else
 	echo "romDirs = ""$var""/" >> "$consoles"
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#,WONDERSWAN,GAME & WATCH" >> "${consoles}"
 echo [ATARI LYNX] >> "${consoles}"
 var=$(find /media/sdcard/APPS/ -type f -iname handy*.opk | head -n 1)
 if [ -z "$var" ]
@@ -226,18 +231,10 @@ fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .lnx" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/LYNX/ -type f  -iname \*.lnx  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/LYNX/ -type f -iname \*.lnx  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/sdcard/ROMS/LYNX/ -type f  -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
-fi
-if [ -z "$var" ]
-then
-	var=$(find /media/data/ROMS/PS/ -type f  -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
-fi
-if [ -z "$var" ]
-then
-	var=$(find /media/data/ROMS/PSX/ -type f  -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/LYNX/ -type f -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -246,44 +243,37 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [NEO GEO] >> "${consoles}"
-var=$(find /media/sdcard/APPS/ -type f -iname gngeo*.opk | head -n 1)
+echo [WONDERSWAN] >> "${consoles}"
+var=$(find /media/sdcard/APPS/ -type f -iname oswan*.opk | head -n 1)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/apps/ -type f -iname gngeo*.opk | head -n 1)
-fi
-if [ -z "$var" ]
-then
-	var=$(find /media/sdcard/APPS/ -type f -iname fba*.opk | head -n 1)
-fi
-if [ -z "$var" ]
-then
-	var=$(find /media/data/apps/ -type f -iname fba*.opk | head -n 1)
+	var=$(find /media/data/apps/ -type f -iname oswan*.opk | head -n 1)
 fi
 if [ -z "$var" ]
 then
 	var=none
 fi
 echo "execs = ""$var" >> ${consoles}
-echo "romExts = .zip" >> ${consoles}
+echo "romExts = .ws" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/NEOGEO/ -type f  -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/OSWAN/ -type f -iname \*.ws  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/sdcard/ROMS/NEO-GEO/ -type f  -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/sdcard/ROMS/OSWANC/ -type f -iname \*.wsc | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NEOGEO/ -type f  -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/OSWAN/ -type f -iname \*.ws | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NEO-GEO/ -type f  -iname \*.zip  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/OSWANC/ -type f -iname \*.wsc   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -292,28 +282,29 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
+echo "scaling = 1" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "" >> "$consoles"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [TURBOGRAFX-16] >> "${consoles}"
-var=$(find /media/sdcard/APPS/ -type f -iname temper*.opk | head -n 1)
+echo "[GAME & WATCH]" >> "${consoles}"
+var=$(find /media/sdcard/APPS/ -type f -iname gw-libretro*.opk | head -n 1)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/apps/ -type f -iname temper*.opk | head -n 1)
+	var=$(find /media/data/apps/ -type f -iname gw-libretro*.opk | head -n 1)
 fi
 if [ -z "$var" ]
 then
 	var=none
 fi
 echo "execs = ""$var" >> ${consoles}
-echo "romExts = .pce,.zip" >> ${consoles}
+echo "romExts = .mgw" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/PCE/ -type f  -iname \*.zip -o -iname \*.pce  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/GW/ -type f  -iname \*.mgw  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/PCE/ -type f  -iname \*.zip -o -iname \*.pce  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/GW/ -type f  -iname \*.mgw   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -322,96 +313,4 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-echo "" >> "$consoles"
-
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [TURBOGRAFX-CD] >> "${consoles}"
-var=$(find /media/sdcard/APPS/ -type f -iname temper*.opk | head -n 1)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/apps/ -type f -iname temper*.opk | head -n 1)
-fi
-if [ -z "$var" ]
-then
-	var=none
-fi
-echo "execs = ""$var" >> ${consoles}
-echo "romExts = .pce,.zip" >> ${consoles}
-
-var=$(find /media/sdcard/ROMS/PCECD/ -type f  -iname \*.zip -o -iname \*.pce  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/ROMS/PCECD/ -type f  -iname \*.zip -o -iname \*.pce  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-fi
-if [ -z "$var" ]	
-then
-	var=none
-	echo "romDirs = ""$var" >> ${consoles}
-else
-	echo "romDirs = ""$var""/" >> ${consoles}
-fi
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-echo "" >> "$consoles"
-
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [ATARI 2600] >> "${consoles}"
-var=$(find /media/sdcard/APPS/ -type f -iname stella*.opk | head -n 1)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/apps/ -type f -iname stella*.opk | head -n 1)
-fi
-if [ -z "$var" ]
-then
-	var=none
-fi
-echo "execs = ""$var" >> ${consoles}
-echo "romExts = .bin,.zip" >> ${consoles}
-
-var=$(find /media/sdcard/ROMS/2600/ -type f  -iname \*.zip -o -iname \*.bin	  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/ROMS/2600/ -type f  -iname \*.zip -o -iname \*.bin  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-fi
-if [ -z "$var" ]	
-then
-	var=none
-	echo "romDirs = ""$var" >> ${consoles}
-else
-	echo "romDirs = ""$var""/" >> ${consoles}
-fi
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-echo "" >> "$consoles"
-
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [ATARI 7800] >> "${consoles}"
-var=$(find /media/sdcard/APPS/ -type f -iname prosystem*.opk | head -n 1)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/apps/ -type f -iname prosystem*.opk | head -n 1)
-fi
-if [ -z "$var" ]
-then
-	var=none
-fi
-echo "execs = ""$var" >> ${consoles}
-echo "romExts = .a78,.rom,.zip" >> ${consoles}
-
-var=$(find /media/sdcard/ROMS/7800/ -type f  -iname \*.zip -o -iname \*.bin -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-if [ -z "$var" ]
-then
-	var=$(find /media/data/ROMS/7800/ -type f  -iname \*.zip -o -iname \*.bin -o -iname \*.rom  | head -n 1 | rev | cut -d"/" -f2-  | rev)
-fi
-if [ -z "$var" ]	
-then
-	var=none
-	echo "romDirs = ""$var" >> ${consoles}
-else
-	echo "romDirs = ""$var""/" >> ${consoles}
-fi
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-#,ATARI 7800
+echo "scaling = 1" >> ${consoles}
