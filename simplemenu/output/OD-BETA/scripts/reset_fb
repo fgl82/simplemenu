@@ -1,13 +1,26 @@
-#!/bin/sh
-export HOME=`cat /etc/passwd |head -1 |cut -d':' -f 6`
-/usr/sbin/unlockvt > /dev/null
+# Reset the console
 /usr/bin/reset
-echo 0 > /sys/devices/virtual/vtconsole/vtcon1/bind
-if [ -f /sys/devices/platform/jz-lcd.0/allow_downscaling ] ; then
-	echo 0 > /sys/devices/platform/jz-lcd.0/allow_downscaling
+
+# Stop the gravity sensor if it's loaded
+if [ -x /usr/sbin/gsensor ] ; then
+	/usr/sbin/gsensor --stop
 fi
-if [ -f /sys/devices/platform/linkdev/alt_key_map ] ; then
-	echo 0 > /sys/devices/platform/linkdev/alt_key_map
+
+# Check that the screen is available. If not, wait until the
+# user presses START/ENTER in the VT console.
+while /bin/true; do
+	fuser /dev/dri/by-path/platform-13050000.lcd-controller-card >/dev/null
+	[ $? -eq 1 ] && break
+	read
+done
+
+# # Reset clock frequency to the default one
+# if [ -r /var/tmp/boot_cpu_freq ] ; then
+# 	cat /var/tmp/boot_cpu_freq > /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+# fi
+
+# Restore the loading splash if needed
+if [ `cat /sys/class/vtconsole/vtcon1/bind` -ne 0 -o ! -f /var/tmp/.boot_complete ] ; then
+	touch /var/tmp/.boot_complete
+	fbsplash /usr/share/opendingux/loading.png
 fi
-/usr/sbin/gsensor --stop
-. /etc/profile

@@ -325,8 +325,10 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=0");
 		} else if (strcmp(CURRENT_SECTION.scaling,"1")==0) { //1: aspect
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=1");
-		} else {
+		} else if (strcmp(CURRENT_SECTION.scaling,"2")==0) {
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=2"); //2: integer scaling
+		} else if (strcmp(CURRENT_SECTION.scaling,"3")==0) {
+			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=3"); //2: integer scaling
 		}
 #endif
 #ifndef TARGET_PC
@@ -336,9 +338,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		SDL_ShowCursor(1);
 		freeResources();
 		SDL_ShowCursor(1);
-//#ifndef TARGET_OD_BETA
+#ifndef TARGET_OD_BETA
 		resetFrameBuffer1();
-//#endif
+#endif
 
 		if (consoleApp) {
 		#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA

@@ -170,10 +170,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .ngp,.ngf,.zip" >> ${consoles}
-var=$(find /media/sdcard/ROMS/NGP/ -type f  -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/NGP/ -type f -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NGP/ -type f  -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/NGP/ -type f -iname \*.ngp -o -iname \*.zip -o -iname \*.ngf  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -200,10 +200,10 @@ then
 fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .zip,.ngc" >> ${consoles}
-var=$(find /media/sdcard/ROMS/NGPC/ -type f  -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/NGPC/ -type f -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/NGPC/ -type f  -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/NGPC/ -type f -iname \*.zip -o -iname \*.ngc  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -231,10 +231,10 @@ fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .lnx" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/LYNX/ -type f  -iname \*.lnx  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/LYNX/ -type f -iname \*.lnx  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/LYNX/ -type f  -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/LYNX/ -type f -iname \*.lnx   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -262,18 +262,18 @@ fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .ws" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/OSWAN/ -type f  -iname \*.ws  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/OSWAN/ -type f -iname \*.ws  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/sdcard/ROMS/OSWANC/ -type f  -iname \*.wsc   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/sdcard/ROMS/OSWANC/ -type f -iname \*.wsc | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/OSWAN/ -type f  -iname \*.ws   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/OSWAN/ -type f -iname \*.ws | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/OSWANC/ -type f  -iname \*.wsc   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/OSWANC/ -type f -iname \*.wsc   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
@@ -288,7 +288,7 @@ echo "scaling = 1" >> ${consoles}
 echo "" >> "$consoles"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-echo [GAME & WATCH] >> "${consoles}"
+echo "[GAME & WATCH]" >> "${consoles}"
 var=$(find /media/sdcard/APPS/ -type f -iname gw-libretro*.opk | head -n 1)
 if [ -z "$var" ]
 then
@@ -301,10 +301,10 @@ fi
 echo "execs = ""$var" >> ${consoles}
 echo "romExts = .mgw" >> ${consoles}
 
-var=$(find /media/sdcard/ROMS/GW/ -type f  -iname \*.ws  | head -n 1 | rev | cut -d"/" -f2-  | rev)
+var=$(find /media/sdcard/ROMS/GW/ -type f  -iname \*.mgw  | head -n 1 | rev | cut -d"/" -f2-  | rev)
 if [ -z "$var" ]
 then
-	var=$(find /media/data/ROMS/GW/ -type f  -iname \*.ws   | head -n 1 | rev | cut -d"/" -f2-  | rev)
+	var=$(find /media/data/ROMS/GW/ -type f  -iname \*.mgw   | head -n 1 | rev | cut -d"/" -f2-  | rev)
 fi
 if [ -z "$var" ]	
 then
