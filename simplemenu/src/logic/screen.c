@@ -835,51 +835,94 @@ void drawSettingsScreen() {
 	free(hints[AUTO_HIDE_LOGOS_OPTION]);
 }
 
-void updateScreen(struct Rom *rom) {
+void updateScreen1(struct Rom *rom) {
 	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		if (!currentlyChoosing&&fullscreenMode) {
-			logMessage("INFO","Displaying game picture");
-			displayGamePicture(rom);
-		}
-		if (!currentlyChoosing&&!fullscreenMode) {
-			logMessage("INFO","update screen - Displaying system logo");
-			displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
-		}
-		logMessage("INFO","update screen - drawing game list");
-
-		logMessage("INFO","update screen - displaying game picture");
-		if(!currentlyChoosing) {
-			drawGameList();
-		}
-		if (!currentlyChoosing&&!fullscreenMode) {
-			displayGamePictureInMenu(rom);
-			logMessage("INFO","update screen - setting up decorations");
-			setupDecorations(rom);
-		}
-		if(!currentlyChoosing) {
-			drawGameList();
-		}
-		if (!currentlyChoosing&&fullscreenMode==1){
-			displayHeart();
-		}
-		if (currentlyChoosing==3) {
+		if (!currentlyChoosing) {
+			logMessage("INFO","update screen - drawing game list");
+			logMessage("INFO","update screen - displaying game picture");
+			if (fullscreenMode) {
+				displayGamePicture(rom);
+				drawGameList();
+				displayHeart();
+			} else {
+				logMessage("INFO","update screen - Displaying section background");
+				displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
+				displayGamePictureInMenu(rom);
+				logMessage("INFO","update screen - setting up decorations");
+				setupDecorations(rom);
+				drawGameList();
+			}
+			if (CURRENT_SECTION.alphabeticalPaging) {
+				if (rom->name!=NULL) {
+					showLetter(rom);
+				}
+			}
+			return;
+		} else if (currentlyChoosing==3) {
 			drawSettingsScreen();
 		} else if (currentlyChoosing==2) {
 			showCurrentGroup();
 		} else if (currentlyChoosing==1) {
 			showCurrentEmulator();
 		}
-		if (CURRENT_SECTION.alphabeticalPaging) {
-			if (rom->name!=NULL) {
-				showLetter(rom);
+	} else if (isUSBMode) {
+		drawUSBScreen();
+	} else if (itsStoppedBecauseOfAnError) {
+		showErrorMessage(errorMessage);
+	} else {
+		if (picModeHideLogoTimer!=NULL || displayLogo) {
+			displayBackgroundPicture();
+			showConsole();
+		} else {
+			displayLogo=0;
+		}
+	}
+}
+
+
+void updateScreen(struct Rom *rom) {
+	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
+		if (!currentlyChoosing) {
+			if (fullscreenMode) {
+				logMessage("INFO","update screen - drawing game list - fullscreen");
+				drawGameList();
+				logMessage("INFO","Displaying game picture - fullscreen");
+				displayGamePicture(rom);
+				displayHeart();
+			} else {
+				logMessage("INFO","update screen - Displaying section background");
+				displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
+				logMessage("INFO","update screen - drawing game list");
+				drawGameList();
+				logMessage("INFO","update screen - displaying game picture");
+				displayGamePictureInMenu(rom);
+				logMessage("INFO","update screen - setting up decorations");
+				setupDecorations(rom);
 			}
+			if (CURRENT_SECTION.alphabeticalPaging) {
+				if (rom->name!=NULL) {
+					showLetter(rom);
+				}
+			}
+		} else if (currentlyChoosing==3) {
+			drawSettingsScreen();
+		} else if (currentlyChoosing==2) {
+			showCurrentGroup();
+		} else if (currentlyChoosing==1) {
+			showCurrentEmulator();
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
+	} else {
+		if (picModeHideLogoTimer!=NULL || displayLogo) {
+			displayBackgroundPicture();
+			showConsole();
+		} else {
+			displayLogo=0;
+		}
 	}
-	refreshScreen();
 }
 
 void setupDisplayAndKeys() {
@@ -899,9 +942,11 @@ uint32_t hideFullScreenModeMenu() {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
 		if (CURRENT_SECTION.currentGameNode!=NULL) {
-			updateScreen(CURRENT_SECTION.currentGameNode->data);
+			nullUpdate=0;
+//			updateScreen(CURRENT_SECTION.currentGameNode->data);
 		} else {
-			updateScreen(NULL);
+			nullUpdate=1;
+//			updateScreen(NULL);
 		}
 	}
 	return 0;
@@ -923,6 +968,7 @@ void clearPicModeHideLogoTimer() {
 }
 
 uint32_t hidePicModeLogo() {
+	printf("pepe\n");
 	clearPicModeHideLogoTimer();
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
@@ -935,9 +981,11 @@ uint32_t hidePicModeLogo() {
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
-		updateScreen(CURRENT_SECTION.currentGameNode->data);
+		nullUpdate=0;
+//		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {
-		updateScreen(NULL);
+		nullUpdate=1;
+//		updateScreen(NULL);
 	}
 	return 0;
 }
@@ -960,9 +1008,11 @@ uint32_t hideHeart() {
 		resetPicModeHideMenuTimer();
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
-		updateScreen(CURRENT_SECTION.currentGameNode->data);
+		nullUpdate=0;
+//		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {
-		updateScreen(NULL);
+		nullUpdate=1;
+//		updateScreen(NULL);
 	}
 	return 0;
 }
@@ -971,8 +1021,32 @@ void resetHideHeartTimer() {
 	clearHideHeartTimer();
 	hideHeartTimer=SDL_AddTimer(0.5 * 1e3, hideHeart, NULL);
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
-		updateScreen(CURRENT_SECTION.currentGameNode->data);
+		nullUpdate=0;
+//		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {
-		updateScreen(NULL);
+		nullUpdate=1;
+//		updateScreen(NULL);
 	}
+}
+
+uint32_t updateScreenCallBack() {
+//	if (!nullUpdate) {
+//		updateScreen(CURRENT_SECTION.currentGameNode->data);
+//		refreshScreen();
+//	} else {
+//		updateScreen(NULL);
+//		if (nullUpdate>-1) {
+//			nullUpdate=-1;
+//			SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0, 0, 0 ) );
+
+	updateScreen(nullUpdate==1?NULL:CURRENT_SECTION.currentGameNode->data);
+			refreshScreen();
+//		}
+//	}
+	return 1;
+}
+
+
+void startScreenTimer() {
+	screenTimer=SDL_AddTimer(1, updateScreenCallBack, NULL);
 }

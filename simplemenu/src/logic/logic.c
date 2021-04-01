@@ -192,7 +192,7 @@ void quit() {
 	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
 	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
 		drawShutDownScreen();
-		refreshScreen();
+//		refreshScreen();
 	}
 	saveLastState();
 	saveFavorites();

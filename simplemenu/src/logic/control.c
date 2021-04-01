@@ -116,16 +116,18 @@ int advanceSection(int showLogo) {
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
-		displayBackgroundPicture();
+//		displayBackgroundPicture();
 		logMessage("INFO","Displaying system logo");
-		showConsole();
-		refreshScreen();
+		displayLogo=1;
+//		showConsole();
+//		refreshScreen();
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		displayBackgroundPicture();
-		showConsole();
-		refreshScreen();
+//		displayBackgroundPicture();
+//		showConsole();
+//		refreshScreen();
+		displayLogo=1;
 	}
 	#endif
 	return 1;
@@ -147,16 +149,18 @@ int rewindSection(int showLogo) {
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
-		displayBackgroundPicture();
+//		displayBackgroundPicture();
 		logMessage("INFO","Displaying system logo");
-		showConsole();
-		refreshScreen();
+//		showConsole();
+//		refreshScreen();
+		displayLogo=1;
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		displayBackgroundPicture();
-		showConsole();
-		refreshScreen();
+//		displayBackgroundPicture();
+//		showConsole();
+//		refreshScreen();
+		displayLogo=1;
 	}
 	#endif
 	if(currentSectionNumber!=favoritesSectionNumber) {
@@ -352,18 +356,20 @@ void showOrHideFavorites() {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
 				currentlySectionSwitching=1;
-				displayBackgroundPicture();
+//				displayBackgroundPicture();
 				logMessage("INFO","Displaying system logo");
-				showConsole();
+//				showConsole();
+				displayLogo=1;
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
 			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
-				displayBackgroundPicture();
+//				displayBackgroundPicture();
 				logMessage("INFO","Displaying system logo");
-				showConsole();
+//				showConsole();
+				displayLogo=1;
 			}
 			loadGameList(0);
 		}
@@ -392,10 +398,11 @@ void showOrHideFavorites() {
 	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
 		currentlySectionSwitching=1;
-		displayBackgroundPicture();
+//		displayBackgroundPicture();
 		logMessage("INFO","Displaying system logo");
-		showConsole();
-		refreshScreen();
+//		showConsole();
+		displayLogo=1;
+//		refreshScreen();
 	}
 	loadFavoritesSectionGameList();
 }

@@ -10,8 +10,10 @@
 #if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
-
+SDL_Surface *screen;
+int displayLogo;
 /* STATUS */
+int nullUpdate;
 char *errorMessage;
 int running;
 int itsStoppedBecauseOfAnError;
@@ -38,6 +40,7 @@ SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;
 SDL_TimerID hideHeartTimer;
+SDL_TimerID screenTimer;
 
 typedef struct thread_picture {
 	  SDL_Surface* display;

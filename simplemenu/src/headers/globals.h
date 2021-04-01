@@ -11,7 +11,10 @@
 #include <shake.h>
 #endif
 
+extern SDL_Surface *screen;
+extern int displayLogo;
 /* STATUS */
+extern int nullUpdate;
 extern char *errorMessage;
 extern int running;
 extern int itsStoppedBecauseOfAnError;
@@ -38,6 +41,7 @@ extern SDL_TimerID timeoutTimer;
 extern SDL_TimerID picModeHideMenuTimer;
 extern SDL_TimerID picModeHideLogoTimer;
 extern SDL_TimerID hideHeartTimer;
+extern SDL_TimerID screenTimer;
 
 typedef struct thread_picture {
 	  SDL_Surface* display;

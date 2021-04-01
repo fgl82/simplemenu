@@ -30,7 +30,6 @@
 #include "../headers/globals.h"
 #include "../headers/utils.h"
 
-SDL_Surface *screen = NULL;
 TTF_Font *font = NULL;
 TTF_Font *miniFont = NULL;
 TTF_Font *picModeFont = NULL;
@@ -1016,7 +1015,7 @@ void initializeDisplay() {
 	SCREEN_HEIGHT = 480;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE|SDL_DOUBLEBUF);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE|SDL_DOUBLEBUF);
 	SDL_ShowCursor(0);
 #else
 	SDL_ShowCursor(0);
@@ -1030,6 +1029,8 @@ void initializeDisplay() {
 
 void refreshScreen() {
 	SDL_Flip(screen);
+//	int black[3] = {0,0,0};
+//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,black);
 }
 
 void initializeSettingsFonts() {

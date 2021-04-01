@@ -49,44 +49,44 @@ void resetFrameBuffer () {
 
 void critical_error_handler()
 {
-    logMessage("ERROR","Nice, a critical error!!!");
-    closeLogFile();
-    exit(0);
+	logMessage("ERROR","Nice, a critical error!!!");
+	closeLogFile();
+	exit(0);
 }
 
 void sig_term_handler()
 {
-    logMessage("WARN","Received SIGTERM");
+	logMessage("WARN","Received SIGTERM");
 	running=0;
 }
 
 int main() {
 	initializeGlobals();
 	logMessage("INFO","Initialized Globals");
-    struct sigaction sa;
-    memset(&sa, 0, sizeof(struct sigaction));
-    sigemptyset(&sa.sa_mask);
-    sa.sa_sigaction = critical_error_handler;
-    sa.sa_flags   = SA_SIGINFO;
-    sigaction(SIGSEGV, &sa, NULL);
-    sigaction(SIGABRT, &sa, NULL);
-    sigaction(SIGINT, &sa, NULL);
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(struct sigaction));
+	sigemptyset(&sa.sa_mask);
+	sa.sa_sigaction = critical_error_handler;
+	sa.sa_flags   = SA_SIGINFO;
+	sigaction(SIGSEGV, &sa, NULL);
+	sigaction(SIGABRT, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 	resetFrameBuffer();
 	logMessage("INFO","Reset Framebuffer");
-	#endif
+#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	logMessage("INFO","Config loaded");
 	initializeDisplay();
 	int color[3] = {255,255,255} ;
-//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0 , 0, color);
+	//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0 , 0, color);
 
-//	char *akashi = "resources/akashi.ttf";
-//	TTF_Font *fonti = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
-//	drawTextOnScreen(fonti, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "HELLO", color, VAlignMiddle|HAlignCenter);
-//	refreshScreen();
+	//	char *akashi = "resources/akashi.ttf";
+	//	TTF_Font *fonti = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
+	//	drawTextOnScreen(fonti, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "HELLO", color, VAlignMiddle|HAlignCenter);
+	//	refreshScreen();
 
 	logMessage("INFO","Validated configuration existence");
 	checkThemes();
@@ -95,14 +95,14 @@ int main() {
 	logMessage("INFO","Last state loaded");
 	logMessage("INFO","Initialized Display");
 	char temp[300];
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
+#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	logMessage("INFO","HW Initialized");
 	currentCPU = OC_NO;
 	setCPU(OC_NO);
 	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
 	logMessage("INFO",temp);
-	#endif
+#endif
 	setupDisplayAndKeys();
 	logMessage("INFO","Display and input successfully configured");
 	checkIfDefault();
@@ -129,110 +129,131 @@ int main() {
 	initializeFonts();
 	initializeSettingsFonts();
 	logMessage("INFO","Fonts initialized");
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
+#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
 	initSuspendTimer();
 	logMessage("INFO","Suspend timer initialized");
-	#endif
+#endif
 	logMessage("INFO","Determining starting screen");
 	determineStartingScreen(sectionCount);
 	while(strlen(CURRENT_SECTION.sectionName)<1) {
 		advanceSection(0);
 	}
 	if (CURRENT_SECTION.currentGameNode!=NULL) {
-		updateScreen(CURRENT_SECTION.currentGameNode->data);
+		nullUpdate=0;
+		//		updateScreen(CURRENT_SECTION.currentGameNode->data);
 	} else {
-		updateScreen(NULL);
+		nullUpdate=1;
+		//		updateScreen(NULL);
 	}
 	enableKeyRepeat();
 	SDL_Event event;
 
 	const int GAME_FPS=60;
- 	Uint32 start_time;
+	Uint32 start_time;
+	// 	startScreenTimer();
+	while(running) {
+	    start_time=SDL_GetTicks();
+		refreshScreen();
+		if(1000/GAME_FPS>SDL_GetTicks()-start_time) {
+		      SDL_Delay(1000/GAME_FPS-(SDL_GetTicks()-start_time));
+		}
 
-	while (SDL_WaitEvent(&event) && running) {
-		start_time=SDL_GetTicks();
-		if (currentlyChoosing==3) {
-			currRawtime = time(NULL);
-			currTime = localtime(&currRawtime);
-			int batt = 100;
-			if (lastChargeLevel > batt || batt > lastChargeLevel + 1) {
-				lastChargeLevel = batt;
-				updateScreen(NULL);
+//		SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0, 0, 0 ) );
+		updateScreen(nullUpdate==1?NULL:CURRENT_SECTION.currentGameNode->data);
+		while (SDL_PollEvent(&event)) {
+			start_time=SDL_GetTicks();
+			if (currentlyChoosing==3) {
+				currRawtime = time(NULL);
+				currTime = localtime(&currRawtime);
+				int batt = 100;
+				if (lastChargeLevel > batt || batt > lastChargeLevel + 1) {
+					lastChargeLevel = batt;
+					nullUpdate=1;
+					//				updateScreen(NULL);
+				}
+				if(currTime->tm_min!=lastMin) {
+					lastMin=currTime->tm_min;
+					nullUpdate=1;
+					//				updateScreen(NULL);
+				}
 			}
-			if(currTime->tm_min!=lastMin) {
-				lastMin=currTime->tm_min;
-				updateScreen(NULL);
-			}
-		}
-		if(event.type==getKeyDown()){
-			if (!isSuspended) {
-				if (currentlyChoosing==0) {
-					if (CURRENT_SECTION.currentGameNode!=NULL) {
-						performAction(CURRENT_SECTION.currentGameNode->data);
+			if(event.type==getKeyDown()){
+				if (!isSuspended) {
+					if (currentlyChoosing==0) {
+						if (CURRENT_SECTION.currentGameNode!=NULL) {
+							performAction(CURRENT_SECTION.currentGameNode->data);
+						} else {
+							performAction(NULL);
+						}
 					} else {
-						performAction(NULL);
-					}
-				} else {
-					if (currentlyChoosing==1) {
-						performChoosingAction();
-					} else if (currentlyChoosing==2) {
-						performGroupChoosingAction();
-					} else if (currentlyChoosing==3) {
-						performSettingsChoosingAction();
+						if (currentlyChoosing==1) {
+							performChoosingAction();
+						} else if (currentlyChoosing==2) {
+							performGroupChoosingAction();
+						} else if (currentlyChoosing==3) {
+							performSettingsChoosingAction();
+						}
 					}
 				}
-			}
-			#ifndef TARGET_PC
-			resetScreenOffTimer();
-			#endif
-			if (CURRENT_SECTION.currentGameNode!=NULL) {
-				updateScreen(CURRENT_SECTION.currentGameNode->data);
-			} else {
-				updateScreen(NULL);
-			}
-		} else if (event.type==getKeyUp()&&!isUSBMode) {
-			if(event.key.keysym.sym==BTN_B&&!currentlyChoosing) {
-				if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
-					beforeTryingToSwitchGroup = activeGroup;
-					currentlyChoosing=2;
-					}
-				hotKeyPressed=0;
-				if(fullscreenMode) {
-					if(currentlySectionSwitching) {
-						hideFullScreenModeMenu();
-					} else if (CURRENT_SECTION.alphabeticalPaging) {
-						resetPicModeHideMenuTimer();
-					}
-				}
-				CURRENT_SECTION.alphabeticalPaging=0;
-				if (aKeyComboWasPressed) {
-					currentlySectionSwitching=0;
-				}
+#ifndef TARGET_PC
+				resetScreenOffTimer();
+#endif
 				if (CURRENT_SECTION.currentGameNode!=NULL) {
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					nullUpdate=0;
+					//				updateScreen(CURRENT_SECTION.currentGameNode->data);
 				} else {
-					updateScreen(NULL);
+					nullUpdate=1;
+					//				updateScreen(NULL);
 				}
-				aKeyComboWasPressed=0;
-			}
-			if(event.key.keysym.sym==BTN_SELECT&&!hotKeyPressed) {
-				if (CURRENT_SECTION.currentGameNode!=NULL) {
-					updateScreen(CURRENT_SECTION.currentGameNode->data);
-				} else {
-					updateScreen(NULL);
+			} else if (event.type==getKeyUp()&&!isUSBMode) {
+				displayLogo = 0;
+				if(event.key.keysym.sym==BTN_B&&!currentlyChoosing) {
+					if (!currentlySectionSwitching&&!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+						beforeTryingToSwitchGroup = activeGroup;
+						currentlyChoosing=2;
+					}
+					hotKeyPressed=0;
+					if(fullscreenMode) {
+						if(currentlySectionSwitching) {
+							hideFullScreenModeMenu();
+						} else if (CURRENT_SECTION.alphabeticalPaging) {
+							resetPicModeHideMenuTimer();
+						}
+					}
+					CURRENT_SECTION.alphabeticalPaging=0;
+					if (aKeyComboWasPressed) {
+						currentlySectionSwitching=0;
+					}
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						nullUpdate=0;
+						//					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						nullUpdate=1;
+						//					updateScreen(NULL);
+					}
+					aKeyComboWasPressed=0;
+				}
+				if(event.key.keysym.sym==BTN_SELECT&&!hotKeyPressed) {
+					if (CURRENT_SECTION.currentGameNode!=NULL) {
+						nullUpdate=0;
+						//					updateScreen(CURRENT_SECTION.currentGameNode->data);
+					} else {
+						nullUpdate=1;
+						//					updateScreen(NULL);
+					}
 				}
 			}
+			//		if (wasNull) {
+			//			updateScreen(NULL);
+			//		} else {
+			//			updateScreen(CURRENT_SECTION.currentGameNode->data);
+			//		}
+			//		refreshScreen();
+			//	    // set FPS 60
+			//	    if(1000/GAME_FPS>SDL_GetTicks()-start_time) {
+			//	      SDL_Delay(1000/GAME_FPS-(SDL_GetTicks()-start_time));
+			//		}
 		}
-//		if (wasNull) {
-//			updateScreen(NULL);
-//		} else {
-//			updateScreen(CURRENT_SECTION.currentGameNode->data);
-//		}
-//		refreshScreen();
-//	    // set FPS 60
-//	    if(1000/GAME_FPS>SDL_GetTicks()-start_time) {
-//	      SDL_Delay(1000/GAME_FPS-(SDL_GetTicks()-start_time));
-//		}
 	}
 	quit();
 }
