@@ -56,7 +56,7 @@ void checkIfDefault() {
 	fp = fopen("/mnt/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
-	#ifdef TARGET_RG300
+	#ifdef TARGET_RFW
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
@@ -784,7 +784,7 @@ int loadSections(char *file) {
 		logMessage("INFO","Executable set");
 		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories,"\0");
 		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions,"\0");
-		#ifdef TARGET_RG300
+		#ifdef TARGET_RFW
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"3");
 		#else
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"0");

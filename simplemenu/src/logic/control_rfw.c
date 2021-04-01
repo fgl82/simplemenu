@@ -28,7 +28,7 @@ int performAction(struct Rom *rom) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentlyChoosing=3;
-			pthread_create(&clockThread, NULL, updateClock,NULL);
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 1;
 		}
 	}
@@ -196,7 +196,7 @@ int performAction(struct Rom *rom) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentlyChoosing=3;
-			pthread_create(&clockThread, NULL, updateClock,NULL);
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}
 		if (keys[BTN_R]) {

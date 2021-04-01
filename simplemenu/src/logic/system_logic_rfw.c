@@ -104,5 +104,5 @@ void cycleFrequencies() {
 }
 
 int getBatteryLevel() {
-	return -1;
+	return 100;
 }

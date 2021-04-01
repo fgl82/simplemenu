@@ -1,11 +1,11 @@
 # Software Name
 TARGET = simplemenu
 #PLATFORM = BITTBOY
-#PLATFORM = RG-300
+PLATFORM = RFW
 #PLATFORM = OD
 #PLATFORM = OD-BETA
 #PLATFORM = NPG
-PLATFORM = PC
+#PLATFORM = PC
 
 # Compiler
 ifeq ($(PLATFORM), BITTBOY)
@@ -13,10 +13,10 @@ ifeq ($(PLATFORM), BITTBOY)
 	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
 	CFLAGS = -DTARGET_BITTBOY -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
 	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lbz2
-else ifeq ($(PLATFORM), RG-300)
+else ifeq ($(PLATFORM), RFW)
 	CC = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
 	LINKER = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
-	CFLAGS = -DTARGET_RG300 -DUSE_GZIP -ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
+	CFLAGS = -DTARGET_RFW -DUSE_GZIP -ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz
 else ifeq ($(PLATFORM), OD)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
@@ -60,33 +60,33 @@ SOURCES  := $(wildcard $(SRCDIR)/*.c)
 
 ifeq ($(PLATFORM), BITTBOY)
 	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))	
-else ifeq ($(PLATFORM), RG-300)
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))	
+else ifeq ($(PLATFORM), RFW)
 	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))		
 else ifeq ($(PLATFORM), OD)  
-	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
 else ifeq ($(PLATFORM), OD-BETA)  
-	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
 else ifeq ($(PLATFORM), NPG)  
-	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
 else
-	SOURCES := $(filter-out src/logic/control_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rg300.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
 endif 
 

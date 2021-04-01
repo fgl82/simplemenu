@@ -562,8 +562,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[DEFAULT_OPTION],"Default launcher  ");
 	logMessage("INFO","Default option");
 	logMessage("INFO",options[DEFAULT_OPTION]);
-	#if defined TARGET_RG300
-	strcpy(options[USB_OPTION],"USB mode ");
+	#if defined TARGET_RFW
+	strcpy(options[USB_OPTION],"USB mode");
 	#else
 	strcpy(options[USB_OPTION],"HDMI ");
 	#endif
@@ -582,7 +582,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	logMessage("INFO",hints[DEFAULT_OPTION]);
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
 
-	#if defined TARGET_RG300
+	#if defined TARGET_RFW
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
 	#else
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
@@ -648,8 +648,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		logMessage("INFO",values[DEFAULT_OPTION]);
 	}
 //	strcpy(values[SHUTDOWN_OPTION],"\0");
-	#if defined TARGET_RG300
-	strcpy(values[USB_OPTION],"\0");
+	#if defined TARGET_RFW
+	strcpy(values[USB_OPTION],"YES \0");
 	#else
 	if (hdmiChanged==1) {
 		strcpy(values[USB_OPTION],"enabled");
@@ -727,6 +727,7 @@ void drawSettingsScreen() {
 //	}
 
 	logMessage("INFO","Drawing shit");
+	printf("PAPAAAA 1\n");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
@@ -736,7 +737,7 @@ void drawSettingsScreen() {
 	int pos = (lastChargeLevel/10);
 //	int pos = (59/10);
 
-
+	printf("PAPAAAA 2\n");
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
 
 	logMessage("INFO","Positioning batt 1");
@@ -745,11 +746,11 @@ void drawSettingsScreen() {
 		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);
 	}
 //	drawTextOnSettingsHeaderRightWithColor1(batt,SCREEN_WIDTH-14-calculateProportionalSizeOrDistance(7*pos),headerAndFooterText);
-
+	printf("PAPAAAA 3\n");
 	int nextLine = calculateProportionalSizeOrDistance(50);
 	int nextLineText = calculateProportionalSizeOrDistance(50);
 	int selected=0;
-	#if defined TARGET_RG300
+	#if defined TARGET_RFW
 	int max = 9;
 	#elif defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 	int max = 9;
@@ -759,6 +760,7 @@ void drawSettingsScreen() {
 	logMessage("INFO","Defining number of items");
 	logMessage("INFO","About to go through items");
 	for (int i=0;i<max;i++) {
+		printf("PAPAAAA 4\n");
 		logMessage("INFO","one item");
 		char temp[300];
 		strcpy(temp,options[i]);
@@ -799,6 +801,7 @@ void drawSettingsScreen() {
 		nextLineText+=calculateProportionalSizeOrDistance(19);
 		logMessage("INFO","---");
 	}
+	printf("PAPAAAA 5\n");
 	logMessage("INFO","Out of the loop");
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
 	logMessage("INFO","Drawing Footer");

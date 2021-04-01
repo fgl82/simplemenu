@@ -29,7 +29,7 @@ elif [ "$1" = "PG2" ]; then
     make PLATFORM=NPG
 elif [ "$1" = "RFW" ]; then
     make clean
-    make PLATFORM=RG-300
+    make PLATFORM=RFW
 fi
 
 cd /home/bittboy/git/invoker/invoker/
@@ -45,7 +45,7 @@ elif [ "$1" = "PG2" ]; then
     make PLATFORM=NPG
 else
     make clean
-    make PLATFORM=RG-300
+    make PLATFORM=RFW
 fi
 
 cp invoker.dge /home/bittboy/git/simplemenu/simplemenu/output

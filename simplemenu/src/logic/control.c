@@ -611,14 +611,14 @@ void performSettingsChoosingAction() {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#if defined TARGET_RG300 || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
+			#if defined TARGET_RFW || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 			chosenSetting=8;
 			#else
 			chosenSetting=7;
 			#endif
 		}
 	} else if (keys[BTN_DOWN]) {
-		#if defined TARGET_RG300 || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
+		#if defined TARGET_RFW || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
 		if(chosenSetting<8) {
 		#else
 		if(chosenSetting<7) {
@@ -710,7 +710,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"rm /mnt/autoexec.sh;mv /mnt/autoexec.sh.bck /mnt/autoexec.sh");
 				#endif
-				#ifdef TARGET_RG300
+				#ifdef TARGET_RFW
 				snprintf(command,sizeof(command),"rm /home/retrofw/autoexec.sh;mv /home/retrofw/autoexec.sh.bck /home/retrofw/autoexec.sh");
 				#endif
 				#if defined TARGET_OD || defined TARGET_NPG
@@ -723,7 +723,7 @@ void performSettingsChoosingAction() {
 				#ifdef TARGET_BITTBOY
 				snprintf(command,sizeof(command),"mv /mnt/autoexec.sh /mnt/autoexec.sh.bck;cp scripts/autoexec.sh /mnt");
 				#endif
-				#ifdef TARGET_RG300
+				#ifdef TARGET_RFW
 				snprintf(command,sizeof(command),"mv /home/retrofw/autoexec.sh /home/retrofw/autoexec.sh.bck;cp scripts/autoexec.sh /home/retrofw");
 				#endif
 				#if defined TARGET_OD || defined TARGET_NPG
@@ -745,7 +745,7 @@ void performSettingsChoosingAction() {
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
 	}
-	#if defined TARGET_RG300
+	#if defined TARGET_RFW
 	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 		hotKeyPressed=0;
 		int returnedValue = system("./scripts/usb_mode_on.sh>/home/retrofw/apps/test.txt");

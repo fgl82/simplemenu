@@ -284,15 +284,15 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #endif
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
-//#ifndef TARGET_OD_BETA
+		//#ifndef TARGET_OD_BETA
 		unsetenv("SDL_FBCON_DONT_CLEAR");
-//#endif
+		//#endif
 		char states[2000];
-//		for (int i=0;i<favoritesSectionNumber+1;i++) {
-//			char tempString[200];
-//			snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
-//			strcat(states,tempString);
-//		}
+		//		for (int i=0;i<favoritesSectionNumber+1;i++) {
+		//			char tempString[200];
+		//			snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
+		//			strcat(states,tempString);
+		//		}
 		char pReturnTo[3];
 		snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
 		char pSectionNumber[3]="";
@@ -310,7 +310,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #ifndef TARGET_PC
 		setCPU(currentCPU);
 #endif
-#ifdef TARGET_RG300
+#ifdef TARGET_RFW
 		//	ipu modes (/proc/jz/ipu):
 		//	0: stretch
 		//	1: aspect
@@ -343,7 +343,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #endif
 
 		if (consoleApp) {
-		#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 			/* Enable the framebuffer console */
 			char c = '1';
 			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
@@ -362,7 +362,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					printf("Unable to activate tty1\n");
 				close(fd);
 			}
-		#endif
+#endif
 		}
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
@@ -904,7 +904,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 								if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 									break;
 								} else {
-#ifdef TARGET_RG300
+#ifdef TARGET_RFW
 									while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
 										logMessage("WARN", "Non-RetroFW desktop file found");
 										desktopCounter++;
@@ -927,7 +927,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 											game = 0;
 										}
 									}
-#ifdef TARGET_RG300
+#ifdef TARGET_RFW
 									if(strstr(desktopFiles[desktopCounter].name,"default")==NULL) {
 										strcpy(rom->name,"-m|");
 										strcat(rom->name,desktopFiles[desktopCounter].name);

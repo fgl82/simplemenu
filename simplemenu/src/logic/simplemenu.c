@@ -61,6 +61,7 @@ void sig_term_handler()
 }
 
 int main() {
+	printf(" HELLO BOBBY \n");
 	initializeGlobals();
 	logMessage("INFO","Initialized Globals");
     struct sigaction sa;
@@ -95,7 +96,7 @@ int main() {
 	logMessage("INFO","Last state loaded");
 	logMessage("INFO","Initialized Display");
 	char temp[300];
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG) || defined(TARGET_PC)
 	HW_Init();
 	logMessage("INFO","HW Initialized");
 	currentCPU = OC_NO;
@@ -129,7 +130,7 @@ int main() {
 	initializeFonts();
 	initializeSettingsFonts();
 	logMessage("INFO","Fonts initialized");
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RG300) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
+	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
 	initSuspendTimer();
 	logMessage("INFO","Suspend timer initialized");
 	#endif
@@ -152,9 +153,10 @@ int main() {
 	while (SDL_WaitEvent(&event) && running) {
 		start_time=SDL_GetTicks();
 		if (currentlyChoosing==3) {
+			printf("PAPAAAA\n");
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
-			int batt = getBatteryLevel();
+			int batt = 100;
 			if (lastChargeLevel > batt || batt > lastChargeLevel + 1) {
 				lastChargeLevel = batt;
 				updateScreen(NULL);
