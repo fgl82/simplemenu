@@ -61,7 +61,6 @@ void sig_term_handler()
 }
 
 int main() {
-	printf(" HELLO BOBBY \n");
 	initializeGlobals();
 	logMessage("INFO","Initialized Globals");
     struct sigaction sa;
@@ -153,7 +152,6 @@ int main() {
 	while (SDL_WaitEvent(&event) && running) {
 		start_time=SDL_GetTicks();
 		if (currentlyChoosing==3) {
-			printf("PAPAAAA\n");
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
 			int batt = 100;
