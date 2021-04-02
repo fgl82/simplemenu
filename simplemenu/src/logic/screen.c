@@ -16,6 +16,13 @@
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
+void pushevent() {
+    SDL_Event sdlevent;
+    sdlevent.type = SDL_KEYDOWN;
+    sdlevent.key.keysym.sym = SDLK_1;
+    SDL_PushEvent(&sdlevent);
+}
+
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,CURRENT_SECTION.bodyBackgroundColor);
@@ -904,6 +911,7 @@ uint32_t hideFullScreenModeMenu() {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
 	}
+	pushevent();
 	return 0;
 }
 
@@ -934,6 +942,7 @@ uint32_t hidePicModeLogo() {
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
+	pushevent();
 	return 0;
 }
 
@@ -954,6 +963,7 @@ uint32_t hideHeart() {
 	if(!isPicModeMenuHidden) {
 		resetPicModeHideMenuTimer();
 	}
+	pushevent();
 	return 0;
 }
 

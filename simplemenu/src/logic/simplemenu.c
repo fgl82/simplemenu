@@ -117,7 +117,8 @@ void initialSetup() {
 
 void processEvents() {
 	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
+
+	while (SDL_WaitEvent(&event)) {
 		if(event.type==getKeyDown()){
 			if (!isSuspended) {
 				switch (currentState) {
@@ -162,6 +163,7 @@ void processEvents() {
 				aKeyComboWasPressed=0;
 			}
 		}
+		break;
 	}
 }
 
