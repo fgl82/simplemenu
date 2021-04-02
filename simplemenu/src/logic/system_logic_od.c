@@ -47,14 +47,15 @@ void to_string(char str[], int num)
 void setCPU(uint32_t mhz)
 {
 	currentCPU = mhz;
-	#ifndef TARGET_PC
-		#if defined TARGET_OD_BETA
-			char strMhz[10];
-			int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
-			to_string(strMhz, (mhz * 1000));
-			int ret = write(fd, strMhz, strlen(strMhz));
-			close(fd);
-		#endif
+	#if defined TARGET_OD_BETA
+		char strMhz[10];
+		int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
+		to_string(strMhz, (mhz * 1000));
+		int ret = write(fd, strMhz, strlen(strMhz));
+		close(fd);
+		char temp[300];
+		snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
+		logMessage("INFO",temp);
 	#endif
 }
 
@@ -91,6 +92,7 @@ uint32_t suspend() {
 };
 
 void resetScreenOffTimer() {
+#ifndef TARGET_PC
 	if(isSuspended) {
 		turnScreenOnOrOff(1);
 		currentCPU=oldCPU;
@@ -98,11 +100,13 @@ void resetScreenOffTimer() {
 	}
 	clearTimer();
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+#endif
 }
 
 void initSuspendTimer() {
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
 	isSuspended=0;
+	logMessage("INFO","Suspend timer initialized");
 }
 
 void HW_Init()
@@ -115,6 +119,7 @@ void HW_Init()
 	effect_id=Shake_UploadEffect(device, &effect);
 	effect_id1=Shake_UploadEffect(device, &effect1);
 	#endif
+	logMessage("INFO","HW Initialized");
 }
 
 void cycleFrequencies() {

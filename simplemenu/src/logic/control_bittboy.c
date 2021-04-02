@@ -9,7 +9,13 @@
 #include "../headers/system_logic.h"
 #include "../headers/utils.h"
 
-int performAction(struct Rom *rom) {
+int performAction(struct Node *node) {
+	struct Rom *rom;
+	if (node!=NULL) {
+		rom = node->data;
+	} else {
+		rom = NULL;
+	}
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
@@ -25,7 +31,7 @@ int performAction(struct Rom *rom) {
 				currentlySectionSwitching=0;
 				chosenSetting=SHUTDOWN_OPTION;
 				selectedShutDownOption=0;
-				currentlyChoosing=3;
+				currentState=3;
 //				pthread_create(&clockThread, NULL, updateClock,NULL);
 				return 1;
 			}
@@ -75,8 +81,6 @@ int performAction(struct Rom *rom) {
 		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<25;i++) {
 				selectRandomGame();
-				nullUpdate=0;
-//				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			}
 			saveFavorites();
 			launchGame(CURRENT_SECTION.currentGameNode->data);
@@ -145,13 +149,14 @@ int performAction(struct Rom *rom) {
 		}
 	}
 	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
-		currentlyChoosing=1;
+		currentState=1;
 		return 0;
 	}
 	if(keys[BTN_L1]) {
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
+			displayLogo=1;
 		}
 		int rewinded = rewindSection(1);
 		if(rewinded) {
@@ -167,6 +172,7 @@ int performAction(struct Rom *rom) {
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
+			displayLogo=1;
 		}
 		int advanced = advanceSection(1);
 		if(advanced) {
@@ -197,7 +203,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_START]) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
-			currentlyChoosing=3;
+			currentState=3;
 //			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}

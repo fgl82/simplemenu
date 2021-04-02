@@ -1106,6 +1106,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			}
 			CURRENT_SECTION.totalPages=pages;
 		}
+		logMessage("INFO","Found starting screen");
 	}
 
 	void deleteGame(struct Rom *rom) {

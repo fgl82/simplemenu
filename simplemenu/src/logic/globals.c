@@ -12,8 +12,8 @@
 #endif
 SDL_Surface *screen;
 int displayLogo;
+SDL_Surface *heart;
 /* STATUS */
-int nullUpdate;
 char *errorMessage;
 int running;
 int itsStoppedBecauseOfAnError;
@@ -27,7 +27,7 @@ int fullscreenMode;
 int hotKeyPressed;
 int aKeyComboWasPressed;
 int currentlySectionSwitching;
-int currentlyChoosing;
+int currentState;
 int loading;
 int isPicModeMenuHidden;
 int isSuspended;
@@ -238,7 +238,7 @@ struct Favorite favorites[2000];
 uint8_t *keys;
 SDL_Joystick *joystick;
 int BTN_Y;
-int BTN_B;
+uint8_t BTN_B;
 int BTN_A;
 int BTN_X;
 int BTN_START;

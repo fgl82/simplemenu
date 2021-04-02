@@ -1,6 +1,11 @@
 #ifndef GLOBALS_DEFINED
 #define GLOBALS_DEFINED
 
+#define BROWSING_GAME_LIST 0
+#define SELECTING_EMULATOR 1
+#define CHOOSING_GROUP 2
+#define SETTINGS_SCREEN 3
+
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_image.h>
@@ -13,6 +18,7 @@
 
 extern SDL_Surface *screen;
 extern int displayLogo;
+extern SDL_Surface *heart;
 /* STATUS */
 extern int nullUpdate;
 extern char *errorMessage;
@@ -28,7 +34,7 @@ extern int fullscreenMode;
 extern int hotKeyPressed;
 extern int aKeyComboWasPressed;
 extern int currentlySectionSwitching;
-extern int currentlyChoosing;
+extern int currentState;
 extern int loading;
 extern int isPicModeMenuHidden;
 extern int isSuspended;

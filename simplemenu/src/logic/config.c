@@ -96,6 +96,7 @@ void checkIfDefault() {
 	if (fpScripts!=NULL) {
 		fclose(fpScripts);
 	}
+	logMessage("INFO","Default state checked");
 }
 
 uint32_t hex2int(char *hex) {
@@ -243,7 +244,11 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 
+		SDL_FreeSurface(heart);
+		heart=NULL;
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
+		heart = IMG_Load(favoriteIndicator);
+
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
@@ -381,6 +386,7 @@ void checkThemes() {
 		free(files[i]);
 		themeCounter++;
 	}
+	logMessage("INFO","Themes checked");
 }
 
 void createConfigFilesInHomeIfTheyDontExist() {
@@ -439,6 +445,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		system("scripts/home computers.sh");
 		mkdir(pathToTempFiles,0700);
 	}
+	logMessage("INFO","Validated configuration existence");
 }
 
 void saveFavorites() {
@@ -483,7 +490,7 @@ void loadFavorites() {
 	snprintf(pathToFavoritesFilePlusFileName,sizeof(pathToFavoritesFilePlusFileName),"%s/.simplemenu/favorites.sav",home);
 	fp = fopen(pathToFavoritesFilePlusFileName, "r");
 	if (fp==NULL) {
-		generateError("FAVORITES FILE NOT FOUND-SHUTTING DOWN",1);
+		generateError("FAVORITES FILE NOT FOUND",1);
 		return;
 	}
 	char *configurations[7];
@@ -515,6 +522,7 @@ void loadFavorites() {
 		free(line);
 	}
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
+	logMessage("INFO","Loaded favorites");
 }
 
 int cmpfnc(const void *f1, const void *f2)
@@ -653,6 +661,7 @@ void loadConfig() {
 	}
 
 	ini_free(config);
+	logMessage("INFO","Config loaded");
 }
 
 void loadSectionGroups() {
@@ -712,6 +721,7 @@ void loadSectionGroups() {
 
 	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
 	ini_free(themeConfig);
+	logMessage("INFO","Loaded section groups");
 }
 
 int loadSections(char *file) {
@@ -965,6 +975,10 @@ int loadSections(char *file) {
 	footerOnTop = atoifgl(value);
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
+	SDL_FreeSurface(heart);
+	heart=NULL;
+	heart = IMG_Load(favoriteIndicator);
+
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
@@ -1165,4 +1179,5 @@ void loadLastState() {
 	if (line) {
 		free(line);
 	}
+	logMessage("INFO","Last state loaded");
 }

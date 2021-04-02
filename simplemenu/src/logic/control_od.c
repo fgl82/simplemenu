@@ -12,10 +12,17 @@
 #include "../headers/utils.h"
 #include "../headers/system_logic.h"
 
-int performAction(struct Rom *rom) {
+int performAction(struct Node *node) {
+	struct Rom *rom;
+	if (node!=NULL) {
+		rom = node->data;
+	} else {
+		rom = NULL;
+	}
 	if(currentlySectionSwitching) {
 		if (keys[BTN_A]) {
 			currentlySectionSwitching=0;
+			displayLogo=0;
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
 				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
@@ -27,10 +34,11 @@ int performAction(struct Rom *rom) {
 			return 1;
 		}
 		if (keys[BTN_START]) {
+			displayLogo=0;
 			currentlySectionSwitching=0;
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
-			currentlyChoosing=3;
+			currentState=3;
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
 			lastMin=currTime->tm_min;
@@ -94,8 +102,6 @@ int performAction(struct Rom *rom) {
 		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
 			for(int i=0;i<25;i++) {
 				selectRandomGame();
-				nullUpdate=0;
-//				updateScreen(CURRENT_SECTION.currentGameNode->data);
 			}
 			saveFavorites();
 			launchGame(CURRENT_SECTION.currentGameNode->data);
@@ -161,10 +167,12 @@ int performAction(struct Rom *rom) {
 		}
 	}
 	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
-		currentlyChoosing=1;
+		currentState=1;
 		return 0;
 	}
 	if(keys[BTN_L1]) {
+		currentlySectionSwitching=1;
+		displayLogo=1;
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
@@ -180,6 +188,8 @@ int performAction(struct Rom *rom) {
 	}
 
 	if(keys[BTN_R1]) {
+		currentlySectionSwitching=1;
+		displayLogo=1;
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
@@ -213,7 +223,7 @@ int performAction(struct Rom *rom) {
 		if (keys[BTN_START]) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
-			currentlyChoosing=3;
+			currentState=3;
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
 			lastMin=currTime->tm_min;

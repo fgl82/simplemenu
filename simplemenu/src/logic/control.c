@@ -116,18 +116,14 @@ int advanceSection(int showLogo) {
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
-//		displayBackgroundPicture();
 		logMessage("INFO","Displaying system logo");
-		displayLogo=1;
-//		showConsole();
-//		refreshScreen();
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		displayBackgroundPicture();
 //		showConsole();
 //		refreshScreen();
-		displayLogo=1;
+//		displayLogo=1;
 	}
 	#endif
 	return 1;
@@ -149,18 +145,14 @@ int rewindSection(int showLogo) {
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 		currentlySectionSwitching=1;
-//		displayBackgroundPicture();
 		logMessage("INFO","Displaying system logo");
-//		showConsole();
-//		refreshScreen();
-		displayLogo=1;
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		displayBackgroundPicture();
 //		showConsole();
 //		refreshScreen();
-		displayLogo=1;
+//		displayLogo=1;
 	}
 	#endif
 	if(currentSectionNumber!=favoritesSectionNumber) {
@@ -355,7 +347,7 @@ void showOrHideFavorites() {
 			if (fullscreenMode) {
 				currentlySectionSwitching=1;
 				resetPicModeHideLogoTimer();
-				currentlySectionSwitching=1;
+//				currentlySectionSwitching=1;
 //				displayBackgroundPicture();
 				logMessage("INFO","Displaying system logo");
 //				showConsole();
@@ -500,7 +492,7 @@ int isSelectPressed() {
 void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
-		currentlyChoosing=3;
+		currentState=3;
 //		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
@@ -559,9 +551,9 @@ void performGroupChoosingAction() {
 					}
 				}
 			}
-			if (currentlyChoosing) {
+			if (currentState) {
 				loadSections(sectionGroups[activeGroup].groupPath);
-				currentlyChoosing=0;
+				currentState=0;
 				currentSectionNumber=0;
 				for(int i=0;i<menuSectionCounter;i++) {
 					menuSections[i].initialized=0;
@@ -608,7 +600,7 @@ void performGroupChoosingAction() {
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
-			currentlyChoosing=0;
+			currentState=0;
 		}
 	}
 }
@@ -761,7 +753,7 @@ void performSettingsChoosingAction() {
 		} else {
 			generateError("USB MODE  NOT AVAILABLE",0);
 		}
-		currentlyChoosing=0;
+		currentState=0;
 	}
 	#endif
 	else if (keys[BTN_START]) {
@@ -782,7 +774,7 @@ void performSettingsChoosingAction() {
 			execlp("./simplemenu","invoker",NULL);
 		}
 		#endif
-		currentlyChoosing=0;
+		currentState=0;
 //		char *temp=malloc(8000);
 //		strcpy(temp,themes[activeTheme]);
 //		strcat(temp,"/theme.ini");
@@ -828,8 +820,8 @@ void performChoosingAction() {
 		return;
 	}
 	if (keys[BTN_A]) {
-		if (currentlyChoosing) {
-			currentlyChoosing=0;
+		if (currentState) {
+			currentState=0;
 			return;
 		}
 	}

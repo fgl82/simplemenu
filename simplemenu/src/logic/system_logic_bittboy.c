@@ -294,6 +294,9 @@ void setCPU(uint32_t mhz) {
 			break;
 		}
 	}
+	char temp[300];
+	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
+	logMessage("INFO",temp);
 	#endif
 }
 
@@ -338,6 +341,7 @@ uint32_t suspend() {
 };
 
 void resetScreenOffTimer() {
+#ifndef TARGET_PC
 	if(isSuspended) {
 		setCPU(OC_NO);
 		setBacklight(backlightValue);
@@ -346,11 +350,13 @@ void resetScreenOffTimer() {
 	}
 	clearTimer();
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
+#endif
 }
 
 void initSuspendTimer() {
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
 	isSuspended=0;
+	logMessage("INFO","Suspend timer initialized");
 }
 
 void HW_Init() {
@@ -361,6 +367,7 @@ void HW_Init() {
 			close(memdev);
 		}
 	}
+	logMessage("INFO","HW Initialized");
 }
 
 void cycleFrequencies() {

@@ -1,7 +1,7 @@
 #include "../headers/globals.h"
 #ifndef SCREEN_DEFINED
 #define SCREEN_DEFINED
-void updateScreen(struct Rom *rom);
+void updateScreen(struct Node *node);
 void drawHeader();
 void drawGameList();
 void drawFooter(char *text);

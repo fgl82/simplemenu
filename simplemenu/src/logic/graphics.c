@@ -98,14 +98,14 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	}
 
 	if (shaded) {
-		if (currentlyChoosing==0  && outline != NULL && fontOutline > 0) {
+		if (currentState==0  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
 			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		}
 	} else {
-		if (currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
+		if (currentState==0 && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
@@ -129,7 +129,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	rect2.w = msg->w;
 	rect2.h = msg->h;
 
-	if(currentlyChoosing==0 && outline != NULL && fontOutline > 0) {
+	if(currentState==0 && outline != NULL && fontOutline > 0) {
 		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
 		SDL_BlitSurface(msg, NULL, msg1, &rect);
 		SDL_BlitSurface(msg1, NULL, screen, &rect2);
@@ -658,16 +658,45 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 	return 1;
 }
 
-void showHeart(int x, int y) {
-	SDL_Surface *img = IMG_Load(favoriteIndicator);
-	SDL_Rect rectangleDest;
-	rectangleDest.w = 0;
-	rectangleDest.h = 0;
-	rectangleDest.x = x;
-	rectangleDest.y = y;
-	SDL_BlitSurface(img, NULL, screen, &rectangleDest);
-	SDL_FreeSurface(img);
+
+int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
+	// Zoom function uses doubles for rates of scaling, rather than
+	// exact size values. This is how we get around that:
+	double zoomx = newwidth  / (float)image->w;
+	double zoomy = newheight / (float)image->h;
+	// This function assumes no smoothing, so that any colorkeys wont bleed.
+	SDL_Surface* sized = NULL;
+	if (((int)newwidth<(int)(image->w/2))&&(int)(image->w/2)%(int)newwidth==0) {
+		zoomx = (float)image->w/newwidth;
+		zoomy = (float)image->h/newheight;
+		sized = shrinkSurface(image, zoomx, zoomy);
+	} else {
+		zoomx = newwidth  / (float)image->w;
+		zoomy = newheight / (float)image->h;
+		sized = zoomSurface(image, zoomx, zoomy, smoothing);
+	}	// If the original had an alpha color key, give it to the new one.
+	if( image->flags & SDL_SRCCOLORKEY ) {
+		// Acquire the original Key
+		Uint32 colorkey = image->format->colorkey;
+		// Set to the new image
+		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
+	}
+	// The original picture is no longer needed.
+//	SDL_FreeSurface(image);
+	// Set it instead to the new image.
+	image =  sized;
+	SDL_Rect src, dest;
+	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
+	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
+	if(transparent == 1 ) {
+		//Set the color as transparent
+		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
+	}
+	SDL_BlitSurface(image, &src, display, &dest);
+//	SDL_FreeSurface(image);
+	return 1;
 }
+
 
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
@@ -695,30 +724,21 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-		//		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
+//		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
+		int heartX = (calculateProportionalSizeOrDistance(artX)+(w/2));
+		int heartY = (calculateProportionalSizeOrDistance(artY)+(h/2));
+		displayHeart(heartX, heartY);
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY), 0, 0, w, h, 0, smoothing);
-		if(hideHeartTimer!=NULL) {
-			SDL_Surface *heart = IMG_Load(favoriteIndicator);
-			if (heart!=NULL) {
-				double wh = heart->w;
-				double hh = heart->h;
-				double ratioh = 0;  // Used for aspect ratio
-				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(heart->h);
-				if(hh!=heart->h) {
-					smoothing = 1;
-					wh = hh*ratioh;
-				}
-				drawImage(screen, heart, calculateProportionalSizeOrDistance(artX)+w/2-(wh/2), calculateProportionalSizeOrDistance(artY)+h/2-hh/2, 0, 0, wh, hh, 0, smoothing);
-			}
-		}
+		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 		}
 	} else {
-		int smoothing = 0;
+		int heartX = calculateProportionalSizeOrDistance(artX+(artWidth/2));
+		int heartY = calculateProportionalSizeOrDistance(artY)+(calculateProportionalSizeOrDistance((artWidth/4)*3)/2);
+		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
@@ -728,27 +748,11 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
-		if(hideHeartTimer!=NULL) {
-			SDL_Surface *heart = IMG_Load(favoriteIndicator);
-			if (heart!=NULL) {
-				double wh = heart->w;
-				double hh = heart->h;
-				double ratioh = 0;  // Used for aspect ratio
-				ratioh = wh / hh;   // get ratio for scaling image
-				hh = calculateProportionalSizeOrDistance(heart->h);
-				if(hh!=heart->h) {
-					smoothing = 1;
-				}
-				wh = hh*ratioh;
-				drawImage(screen, heart, calculateProportionalSizeOrDistance(artX+artWidth/2)-(wh/2), calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance((artWidth/4)*3)/2-hh/2, 0, 0, wh, hh, 0, smoothing);
-			}
-		}
 	}
 }
 
-void displayHeart() {
+void displayHeart(int x, int y) {
 	if(hideHeartTimer!=NULL) {
-		SDL_Surface *heart = IMG_Load(favoriteIndicator);
 		if (heart!=NULL) {
 			double wh = heart->w;
 			double hh = heart->h;
@@ -761,7 +765,7 @@ void displayHeart() {
 			}
 			wh = hh*ratioh;
 			smoothing = 1;
-			drawImage(screen, heart, SCREEN_WIDTH/2-(wh/2), SCREEN_HEIGHT/2-hh/2, 0, 0, wh, hh, 0, smoothing);
+			drawImage1(screen, heart, x-(wh/2), y-(hh/2), 0, 0, wh, hh, 0, smoothing);
 		}
 	}
 }
@@ -1019,10 +1023,11 @@ void initializeDisplay() {
 	SDL_ShowCursor(0);
 #else
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE|SDL_DOUBLEBUF);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
 #endif
 	//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+	logMessage("INFO","Initialized Display");
 }
 
 
@@ -1039,6 +1044,7 @@ void initializeSettingsFonts() {
 	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));
 	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
 	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(16));
+	logMessage("INFO","Settings Fonts initialized");
 }
 
 void initializeFonts() {
@@ -1072,7 +1078,7 @@ void initializeFonts() {
 		TTF_SetFontOutline(outlineCustomHeaderFont,fontOutline);
 		TTF_SetFontOutline(outlineCustomCountFont,fontOutline);
 	}
-
+	logMessage("INFO","Fonts initialized");
 }
 
 void freeFonts() {
