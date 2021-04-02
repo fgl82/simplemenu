@@ -98,14 +98,14 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	}
 
 	if (shaded) {
-		if (currentState==0  && outline != NULL && fontOutline > 0) {
+		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
 			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
 		}
 	} else {
-		if (currentState==0 && outline != NULL && fontOutline > 0) {
+		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
@@ -129,7 +129,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	rect2.w = msg->w;
 	rect2.h = msg->h;
 
-	if(currentState==0 && outline != NULL && fontOutline > 0) {
+	if(currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
 		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
 		SDL_BlitSurface(msg, NULL, msg1, &rect);
 		SDL_BlitSurface(msg1, NULL, screen, &rect2);
@@ -892,6 +892,7 @@ void displayCenteredSurface(SDL_Surface *surface) {
 	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
 	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
 	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
+	logMessage("INFO","Displayed surface");
 }
 
 void displaySurface(SDL_Surface *surface, int x, int y) {

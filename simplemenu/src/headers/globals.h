@@ -6,6 +6,7 @@
 #define CHOOSING_GROUP 2
 #define SETTINGS_SCREEN 3
 #define SELECTING_SECTION 4
+#define SHUTTING_DOWN 5
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>

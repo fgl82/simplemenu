@@ -145,7 +145,7 @@ void processEvents() {
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
-						currentState=2;
+						currentState=CHOOSING_GROUP;
 					}
 				}
 				hotKeyPressed=0;
@@ -172,18 +172,25 @@ int main() {
 	const int GAME_FPS=60;
 	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
 	Uint32 start_time;
+	pushEvent();
 	while(running) {
 		start_time=SDL_GetTicks();
 		processEvents();
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();
-		//Time spent on one loop
-		int timeSpent = SDL_GetTicks()-start_time;
+//		//Time spent on one loop
+//		int timeSpent = SDL_GetTicks()-start_time;
 		//If it took less than a frame
-		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
-			//Wait the remaining time until one frame completes
-			SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
-		}
+//		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
+//			//Wait the remaining time until one frame completes
+//			SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
+//		}
+	}
+	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
+	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
+		currentState=SHUTTING_DOWN;
+		updateScreen(CURRENT_SECTION.currentGameNode);
+		refreshScreen();
 	}
 	quit();
 }

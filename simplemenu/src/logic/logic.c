@@ -189,19 +189,11 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 }
 
 void quit() {
-	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
-	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
-		drawShutDownScreen();
-//		refreshScreen();
-	}
 	saveLastState();
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
-	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
-		sleep(1.5);
-	}
 	freeResources();
 	if (shutDownEnabled) {
 #ifdef TARGET_PC

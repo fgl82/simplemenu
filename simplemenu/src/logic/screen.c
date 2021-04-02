@@ -16,10 +16,10 @@
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
-void pushevent() {
+void pushEvent() {
     SDL_Event sdlevent;
-    sdlevent.type = SDL_KEYDOWN;
-    sdlevent.key.keysym.sym = SDLK_1;
+    sdlevent.type = SDL_MOUSEMOTION;
+    sdlevent.motion.x = 1;
     SDL_PushEvent(&sdlevent);
 }
 
@@ -194,13 +194,13 @@ void showCurrentGroup() {
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
-	logMessage("INFO", "Displaying group background");
 	displayCenteredSurface(sectionGroups[activeGroup].groupBackgroundSurface);
 	if (displaySectionGroupName) {
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
 		drawCurrentSectionGroup(tempString, textColor);
 	}
 	free(tempString);
+	logMessage("INFO", "Group displayed");
 }
 
 void showCurrentEmulator() {
@@ -233,6 +233,7 @@ void showCurrentEmulator() {
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)                                         , filling);
 	drawCurrentExecutable(tempString, textColor);
 	free(tempString);
+	logMessage("INFO","Current emulator shown");
 }
 
 void showConsole() {
@@ -247,6 +248,7 @@ void showConsole() {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 		drawTextOnScreen(NULL,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
 	}
+	logMessage("INFO","Current console shown");
 }
 
 void displayGamePicture(struct Rom *rom) {
@@ -363,6 +365,7 @@ void displayGamePicture(struct Rom *rom) {
 
 	free(pictureWithFullPath);
 	free(tempGameName);
+	logMessage("INFO","Displayed game picture - fullscreen");
 }
 
 void displayGamePictureInMenu(struct Rom *rom) {
@@ -397,6 +400,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	}
 	free(pictureWithFullPath);
 	free(tempGameName);
+	logMessage("INFO","Displayed game picture");
 }
 
 void drawHeader() {
@@ -520,6 +524,7 @@ void drawGameList() {
 		currentNode = currentNode->next;
 	}
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+	logMessage("INFO","Game list - Done");
 }
 
 void setupDecorations(struct Rom *rom) {
@@ -530,6 +535,7 @@ void setupDecorations(struct Rom *rom) {
 	snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
 	drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2X), calculateProportionalSizeOrDistance(text2Y));
 	free(gameNumber);
+	logMessage("INFO","Decorations set");
 }
 
 void setOptionsAndValues (char **options, char **values, char **hints){
@@ -845,6 +851,7 @@ void drawSettingsScreen() {
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[USB_OPTION]);
 	free(hints[AUTO_HIDE_LOGOS_OPTION]);
+	logMessage("INFO","Settings drawn");
 }
 
 void updateScreen(struct Node *node) {
@@ -855,36 +862,42 @@ void updateScreen(struct Node *node) {
 		rom = node->data;
 	}
 	if (!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		if (currentState==BROWSING_GAME_LIST) {
-			if (fullscreenMode) {
-				logMessage("INFO","Displaying game picture - fullscreen");
-				displayGamePicture(rom);
-				logMessage("INFO","update screen - drawing game list - fullscreen");
-				drawGameList();
-				displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-			} else {
-				logMessage("INFO","update screen - Displaying section background");
-				displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
-				logMessage("INFO","update screen - drawing game list");
-				drawGameList();
-				logMessage("INFO","update screen - displaying game picture");
-				displayGamePictureInMenu(rom);
-				logMessage("INFO","update screen - setting up decorations");
-				setupDecorations(rom);
-			}
-			if (CURRENT_SECTION.alphabeticalPaging) {
-				if (rom->name!=NULL) {
-					showLetter(rom);
+		switch(currentState) {
+			case BROWSING_GAME_LIST:
+				if (fullscreenMode) {
+					logMessage("INFO","Fullscreen mode");
+					displayGamePicture(rom);
+					drawGameList();
+					displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+				} else {
+					logMessage("INFO","Menu mode");
+					displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
+					drawGameList();
+					displayGamePictureInMenu(rom);
+					setupDecorations(rom);
 				}
-			}
-		} else if (currentState==SETTINGS_SCREEN) {
-			drawSettingsScreen();
-		} else if (currentState==CHOOSING_GROUP) {
-			showCurrentGroup();
-		} else if (currentState==SELECTING_EMULATOR) {
-			showCurrentEmulator();
-		} else if (currentState==SELECTING_SECTION) {
-			showConsole();
+				if (CURRENT_SECTION.alphabeticalPaging) {
+					logMessage("INFO","Show alphabetical navigation bar");
+					if (rom->name!=NULL) {
+						showLetter(rom);
+					}
+				}
+				break;
+			case SETTINGS_SCREEN:
+				drawSettingsScreen();
+				break;
+			case CHOOSING_GROUP:
+				showCurrentGroup();
+				break;
+			case SELECTING_EMULATOR:
+				showCurrentEmulator();
+				break;
+			case SELECTING_SECTION:
+				showConsole();
+				break;
+			case SHUTTING_DOWN:
+				drawShutDownScreen();
+				break;
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
@@ -911,7 +924,7 @@ uint32_t hideFullScreenModeMenu() {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
 	}
-	pushevent();
+	pushEvent();
 	return 0;
 }
 
@@ -942,7 +955,7 @@ uint32_t hidePicModeLogo() {
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
-	pushevent();
+	pushEvent();
 	return 0;
 }
 
@@ -963,7 +976,7 @@ uint32_t hideHeart() {
 	if(!isPicModeMenuHidden) {
 		resetPicModeHideMenuTimer();
 	}
-	pushevent();
+	pushEvent();
 	return 0;
 }
 

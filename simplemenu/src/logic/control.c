@@ -342,7 +342,7 @@ void showOrHideFavorites() {
 		}
 		if (returnTo==0) {
 			if (fullscreenMode) {
-				currentState=SELECTING_EMULATOR;
+				currentState=SELECTING_SECTION;
 				resetPicModeHideLogoTimer();
 				logMessage("INFO","Displaying system logo");
 //				showConsole();
@@ -540,9 +540,9 @@ void performGroupChoosingAction() {
 					}
 				}
 			}
-			if (currentState) {
+			if (currentState!=BROWSING_GAME_LIST) {
 				loadSections(sectionGroups[activeGroup].groupPath);
-				currentState=0;
+				currentState=BROWSING_GAME_LIST;
 				currentSectionNumber=0;
 				for(int i=0;i<menuSectionCounter;i++) {
 					menuSections[i].initialized=0;
@@ -589,7 +589,7 @@ void performGroupChoosingAction() {
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
-			currentState=0;
+			currentState=BROWSING_GAME_LIST;
 		}
 	}
 }
@@ -742,7 +742,7 @@ void performSettingsChoosingAction() {
 		} else {
 			generateError("USB MODE  NOT AVAILABLE",0);
 		}
-		currentState=0;
+		currentState=BROWSING_GAME_LIST;
 	}
 	#endif
 	else if (keys[BTN_START]) {
@@ -763,7 +763,7 @@ void performSettingsChoosingAction() {
 			execlp("./simplemenu","invoker",NULL);
 		}
 		#endif
-		currentState=0;
+		currentState=BROWSING_GAME_LIST;
 //		char *temp=malloc(8000);
 //		strcpy(temp,themes[activeTheme]);
 //		strcat(temp,"/theme.ini");
@@ -809,8 +809,8 @@ void performChoosingAction() {
 		return;
 	}
 	if (keys[BTN_A]) {
-		if (currentState) {
-			currentState=0;
+		if (currentState!=BROWSING_GAME_LIST) {
+			currentState=BROWSING_GAME_LIST;
 			return;
 		}
 	}
