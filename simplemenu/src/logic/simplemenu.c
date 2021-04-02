@@ -171,7 +171,7 @@ int main() {
 		//Time spent on one loop
 		int timeSpent = SDL_GetTicks()-start_time;
 		//If it took less than a frame
-		if(FRAME_DURATION_IN_MILLISECONDS > timeSpent) {
+		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
 			//Wait the remaining time until one frame completes
 		    SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
 		}
