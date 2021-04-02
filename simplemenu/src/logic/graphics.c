@@ -533,9 +533,14 @@ void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
 	drawTextOnScreen(font, NULL, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
 }
 
-void drawShutDownText(char *text) {
+void drawBigWhiteText(char *text) {
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
+}
+
+void drawLoadingText() {
+	int white[3]={255, 255, 255};
+	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
 }
 
 void drawTimeOnFooter(char *text) {

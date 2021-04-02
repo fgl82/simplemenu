@@ -789,6 +789,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	}
 
 	void loadGameList(int refresh) {
+		Uint32 startTime = SDL_GetTicks();
 		logMessage("INFO",CURRENT_SECTION.sectionName);
 		int loadedFiles=0;
 		logMessage("INFO","Should we skip this?");
@@ -877,6 +878,11 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			}
 			free(filesDirectoriesCopy);
 			for(int k=0;k<dirCounter;k++) {
+				if (SDL_GetTicks()>(startTime+250)) {
+					drawLoadingText();
+					refreshScreen();
+//					sleep(1);
+				}
 				int n = 0;
 				logMessage("INFO","Scanning directory");
 				n = scanDirectory(dirs[k], files, 0);

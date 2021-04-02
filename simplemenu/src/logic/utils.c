@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <SDL/SDL_events.h>
 
 FILE * fp;
 int loggingEnabled;
@@ -39,4 +40,11 @@ void closeLogFile() {
 
 int isLoggingEnabled() {
 	return loggingEnabled;
+}
+
+void pushEvent() {
+    SDL_Event sdlevent;
+    sdlevent.type = SDL_MOUSEMOTION;
+    sdlevent.motion.x = 1;
+    SDL_PushEvent(&sdlevent);
 }

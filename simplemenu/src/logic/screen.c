@@ -16,13 +16,6 @@
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
-void pushEvent() {
-    SDL_Event sdlevent;
-    sdlevent.type = SDL_MOUSEMOTION;
-    sdlevent.motion.x = 1;
-    SDL_PushEvent(&sdlevent);
-}
-
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,CURRENT_SECTION.bodyBackgroundColor);
@@ -435,9 +428,9 @@ void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
 	if (selectedShutDownOption==1) {
-		drawShutDownText("REBOOTING");
+		drawBigWhiteText("REBOOTING");
 	} else {
-		drawShutDownText("SHUTTING DOWN");
+		drawBigWhiteText("SHUTTING DOWN");
 	}
 }
 
@@ -898,6 +891,9 @@ void updateScreen(struct Node *node) {
 			case SHUTTING_DOWN:
 				drawShutDownScreen();
 				break;
+			case LOADING:
+				drawLoadingText();
+				break;
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
@@ -947,6 +943,7 @@ uint32_t hidePicModeLogo() {
 	clearPicModeHideLogoTimer();
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
+	loadGameList(0);
 	currentState=BROWSING_GAME_LIST;
 	if (CURRENT_SECTION.backgroundSurface == NULL) {
 		logMessage("INFO","Loading system background");

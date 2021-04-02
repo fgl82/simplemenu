@@ -98,7 +98,6 @@ void scrollToGame(int gameNumber) {
 }
 
 int advanceSection(int showLogo) {
-	logMessage("INFO","Advancing section");
 	if(currentSectionNumber==favoritesSectionNumber) {
 		return 0;
 	}
@@ -108,17 +107,10 @@ int advanceSection(int showLogo) {
 		currentSectionNumber=0;
 	}
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
-		logMessage("INFO",CURRENT_SECTION.sectionName);
-		logMessage("INFO","advanceSection - Loading system logo");
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	#ifndef TARGET_BITTBOY
-	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		currentState=SELECTING_SECTION;
-		logMessage("INFO","Displaying system logo");
-	}
-	#else
+	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		displayBackgroundPicture();
 //		showConsole();

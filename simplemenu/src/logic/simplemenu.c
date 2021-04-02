@@ -128,6 +128,9 @@ void processEvents() {
 					case SELECTING_SECTION:
 						performAction(CURRENT_SECTION.currentGameNode);
 						break;
+					case LOADING:
+						performAction(CURRENT_SECTION.currentGameNode);
+						break;
 					case SELECTING_EMULATOR:
 						performChoosingAction();
 						break;
@@ -176,6 +179,7 @@ int main() {
 	while(running) {
 		start_time=SDL_GetTicks();
 		processEvents();
+		printf(" processed\n");
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();
 //		//Time spent on one loop
