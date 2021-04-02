@@ -944,7 +944,6 @@ uint32_t hidePicModeLogo() {
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
 	loadGameList(0);
-	currentState=BROWSING_GAME_LIST;
 	if (CURRENT_SECTION.backgroundSurface == NULL) {
 		logMessage("INFO","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
@@ -953,6 +952,9 @@ uint32_t hidePicModeLogo() {
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	pushEvent();
+	if (currentState==SELECTING_SECTION) {
+		currentState=BROWSING_GAME_LIST;
+	}
 	return 0;
 }
 

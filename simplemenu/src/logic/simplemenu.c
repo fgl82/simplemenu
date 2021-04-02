@@ -128,9 +128,6 @@ void processEvents() {
 					case SELECTING_SECTION:
 						performAction(CURRENT_SECTION.currentGameNode);
 						break;
-					case LOADING:
-						performAction(CURRENT_SECTION.currentGameNode);
-						break;
 					case SELECTING_EMULATOR:
 						performChoosingAction();
 						break;
@@ -144,7 +141,7 @@ void processEvents() {
 			}
 			resetScreenOffTimer();
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
-			if(event.key.keysym.sym==BTN_B&&!(currentState>BROWSING_GAME_LIST)) {
+			if(event.key.keysym.sym==BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
@@ -179,7 +176,6 @@ int main() {
 	while(running) {
 		start_time=SDL_GetTicks();
 		processEvents();
-		printf(" processed\n");
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();
 //		//Time spent on one loop

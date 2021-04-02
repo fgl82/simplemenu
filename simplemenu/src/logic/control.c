@@ -110,18 +110,21 @@ int advanceSection(int showLogo) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	#ifdef TARGET_BITTBOY
+//	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		displayBackgroundPicture();
 //		showConsole();
 //		refreshScreen();
 //		displayLogo=1;
 	}
-	#endif
+//	#endif
 	return 1;
 }
 
 int rewindSection(int showLogo) {
+	if(currentSectionNumber==favoritesSectionNumber) {
+		return 0;
+	}
 	logMessage("INFO","Rewinding section");
 	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
 		currentSectionNumber--;
@@ -129,25 +132,15 @@ int rewindSection(int showLogo) {
 		currentSectionNumber=menuSectionCounter-2;
 	}
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
-		logMessage("INFO",CURRENT_SECTION.sectionName);
-		logMessage("INFO","rewindSection - Loading system logo");
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	#ifndef TARGET_BITTBOY
-	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		currentState = SELECTING_SECTION;
-		logMessage("INFO","Displaying system logo");
-	}
-	#else
+	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		showConsole();
 	}
 	#endif
-	if(currentSectionNumber!=favoritesSectionNumber) {
-		return 1;
-	}
-	return 0;
+	return 1;
 }
 
 void launchGame(struct Rom *rom) {
@@ -549,6 +542,8 @@ void performGroupChoosingAction() {
 							currentSectionNumber=sectionCount;
 							logMessage("INFO","performGroupChoosingAction - Loading system logo");
 							CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+							drawLoadingText();
+							refreshScreen();
 							resizeSectionSystemLogo(&CURRENT_SECTION);
 							logMessage("INFO","Loading system background");
 							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
@@ -570,6 +565,8 @@ void performGroupChoosingAction() {
 				loadGameList(0);
 			}
 			if (!existed) {
+				drawLoadingText();
+				refreshScreen();
 				logMessage("INFO","performGroupChoosingAction !existed - Loading system logo");
 				CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 				resizeSectionSystemLogo(&CURRENT_SECTION);
@@ -650,6 +647,8 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
 			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==THEME_OPTION) {
+			drawLoadingText();
+			refreshScreen();
 			if (keys[BTN_LEFT]) {
 				if (activeTheme>0) {
 					activeTheme--;
@@ -761,6 +760,16 @@ void performSettingsChoosingAction() {
 //		strcat(temp,"/theme.ini");
 //		loadTheme(temp);
 //		free(temp);
+		int headerAndFooterBackground[3]={37,50,56};
+		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
+		if (CURRENT_SECTION.backgroundSurface==NULL) {
+			logMessage("INFO","Loading system background");
+			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+			resizeSectionBackground(&CURRENT_SECTION);
+			logMessage("INFO","Loading system picture");
+			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+			resizeSectionSystemPicture(&CURRENT_SECTION);
+		}
 		if(fullscreenMode==0) {
 			ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
 		} else {

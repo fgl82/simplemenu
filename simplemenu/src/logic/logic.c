@@ -795,6 +795,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		logMessage("INFO","Should we skip this?");
 		FILE *fp=NULL;
 		if (CURRENT_SECTION.initialized==0||refresh) {
+
+			drawLoadingText();
+			refreshScreen();
 			logMessage("INFO","No, loading game list");
 			CURRENT_SECTION.initialized=1;
 			//We don't need to reload the alias file if just refreshing
@@ -825,6 +828,10 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					logMessage("INFO","Using cache file");
 					char currentline[2000];
 					while (fgets(currentline, sizeof(currentline), fp) != NULL) {
+//						if (SDL_GetTicks()>(startTime)) {
+							drawLoadingText();
+							refreshScreen();
+//						}
 						int size = strlen(currentline)+1;
 
 						struct Rom *rom;
@@ -878,11 +885,10 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			}
 			free(filesDirectoriesCopy);
 			for(int k=0;k<dirCounter;k++) {
-				if (SDL_GetTicks()>(startTime+250)) {
+//				if (SDL_GetTicks()>(startTime)) {
 					drawLoadingText();
 					refreshScreen();
-//					sleep(1);
-				}
+//				}
 				int n = 0;
 				logMessage("INFO","Scanning directory");
 				n = scanDirectory(dirs[k], files, 0);
@@ -1010,6 +1016,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					if (fp!=NULL) {
 						fclose(fp);
 					}
+//					sleep(1);
 					return;
 				}
 			}
@@ -1033,6 +1040,8 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 				fclose(fp);
 			}
 		}
+//		printf("papa\n");
+//		sleep(1);
 		loading=0;
 	}
 
