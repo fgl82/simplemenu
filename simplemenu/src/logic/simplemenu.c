@@ -115,60 +115,64 @@ void initialSetup() {
 	enableKeyRepeat();
 }
 
+void processEvents() {
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		if(event.type==getKeyDown()){
+			if (!isSuspended) {
+				switch (currentState) {
+					case BROWSING_GAME_LIST:
+						performAction(CURRENT_SECTION.currentGameNode);
+						break;
+					case SELECTING_SECTION:
+						performAction(CURRENT_SECTION.currentGameNode);
+						break;
+					case SELECTING_EMULATOR:
+						performChoosingAction();
+						break;
+					case CHOOSING_GROUP:
+						performGroupChoosingAction();
+						break;
+					case SETTINGS_SCREEN:
+						performSettingsChoosingAction();
+						break;
+				}
+			}
+			resetScreenOffTimer();
+		} else if (event.type==getKeyUp()&&!isUSBMode) {
+			if(event.key.keysym.sym==BTN_B&&!(currentState>BROWSING_GAME_LIST)) {
+				if (currentState!=SELECTING_SECTION) {
+					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+						beforeTryingToSwitchGroup = activeGroup;
+						currentState=2;
+					}
+				}
+				hotKeyPressed=0;
+				if(fullscreenMode) {
+					if(currentState==SELECTING_SECTION) {
+						hideFullScreenModeMenu();
+					} else if (CURRENT_SECTION.alphabeticalPaging) {
+						resetPicModeHideMenuTimer();
+					}
+				}
+				CURRENT_SECTION.alphabeticalPaging=0;
+				if (aKeyComboWasPressed) {
+					currentState=BROWSING_GAME_LIST;
+				}
+				aKeyComboWasPressed=0;
+			}
+		}
+	}
+}
+
 int main() {
 	initialSetup();
-	SDL_Event event;
 	const int GAME_FPS=60;
 	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
 	Uint32 start_time;
 	while(running) {
-	    start_time=SDL_GetTicks();
-		while (SDL_PollEvent(&event)) {
-			if(event.type==getKeyDown()){
-				if (!isSuspended) {
-					switch (currentState) {
-						case BROWSING_GAME_LIST:
-							performAction(CURRENT_SECTION.currentGameNode);
-							break;
-						case SELECTING_SECTION:
-							performAction(CURRENT_SECTION.currentGameNode);
-							break;
-						case SELECTING_EMULATOR:
-							performChoosingAction();
-							break;
-						case CHOOSING_GROUP:
-							performGroupChoosingAction();
-							break;
-						case SETTINGS_SCREEN:
-							performSettingsChoosingAction();
-							break;
-					}
-				}
-				resetScreenOffTimer();
-			} else if (event.type==getKeyUp()&&!isUSBMode) {
-				if(event.key.keysym.sym==BTN_B&&!(currentState>BROWSING_GAME_LIST)) {
-					if (currentState!=SELECTING_SECTION) {
-						if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
-							beforeTryingToSwitchGroup = activeGroup;
-							currentState=2;
-						}
-					}
-					hotKeyPressed=0;
-					if(fullscreenMode) {
-						if(currentState==SELECTING_SECTION) {
-							hideFullScreenModeMenu();
-						} else if (CURRENT_SECTION.alphabeticalPaging) {
-							resetPicModeHideMenuTimer();
-						}
-					}
-					CURRENT_SECTION.alphabeticalPaging=0;
-					if (aKeyComboWasPressed) {
-						currentState=BROWSING_GAME_LIST;
-					}
-					aKeyComboWasPressed=0;
-				}
-			}
-		}
+		start_time=SDL_GetTicks();
+		processEvents();
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();
 		//Time spent on one loop
@@ -176,7 +180,7 @@ int main() {
 		//If it took less than a frame
 		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
 			//Wait the remaining time until one frame completes
-		    SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
+			SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
 		}
 	}
 	quit();
