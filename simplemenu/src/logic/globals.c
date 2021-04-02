@@ -236,7 +236,7 @@ struct Favorite favorites[2000];
 uint8_t *keys;
 SDL_Joystick *joystick;
 int BTN_Y;
-uint8_t BTN_B;
+int BTN_B;
 int BTN_A;
 int BTN_X;
 int BTN_START;

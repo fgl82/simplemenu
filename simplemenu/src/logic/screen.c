@@ -981,7 +981,7 @@ uint32_t hideHeart() {
 
 void resetHideHeartTimer() {
 	clearHideHeartTimer();
-	hideHeartTimer=SDL_AddTimer(0.8 * 1e3, hideHeart, NULL);
+	hideHeartTimer=SDL_AddTimer(0.5 * 1e3, hideHeart, NULL);
 }
 
 uint32_t controlsCallBack() {

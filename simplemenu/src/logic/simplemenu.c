@@ -151,7 +151,7 @@ void processEvents() {
 				hotKeyPressed=0;
 				if(fullscreenMode) {
 					if(currentState==SELECTING_SECTION) {
-						hideFullScreenModeMenu();
+//						hideFullScreenModeMenu();
 					} else if (CURRENT_SECTION.alphabeticalPaging) {
 						resetPicModeHideMenuTimer();
 					}

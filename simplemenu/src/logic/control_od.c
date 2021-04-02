@@ -113,7 +113,7 @@ int performAction(struct Node *node) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				advancePage(rom);
-				if(fullscreenMode && autoHideLogos) {
+				if(fullscreenMode) {
 					resetPicModeHideMenuTimer();
 				}
 				aKeyComboWasPressed=1;
@@ -123,7 +123,7 @@ int performAction(struct Node *node) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				rewindPage(rom);
-				if(fullscreenMode && autoHideLogos) {
+				if(fullscreenMode) {
 					resetPicModeHideMenuTimer();
 				}
 				aKeyComboWasPressed=1;
@@ -131,10 +131,6 @@ int performAction(struct Node *node) {
 			}
 		}
 		if (currentState == BROWSING_GAME_LIST || (fullscreenMode)) {
-//			if (fullscreenMode && autoHideLogos) {
-//
-////				resetPicModeHideLogoTimer();
-//			}
 			if(keys[BTN_RIGHT]) {
 				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
 //				currentState=SELECTING_SECTION;
