@@ -115,7 +115,7 @@ int advanceSection(int showLogo) {
 	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		currentlySectionSwitching=1;
+		currentState=SELECTING_SECTION;
 		logMessage("INFO","Displaying system logo");
 	}
 	#else
@@ -144,15 +144,12 @@ int rewindSection(int showLogo) {
 	}
 	#ifndef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-		currentlySectionSwitching=1;
+		currentState = SELECTING_SECTION;
 		logMessage("INFO","Displaying system logo");
 	}
 	#else
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-//		displayBackgroundPicture();
 //		showConsole();
-//		refreshScreen();
-//		displayLogo=1;
 	}
 	#endif
 	if(currentSectionNumber!=favoritesSectionNumber) {
@@ -345,23 +342,18 @@ void showOrHideFavorites() {
 		}
 		if (returnTo==0) {
 			if (fullscreenMode) {
-				currentlySectionSwitching=1;
+				currentState=SELECTING_EMULATOR;
 				resetPicModeHideLogoTimer();
-//				currentlySectionSwitching=1;
-//				displayBackgroundPicture();
 				logMessage("INFO","Displaying system logo");
 //				showConsole();
-				displayLogo=1;
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
 			if (fullscreenMode) {
-				currentlySectionSwitching=1;
+				currentState=SELECTING_SECTION;
 				resetPicModeHideLogoTimer();
-//				displayBackgroundPicture();
 				logMessage("INFO","Displaying system logo");
 //				showConsole();
-				displayLogo=1;
 			}
 			loadGameList(0);
 		}
@@ -389,12 +381,9 @@ void showOrHideFavorites() {
 	}
 	if (fullscreenMode) {
 		resetPicModeHideLogoTimer();
-		currentlySectionSwitching=1;
-//		displayBackgroundPicture();
+		currentState = SELECTING_SECTION;
 		logMessage("INFO","Displaying system logo");
 //		showConsole();
-		displayLogo=1;
-//		refreshScreen();
 	}
 	loadFavoritesSectionGameList();
 }

@@ -229,6 +229,11 @@ void showCurrentEmulator() {
 }
 
 void showConsole() {
+	int backgroundColor[3];
+	backgroundColor[0]=30;
+	backgroundColor[1]=30;
+	backgroundColor[2]=130;
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(SCREEN_HEIGHT), 0, 0, backgroundColor);
 	if (CURRENT_SECTION.systemLogoSurface!=NULL) {
 		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
 	} else {
@@ -842,8 +847,8 @@ void updateScreen(struct Node *node) {
 	} else {
 		rom = node->data;
 	}
-	if (!currentlySectionSwitching&&!isUSBMode&&!itsStoppedBecauseOfAnError) {
-		if (currentState==0) {
+	if (!isUSBMode&&!itsStoppedBecauseOfAnError) {
+		if (currentState==BROWSING_GAME_LIST) {
 			if (fullscreenMode) {
 				logMessage("INFO","Displaying game picture - fullscreen");
 				displayGamePicture(rom);
@@ -865,24 +870,24 @@ void updateScreen(struct Node *node) {
 					showLetter(rom);
 				}
 			}
-		} else if (currentState==3) {
+		} else if (currentState==SETTINGS_SCREEN) {
 			drawSettingsScreen();
-		} else if (currentState==2) {
+		} else if (currentState==CHOOSING_GROUP) {
 			showCurrentGroup();
-		} else if (currentState==1) {
+		} else if (currentState==SELECTING_EMULATOR) {
 			showCurrentEmulator();
+		} else if (currentState==SELECTING_SECTION) {
+//			if (picModeHideLogoTimer!=NULL || currentState==SELECTING_SECTION) {
+				displayBackgroundPicture();
+				showConsole();
+//			} else {
+//				displayLogo=0;
+//			}
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
-	} else {
-		if (picModeHideLogoTimer!=NULL || displayLogo) {
-			displayBackgroundPicture();
-			showConsole();
-		} else {
-			displayLogo=0;
-		}
 	}
 }
 
@@ -926,8 +931,7 @@ uint32_t hidePicModeLogo() {
 	clearPicModeHideLogoTimer();
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
-	currentlySectionSwitching=0;
-	displayLogo=0;
+	currentState=BROWSING_GAME_LIST;
 	if (CURRENT_SECTION.backgroundSurface == NULL) {
 		logMessage("INFO","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);

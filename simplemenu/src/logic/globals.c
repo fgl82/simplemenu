@@ -11,7 +11,6 @@
 #include <shake.h>
 #endif
 SDL_Surface *screen;
-int displayLogo;
 SDL_Surface *heart;
 /* STATUS */
 char *errorMessage;
@@ -26,7 +25,6 @@ int currentCPU;
 int fullscreenMode;
 int hotKeyPressed;
 int aKeyComboWasPressed;
-int currentlySectionSwitching;
 int currentState;
 int loading;
 int isPicModeMenuHidden;

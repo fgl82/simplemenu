@@ -130,6 +130,9 @@ int main() {
 						case BROWSING_GAME_LIST:
 							performAction(CURRENT_SECTION.currentGameNode);
 							break;
+						case SELECTING_SECTION:
+							performAction(CURRENT_SECTION.currentGameNode);
+							break;
 						case SELECTING_EMULATOR:
 							performChoosingAction();
 							break;
@@ -144,7 +147,7 @@ int main() {
 				resetScreenOffTimer();
 			} else if (event.type==getKeyUp()&&!isUSBMode) {
 				if(event.key.keysym.sym==BTN_B&&!(currentState>BROWSING_GAME_LIST)) {
-					if (!currentlySectionSwitching) {
+					if (currentState!=SELECTING_SECTION) {
 						if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 							beforeTryingToSwitchGroup = activeGroup;
 							currentState=2;
@@ -152,7 +155,7 @@ int main() {
 					}
 					hotKeyPressed=0;
 					if(fullscreenMode) {
-						if(currentlySectionSwitching) {
+						if(currentState==SELECTING_SECTION) {
 							hideFullScreenModeMenu();
 						} else if (CURRENT_SECTION.alphabeticalPaging) {
 							resetPicModeHideMenuTimer();
@@ -160,7 +163,7 @@ int main() {
 					}
 					CURRENT_SECTION.alphabeticalPaging=0;
 					if (aKeyComboWasPressed) {
-						currentlySectionSwitching=0;
+						currentState=BROWSING_GAME_LIST;
 					}
 					aKeyComboWasPressed=0;
 				}
