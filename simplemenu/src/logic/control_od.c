@@ -108,7 +108,7 @@ int performAction(struct Node *node) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				advancePage(rom);
-				if(fullscreenMode) {
+				if(fullscreenMode && autoHideLogos) {
 					resetPicModeHideMenuTimer();
 				}
 				aKeyComboWasPressed=1;
@@ -118,7 +118,7 @@ int performAction(struct Node *node) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				rewindPage(rom);
-				if(fullscreenMode) {
+				if(fullscreenMode && autoHideLogos) {
 					resetPicModeHideMenuTimer();
 				}
 				aKeyComboWasPressed=1;

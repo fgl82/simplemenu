@@ -877,12 +877,7 @@ void updateScreen(struct Node *node) {
 		} else if (currentState==SELECTING_EMULATOR) {
 			showCurrentEmulator();
 		} else if (currentState==SELECTING_SECTION) {
-//			if (picModeHideLogoTimer!=NULL || currentState==SELECTING_SECTION) {
-				displayBackgroundPicture();
-				showConsole();
-//			} else {
-//				displayLogo=0;
-//			}
+			showConsole();
 		}
 	} else if (isUSBMode) {
 		drawUSBScreen();
