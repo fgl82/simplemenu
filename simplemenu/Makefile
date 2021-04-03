@@ -16,7 +16,7 @@ ifeq ($(PLATFORM), BITTBOY)
 else ifeq ($(PLATFORM), RFW)
 	CC = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
 	LINKER = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
-	CFLAGS = -DTARGET_RFW -DUSE_GZIP -ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
+	CFLAGS = -DTARGET_RFW -DUSE_GZIP -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
 	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz
 else ifeq ($(PLATFORM), OD)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc

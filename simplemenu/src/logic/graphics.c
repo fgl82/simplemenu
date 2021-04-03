@@ -78,7 +78,7 @@ int calculateProportionalSizeOrDistance(int number) {
 
 int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-	SDL_Surface *msg1;
+	SDL_Surface *msg1 = malloc(sizeof(msg));
 	char *bufCopy=malloc(strlen(buf)+1);
 	strcpy(bufCopy,buf);
 
