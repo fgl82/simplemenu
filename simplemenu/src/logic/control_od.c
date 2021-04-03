@@ -184,7 +184,7 @@ int performAction(struct Node *node) {
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
 		}
-		int rewinded = rewindSection(1);
+		rewindSection(1);
 		return 0;
 	}
 
@@ -194,7 +194,7 @@ int performAction(struct Node *node) {
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
 		}
-		int advanced = advanceSection(1);
+		advanceSection(1);
 		return 0;
 	}
 

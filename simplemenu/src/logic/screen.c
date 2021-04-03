@@ -518,7 +518,7 @@ void drawGameList() {
 	logMessage("INFO","Game list - Done");
 }
 
-void setupDecorations(struct Rom *rom) {
+void setupDecorations() {
 	if (text1X!=-1&&text1Y!=-1) {
 		drawHeader();
 	}
@@ -687,7 +687,6 @@ void drawSettingsScreen() {
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
 	int bodyHighlightedText[3]= {0,147,131};
-	int bodyHighlightedTextForeground[3]= {183,224,218};
 	int bodyBackground[3]={250,250,250};
 
 	int batteryLevel90to100[] = {1,255,1};
@@ -778,7 +777,7 @@ void drawSettingsScreen() {
 			logMessage("INFO",options[i]);
 			logMessage("INFO",values[i]);
 			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,bodyBackground);
+			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText);
 		}
 		int lineColor[] = { 229,229,229};
 		logMessage("INFO","Drawing rect");

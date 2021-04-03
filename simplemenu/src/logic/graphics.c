@@ -282,7 +282,7 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
 }
 
-void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
+void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[]) {
 	int retW=1;
 	int retW2=1;
 	int retW3=3;
@@ -485,7 +485,7 @@ void drawTextOnSettingsFooterWithColor(char *text, int txtColor[]) {
 	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(231), text, txtColor, VAlignMiddle| HAlignLeft);
 }
 
-void drawTextOnHeader(char *text) {
+void drawTextOnHeader() {
 	int Halign = 0;
 	switch (text1Alignment) {
 	case 0:
@@ -971,7 +971,7 @@ void initializeDisplay() {
 	fclose(fp);
 #endif
 #ifdef TARGET_PC
-	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
+//	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
 	SCREEN_HEIGHT = 480;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;

@@ -272,14 +272,13 @@ void resetFrameBuffer1 () {
 #ifndef TARGET_PC
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath, int consoleApp) {
 #else
-	void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath, int consoleApp) {
+void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #endif
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
 		//#ifndef TARGET_OD_BETA
 		unsetenv("SDL_FBCON_DONT_CLEAR");
 		//#endif
-		char states[2000];
 		char pReturnTo[3];
 		snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
 		char pSectionNumber[3]="";
@@ -351,6 +350,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			}
 #endif
 		}
+		char states[] = {};
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
 		strcat(exec, " \"");
@@ -782,7 +782,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 	}
 
 	void loadGameList(int refresh) {
-		Uint32 startTime = SDL_GetTicks();
+//		Uint32 startTime = SDL_GetTicks();
 		logMessage("INFO",CURRENT_SECTION.sectionName);
 		int loadedFiles=0;
 		logMessage("INFO","Should we skip this?");

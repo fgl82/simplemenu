@@ -3,6 +3,7 @@
 
 #include <SDL/SDL_ttf.h>
 #include "../headers/globals.h"
+#include "../headers/utils.h"
 
 static const int
 HAlignLeft = 1,
@@ -19,7 +20,7 @@ void drawNonShadedGameNameOnScreen(char *buf, int position);
 void drawPictureTextOnScreen(char *buf);
 void drawImgFallbackTextOnScreen( char *fallBackText);
 void drawTextOnFooter(char *text);
-void drawTextOnHeader(char *text);
+void drawTextOnHeader();
 void drawCurrentLetter(char *letter, int textColor[], int x, int y);
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]);
 void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[], int transparency);
@@ -68,4 +69,7 @@ void resizeSectionSystemPicture(struct MenuSection *section);
 void *updateClock(void *x_void_ptr);
 void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]);
 void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]);
+void drawLoadingText();
+void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]);
+void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[]);
 #endif

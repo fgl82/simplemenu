@@ -42,6 +42,7 @@ static int strcmpci(const char *a, const char *b) {
     }
     a++, b++;
   }
+  return 0;
 }
 
 /* Returns the next string in the split data */
@@ -109,7 +110,7 @@ static void split_data(ini_t *ini) {
       case '\n':
       case '\t':
       case ' ':
-        *p = '\0';
+        *p = '\0'; // @suppress("No break at end of case")
         /* Fall through */
 
       case '\0':

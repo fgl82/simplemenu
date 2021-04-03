@@ -20,5 +20,5 @@ void performChoosingAction();
 void performGroupChoosingAction();
 void performSettingsChoosingAction();
 int performAction();
-void callDeleteGame(struct Node *node);
+void callDeleteGame(struct Rom * rom);
 #endif

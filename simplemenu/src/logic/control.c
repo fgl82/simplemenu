@@ -135,11 +135,11 @@ int rewindSection(int showLogo) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	#ifdef TARGET_BITTBOY
+//	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
 //		showConsole();
 	}
-	#endif
+//	#endif
 	return 1;
 }
 
@@ -165,7 +165,7 @@ void launchGame(struct Rom *rom) {
 		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp);
 		#else
-		executeCommandPC(favorite.executable,favorite.name, favorite.isConsoleApp);
+		executeCommandPC(favorite.executable,favorite.name);
 		#endif
 	} else if (rom->name!=NULL) {
 		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
@@ -185,11 +185,11 @@ void launchGame(struct Rom *rom) {
 			#ifndef TARGET_PC
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name), rom->isConsoleApp);
 			#else
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name), rom->isConsoleApp);
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
 			#endif
 		} else {
 			#ifdef TARGET_PC
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name, rom->isConsoleApp);
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
 			#else
 			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name, rom->isConsoleApp);
 			#endif
@@ -203,13 +203,13 @@ void launchEmulator(struct Rom *rom) {
 		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp);
 		#else
-		executeCommandPC(favorite.executable,"*",0);
+		executeCommandPC(favorite.executable,"*");
 		#endif
 	} else if (rom->name!=NULL) {
 		#ifndef TARGET_PC
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*", 0);
 		#else
-		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*",0);
+		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
 		#endif
 	}
 }
@@ -462,7 +462,7 @@ int isSelectPressed() {
 void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
-		currentState=3;
+		currentState=SETTINGS_SCREEN;
 //		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}

@@ -249,21 +249,21 @@ extern struct Favorite favorites[2000];
 /* CONTROL */
 extern uint8_t *keys;
 extern SDL_Joystick *joystick;
-extern int BTN_Y;
-extern int BTN_B;
-extern int BTN_A;
-extern int BTN_X;
-extern int BTN_START;
-extern int BTN_SELECT;
-extern int BTN_R;
-extern int BTN_UP;
-extern int BTN_DOWN;
-extern int BTN_LEFT;
-extern int BTN_RIGHT;
-extern int BTN_L1;
-extern int BTN_R1;
-extern int BTN_L2;
-extern int BTN_R2;
+extern uint8_t BTN_Y;
+extern uint8_t BTN_B;
+extern uint8_t BTN_A;
+extern uint8_t BTN_X;
+extern uint8_t BTN_START;
+extern uint8_t BTN_SELECT;
+extern uint8_t BTN_R;
+extern uint8_t BTN_UP;
+extern uint8_t BTN_DOWN;
+extern uint8_t BTN_LEFT;
+extern uint8_t BTN_RIGHT;
+extern uint8_t BTN_L1;
+extern uint8_t BTN_R1;
+extern uint8_t BTN_L2;
+extern uint8_t BTN_R2;
 
 #if defined TARGET_OD || defined TARGET_OD_BETA
 extern Shake_Device *device;

@@ -10,6 +10,7 @@
 #include "../headers/logic.h"
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
+#include "../headers/utils.h"
 #if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
@@ -138,10 +139,10 @@ void rumble() {
 
 int getBatteryLevel() {
 	int max_voltage;
-	int min_voltage;
 	int voltage_now;
 	int total;
 	#if defined TARGET_OD_BETA
+	int min_voltage;
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);
 		fclose(f);
@@ -179,11 +180,16 @@ int getBatteryLevel() {
 		return total;
 	#else
 		FILE *f = fopen("/sys/class/power_supply/BAT0/charge_full", "r");
-		fscanf(f, "%i", &max_voltage);
+		int ret = fscanf(f, "%i", &max_voltage);
+		if (ret==-1) {
+			logMessage("INFO","Error");
+		}
 		fclose(f);
-
 		f = fopen("/sys/class/power_supply/BAT0/charge_now", "r");
-		fscanf(f, "%i", &voltage_now);
+		ret = fscanf(f, "%i", &voltage_now);
+		if (ret==-1) {
+			logMessage("INFO","Error");
+		}
 		fclose(f);
 
 		total = (voltage_now*100)/(max_voltage);

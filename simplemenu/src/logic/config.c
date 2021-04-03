@@ -436,10 +436,22 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		system("scripts/consoles.sh");
-		system("scripts/handhelds.sh");
-		system("scripts/arcades.sh");
-		system("scripts/home computers.sh");
+		ret = system("scripts/consoles.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		ret = system("scripts/handhelds.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		ret = system("scripts/arcades.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+		ret = system("scripts/home computers.sh");
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
 		mkdir(pathToTempFiles,0700);
 	}
 	logMessage("INFO","Validated configuration existence");
