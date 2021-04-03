@@ -161,6 +161,7 @@ int getBatteryLevel() {
 		}
 		return total;
 	#elif TARGET_OD
+		int min_voltage;
 		FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);
 		fclose(f);
