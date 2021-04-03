@@ -234,21 +234,21 @@ struct Favorite favorites[2000];
 /* CONTROL */
 uint8_t *keys;
 SDL_Joystick *joystick;
-uint8_t BTN_Y;
-uint8_t BTN_B;
-uint8_t BTN_A;
-uint8_t BTN_X;
-uint8_t BTN_START;
-uint8_t BTN_SELECT;
-uint8_t BTN_R;
-uint8_t BTN_UP;
-uint8_t BTN_DOWN;
-uint8_t BTN_LEFT;
-uint8_t BTN_RIGHT;
-uint8_t BTN_L1;
-uint8_t BTN_R1;
-uint8_t BTN_L2;
-uint8_t BTN_R2;
+int BTN_Y;
+int BTN_B;
+int BTN_A;
+int BTN_X;
+int BTN_START;
+int BTN_SELECT;
+int BTN_R;
+int BTN_UP;
+int BTN_DOWN;
+int BTN_LEFT;
+int BTN_RIGHT;
+int BTN_L1;
+int BTN_R1;
+int BTN_L2;
+int BTN_R2;
 
 #if defined TARGET_OD || defined TARGET_OD_BETA
  Shake_Device *device;

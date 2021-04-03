@@ -141,7 +141,7 @@ void processEvents() {
 			}
 			resetScreenOffTimer();
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
-			if(event.key.keysym.sym==BTN_B) {
+			if(event.key.keysym.sym==(uint8_t)BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
