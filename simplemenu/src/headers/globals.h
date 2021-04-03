@@ -21,7 +21,6 @@
 
 extern SDL_Surface *screen;
 extern int displayLogo;
-extern SDL_Surface *heart;
 /* STATUS */
 extern int nullUpdate;
 extern char *errorMessage;

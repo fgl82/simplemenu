@@ -133,7 +133,6 @@ int performAction(struct Node *node) {
 		if (currentState == BROWSING_GAME_LIST || (fullscreenMode)) {
 			if(keys[BTN_RIGHT]) {
 				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
-//				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				int advanced = advanceSection(0);
 				if(advanced) {
@@ -154,7 +153,6 @@ int performAction(struct Node *node) {
 			}
 			if(keys[BTN_LEFT]) {
 				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
-//				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				int rewinded = rewindSection(0);
 				if(rewinded) {

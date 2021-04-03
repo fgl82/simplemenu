@@ -268,7 +268,6 @@ void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, co
 	SDL_BlitSurface(msg1, NULL, screen, &rect2);
 	SDL_FreeSurface(msg1);
 
-	//	SDL_BlitSurface(msg, NULL, screen, &rect);
 	SDL_FreeSurface(msg);
 	free(bufCopy);
 }
@@ -280,10 +279,7 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
 	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
 	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
-	//	drawShadedTextOnScreen(settingsfont, NULL, retW+retW2, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
 	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
-	//	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(70), position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
-	//	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(130), position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
 }
 
 void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
@@ -293,10 +289,7 @@ void drawSettingsOptionValueOnScreen(char *option, char *value, int position, in
 	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
 	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
 	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
-	//	drawTextOnScreen(settingsfont, NULL, retW+retW2, position, value, txtColor, VAlignBottom | HAlignLeft);
 	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft);
-	//	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(70), position, value, txtColor, VAlignBottom | HAlignLeft);
-	//	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(130), position, value, txtColor, VAlignBottom | HAlignLeft);
 }
 
 void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
@@ -505,7 +498,6 @@ void drawTextOnHeader(char *text) {
 		Halign = HAlignRight;
 		break;
 	}
-	//		drawCustomText1OnScreen(customHeaderFont, outlineCustomHeaderFont, calculateProportionalSizeOrDistance(text1XInCustom), calculateProportionalSizeOrDistance(text1YInCustom), CURRENT_SECTION.sectionName, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | Halign);
 	genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, calculateProportionalSizeOrDistance(text1X), calculateProportionalSizeOrDistance(text1Y), CURRENT_SECTION.sectionName, menuSections[currentSectionNumber].headerAndFooterTextColor, VAlignMiddle | Halign, CURRENT_SECTION.headerAndFooterBackgroundColor, 0);
 }
 
@@ -663,46 +655,6 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 	return 1;
 }
 
-
-int drawImage1(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
-	// Zoom function uses doubles for rates of scaling, rather than
-	// exact size values. This is how we get around that:
-	double zoomx = newwidth  / (float)image->w;
-	double zoomy = newheight / (float)image->h;
-	// This function assumes no smoothing, so that any colorkeys wont bleed.
-	SDL_Surface* sized = NULL;
-	if (((int)newwidth<(int)(image->w/2))&&(int)(image->w/2)%(int)newwidth==0) {
-		zoomx = (float)image->w/newwidth;
-		zoomy = (float)image->h/newheight;
-		sized = shrinkSurface(image, zoomx, zoomy);
-	} else {
-		zoomx = newwidth  / (float)image->w;
-		zoomy = newheight / (float)image->h;
-		sized = zoomSurface(image, zoomx, zoomy, smoothing);
-	}	// If the original had an alpha color key, give it to the new one.
-	if( image->flags & SDL_SRCCOLORKEY ) {
-		// Acquire the original Key
-		Uint32 colorkey = image->format->colorkey;
-		// Set to the new image
-		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
-	}
-	// The original picture is no longer needed.
-//	SDL_FreeSurface(image);
-	// Set it instead to the new image.
-	image =  sized;
-	SDL_Rect src, dest;
-	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
-	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
-	if(transparent == 1 ) {
-		//Set the color as transparent
-		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
-	}
-	SDL_BlitSurface(image, &src, display, &dest);
-//	SDL_FreeSurface(image);
-	return 1;
-}
-
-
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 	if(systemX>0&&systemY>0) {
@@ -729,7 +681,6 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-//		drawTransparentRectangleToScreen(w,h,calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
 		int heartX = (calculateProportionalSizeOrDistance(artX)+(w/2));
 		int heartY = (calculateProportionalSizeOrDistance(artY)+(h/2));
 		displayHeart(heartX, heartY);
@@ -749,7 +700,6 @@ void displayImageOnScreenCustom(char *fileName) {
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidth/4)*3;
 			if (CURRENT_SECTION.gameCount>0) {
-				//				drawTransparentRectangleToScreen(calculateProportionalSizeOrDistance(artWidth),calculateProportionalSizeOrDistance(artHeight),calculateProportionalSizeOrDistance(artX+(artWidth/2))-calculateProportionalSizeOrDistance(artWidth)/2,calculateProportionalSizeOrDistance(artY),CURRENT_SECTION.headerAndFooterBackgroundColor,120);
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
@@ -758,6 +708,7 @@ void displayImageOnScreenCustom(char *fileName) {
 
 void displayHeart(int x, int y) {
 	if(hideHeartTimer!=NULL) {
+		SDL_Surface *heart = IMG_Load(favoriteIndicator);
 		if (heart!=NULL) {
 			double wh = heart->w;
 			double hh = heart->h;
@@ -770,7 +721,7 @@ void displayHeart(int x, int y) {
 			}
 			wh = hh*ratioh;
 			smoothing = 1;
-			drawImage1(screen, heart, x-(wh/2), y-(hh/2), 0, 0, wh, hh, 0, smoothing);
+			drawImage(screen, heart, x-(wh/2), y-(hh/2), 0, 0, wh, hh, 0, smoothing);
 		}
 	}
 }

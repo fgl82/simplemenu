@@ -11,7 +11,6 @@
 #include <shake.h>
 #endif
 SDL_Surface *screen;
-SDL_Surface *heart;
 /* STATUS */
 char *errorMessage;
 int running;

@@ -280,11 +280,6 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 		unsetenv("SDL_FBCON_DONT_CLEAR");
 		//#endif
 		char states[2000];
-		//		for (int i=0;i<favoritesSectionNumber+1;i++) {
-		//			char tempString[200];
-		//			snprintf(tempString,sizeof(tempString),"%d-%d-%d;",menuSections[i].currentPage,menuSections[i].currentGameInPage,menuSections[i].alphabeticalPaging);
-		//			strcat(states,tempString);
-		//		}
 		char pReturnTo[3];
 		snprintf(pReturnTo,sizeof(pReturnTo),"%d;",returnTo);
 		char pSectionNumber[3]="";
@@ -541,14 +536,12 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					}
 					free(e);
 					snprintf (path, PATH_MAX, "%s%s", directory, d_name);
-					//				logMessage("INFO",d_name);
 					CURRENT_SECTION.hasDirs = 1;
 					i=scanDirectory(path, files, i);
 				} else {
 					char path[PATH_MAX];
 					snprintf (path, PATH_MAX, "%s%s", directory, d_name);
 					files[i]=malloc(sizeof(path)+1);
-					//				logMessage("INFO",path);
 					strcpy(files[i],path);
 					i++;
 				}
@@ -828,10 +821,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					logMessage("INFO","Using cache file");
 					char currentline[2000];
 					while (fgets(currentline, sizeof(currentline), fp) != NULL) {
-//						if (SDL_GetTicks()>(startTime)) {
-							drawLoadingText();
-							refreshScreen();
-//						}
+						drawLoadingText();
+						refreshScreen();
+
 						int size = strlen(currentline)+1;
 
 						struct Rom *rom;
@@ -885,10 +877,9 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 			}
 			free(filesDirectoriesCopy);
 			for(int k=0;k<dirCounter;k++) {
-//				if (SDL_GetTicks()>(startTime)) {
-					drawLoadingText();
-					refreshScreen();
-//				}
+				drawLoadingText();
+				refreshScreen();
+
 				int n = 0;
 				logMessage("INFO","Scanning directory");
 				n = scanDirectory(dirs[k], files, 0);
@@ -1016,7 +1007,6 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 					if (fp!=NULL) {
 						fclose(fp);
 					}
-//					sleep(1);
 					return;
 				}
 			}
@@ -1040,8 +1030,6 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 				fclose(fp);
 			}
 		}
-//		printf("papa\n");
-//		sleep(1);
 		loading=0;
 	}
 

@@ -385,9 +385,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
-//		char *tempDisplayName = getFileNameOrAlias(rom);
 		displayImageOnScreenCustom(pictureWithFullPath);
-//		free(tempDisplayName);
 	} else {
 		displayImageOnScreenCustom(pictureWithFullPath);
 	}
@@ -658,7 +656,6 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		logMessage("INFO","Default option value");
 		logMessage("INFO",values[DEFAULT_OPTION]);
 	}
-//	strcpy(values[SHUTDOWN_OPTION],"\0");
 	#if defined TARGET_RFW
 	strcpy(values[USB_OPTION],"YES \0");
 	#else
@@ -727,34 +724,20 @@ void drawSettingsScreen() {
 	logMessage("INFO","Setting options and values");
 	setOptionsAndValues(options, values, hints);
 
-//	char clock[20];
-//	char batt[20];
-
-//	currRawtime = time(NULL);
-//	currTime = localtime(&currRawtime);
-//	if(currTime->tm_min!=lastMin) {
-//		snprintf(clock,sizeof(clock), "%02d:%02d", currTime->tm_hour, currTime->tm_min);
-//		snprintf(batt,sizeof(batt), "%d%%", lastChargeLevel);
-//	}
-
 	logMessage("INFO","Drawing shit");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
-//	drawTextOnSettingsHeaderWithColor(clock,headerAndFooterText);
 
 	logMessage("INFO","Positioning batt");
 	int pos = (lastChargeLevel/10);
-//	int pos = (59/10);
 
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
 
 	logMessage("INFO","Positioning batt 1");
 	for (int i=pos;i>=0;i--) {
-//		drawRectangleToScreen(calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(2), SCREEN_WIDTH-10-calculateProportionalSizeOrDistance(7*i), 10, levels[i]);
 		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);
 	}
-//	drawTextOnSettingsHeaderRightWithColor1(batt,SCREEN_WIDTH-14-calculateProportionalSizeOrDistance(7*pos),headerAndFooterText);
 	int nextLine = calculateProportionalSizeOrDistance(50);
 	int nextLineText = calculateProportionalSizeOrDistance(50);
 	int selected=0;
@@ -903,7 +886,6 @@ void updateScreen(struct Node *node) {
 }
 
 void setupDisplayAndKeys() {
-//	initializeFonts();
 	initializeKeys();
 	logMessage("INFO","Input successfully configured");
 }

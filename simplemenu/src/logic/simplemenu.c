@@ -170,11 +170,11 @@ void processEvents() {
 int main() {
 	initialSetup();
 	const int GAME_FPS=60;
-	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
-	Uint32 start_time;
+//	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
+//	Uint32 start_time;
 	pushEvent();
 	while(running) {
-		start_time=SDL_GetTicks();
+//		start_time=SDL_GetTicks();
 		processEvents();
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();

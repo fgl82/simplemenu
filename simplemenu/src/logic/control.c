@@ -330,7 +330,6 @@ void showOrHideFavorites() {
 				currentState=SELECTING_SECTION;
 				resetPicModeHideLogoTimer();
 				logMessage("INFO","Displaying system logo");
-//				showConsole();
 			}
 			determineStartingScreen(menuSectionCounter);
 		} else {
@@ -338,7 +337,6 @@ void showOrHideFavorites() {
 				currentState=SELECTING_SECTION;
 				resetPicModeHideLogoTimer();
 				logMessage("INFO","Displaying system logo");
-//				showConsole();
 			}
 			loadGameList(0);
 		}
@@ -368,7 +366,6 @@ void showOrHideFavorites() {
 		resetPicModeHideLogoTimer();
 		currentState = SELECTING_SECTION;
 		logMessage("INFO","Displaying system logo");
-//		showConsole();
 	}
 	loadFavoritesSectionGameList();
 }
@@ -441,7 +438,6 @@ void markAsFavorite(struct Rom *rom) {
 				strcpy(favorites[favoritesSize].name, getGameName(rom->name));
 			} else {
 				strcpy(favorites[favoritesSize].name, rom->name);
-//				printf("%s\n", favorites[favoritesSize].name);
 			}
 			if(rom->alias!=NULL&&strlen(rom->alias)>2) {
 				strcpy(favorites[favoritesSize].alias, rom->alias);
@@ -755,11 +751,6 @@ void performSettingsChoosingAction() {
 		}
 		#endif
 		currentState=BROWSING_GAME_LIST;
-//		char *temp=malloc(8000);
-//		strcpy(temp,themes[activeTheme]);
-//		strcat(temp,"/theme.ini");
-//		loadTheme(temp);
-//		free(temp);
 		int headerAndFooterBackground[3]={37,50,56};
 		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
 		if (CURRENT_SECTION.backgroundSurface==NULL) {

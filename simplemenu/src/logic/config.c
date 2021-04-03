@@ -244,10 +244,7 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 
-		SDL_FreeSurface(heart);
-		heart=NULL;
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
-		heart = IMG_Load(favoriteIndicator);
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
@@ -975,9 +972,6 @@ int loadSections(char *file) {
 	footerOnTop = atoifgl(value);
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
-	SDL_FreeSurface(heart);
-	heart=NULL;
-	heart = IMG_Load(favoriteIndicator);
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
