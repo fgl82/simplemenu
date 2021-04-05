@@ -140,6 +140,8 @@ void processEvents() {
 				}
 			}
 			resetScreenOffTimer();
+			updateScreen(CURRENT_SECTION.currentGameNode);
+			refreshScreen();
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
@@ -161,7 +163,12 @@ void processEvents() {
 					currentState=BROWSING_GAME_LIST;
 				}
 				aKeyComboWasPressed=0;
+				updateScreen(CURRENT_SECTION.currentGameNode);
+				refreshScreen();
 			}
+		} else if (event.type==SDL_MOUSEMOTION) {
+			updateScreen(CURRENT_SECTION.currentGameNode);
+			refreshScreen();
 		}
 		break;
 	}
@@ -169,28 +176,27 @@ void processEvents() {
 
 int main() {
 	initialSetup();
-//	const int GAME_FPS=60;
-//	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
-//	Uint32 start_time;
+	const int GAME_FPS=60;
+	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
+	Uint32 start_time;
 	pushEvent();
 	while(running) {
-//		start_time=SDL_GetTicks();
+		start_time=SDL_GetTicks();
 		processEvents();
-		updateScreen(CURRENT_SECTION.currentGameNode);
-		refreshScreen();
 //		//Time spent on one loop
-//		int timeSpent = SDL_GetTicks()-start_time;
+		int timeSpent = SDL_GetTicks()-start_time;
 		//If it took less than a frame
-//		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
-//			//Wait the remaining time until one frame completes
-//			SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
-//		}
+		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
+			//Wait the remaining time until one frame completes
+			SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
+		}
 	}
 	int notDefaultButTryingToRebootOrShutDown = (shutDownEnabled==0&&(selectedShutDownOption==1||selectedShutDownOption==2));
 	if(shutDownEnabled||notDefaultButTryingToRebootOrShutDown) {
 		currentState=SHUTTING_DOWN;
 		updateScreen(CURRENT_SECTION.currentGameNode);
 		refreshScreen();
+		sleep(1);
 	}
 	quit();
 }

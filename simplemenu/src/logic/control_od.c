@@ -103,10 +103,28 @@ int performAction(struct Node *node) {
 				aKeyComboWasPressed=1;
 			}
 			if (rom!=NULL&&keys[BTN_SELECT]) {
+				int flag = 0;
+				const int GAME_FPS=60;
+				const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
+				Uint32 start_time;
 				for(int i=0;i<25;i++) {
 					selectRandomGame();
+					if (fullscreenMode==0) {
+						fullscreenMode=1;
+						flag = 1;
+					}
+					updateScreen(CURRENT_SECTION.currentGameNode);
+					refreshScreen();
+					int timeSpent = SDL_GetTicks()-start_time;
+					if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {
+						//Wait the remaining time until one frame completes
+						SDL_Delay(FRAME_DURATION_IN_MILLISECONDS-timeSpent);
+					}
 				}
 				saveFavorites();
+				if (flag == 1) {
+					fullscreenMode=0;
+				}
 				launchGame(CURRENT_SECTION.currentGameNode->data);
 			}
 			if (rom!=NULL&&keys[BTN_DOWN]) {
