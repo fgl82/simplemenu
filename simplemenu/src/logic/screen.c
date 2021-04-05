@@ -932,16 +932,16 @@ uint32_t hidePicModeLogo() {
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
-	pushEvent();
 	if (currentState==SELECTING_SECTION) {
 		currentState=BROWSING_GAME_LIST;
 	}
+	pushEvent();
 	return 0;
 }
 
 void resetPicModeHideLogoTimer() {
 	clearPicModeHideLogoTimer();
-	picModeHideLogoTimer=SDL_AddTimer(0.8 * 1e3, hidePicModeLogo, NULL);
+	picModeHideLogoTimer=SDL_AddTimer(0.7 * 1e3, hidePicModeLogo, NULL);
 }
 
 void clearHideHeartTimer() {

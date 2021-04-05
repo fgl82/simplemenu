@@ -197,23 +197,26 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 	if(keys[BTN_L1]) {
-		currentState=SELECTING_SECTION;
-		hotKeyPressed=0;
-		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
-			resetPicModeHideLogoTimer();
+		if (currentSectionNumber!=favoritesSectionNumber) {
+			currentState=SELECTING_SECTION;
+			hotKeyPressed=0;
+			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
+			rewindSection(1);
 		}
-		rewindSection(1);
 		return 0;
 	}
 
 	if(keys[BTN_R1]) {
-		printf("1\n");
-		currentState=SELECTING_SECTION;
-		hotKeyPressed=0;
-		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
-			resetPicModeHideLogoTimer();
+		if (currentSectionNumber!=favoritesSectionNumber) {
+			currentState=SELECTING_SECTION;
+			hotKeyPressed=0;
+			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
+				resetPicModeHideLogoTimer();
+			}
+			advanceSection(1);
 		}
-		advanceSection(1);
 		return 0;
 	}
 
