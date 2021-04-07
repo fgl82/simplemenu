@@ -75,6 +75,7 @@ extern int SHUTDOWN_OPTION;
 extern int AUTO_HIDE_LOGOS_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern char mediaFolder[1000];
+extern char mediaSuffix[1000];
 extern int stripGames;
 extern int shutDownEnabled;
 extern int selectedShutDownOption;

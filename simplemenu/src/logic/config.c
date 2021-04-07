@@ -613,6 +613,9 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "media_folder");
 	strcpy(mediaFolder,value);
 
+	value = ini_get(config, "GENERAL", "media_suffix");
+	if (value!=NULL) strcpy(mediaSuffix,value);
+
 	value = ini_get(config, "GENERAL", "logging_enabled");
 
 	if (atoifgl(value)==1) {

@@ -75,6 +75,7 @@ typedef struct thread_picture {
  int AUTO_HIDE_LOGOS_OPTION;
  int ITEMS_PER_PAGE_OPTION;
  char mediaFolder[1000];
+ char mediaSuffix[1000];
  int stripGames;
  int shutDownEnabled;
  int selectedShutDownOption;

@@ -288,6 +288,9 @@ void displayGamePicture(struct Rom *rom) {
 	strcat(pictureWithFullPath,mediaFolder);
 	strcat(pictureWithFullPath,"/");
 	strcat(pictureWithFullPath,tempGameName);
+	if ((mediaSuffix!=NULL) && (strlen(mediaSuffix)>0)) {
+                strcat(pictureWithFullPath,mediaSuffix);
+    }
 	strcat(pictureWithFullPath,".png");
 	displayBackgroundPicture();
 	if (rom==NULL) {
@@ -404,6 +407,9 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,mediaFolder);
 	strcat(pictureWithFullPath,"/");
 	strcat(pictureWithFullPath,tempGameName);
+	if ((mediaSuffix!=NULL) && (strlen(mediaSuffix)>0)) {
+		strcat(pictureWithFullPath,mediaSuffix);
+	}
 	strcat(pictureWithFullPath,".png");
 	if (rom!=NULL) {
 		char *tempDisplayName = getFileNameOrAlias(rom);
