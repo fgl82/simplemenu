@@ -16,9 +16,9 @@ int performAction(struct Node *node) {
 	} else {
 		rom = NULL;
 	}
-	if(currentlySectionSwitching) {
+	if(currentState==SELECTING_SECTION) {
 		if (keys[BTN_A]) {
-			currentlySectionSwitching=0;
+			currentState=BROWSING_GAME_LIST;
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
 				logMessage("INFO","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
@@ -28,10 +28,9 @@ int performAction(struct Node *node) {
 				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			if (keys[BTN_START]) {
-				currentlySectionSwitching=0;
+				currentState=SETTINGS_SCREEN;
 				chosenSetting=SHUTDOWN_OPTION;
 				selectedShutDownOption=0;
-				currentState=3;
 //				pthread_create(&clockThread, NULL, updateClock,NULL);
 				return 1;
 			}
@@ -50,12 +49,12 @@ int performAction(struct Node *node) {
 				return(1);
 			}
 		}
-		if (rom!=NULL&&keys[BTN_A]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_A]&&!(currentState==SELECTING_SECTION)) {
 			launchEmulator(rom);
 			aKeyComboWasPressed=1;
 			return 1;
 		}
-		if (rom!=NULL&&keys[BTN_X]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_X]&&!(currentState==SELECTING_SECTION)) {
 			if (!isPicModeMenuHidden) {
 				resetPicModeHideMenuTimer();
 			}
@@ -72,20 +71,20 @@ int performAction(struct Node *node) {
 			}
 		}
 
-		if (keys[BTN_START]&&!currentlySectionSwitching) {
+		if (keys[BTN_START]&&!(currentState==SELECTING_SECTION)) {
 			hotKeyPressed=0;
 			cycleFrequencies();
 			aKeyComboWasPressed=1;
 			return 0;
 		}
-		if (rom!=NULL&&keys[BTN_SELECT]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_SELECT]&&!(currentState==SELECTING_SECTION)) {
 			for(int i=0;i<25;i++) {
 				selectRandomGame();
 			}
 			saveFavorites();
 			launchGame(CURRENT_SECTION.currentGameNode->data);
 		}
-		if (rom!=NULL&&keys[BTN_DOWN]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_DOWN]&&!(currentState==SELECTING_SECTION)) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			advancePage(rom);
@@ -95,7 +94,7 @@ int performAction(struct Node *node) {
 			aKeyComboWasPressed=1;
 			return 0;
 		}
-		if (rom!=NULL&&keys[BTN_UP]&&!currentlySectionSwitching) {
+		if (rom!=NULL&&keys[BTN_UP]&&!(currentState==SELECTING_SECTION)) {
 			hotKeyPressed=1;
 			CURRENT_SECTION.alphabeticalPaging=1;
 			rewindPage(rom);
@@ -107,7 +106,7 @@ int performAction(struct Node *node) {
 		}
 		if(keys[BTN_RIGHT]) {
 			hotKeyPressed=0;
-			currentlySectionSwitching=1;
+			currentState=SELECTING_SECTION;
 			int advanced = advanceSection(1);
 			if(advanced) {
 				if (CURRENT_SECTION.backgroundSurface == NULL) {
@@ -128,7 +127,7 @@ int performAction(struct Node *node) {
 		}
 		if(keys[BTN_LEFT]) {
 			hotKeyPressed=0;
-			currentlySectionSwitching=1;
+			currentState=SELECTING_SECTION;
 			int rewinded = rewindSection(1);
 			if(rewinded) {
 				if (CURRENT_SECTION.backgroundSurface == NULL) {
@@ -156,7 +155,7 @@ int performAction(struct Node *node) {
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
-			displayLogo=1;
+//			displayLogo=1;
 		}
 		int rewinded = rewindSection(1);
 		if(rewinded) {
@@ -172,7 +171,7 @@ int performAction(struct Node *node) {
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
 			resetPicModeHideLogoTimer();
-			displayLogo=1;
+//			displayLogo=1;
 		}
 		int advanced = advanceSection(1);
 		if(advanced) {
@@ -184,7 +183,7 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 
-	if (!currentlySectionSwitching&&!hotKeyPressed&&!isUSBMode) {
+	if (!(currentState==SELECTING_SECTION)&&!hotKeyPressed&&!isUSBMode) {
 
 		if (rom!=NULL&&keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {

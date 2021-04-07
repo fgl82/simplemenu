@@ -399,45 +399,113 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		return gamesCounter;
 	}
 
-	struct Node *split(struct Node *head)
-	{
-		struct Node *fast = head,*slow = head;
-		while (fast->next && fast->next->next)
-		{
-			fast = fast->next->next;
-			slow = slow->next;
-		}
-		struct Node *temp = slow->next;
-		slow->next = NULL;
-		return temp;
-	}
+//	struct Node *split(struct Node *head)
+//	{
+//		struct Node *fast = head,*slow = head;
+//		while (fast->next && fast->next->next)
+//		{
+//			fast = fast->next->next;
+//			slow = slow->next;
+//		}
+//		struct Node *temp = slow->next;
+//		slow->next = NULL;
+//		return temp;
+//	}
+//
+//	struct Node *merge(struct Node *first, struct Node *second)
+//	{
+//		if (!first) {
+//			return second;
+//		}
+//
+//		if (!second) {
+//			return first;
+//		}
+//
+//
+//		char s1Alias[300];
+//		if(first->data->alias!=NULL&&strlen(first->data->alias)>2) {
+//			strcpy(s1Alias,first->data->alias);
+//		} else {
+//			strcpy(s1Alias,first->data->name);
+//		}
+//		char s2Alias[300];
+//		if(second->data->alias!=NULL&&strlen(second->data->alias)>2) {
+//			strcpy(s2Alias,second->data->alias);
+//		} else {
+//			strcpy(s2Alias,second->data->name);
+//		}
+//
+//		char * noPathS1Alias=strdup(s1Alias);
+//		char * noPathS2Alias=strdup(s2Alias);
+//
+//		for(char *p = noPathS1Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
+//		for(char *p = noPathS2Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
+//
+//		if(strlen(CURRENT_SECTION.aliasFileName)<2) {
+//			stripGameName(noPathS1Alias);
+//			stripGameName(noPathS2Alias);
+//		}
+//		if (strcmp(noPathS1Alias, noPathS2Alias)<=0)
+//		{
+//			free(noPathS1Alias);
+//			free(noPathS2Alias);
+//			first->next = merge(first->next,second);
+//			first->next->prev = first;
+//			first->prev = NULL;
+//			return first;
+//		}else {
+//			free(noPathS1Alias);
+//			free(noPathS2Alias);
+//			second->next = merge(first,second->next);
+//			second->next->prev = second;
+//			second->prev = NULL;
+//			return second;
+//		}
+//	}
 
-	struct Node *merge(struct Node *first, struct Node *second)
-	{
-		if (!first) {
-			return second;
-		}
+//	struct Node *mergeSort(struct Node *head) {
+//		if (!head || !head->next) {
+//			return head;
+//		}
+//		struct Node *second = split(head);
+//
+//		// Recur for left and right halves
+//		head = mergeSort(head);
+//		second = mergeSort(second);
+//
+//		// Merge the two sorted halves
+//		return merge(head,second);
+//	}
 
-		if (!second) {
-			return first;
-		}
+	/* See https:// www.geeksforgeeks.org/?p=3622 for details of this
+	function */
+	struct Node* SortedMerge(struct Node* a, struct Node* b) {
+		struct Node* result = NULL;
 
+		/* Base cases */
+		if (a == NULL)
+			return (b);
+		else if (b == NULL)
+			return (a);
 
-		char s1Alias[300];
-		if(first->data->alias!=NULL&&strlen(first->data->alias)>2) {
-			strcpy(s1Alias,first->data->alias);
+		char *s1Alias = malloc(1000);
+		if(a->data->alias!=NULL&&strlen(a->data->alias)>2) {
+			strcpy(s1Alias,a->data->alias);
 		} else {
-			strcpy(s1Alias,first->data->name);
+			strcpy(s1Alias,a->data->name);
 		}
-		char s2Alias[300];
-		if(second->data->alias!=NULL&&strlen(second->data->alias)>2) {
-			strcpy(s2Alias,second->data->alias);
+		char *s2Alias=malloc(1000);
+		if(b->data->alias!=NULL&&strlen(b->data->alias)>2) {
+			strcpy(s2Alias,b->data->alias);
 		} else {
-			strcpy(s2Alias,second->data->name);
+			strcpy(s2Alias,b->data->name);
 		}
 
 		char * noPathS1Alias=strdup(s1Alias);
 		char * noPathS2Alias=strdup(s2Alias);
+		free(s1Alias);
+		free(s2Alias);
 
 		for(char *p = noPathS1Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
 		for(char *p = noPathS2Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
@@ -450,34 +518,80 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		{
 			free(noPathS1Alias);
 			free(noPathS2Alias);
-			first->next = merge(first->next,second);
-			first->next->prev = first;
-			first->prev = NULL;
-			return first;
-		}
-		else
-		{
+			a->next = SortedMerge(a->next,b);
+			a->next->prev = a;
+			a->prev = NULL;
+			result = a;
+//			result->next = SortedMerge(a->next, b);
+		}else {
 			free(noPathS1Alias);
 			free(noPathS2Alias);
-			second->next = merge(first,second->next);
-			second->next->prev = second;
-			second->prev = NULL;
-			return second;
+			b->next = SortedMerge(a,b->next);
+			b->next->prev = b;
+			b->prev = NULL;
+			result = b;
+//			result->next = SortedMerge(a, b->next);
 		}
+
+	    /* Pick either a or b, and recur */
+//	    if (a->data <= b->data) {
+//	        result = a;
+//	        result->next = SortedMerge(a->next, b);
+//	    } else {
+//	        result = b;
+//	        result->next = SortedMerge(a, b->next);
+//	    }
+	    return (result);
+
+
+
 	}
 
-	struct Node *mergeSort(struct Node *head) {
-		if (!head || !head->next) {
-			return head;
-		}
-		struct Node *second = split(head);
+	void FrontBackSplit(struct Node* source,
+	                    struct Node** frontRef, struct Node** backRef)
+	{
+		struct Node* fast;
+		struct Node* slow;
+	    slow = source;
+	    fast = source->next;
 
-		// Recur for left and right halves
-		head = mergeSort(head);
-		second = mergeSort(second);
+	    /* Advance 'fast' two nodes, and advance 'slow' one node */
+	    while (fast != NULL) {
+	        fast = fast->next;
+	        if (fast != NULL) {
+	            slow = slow->next;
+	            fast = fast->next;
+	        }
+	    }
 
-		// Merge the two sorted halves
-		return merge(head,second);
+	    /* 'slow' is before the midpoint in the list, so split it in two
+	    at that point. */
+	    *frontRef = source;
+	    *backRef = slow->next;
+	    slow->next = NULL;
+	}
+
+	/* sorts the linked list by changing next pointers (not data) */
+	void mergeSort(struct Node** headRef)
+	{
+		struct Node* head = *headRef;
+		struct Node* a;
+		struct Node* b;
+
+	    /* Base case -- length 0 or 1 */
+	    if ((head == NULL) || (head->next == NULL)) {
+	        return;
+	    }
+
+	    /* Split head into 'a' and 'b' sublists */
+	    FrontBackSplit(head, &a, &b);
+
+	    /* Recursively sort the sublists */
+	    mergeSort(&a);
+	    mergeSort(&b);
+
+	    /* answer = merge the two sorted lists together */
+	    *headRef = SortedMerge(a, b);
 	}
 
 	void loadFavoritesSectionGameList() {
@@ -1013,8 +1127,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			for (int i=0;i<dirCounter;i++){
 				free (dirs[i]);
 			}
-			logMessage("INFO","The list needs to be sorted");
-			CURRENT_SECTION.head = mergeSort(CURRENT_SECTION.head);
+
+			if (strlen(CURRENT_SECTION.aliasFileName) > 2) {
+				logMessage("INFO","The list needs to be sorted");
+				mergeSort(&CURRENT_SECTION.head);
+			}
 
 			if(useCache==1) {
 				fp = fopen(sectionCacheName,"w");

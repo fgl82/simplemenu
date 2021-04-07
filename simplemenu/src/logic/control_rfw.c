@@ -184,7 +184,6 @@ int performAction(struct Node *node) {
 	}
 
 	if(keys[BTN_R1]) {
-		printf("1\n");
 		currentState=SELECTING_SECTION;
 		hotKeyPressed=0;
 		if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
