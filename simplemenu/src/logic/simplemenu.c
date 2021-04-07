@@ -167,6 +167,10 @@ void processEvents() {
 				refreshScreen();
 			}
 		} else if (event.type==SDL_MOUSEMOTION) {
+			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
+				loadGameList(0);
+				currentState=BROWSING_GAME_LIST;
+			}
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshScreen();
 		}
