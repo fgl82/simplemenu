@@ -239,10 +239,10 @@ int performAction(struct Node *node) {
 		if (keys[BTN_START]) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
-			currentState=3;
-			currRawtime = time(NULL);
-			currTime = localtime(&currRawtime);
-			lastMin=currTime->tm_min;
+			currentState=SETTINGS_SCREEN;
+//			currRawtime = time(NULL);
+//			currTime = localtime(&currRawtime);
+//			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
 //			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
