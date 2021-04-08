@@ -318,18 +318,22 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		}
 #endif
 #ifndef TARGET_PC
+		logMessage("INFO",emulatorFolder);
 		logMessage("INFO",exec);
 		logMessage("INFO",fileToBeExecutedWithFullPath);
 		SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 		SDL_ShowCursor(1);
 		freeResources();
 		SDL_ShowCursor(1);
-#ifndef TARGET_OD_BETA
+		#ifndef TARGET_OD_BETA
 		resetFrameBuffer1();
-#endif
-
+		#endif
+		//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
+		#if defined TARGET_RFW
+		printf ("\n");
+		#endif
 		if (consoleApp) {
-#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+		#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 			/* Enable the framebuffer console */
 			char c = '1';
 			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
@@ -348,9 +352,20 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 					printf("Unable to activate tty1\n");
 				close(fd);
 			}
-#endif
+		#endif
 		}
 		char states[] = {};
+
+//		char menuDirectory[100] = "";
+//		char *directory="/home/retrofw/apps";
+//		getcwd(menuDirectory, sizeof(menuDirectory));
+//		int ret = chdir(directory);
+		//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
+		#if defined TARGET_RFW
+		printf ("            ");
+		#endif
+//		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
+
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);
 #else
 		strcat(exec, " \"");
@@ -478,8 +493,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 //		return merge(head,second);
 //	}
 
-	/* See https:// www.geeksforgeeks.org/?p=3622 for details of this
-	function */
 	struct Node* SortedMerge(struct Node* a, struct Node* b) {
 		struct Node* result = NULL;
 
@@ -1037,14 +1050,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 										}
 									}
 #ifdef TARGET_RFW
-									if(strstr(desktopFiles[desktopCounter].name,"default")==NULL) {
-										strcpy(rom->name,"-m|");
-										strcat(rom->name,desktopFiles[desktopCounter].name);
-										strcat(rom->name,"|");
-									} else {
-										strcpy(rom->name,desktopFiles[desktopCounter].parentOPK);
-										strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
-									}
+									strcpy(rom->name,"-m|");
+									strcat(rom->name,desktopFiles[desktopCounter].name);
+									strcat(rom->name,"|");
+									strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
+									strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 #else
 									strcpy(rom->name,"-m|");
 									strcat(rom->name,desktopFiles[desktopCounter].name);
