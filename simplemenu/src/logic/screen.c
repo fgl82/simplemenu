@@ -924,17 +924,18 @@ uint32_t hidePicModeLogo() {
 	clearPicModeHideLogoTimer();
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
-	loadGameList(0);
-	if (CURRENT_SECTION.backgroundSurface == NULL) {
+	if (CURRENT_SECTION.backgroundSurface==NULL) {
 		logMessage("INFO","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
+		logMessage("INFO","Loading system picture");
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
-	if (currentState==SELECTING_SECTION) {
-		currentState=BROWSING_GAME_LIST;
+	if(CURRENT_SECTION.gameCount>0) {
+		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}
+	currentState=BROWSING_GAME_LIST_AFTER_TIMER;
 	pushEvent();
 	return 0;
 }
