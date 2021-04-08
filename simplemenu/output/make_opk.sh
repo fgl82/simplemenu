@@ -43,20 +43,12 @@ elif [ "$1" = "OD-BETA" ]; then
 elif [ "$1" = "PG2" ]; then
     make clean
     make PLATFORM=NPG
-else
+elif [ "$1" = "RFW" ]; then
     make clean
     make PLATFORM=RFW
 fi
 
 cp invoker.dge /home/bittboy/git/simplemenu/simplemenu/output
-
-if [ "$1" = "OD" ] || [ "$1" = "PG2" ] || [ "$1" = "OD-BETA" ]; then
-    var="gcw0"
-fi
-
-if [ "$1" = "RFW" ]]; then
-    var="retrofw"
-fi
 
 cd /home/bittboy/git/simplemenu/simplemenu/output
 
