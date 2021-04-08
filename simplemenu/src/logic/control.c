@@ -150,7 +150,7 @@ void launchGame(struct Rom *rom) {
 
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
-
+	printf(" \n");
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(tempExec,favorite.emulatorFolder);
