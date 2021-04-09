@@ -159,6 +159,9 @@ void stripGameName(char *gameName) {
 	while (gameName[charNumber]) {
 		if (gameName[charNumber]=='('||gameName[charNumber]=='[') {
 			if ((charNumber-1)>-1) {
+				gameName[charNumber]='\0';
+			}
+			if (gameName[charNumber-1]==' ') {
 				gameName[charNumber-1]='\0';
 			}
 			break;

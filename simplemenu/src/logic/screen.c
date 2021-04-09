@@ -482,7 +482,7 @@ void drawGameList() {
 		}
 		buf=strdup(nameWithoutExtension);
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
-			if(strlen(buf)>1) {
+			if(strlen(buf)>0) {
 				if(fullscreenMode) {
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 						drawShadedGameNameOnScreenPicMode(buf, nextLine);
@@ -494,7 +494,7 @@ void drawGameList() {
 				}
 			}
 		} else {
-			if(strlen(buf)>1) {
+			if(strlen(buf)>0) {
 				if(fullscreenMode) {
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 						drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
@@ -760,7 +760,7 @@ void drawSettingsScreen() {
 			logMessage("INFO","Chosen setting");
 			logMessage("INFO",options[i]);
 			logMessage("INFO",values[i]);
-			drawRectangleToScreen(5, 20, 0, nextLine-3, bodyHighlightedText);
+//			drawRectangleToScreen(5, 20, 0, nextLine-3, bodyHighlightedText);
 			int lineColor[] = { 219,219,219};
 			if (i==0) {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, nextLine-calculateProportionalSizeOrDistance(4), lineColor);

@@ -329,9 +329,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		resetFrameBuffer1();
 		#endif
 		//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-		#if defined TARGET_RFW
+//		#if defined TARGET_RFW
 		printf ("\n");
-		#endif
+//		#endif
 		if (consoleApp) {
 		#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
 			/* Enable the framebuffer console */
@@ -361,9 +361,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 //		getcwd(menuDirectory, sizeof(menuDirectory));
 //		int ret = chdir(directory);
 		//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-		#if defined TARGET_RFW
+//		#if defined TARGET_RFW
 		printf ("            ");
-		#endif
+//		#endif
 //		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
 
 		execlp("./invoker.dge","invoker.dge", emulatorFolder, exec, fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo, pPictureMode, NULL);

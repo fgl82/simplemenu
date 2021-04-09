@@ -140,6 +140,7 @@ void processEvents() {
 				}
 			}
 			resetScreenOffTimer();
+//			printf("%d\n",(int)event.key.keysym.sym);
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshScreen();
 		} else if (event.type==getKeyUp()&&!isUSBMode) {

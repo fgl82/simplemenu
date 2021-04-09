@@ -926,7 +926,7 @@ void drawUSBScreen() {
 }
 
 void initializeDisplay() {
-	//	SDL_ShowCursor(0);
+	SDL_ShowCursor(0);
 
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 #ifdef TARGET_OD
@@ -977,7 +977,7 @@ void initializeDisplay() {
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE|SDL_DOUBLEBUF);
-	SDL_ShowCursor(0);
+//	SDL_ShowCursor(0);
 #else
 	SDL_ShowCursor(0);
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
