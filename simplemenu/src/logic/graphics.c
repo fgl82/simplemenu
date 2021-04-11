@@ -989,7 +989,15 @@ void initializeDisplay() {
 //	SDL_ShowCursor(0);
 #else
 	SDL_ShowCursor(0);
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
+	SDL_GetVideoInfo();
+//	screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
+//	if (!screen) {
+		SDL_VideoInfo *info =  SDL_GetVideoInfo();
+		SCREEN_WIDTH=640;
+		SCREEN_HEIGHT=480;
+		printf("%d\n", info->current_h);
+		screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
+//	}
 #endif
 	//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
