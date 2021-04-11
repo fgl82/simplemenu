@@ -854,7 +854,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&
-						strcmp(ext,".png")!=0&&
 						isExtensionValid(ext,section->fileExtensions)) {
 					value = 1;
 					break;
@@ -871,7 +870,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
-		return !value;
+		return value;
 	}
 
 	char * readline(FILE *fp, char *buffer)
@@ -1222,11 +1221,24 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		} else {
 			logMessage("INFO","determineStartingScreen - Loading game list");
 			loadGameList(0);
+			if (CURRENT_SECTION.gameCount==0){
+				advanceSection(0);
+				loadGameList(0);
+//				generateError("NO GAMES FOUND!", 0);
+			}
+			if (CURRENT_SECTION.backgroundSurface == NULL) {
+				logMessage("INFO","Loading system background");
+				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+				resizeSectionBackground(&CURRENT_SECTION);
+				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
+			}			
 			int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 			if (pages>0&&CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
 				pages--;
 			}
 			CURRENT_SECTION.totalPages=pages;
+
 		}
 		logMessage("INFO","Found starting screen");
 	}

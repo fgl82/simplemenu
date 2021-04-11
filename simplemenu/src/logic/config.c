@@ -191,9 +191,9 @@ void loadTheme(char *theme) {
 	ini_t *themeConfig = ini_load(theme);
 	const char *value;
 	for (int i=0;i<menuSectionCounter;i++) {
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_background_color", menuSections[i].headerAndFooterBackgroundColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_font_color", menuSections[i].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "items_font_color", menuSections[i].bodyTextColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_background_color", menuSections[i].fullScreenMenuBackgroundColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "fullscreen_menu_font_color", menuSections[i].fullscreenMenuItemsColor);
+		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "items_font_color", menuSections[i].menuItemsFontColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_background_color", menuSections[i].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_font_color", menuSections[i].bodySelectedTextTextColor);
 
@@ -808,9 +808,9 @@ int loadSections(char *file) {
 		#else
 		setStringValueInSection (config, sectionName, "scaling", menuSections[menuSectionCounter].scaling,"0");
 		#endif
-		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_background_color", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
-		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_font_color", menuSections[menuSectionCounter].headerAndFooterTextColor);
-		setRGBColorInSection(themeConfig, sectionName, "items_font_color", menuSections[menuSectionCounter].bodyTextColor);
+		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_background_color", menuSections[menuSectionCounter].fullScreenMenuBackgroundColor);
+		setRGBColorInSection(themeConfig, sectionName, "fullscreen_menu_font_color", menuSections[menuSectionCounter].fullscreenMenuItemsColor);
+		setRGBColorInSection(themeConfig, sectionName, "items_font_color", menuSections[menuSectionCounter].menuItemsFontColor);
 		setRGBColorInSection(themeConfig, sectionName, "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 
@@ -1003,9 +1003,9 @@ int loadSections(char *file) {
 	menuSections[menuSectionCounter].hidden=0;
 	menuSections[menuSectionCounter].currentPage=0;
 	menuSections[menuSectionCounter].currentGameInPage=0;
-	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_background_color", menuSections[menuSectionCounter].headerAndFooterBackgroundColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_font_color", menuSections[menuSectionCounter].headerAndFooterTextColor);
-	setRGBColorInSection(themeConfig, "FAVORITES", "items_font_color", menuSections[menuSectionCounter].bodyTextColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_background_color", menuSections[menuSectionCounter].fullScreenMenuBackgroundColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "fullscreen_menu_font_color", menuSections[menuSectionCounter].fullscreenMenuItemsColor);
+	setRGBColorInSection(themeConfig, "FAVORITES", "items_font_color", menuSections[menuSectionCounter].menuItemsFontColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 	value = ini_get(themeConfig, "GENERAL", "art_font_color");

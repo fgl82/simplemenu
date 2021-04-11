@@ -109,9 +109,6 @@ void initialSetup() {
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
-	while(strlen(CURRENT_SECTION.sectionName)<1) {
-		advanceSection(0);
-	}
 	enableKeyRepeat();
 }
 

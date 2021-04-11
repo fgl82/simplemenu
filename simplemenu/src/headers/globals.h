@@ -221,10 +221,10 @@ struct MenuSection {
 	int gameCount;
 	int initialized;
 	int onlyFileNamesNoExtension;
-	int headerAndFooterBackgroundColor[3];
-	int headerAndFooterTextColor[3];
+	int fullScreenMenuBackgroundColor[3];
+	int fullscreenMenuItemsColor[3];
 	int bodyBackgroundColor[3];
-	int bodyTextColor[3];
+	int menuItemsFontColor[3];
 	int bodySelectedTextBackgroundColor[3];
 	int bodySelectedTextTextColor[3];
 	int pictureTextColor[3];

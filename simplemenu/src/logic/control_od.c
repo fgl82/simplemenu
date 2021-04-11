@@ -92,16 +92,7 @@ int performAction(struct Node *node) {
 				aKeyComboWasPressed=1;
 				return 1;
 			}
-			if (keys[BTN_START]) {
-				hotKeyPressed=0;
-				int returnedValue = system("./usb_mode_on.sh");
-				if (returnedValue==0) {
-					isUSBMode = 1;
-				} else {
-					generateError("USB MODE  NOT AVAILABLE",0);
-				}
-				aKeyComboWasPressed=1;
-			}
+
 			if (rom!=NULL&&keys[BTN_SELECT]) {
 				int flag = 0;
 				const int GAME_FPS=60;
@@ -200,10 +191,12 @@ int performAction(struct Node *node) {
 		if (currentSectionNumber!=favoritesSectionNumber) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
+			int returnValue = rewindSection(1);
+			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
 				resetPicModeHideLogoTimer();
+			} else if (!returnValue) {
+				currentState=BROWSING_GAME_LIST;
 			}
-			rewindSection(1);
 		}
 		return 0;
 	}
@@ -212,10 +205,12 @@ int performAction(struct Node *node) {
 		if (currentSectionNumber!=favoritesSectionNumber) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos) {
+			int returnValue = advanceSection(1);
+			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
 				resetPicModeHideLogoTimer();
+			}else if (!returnValue) {
+				currentState=BROWSING_GAME_LIST;
 			}
-			advanceSection(1);
 		}
 		return 0;
 	}

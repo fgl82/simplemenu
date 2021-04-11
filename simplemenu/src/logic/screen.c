@@ -44,8 +44,8 @@ void showErrorMessage(char *errorMessage) {
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5), borderColor);
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(width), calculateProportionalSizeOrDistance(height), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
 	drawError(errorMessage, textColor);
-	itsStoppedBecauseOfAnError=1;
-	free(errorMessage);
+	itsStoppedBecauseOfAnError=0;
+//	free(errorMessage);
 }
 
 int letterExistsInGameList(char *letter, char* letters) {
@@ -60,10 +60,10 @@ void showLetter(struct Rom *rom) {
 	int rectangleX = (SCREEN_WIDTH/2);
 	int rectangleY = (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3);
 	int filling[3];
-	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0];
-	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1];
-	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2];
-	int textColor[3] = {CURRENT_SECTION.headerAndFooterTextColor[0], CURRENT_SECTION.headerAndFooterTextColor[1], CURRENT_SECTION.headerAndFooterTextColor[2]};
+	filling[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0];
+	filling[1]=CURRENT_SECTION.fullScreenMenuBackgroundColor[1];
+	filling[2]=CURRENT_SECTION.fullScreenMenuBackgroundColor[2];
+	int textColor[3] = {CURRENT_SECTION.fullscreenMenuItemsColor[0], CURRENT_SECTION.fullscreenMenuItemsColor[1], CURRENT_SECTION.fullscreenMenuItemsColor[2]};
 	if (fullscreenMode) {
 		filling[0] = 0;
 		filling[1] = 0;
@@ -75,12 +75,12 @@ void showLetter(struct Rom *rom) {
 		rectangleX = 0;
 		rectangleY = calculateProportionalSizeOrDistance(220);
 	}
-	filling[0] = CURRENT_SECTION.headerAndFooterBackgroundColor[0];
-	filling[1] = CURRENT_SECTION.headerAndFooterBackgroundColor[1];
-	filling[2] = CURRENT_SECTION.headerAndFooterBackgroundColor[2];
-	textColor[0]=CURRENT_SECTION.headerAndFooterTextColor[0];
-	textColor[1]=CURRENT_SECTION.headerAndFooterTextColor[0];
-	textColor[2]=CURRENT_SECTION.headerAndFooterTextColor[0];
+	filling[0] = CURRENT_SECTION.fullScreenMenuBackgroundColor[0];
+	filling[1] = CURRENT_SECTION.fullScreenMenuBackgroundColor[1];
+	filling[2] = CURRENT_SECTION.fullScreenMenuBackgroundColor[2];
+	textColor[0]=CURRENT_SECTION.fullscreenMenuItemsColor[0];
+	textColor[1]=CURRENT_SECTION.fullscreenMenuItemsColor[0];
+	textColor[2]=CURRENT_SECTION.fullscreenMenuItemsColor[0];
 	rectangleHeight=calculateProportionalSizeOrDistance(21);
 	rectangleX = 0;
 	rectangleY = calculateProportionalSizeOrDistance(219);
@@ -200,13 +200,13 @@ void showCurrentEmulator() {
 	int height = 30;
 	int filling[3];
 	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[0]+45;
-	borderColor[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[1]+45;
-	borderColor[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45>255?255:CURRENT_SECTION.headerAndFooterBackgroundColor[2]+45;
-	filling[0]=CURRENT_SECTION.headerAndFooterBackgroundColor[0];
-	filling[1]=CURRENT_SECTION.headerAndFooterBackgroundColor[1];
-	filling[2]=CURRENT_SECTION.headerAndFooterBackgroundColor[2];
-	int textColor[3]= {CURRENT_SECTION.headerAndFooterTextColor[0], CURRENT_SECTION.headerAndFooterTextColor[1], CURRENT_SECTION.headerAndFooterTextColor[2]};
+	borderColor[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45;
+	borderColor[1]=CURRENT_SECTION.fullScreenMenuBackgroundColor[1]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[1]+45;
+	borderColor[2]=CURRENT_SECTION.fullScreenMenuBackgroundColor[2]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[2]+45;
+	filling[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0];
+	filling[1]=CURRENT_SECTION.fullScreenMenuBackgroundColor[1];
+	filling[2]=CURRENT_SECTION.fullScreenMenuBackgroundColor[2];
+	int textColor[3]= {CURRENT_SECTION.fullscreenMenuItemsColor[0], CURRENT_SECTION.fullscreenMenuItemsColor[1], CURRENT_SECTION.fullscreenMenuItemsColor[2]};
 	if (fullscreenMode) {
 		filling[0] = 21;
 		filling[1] = 18;
@@ -346,7 +346,7 @@ void displayGamePicture(struct Rom *rom) {
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
 		if(!favoritesSectionSelected) {
 			if (colorfulFullscreenMenu) {
-				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.headerAndFooterBackgroundColor, 180);
+				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.fullScreenMenuBackgroundColor, 180);
 				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0},100);
 			} else {
 				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0}, 180);
@@ -857,6 +857,10 @@ void updateScreen(struct Node *node) {
 						showLetter(rom);
 					}
 				}
+				if (CURRENT_SECTION.gameCount==0) {
+					generateError("NO GAMES FOUND-FOR THIS SECTION GROUP", 0);
+					showErrorMessage(errorMessage);
+				}
 				break;
 			case SETTINGS_SCREEN:
 				drawSettingsScreen();
@@ -931,9 +935,6 @@ uint32_t hidePicModeLogo() {
 		logMessage("INFO","Loading system picture");
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
-	}
-	if(CURRENT_SECTION.gameCount>0) {
-		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 	}
 	currentState=BROWSING_GAME_LIST_AFTER_TIMER;
 	pushEvent();

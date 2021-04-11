@@ -98,14 +98,25 @@ void scrollToGame(int gameNumber) {
 }
 
 int advanceSection(int showLogo) {
+	int tempCurrentSection = currentSectionNumber;
 	if(currentSectionNumber==favoritesSectionNumber) {
 		return 0;
 	}
-	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber<favoritesSectionNumber-1) {
+	int returnValue = 0;
+	do {
+		returnValue = 0;
 		currentSectionNumber++;
-	} else if (currentSectionNumber!=favoritesSectionNumber) {
-		currentSectionNumber=0;
-	}
+		if (currentSectionNumber==menuSectionCounter-1) {
+			currentSectionNumber=0;
+		}
+		if (tempCurrentSection==currentSectionNumber) {
+			returnValue = 0;
+			break;
+		} else if (theSectionHasGames(&CURRENT_SECTION)) {
+			returnValue = 1;
+			break;
+		}
+	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
@@ -118,19 +129,29 @@ int advanceSection(int showLogo) {
 //		displayLogo=1;
 	}
 //	#endif
-	return 1;
+	return returnValue;
 }
 
 int rewindSection(int showLogo) {
+	int returnValue;
+	int tempCurrentSection = currentSectionNumber;
 	if(currentSectionNumber==favoritesSectionNumber) {
 		return 0;
 	}
 	logMessage("INFO","Rewinding section");
-	if(currentSectionNumber!=favoritesSectionNumber&&currentSectionNumber>0) {
+	do {
 		currentSectionNumber--;
-	} else if (currentSectionNumber!=favoritesSectionNumber) {
-		currentSectionNumber=menuSectionCounter-2;
-	}
+		if (currentSectionNumber==-1) {
+			currentSectionNumber=menuSectionCounter-2;
+		}
+		if (tempCurrentSection==currentSectionNumber) {
+			returnValue = 0;
+			break;
+		} else if (theSectionHasGames(&CURRENT_SECTION)) {
+			returnValue = 1;
+			break;
+		}
+	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
@@ -140,7 +161,7 @@ int rewindSection(int showLogo) {
 //		showConsole();
 	}
 //	#endif
-	return 1;
+	return returnValue;
 }
 
 void launchGame(struct Rom *rom) {
@@ -571,6 +592,10 @@ void performGroupChoosingAction() {
 				resizeSectionBackground(&CURRENT_SECTION);
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 				resizeSectionSystemPicture(&CURRENT_SECTION);
+			}
+			if (CURRENT_SECTION.gameCount==0) {
+				advanceSection(0);
+				loadGameList(0);
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
