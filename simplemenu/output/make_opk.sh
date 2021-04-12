@@ -64,9 +64,6 @@ Icon=simplemenu
 Categories=applications;
 EOF
 
-#copy the right config
-cp $1/config-$2/* $1/config
-
 # create opk
 FLIST="$1/apps"
 FLIST="${FLIST} $1/config"

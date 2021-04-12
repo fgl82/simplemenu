@@ -585,12 +585,6 @@ void loadConfig() {
 	value = ini_get(config, "CPU", "sleep_speed");
 	OC_SLEEP=atoifgl(value);
 
-	value = ini_get(config, "SCREEN", "width");
-	SCREEN_WIDTH=atoifgl(value);
-
-	value = ini_get(config, "SCREEN", "height");
-	SCREEN_HEIGHT=atoifgl(value);
-
 	value = ini_get(config, "SCREEN", "hdmi_width");
 	HDMI_WIDTH=atoifgl(value);
 
