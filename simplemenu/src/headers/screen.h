@@ -5,7 +5,7 @@ void updateScreen(struct Node *node);
 void drawHeader();
 void drawGameList();
 void drawFooter(char *text);
-void setupDisplayAndKeys();
+void setupKeys();
 void setupDecorations();
 void freeResources();
 void displayGamePicture();

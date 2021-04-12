@@ -53,6 +53,7 @@ void checkIfDefault() {
 	FILE *fp=NULL;
 	FILE *fpScripts=NULL;
 	#ifdef TARGET_BITTBOY
+	logMessage("INFO","Checking if default bittboy");
 	fp = fopen("/mnt/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
@@ -81,6 +82,7 @@ void checkIfDefault() {
 	}
 	c1 = getc(fp);
 	c2 = getc(fpScripts);
+	logMessage("INFO","Starting comparison");
 	while (sameFile && c1 != EOF && c2 != EOF) {
 		if (c1 != c2) {
 			sameFile=0;
@@ -90,6 +92,7 @@ void checkIfDefault() {
 		c1 = getc(fp);
 		c2 = getc(fpScripts);
 	}
+	logMessage("INFO","Done comparing");
 	if (fp!=NULL) {
 		fclose(fp);
 	}
@@ -886,7 +889,7 @@ int loadSections(char *file) {
 	} else {
 		fontOutline = atoifgl(value);
 	}
-
+	logMessage("INFO","Out 1");
 	value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
 	if (value == NULL) {
 		displaySectionGroupName = 0;
@@ -917,6 +920,8 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full");
 	gameListPositionFullScreen = atoifgl(value);
+
+	logMessage("INFO","Out2");
 
 	value = ini_get(themeConfig, "GENERAL", "art_max_w");
 	artWidth = atoifgl(value);
@@ -951,6 +956,8 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "text1_alignment");
 	text1Alignment = atoifgl(value);
 
+	logMessage("INFO","Out 3");
+
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 	value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 
@@ -983,6 +990,8 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 	footerOnTop = atoifgl(value);
 
+	logMessage("INFO","Out 4");
+
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "font", menuFont);
@@ -990,6 +999,8 @@ int loadSections(char *file) {
 
 	freeFonts();
 	initializeFonts();
+
+	logMessage("INFO","Out 5");
 
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
 	menuSections[menuSectionCounter].emulatorDirectories[0]=strdup("/some/folder/");
@@ -1014,9 +1025,15 @@ int loadSections(char *file) {
 	} else {
 		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "items_font_color", menuSections[menuSectionCounter].pictureTextColor);
 	}
+
+	logMessage("INFO","Out 6");
+
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
+
+	logMessage("INFO","Out 7");
+
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
 	ini_free(config);

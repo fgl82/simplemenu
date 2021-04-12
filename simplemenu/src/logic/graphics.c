@@ -989,15 +989,42 @@ void initializeDisplay() {
 //	SDL_ShowCursor(0);
 #else
 	SDL_ShowCursor(0);
-	SDL_GetVideoInfo();
-//	screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
-//	if (!screen) {
-		SDL_VideoInfo *info =  SDL_GetVideoInfo();
-		SCREEN_WIDTH=640;
-		SCREEN_HEIGHT=480;
-		printf("%d\n", info->current_h);
-		screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
-//	}
+
+	SCREEN_WIDTH=320;
+	SCREEN_HEIGHT=240;
+
+	SDL_Rect** modes = SDL_ListModes(NULL,SDL_NOFRAME|SDL_SWSURFACE);
+
+	FILE *fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+	if (fp!=NULL) {
+		fprintf(fp, "%d" , 0);
+		fclose(fp);
+	}
+
+#if defined TARGET_OD || defined TARGET_OD_BETA
+	if(modes==(SDL_Rect **)0) {
+		printf("No available modes\n");
+	} else if(modes==(SDL_Rect **)-1) {
+		printf("All modes available\n");
+	} else {
+		printf("Available modes:\n");
+		for(int i=0; modes[i]; i++) {
+			printf("%dx%d\n", modes[i]->w, modes[i]->h);
+			if (modes[i]->w==640 && modes[i]->h ==480) {
+				SCREEN_WIDTH=640;
+				SCREEN_HEIGHT=480;
+				break;
+			}
+		}
+	}
+#endif
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+	if (screen==NULL) {
+		SCREEN_WIDTH=320;
+		SCREEN_HEIGHT=240;
+		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+	}
+
 #endif
 	//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
@@ -1013,6 +1040,7 @@ void refreshScreen() {
 }
 
 void initializeSettingsFonts() {
+	logMessage("INFO","Initializing Settings Fonts");
 	char *akashi = "resources/akashi.ttf";
 	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
 	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));

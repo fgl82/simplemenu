@@ -317,6 +317,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=3"); //2: integer scaling
 		}
 #endif
+		FILE *fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+		if (fp!=NULL) {
+			fprintf(fp, "%d" , 1);
+			fclose(fp);
+		}
 #ifndef TARGET_PC
 		logMessage("INFO",emulatorFolder);
 		logMessage("INFO",exec);

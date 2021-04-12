@@ -26,11 +26,11 @@ void displayBackgroundPicture() {
 
 
 void showErrorMessage(char *errorMessage) {
-	int width = ((calculateProportionalSizeOrDistance(strlen(errorMessage))*(180))/calculateProportionalSizeOrDistance(18));
+	int width = ((calculateProportionalSizeOrDistance(strlen(errorMessage)))*(180)/calculateProportionalSizeOrDistance(18));
 	int height = calculateProportionalSizeOrDistance(40);
 	if(strchr(errorMessage,'-')!=NULL) {
 		height = calculateProportionalSizeOrDistance(60);
-		width = ((calculateProportionalSizeOrDistance(strlen(errorMessage)/2)*calculateProportionalSizeOrDistance(200))/calculateProportionalSizeOrDistance(18))+calculateProportionalSizeOrDistance(20);
+		width = ((calculateProportionalSizeOrDistance(strlen(errorMessage))/2*calculateProportionalSizeOrDistance(200))/calculateProportionalSizeOrDistance(18))+calculateProportionalSizeOrDistance(20);
 	}
 	int filling[3];
 	int borderColor[3];
@@ -888,7 +888,7 @@ void updateScreen(struct Node *node) {
 	}
 }
 
-void setupDisplayAndKeys() {
+void setupKeys() {
 	initializeKeys();
 	logMessage("INFO","Input successfully configured");
 }
