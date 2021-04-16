@@ -2,13 +2,12 @@
 #define GLOBALS_DEFINED
 
 #define BROWSING_GAME_LIST 0
-#define BROWSING_GAME_LIST_AFTER_TIMER 11
+#define BROWSING_GAME_LIST_AFTER_TIMER 6
 #define SELECTING_EMULATOR 1
 #define CHOOSING_GROUP 2
 #define SETTINGS_SCREEN 3
 #define SELECTING_SECTION 4
 #define SHUTTING_DOWN 5
-#define LOADING 6
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -19,6 +18,8 @@
 #if defined TARGET_OD || defined TARGET_OD_BETA
 #include <shake.h>
 #endif
+
+extern int updateScreenFlag;
 
 extern SDL_Surface *screen;
 extern int displayLogo;

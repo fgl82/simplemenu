@@ -384,7 +384,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		}
 		free(exec);
 		initializeDisplay();
-		setupDisplayAndKeys();
+		setupKeys();
 		enableKeyRepeat();
 		initializeFonts();
 		initializeSettingsFonts();
@@ -860,8 +860,8 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&
 						isExtensionValid(ext,section->fileExtensions)) {
-					value = 1;
-					break;
+					value++;
+//					break;
 				}
 			}
 			for (int i=0;i<n;i++){

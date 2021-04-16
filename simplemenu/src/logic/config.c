@@ -200,7 +200,7 @@ void loadTheme(char *theme) {
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_background_color", menuSections[i].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, menuSections[i].sectionName, "selected_item_font_color", menuSections[i].bodySelectedTextTextColor);
 
-		value = ini_get(themeConfig, "GENERAL", "art_font_color");
+		value = ini_get(themeConfig, "DEFAULT", "art_font_color");
 		if (value!=NULL) {
 			setRGBColorInSection(themeConfig, menuSections[i].sectionName, "art_font_color", menuSections[i].pictureTextColor);
 		} else {
@@ -811,7 +811,7 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, sectionName, "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 		setRGBColorInSection(themeConfig, sectionName, "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
 
-		value = ini_get(themeConfig, "GENERAL", "art_font_color");
+		value = ini_get(themeConfig, "DEFAULT", "art_font_color");
 		if (value!=NULL) {
 			setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "art_font_color", menuSections[menuSectionCounter].pictureTextColor);
 		} else {
@@ -1013,7 +1013,7 @@ int loadSections(char *file) {
 	setRGBColorInSection(themeConfig, "FAVORITES", "items_font_color", menuSections[menuSectionCounter].menuItemsFontColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_background_color", menuSections[menuSectionCounter].bodySelectedTextBackgroundColor);
 	setRGBColorInSection(themeConfig, "FAVORITES", "selected_item_font_color", menuSections[menuSectionCounter].bodySelectedTextTextColor);
-	value = ini_get(themeConfig, "GENERAL", "art_font_color");
+	value = ini_get(themeConfig, "DEFAULT", "art_font_color");
 	if (value!=NULL) {
 		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "art_font_color", menuSections[menuSectionCounter].pictureTextColor);
 	} else {

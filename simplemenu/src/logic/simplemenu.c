@@ -79,23 +79,18 @@ void initialSetup() {
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	initializeDisplay();
-	printf("ccccc\n");
 	checkThemes();
-	printf("dddd\n");
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-	printf("eeee\n");
 	setCPU(OC_NO);
 	setupKeys();
 	checkIfDefault();
-	printf("ffff\n");
 	char temp[300];
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
 	logMessage("INFO","Loading theme");
 	loadTheme(temp);
-	printf("gggg\n");
 	loadSectionGroups();
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
 	loadFavorites();
@@ -142,10 +137,8 @@ void processEvents() {
 				}
 			}
 			resetScreenOffTimer();
-//			printf("%d\n",(int)event.key.keysym.sym);
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshScreen();
-			printf("bbbb\n");
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
@@ -188,10 +181,8 @@ int main() {
 	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
 	Uint32 start_time;
 	pushEvent();
-	printf("aaaa\n");
 	while(running) {
 		start_time=SDL_GetTicks();
-		printf("ccccc\n");
 		processEvents();
 //		//Time spent on one loop
 		int timeSpent = SDL_GetTicks()-start_time;

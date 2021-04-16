@@ -237,6 +237,17 @@ void showConsole() {
 	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(SCREEN_HEIGHT), 0, 0, backgroundColor);
 	if (CURRENT_SECTION.systemLogoSurface!=NULL) {
 		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
+		char *gameCount=malloc(100);
+//		snprintf(gameCount,100,"%d GAMES AVAILABLE",theSectionHasGames(&CURRENT_SECTION));
+		snprintf(gameCount,100,"%d GAMES AVAILABLE",CURRENT_SECTION.gameCount);
+
+
+		TTF_Font *font = TTF_OpenFont("/home/bittboy/.simplemenu/themes/640x480/0A (copy)/resources/general/BebasNeue.otf", calculateProportionalSizeOrDistance(14));
+		drawTextOnScreen(font,NULL,calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(149),gameCount,(int[]){255,174,0},0);
+		TTF_CloseFont(font);
+		font=NULL;
+		free(gameCount);
+
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 		drawTextOnScreen(NULL,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
@@ -876,9 +887,6 @@ void updateScreen(struct Node *node) {
 				break;
 			case SHUTTING_DOWN:
 				drawShutDownScreen();
-				break;
-			case LOADING:
-				drawLoadingText();
 				break;
 		}
 	} else if (isUSBMode) {

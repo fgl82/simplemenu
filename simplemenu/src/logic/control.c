@@ -109,10 +109,11 @@ int advanceSection(int showLogo) {
 		if (currentSectionNumber==menuSectionCounter-1) {
 			currentSectionNumber=0;
 		}
+		CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
 		if (tempCurrentSection==currentSectionNumber) {
 			returnValue = 0;
 			break;
-		} else if (theSectionHasGames(&CURRENT_SECTION)) {
+		} else if (CURRENT_SECTION.gameCount>0) {
 			returnValue = 1;
 			break;
 		}
@@ -144,10 +145,11 @@ int rewindSection(int showLogo) {
 		if (currentSectionNumber==-1) {
 			currentSectionNumber=menuSectionCounter-2;
 		}
+		CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
 		if (tempCurrentSection==currentSectionNumber) {
 			returnValue = 0;
 			break;
-		} else if (theSectionHasGames(&CURRENT_SECTION)) {
+		} else if (CURRENT_SECTION.gameCount>0) {
 			returnValue = 1;
 			break;
 		}

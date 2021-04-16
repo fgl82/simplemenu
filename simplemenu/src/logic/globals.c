@@ -12,6 +12,7 @@
 #endif
 SDL_Surface *screen;
 /* STATUS */
+int updateScreenFlag;
 char *errorMessage;
 int running;
 int itsStoppedBecauseOfAnError;
