@@ -46,6 +46,7 @@ extern int isUSBMode;
 extern int activeGroup;
 extern int beforeTryingToSwitchGroup;
 extern int chosenSetting;
+extern int chosenChoosingOption;
 extern char currentGameNameBeingDisplayed [3000];
 extern SDL_TimerID timeoutTimer;
 extern SDL_TimerID picModeHideMenuTimer;
@@ -182,10 +183,17 @@ struct Favorite {
 	int isConsoleApp;
 };
 
+struct RomPreferences {
+	int emulator;
+	int emulatorDir;
+	int frequency;
+};
+
 struct Rom {
 	char *name;
 	char *alias;
 	char *directory;
+	struct RomPreferences preferences;
 	int isConsoleApp;
 };
 

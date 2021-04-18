@@ -53,6 +53,14 @@ TTF_Font *settingsStatusFont = NULL;
 TTF_Font *customHeaderFont = NULL;
 TTF_Font *outlineCustomHeaderFont = NULL;
 
+TTF_Font *getFont() {
+	return font;
+}
+
+TTF_Font *getFooterFont() {
+	return footerFont;
+}
+
 TTF_Font *getBigFont() {
 	char *akashi = "resources/akashi.ttf";
 	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
@@ -550,10 +558,6 @@ void drawTimeOnFooter(char *text) {
 
 void drawBatteryOnFooter(char *text) {
 	drawTextOnScreen(font, NULL, calculateProportionalSizeOrDistance(4), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | HAlignLeft);
-}
-
-void drawCurrentExecutable(char *executable, int textColor[]) {
-	drawTextOnScreen(footerFont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), executable, textColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawCurrentSectionGroup(char *groupName, int textColor[]) {

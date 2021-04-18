@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <opk.h>
 
 #include <sys/ioctl.h>
 #if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
@@ -25,10 +26,10 @@
 #include "../headers/screen.h"
 #include "../headers/string_utils.h"
 #include "../headers/system_logic.h"
-#include "../headers/opk.h"
 #include "../headers/input.h"
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
+
 
 
 FILE *getCurrentSectionAliasFile() {

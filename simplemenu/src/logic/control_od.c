@@ -185,6 +185,7 @@ int performAction(struct Node *node) {
 	}
 	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
 		currentState=SELECTING_EMULATOR;
+		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		return 0;
 	}
 	if(keys[BTN_L1]) {

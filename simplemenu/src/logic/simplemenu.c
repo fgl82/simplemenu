@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+#include <unistd.h>
 #include <dirent.h>
 
 #include "../headers/config.h"
@@ -78,12 +79,12 @@ void initialSetup() {
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
+	currentCPU = OC_NO;
+	setCPU(OC_NO);
 	initializeDisplay();
 	checkThemes();
 	loadLastState();
 	HW_Init();
-	currentCPU = OC_NO;
-	setCPU(OC_NO);
 	setupKeys();
 	checkIfDefault();
 	char temp[300];

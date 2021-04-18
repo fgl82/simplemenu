@@ -804,33 +804,54 @@ void performSettingsChoosingAction() {
 
 
 void performChoosingAction() {
-	if (keys[BTN_UP]) {
-		if(CURRENT_SECTION.activeExecutable>0) {
-			CURRENT_SECTION.activeExecutable--;
-			CURRENT_SECTION.activeEmulatorDirectory--;
+	struct Rom *rom = CURRENT_SECTION.currentGameNode->data;
+	if (keys[BTN_UP] || keys[BTN_DOWN]) {
+		chosenChoosingOption=(-1*(chosenChoosingOption-1));
+	} else if (keys[BTN_LEFT]) {
+		if(chosenChoosingOption==0) {
+			if(rom->preferences.emulator>0) {
+				rom->preferences.emulator--;
+				rom->preferences.emulatorDir--;
+			} else {
+				rom->preferences.emulator=sizeof(CURRENT_SECTION.executables)/sizeof(CURRENT_SECTION.executables[0])-1;
+				rom->preferences.emulatorDir=sizeof(CURRENT_SECTION.executables)/sizeof(CURRENT_SECTION.executables[0])-1;
+				while (rom->preferences.emulator>0&&CURRENT_SECTION.executables[rom->preferences.emulator]==NULL) {
+					rom->preferences.emulator--;
+					rom->preferences.emulatorDir--;
+				}
+				rom->preferences.frequency=currentCPU;
+			}
 		} else {
-			CURRENT_SECTION.activeExecutable=sizeof(CURRENT_SECTION.executables)/sizeof(CURRENT_SECTION.executables[0])-1;
-			while (CURRENT_SECTION.activeExecutable>0&&CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]==NULL) {
-				CURRENT_SECTION.activeExecutable--;
-				CURRENT_SECTION.activeEmulatorDirectory--;
+			if (rom->preferences.frequency==OC_NO) {
+				rom->preferences.frequency=OC_UC;
+			} else if (rom->preferences.frequency==OC_UC) {
+				rom->preferences.frequency=OC_OC;
+			} else {
+				rom->preferences.frequency=OC_NO;
 			}
 		}
-		return;
-	}
-	if (keys[BTN_DOWN]) {
-		if(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable+1]!=NULL) {
-			CURRENT_SECTION.activeExecutable++;
-			CURRENT_SECTION.activeEmulatorDirectory++;
+	} else 	if (keys[BTN_RIGHT]) {
+		if(chosenChoosingOption==0) {
+			if(CURRENT_SECTION.executables[rom->preferences.emulator+1]!=NULL) {
+				rom->preferences.emulator++;
+				rom->preferences.emulatorDir++;
+			} else {
+				rom->preferences.emulator=0;
+				rom->preferences.emulatorDir=0;
+			}
 		} else {
-			CURRENT_SECTION.activeExecutable=0;
-			CURRENT_SECTION.activeEmulatorDirectory=0;
+			if (rom->preferences.frequency==OC_NO) {
+				rom->preferences.frequency=OC_OC;
+			} else if (rom->preferences.frequency==OC_OC) {
+				rom->preferences.frequency=OC_UC;
+			} else {
+				rom->preferences.frequency=OC_NO;
+			}
 		}
-		return;
-	}
-	if (keys[BTN_A]) {
+	} else	if (keys[BTN_A]) {
 		if (currentState!=BROWSING_GAME_LIST) {
 			currentState=BROWSING_GAME_LIST;
-			return;
+			saveRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		}
 	}
 }

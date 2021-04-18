@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <opk.h>
 
 #include "../headers/constants.h"
 #include "../headers/definitions.h"
@@ -12,7 +13,6 @@
 #include "../headers/input.h"
 #include "../headers/logic.h"
 #include "../headers/string_utils.h"
-#include "../headers/opk.h"
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
@@ -197,7 +197,7 @@ void showCurrentGroup() {
 }
 
 void showCurrentEmulator() {
-	int height = 30;
+	int height = 100;
 	int filling[3];
 	int borderColor[3];
 	borderColor[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45;
@@ -218,14 +218,22 @@ void showCurrentEmulator() {
 		textColor[1]=255;
 		textColor[2]=255;
 	}
-	char *tempString = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable])+1);
-	strcpy(tempString,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
-	strcat(tempString,"\0");
-	int width = strlen(tempString)*11;
-	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+10), calculateProportionalSizeOrDistance(height+10), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
-	drawRectangleToScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)                                         , filling);
-	drawCurrentExecutable(tempString, textColor);
-	free(tempString);
+
+	char *emuName = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator])+1);
+	strcpy(emuName,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
+	strcat(emuName,"\0");
+
+	char *frequency = malloc(10);
+	snprintf(frequency, 10, "%d", CURRENT_SECTION.currentGameNode->data->preferences.frequency);
+
+	int width;
+	TTF_SizeText(getFont(), (const char *) emuName, &width, NULL);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+20), calculateProportionalSizeOrDistance(height+20), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
+	drawRectangleToScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
+	drawTextOnScreen(getFooterFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), emuName, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(getFooterFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(16), frequency, textColor, VAlignMiddle | HAlignCenter);
+	free(emuName);
+	free(frequency);
 	logMessage("INFO","Current emulator shown");
 }
 

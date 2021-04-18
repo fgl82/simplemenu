@@ -460,6 +460,50 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	logMessage("INFO","Validated configuration existence");
 }
 
+void saveRomPreferences(struct Rom *rom) {
+	FILE * fp;
+	char pathToPreferencesFilePlusFileName[300];
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s",home, getNameWithoutPath(rom->name));
+	fp = fopen(pathToPreferencesFilePlusFileName, "w");
+	fprintf(fp,"%d;", rom->preferences.emulatorDir);
+	fprintf(fp,"%d;", rom->preferences.emulator);
+	fprintf(fp,"%d", rom->preferences.frequency);
+	fclose(fp);
+}
+
+void loadRomPreferences(struct Rom *rom) {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	char pathToPreferencesFilePlusFileName[300];
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s",home, getNameWithoutPath(rom->name));
+
+
+	rom->preferences.emulatorDir=0;
+	rom->preferences.emulator=0;
+	rom->preferences.frequency=currentCPU;
+
+	fp = fopen(pathToPreferencesFilePlusFileName, "r");
+
+	if (fp==NULL) {
+		return;
+	}
+	char *configurations[4];
+	char *ptr;
+	getline(&line, &len, fp);
+	ptr = strtok(line, ";");
+	int i=0;
+	while(ptr != NULL) {
+		configurations[i]=ptr;
+		ptr = strtok(NULL, ";");
+		i++;
+	}
+	rom->preferences.emulatorDir=atoifgl(configurations[0]);
+	rom->preferences.emulator=atoifgl(configurations[1]);
+	rom->preferences.frequency=atoifgl(configurations[2]);
+	printf("%d - %d - %d\n", rom->preferences.emulatorDir, rom->preferences.emulator, rom->preferences.frequency);
+}
+
 void saveFavorites() {
 	if (favoritesChanged) {
 		FILE * fp;

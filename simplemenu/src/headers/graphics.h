@@ -2,8 +2,8 @@
 #define GRAPHICS_DEFINED
 
 #include <SDL/SDL_ttf.h>
-#include "../headers/globals.h"
-#include "../headers/utils.h"
+#include <SDL/SDL_video.h>
+
 
 static const int
 HAlignLeft = 1,
@@ -72,4 +72,6 @@ void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]);
 void drawLoadingText();
 void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]);
 void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[]);
+TTF_Font *getFont();
+TTF_Font *getFooterFont();
 #endif
