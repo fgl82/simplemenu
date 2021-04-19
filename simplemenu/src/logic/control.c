@@ -847,8 +847,17 @@ void performChoosingAction() {
 		}
 	} else	if (keys[BTN_A]) {
 		if (currentState!=BROWSING_GAME_LIST) {
+			int emu = CURRENT_SECTION.currentGameNode->data->preferences.emulator;
+			int emuDir = CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir;
+			int hz = CURRENT_SECTION.currentGameNode->data->preferences.frequency;
+			loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
+			if (CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir!=emuDir  || CURRENT_SECTION.currentGameNode->data->preferences.emulator!=emu || CURRENT_SECTION.currentGameNode->data->preferences.frequency!=hz) {
+				CURRENT_SECTION.currentGameNode->data->preferences.emulator=emu;
+				CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir=emu;
+				CURRENT_SECTION.currentGameNode->data->preferences.frequency=hz;
+				saveRomPreferences(CURRENT_SECTION.currentGameNode->data);
+			}
 			currentState=BROWSING_GAME_LIST;
-			saveRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		}
 	}
 }

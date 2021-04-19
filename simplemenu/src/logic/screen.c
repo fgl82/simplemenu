@@ -443,31 +443,43 @@ void displayGamePictureInMenu(struct Rom *rom) {
 }
 
 void drawHeader() {
-	char finalString [100];
-	if (currentCPU==OC_UC) {
-		strcpy(finalString,"- ");
-		if(currentSectionNumber==favoritesSectionNumber) {
-			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
-		} else{
-			strcat(finalString,menuSections[currentSectionNumber].sectionName);
-		}
-		strcat(finalString," -");
-	} else if (currentCPU==OC_NO) {
-		if(currentSectionNumber==favoritesSectionNumber) {
-			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
-		} else{
-			strcpy(finalString,menuSections[currentSectionNumber].sectionName);
-		}
-	} else {
-		strcpy(finalString,"+ ");
-		if(currentSectionNumber==favoritesSectionNumber) {
-			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
-		} else{
-			strcat(finalString,menuSections[currentSectionNumber].sectionName);
-		}
-		strcat(finalString," +");
-	}
-	drawTextOnHeader(finalString);
+	char finalString [200];
+//	if (currentCPU==OC_UC) {
+//		strcpy(finalString,"- ");
+//		if(currentSectionNumber==favoritesSectionNumber) {
+//			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
+//		} else{
+//			if (menuSections[currentSectionNumber].fantasyName!=NULL) {
+//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
+//			} else {
+//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
+//			}
+//		}
+//		strcat(finalString," -");
+//	} else if (currentCPU==OC_NO) {
+//		if(currentSectionNumber==favoritesSectionNumber) {
+//			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
+//		} else{
+//			if (strlen(menuSections[currentSectionNumber].fantasyName)>3) {
+//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
+//			} else {
+//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
+//			}
+//		}
+//	} else {
+//		strcpy(finalString,"+ ");
+//		if(currentSectionNumber==favoritesSectionNumber) {
+//			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
+//		} else{
+//			if (menuSections[currentSectionNumber].fantasyName!=NULL) {
+//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
+//			} else {
+//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
+//			}
+//		}
+//		strcat(finalString," +");
+//	}
+	drawTextOnHeader();
 }
 
 void drawShutDownScreen() {

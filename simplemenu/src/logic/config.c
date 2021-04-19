@@ -362,6 +362,11 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 		footerOnTop = atoifgl(value);
 
+		value = ini_get(themeConfig, menuSections[i].sectionName, "name");
+		if (value!=NULL) {
+			strcpy(menuSections[i].fantasyName, value);
+		}
+
     	currentMode=3;
     	MENU_ITEMS_PER_PAGE=itemsPerPage;
     	FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
@@ -912,6 +917,13 @@ int loadSections(char *file) {
 		if(value!=NULL&&strcmp("yes",value)==0) {
 			menuSections[menuSectionCounter].onlyFileNamesNoExtension=1;
 		}
+
+		value = ini_get(themeConfig, menuSections[menuSectionCounter].sectionName, "name");
+
+		if (value!=NULL) {
+			strcpy(menuSections[menuSectionCounter].fantasyName, value);
+		}
+
 		menuSections[menuSectionCounter].currentPage=0;
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
