@@ -472,16 +472,20 @@ void saveRomPreferences(struct Rom *rom) {
 }
 
 void loadRomPreferences(struct Rom *rom) {
+
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
-	char pathToPreferencesFilePlusFileName[300];
+	char pathToPreferencesFilePlusFileName[800];
+	char pathToPreferencesFiles[800];
 	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s",home, getNameWithoutPath(rom->name));
+	snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%s/.simplemenu/rom_preferences",home);
 
+	mkdir(pathToPreferencesFiles,0700);
 
 	rom->preferences.emulatorDir=0;
 	rom->preferences.emulator=0;
-	rom->preferences.frequency=currentCPU;
+	rom->preferences.frequency=OC_NO;
 
 	fp = fopen(pathToPreferencesFilePlusFileName, "r");
 
@@ -501,7 +505,7 @@ void loadRomPreferences(struct Rom *rom) {
 	rom->preferences.emulatorDir=atoifgl(configurations[0]);
 	rom->preferences.emulator=atoifgl(configurations[1]);
 	rom->preferences.frequency=atoifgl(configurations[2]);
-	printf("%d - %d - %d\n", rom->preferences.emulatorDir, rom->preferences.emulator, rom->preferences.frequency);
+//	printf("%d - %d - %d\n", rom->preferences.emulatorDir, rom->preferences.emulator, rom->preferences.frequency);
 }
 
 void saveFavorites() {

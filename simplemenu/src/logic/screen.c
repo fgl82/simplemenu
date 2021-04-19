@@ -196,28 +196,17 @@ void showCurrentGroup() {
 	logMessage("INFO", "Group displayed");
 }
 
-void showCurrentEmulator() {
-	int height = 100;
+void showRomPreferences() {
 	int filling[3];
-	int borderColor[3];
-	borderColor[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[0]+45;
-	borderColor[1]=CURRENT_SECTION.fullScreenMenuBackgroundColor[1]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[1]+45;
-	borderColor[2]=CURRENT_SECTION.fullScreenMenuBackgroundColor[2]+45>255?255:CURRENT_SECTION.fullScreenMenuBackgroundColor[2]+45;
-	filling[0]=CURRENT_SECTION.fullScreenMenuBackgroundColor[0];
-	filling[1]=CURRENT_SECTION.fullScreenMenuBackgroundColor[1];
-	filling[2]=CURRENT_SECTION.fullScreenMenuBackgroundColor[2];
-	int textColor[3]= {CURRENT_SECTION.fullscreenMenuItemsColor[0], CURRENT_SECTION.fullscreenMenuItemsColor[1], CURRENT_SECTION.fullscreenMenuItemsColor[2]};
-	if (fullscreenMode) {
-		filling[0] = 21;
-		filling[1] = 18;
-		filling[2] = 26;
-		borderColor[0]=255;
-		borderColor[1]=255;
-		borderColor[2]=255;
-		textColor[0]=255;
-		textColor[1]=255;
-		textColor[2]=255;
-	}
+	int textColor[3];
+	filling[0] = 80;
+	filling[1] = 80;
+	filling[2] = 80;
+	textColor[0]=255;
+	textColor[1]=255;
+	textColor[2]=255;
+
+	int textWidth;
 
 	char *emuName = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator])+1);
 	strcpy(emuName,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
@@ -226,15 +215,55 @@ void showCurrentEmulator() {
 	char *frequency = malloc(10);
 	snprintf(frequency, 10, "%d", CURRENT_SECTION.currentGameNode->data->preferences.frequency);
 
-	int width;
-	TTF_SizeText(getFont(), (const char *) emuName, &width, NULL);
-	drawRectangleToScreen(calculateProportionalSizeOrDistance(width+20), calculateProportionalSizeOrDistance(height+20), SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2)-calculateProportionalSizeOrDistance(5)  , borderColor);
-	drawRectangleToScreen(calculateProportionalSizeOrDistance(width)   , calculateProportionalSizeOrDistance(height)   , SCREEN_WIDTH/2-calculateProportionalSizeOrDistance(width/2)                                       ,SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(height/2), filling);
-	drawTextOnScreen(getFooterFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), emuName, textColor, VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(getFooterFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(16), frequency, textColor, VAlignMiddle | HAlignCenter);
+	int width=calculateProportionalSizeOrDistance(260);
+	int height = calculateProportionalSizeOrDistance(48);
+
+	//Main rectangle
+	drawRectangleToScreen(width+calculateProportionalSizeOrDistance(4), height+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH/2-(width/2+calculateProportionalSizeOrDistance(2)), SCREEN_HEIGHT/2-(height/2+calculateProportionalSizeOrDistance(2)), (int[]) {200,200,200});
+
+	//Overlay
+	drawRectangleToScreen(width, height, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, filling);
+
+	//Title Bar
+	drawRectangleToScreen(width, height/3, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, (int[]){0,0,100});
+
+	//Selection
+	if (chosenChoosingOption==0) {
+		drawRectangleToScreen(width, height/3, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/3/2, (int[]){150,150,150});
+	} else {
+		drawRectangleToScreen(width, height/3, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/3/2, (int[]){150,150,150});
+	}
+
+	//Name
+	char * name = getNameWithoutPath(CURRENT_SECTION.currentGameNode->data->name);
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance(17), name, textColor, VAlignMiddle | HAlignCenter);
+	free(name);
+
+	TTF_SizeText(getFont(), (const char *) " Overclock: " , &textWidth, NULL);
+
+	//Emulator option text
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)-height/3/2+calculateProportionalSizeOrDistance(7), "Emulator: ", textColor, VAlignMiddle | HAlignLeft);
+	//Emulator option value
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-height/3/2+calculateProportionalSizeOrDistance(7), emuName, textColor, VAlignMiddle | HAlignLeft);
+
+
+	//Frequency option text
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
+	//Frequency option value
+#if defined TARGET_OD_BETA || defined TARGET_RFW
+	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC) {
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "Yes", textColor, VAlignMiddle | HAlignLeft);
+	} else {
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "No", textColor, VAlignMiddle | HAlignLeft);
+	}
+#else
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "unavailable", textColor, VAlignMiddle | HAlignLeft);
+#endif
+
 	free(emuName);
 	free(frequency);
-	logMessage("INFO","Current emulator shown");
+
+	logMessage("INFO","Preferences shown");
 }
 
 void showConsole() {
@@ -888,7 +917,7 @@ void updateScreen(struct Node *node) {
 				showCurrentGroup();
 				break;
 			case SELECTING_EMULATOR:
-				showCurrentEmulator();
+				showRomPreferences();
 				break;
 			case SELECTING_SECTION:
 				showConsole();

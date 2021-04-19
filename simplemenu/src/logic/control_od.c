@@ -183,8 +183,10 @@ int performAction(struct Node *node) {
 			}
 		}
 	}
-	if (CURRENT_SECTION.executables[1]!=NULL&&keys[BTN_SELECT]&&!favoritesSectionSelected) {
+	if (keys[BTN_SELECT]&&!favoritesSectionSelected) {
 		currentState=SELECTING_EMULATOR;
+		chosenChoosingOption=0;
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]) {0,0,0},180);
 		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		return 0;
 	}

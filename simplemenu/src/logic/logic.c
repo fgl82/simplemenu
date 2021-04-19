@@ -295,7 +295,8 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #endif
 		logMessage("INFO", "Launching Game");
 #ifndef TARGET_PC
-		setCPU(currentCPU);
+//		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
+		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
 #endif
 #ifdef TARGET_RFW
 		//	ipu modes (/proc/jz/ipu):

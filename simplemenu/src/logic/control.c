@@ -191,13 +191,14 @@ void launchGame(struct Rom *rom) {
 		executeCommandPC(favorite.executable,favorite.name);
 		#endif
 	} else if (rom->name!=NULL) {
-		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
-		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+		loadRomPreferences(rom);
+		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
+		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
 		char *ptr = strtok(tempExec, " ");
-		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
+		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
 		strcat(tempExecDirPlusFileName,tempExecFile);
 		file = fopen(ptr, "r");
-		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,tempExecDirPlusFileName);
 			strcat(error,"-NOT FOUND");
@@ -206,15 +207,15 @@ void launchGame(struct Rom *rom) {
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			#ifndef TARGET_PC
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name), rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],getGameName(rom->name), rom->isConsoleApp);
 			#else
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],getGameName(rom->name));
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],getGameName(rom->name));
 			#endif
 		} else {
 			#ifdef TARGET_PC
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name);
+			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],rom->name);
 			#else
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],rom->name, rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],rom->name, rom->isConsoleApp);
 			#endif
 		}
 	}
@@ -229,10 +230,11 @@ void launchEmulator(struct Rom *rom) {
 		executeCommandPC(favorite.executable,"*");
 		#endif
 	} else if (rom->name!=NULL) {
+		loadRomPreferences(rom);
 		#ifndef TARGET_PC
-		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory], CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*", 0);
+		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*", 0);
 		#else
-		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable],"*");
+		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*");
 		#endif
 	}
 }
@@ -468,8 +470,8 @@ void markAsFavorite(struct Rom *rom) {
 				favorites[favoritesSize].alias[0]=' ';
 			}
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
-			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.activeEmulatorDirectory]);
-			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[CURRENT_SECTION.activeExecutable]);
+			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
+			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
 			strcpy(favorites[favoritesSize].filesDirectory,rom->directory);
 			favorites[favoritesSize].isConsoleApp = rom->isConsoleApp;
 			favoritesSize++;
@@ -819,12 +821,9 @@ void performChoosingAction() {
 					rom->preferences.emulator--;
 					rom->preferences.emulatorDir--;
 				}
-				rom->preferences.frequency=currentCPU;
 			}
 		} else {
 			if (rom->preferences.frequency==OC_NO) {
-				rom->preferences.frequency=OC_UC;
-			} else if (rom->preferences.frequency==OC_UC) {
 				rom->preferences.frequency=OC_OC;
 			} else {
 				rom->preferences.frequency=OC_NO;
@@ -842,8 +841,6 @@ void performChoosingAction() {
 		} else {
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OC_OC;
-			} else if (rom->preferences.frequency==OC_OC) {
-				rom->preferences.frequency=OC_UC;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}

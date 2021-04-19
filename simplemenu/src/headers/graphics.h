@@ -74,4 +74,5 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[]);
 TTF_Font *getFont();
 TTF_Font *getFooterFont();
+TTF_Font *getSettingsFont();
 #endif
