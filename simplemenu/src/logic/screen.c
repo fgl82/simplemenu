@@ -250,7 +250,7 @@ void showRomPreferences() {
 	//Frequency option text
 	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
 	//Frequency option value
-#if defined TARGET_OD_BETA || defined TARGET_RFW
+#if defined TARGET_OD || defined TARGET_RFW || defined TARGET_BITTBOY
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC) {
 		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/3/2+calculateProportionalSizeOrDistance(7), "Yes", textColor, VAlignMiddle | HAlignLeft);
 	} else {

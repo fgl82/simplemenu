@@ -834,13 +834,16 @@ void performChoosingAction() {
 					rom->preferences.emulatorDir--;
 				}
 			}
-		} else {
+		}
+#if defined TARGET_OD || defined TARGET_RFW || defined TARGET_BITTBOY
+		else {
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OC_OC;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}
 		}
+#endif
 	} else 	if (keys[BTN_RIGHT]) {
 		if(chosenChoosingOption==0) {
 			if(CURRENT_SECTION.executables[rom->preferences.emulator+1]!=NULL) {
@@ -850,13 +853,16 @@ void performChoosingAction() {
 				rom->preferences.emulator=0;
 				rom->preferences.emulatorDir=0;
 			}
-		} else {
+		}
+#if defined TARGET_OD || defined TARGET_RFW || defined TARGET_BITTBOY
+		else {
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OC_OC;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}
 		}
+#endif
 	} else	if (keys[BTN_A]) {
 		if (currentState!=BROWSING_GAME_LIST) {
 			int emu = CURRENT_SECTION.currentGameNode->data->preferences.emulator;
