@@ -71,14 +71,6 @@ int performAction(struct Node *node) {
 	if(keys[BTN_B]) {
 		hotKeyPressed=1;
 		if (currentState==BROWSING_GAME_LIST) {
-			#ifdef TARGET_OD_BETA
-			if (keys[BTN_START]&&currentState!=SELECTING_SECTION) {
-				hotKeyPressed=0;
-				cycleFrequencies();
-				aKeyComboWasPressed=1;
-				return 0;
-			}
-			#endif
 			if (rom!=NULL&&keys[BTN_A]) {
 				launchEmulator(rom);
 				aKeyComboWasPressed=1;
