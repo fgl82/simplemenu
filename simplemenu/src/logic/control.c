@@ -351,18 +351,22 @@ void showOrHideFavorites() {
 			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
-			if (fullscreenMode) {
+
 				currentState=SELECTING_SECTION;
-				resetPicModeHideLogoTimer();
+				if (autoHideLogos) {
+					resetPicModeHideLogoTimer();
+				}
 				logMessage("INFO","Displaying system logo");
-			}
+
 			determineStartingScreen(menuSectionCounter);
 		} else {
-			if (fullscreenMode) {
+
 				currentState=SELECTING_SECTION;
-				resetPicModeHideLogoTimer();
+				if (autoHideLogos) {
+					resetPicModeHideLogoTimer();
+				}
 				logMessage("INFO","Displaying system logo");
-			}
+
 			loadGameList(0);
 		}
 		hideFullScreenModeMenu();
@@ -387,11 +391,13 @@ void showOrHideFavorites() {
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
-	if (fullscreenMode) {
+//	if (fullscreenMode) {
+	if (autoHideLogos) {
 		resetPicModeHideLogoTimer();
+	}
 		currentState = SELECTING_SECTION;
 		logMessage("INFO","Displaying system logo");
-	}
+//	}
 	loadFavoritesSectionGameList();
 }
 

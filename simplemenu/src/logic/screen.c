@@ -917,7 +917,7 @@ void updateScreen(struct Node *node) {
 						showLetter(rom);
 					}
 				}
-				if (CURRENT_SECTION.gameCount==0) {
+				if (currentSectionNumber != favoritesSectionNumber && CURRENT_SECTION.gameCount==0) {
 					generateError("NO GAMES FOUND-FOR THIS SECTION GROUP", 0);
 					showErrorMessage(errorMessage);
 				}
