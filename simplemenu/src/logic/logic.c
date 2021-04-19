@@ -296,7 +296,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		logMessage("INFO", "Launching Game");
 #ifndef TARGET_PC
 //		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
-		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
+		if (currentSectionNumber == favoritesSectionNumber) {
+			setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
+		} else {
+			setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
+		}
 #endif
 #ifdef TARGET_RFW
 		//	ipu modes (/proc/jz/ipu):

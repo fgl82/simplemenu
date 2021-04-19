@@ -538,7 +538,8 @@ void saveFavorites() {
 			fprintf(fp,"%s;",favorite.emulatorFolder);
 			fprintf(fp,"%s;",favorite.executable);
 			fprintf(fp,"%d;",favorite.isConsoleApp);
-			fprintf(fp,"%s",favorite.filesDirectory);
+			fprintf(fp,"%s;",favorite.filesDirectory);
+			fprintf(fp,"%d",favorite.frequency);
 			linesWritten++;
 		}
 		fclose(fp);
@@ -558,7 +559,7 @@ void loadFavorites() {
 		generateError("FAVORITES FILE NOT FOUND",1);
 		return;
 	}
-	char *configurations[7];
+	char *configurations[8];
 	char *ptr;
 	favoritesSize=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -576,6 +577,7 @@ void loadFavorites() {
 		strcpy(favorites[favoritesSize].executable,configurations[4]);
 		favorites[favoritesSize].isConsoleApp = atoi(configurations[5]);
 		strcpy(favorites[favoritesSize].filesDirectory,configurations[6]);
+		favorites[favoritesSize].frequency = atoi(configurations[7]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';

@@ -469,9 +469,18 @@ void markAsFavorite(struct Rom *rom) {
 			} else {
 				favorites[favoritesSize].alias[0]=' ';
 			}
-			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
-			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
-			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
+			if (strlen(CURRENT_SECTION.fantasyName)>0) {
+				strcpy(favorites[favoritesSize].section,CURRENT_SECTION.fantasyName);
+			} else {
+				strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
+			}
+			loadRomPreferences(rom);
+			printf("%d\n",rom->preferences.emulatorDir);
+			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir]);
+			printf("%d\n",rom->preferences.emulator);
+			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[rom->preferences.emulator]);
+			printf("%d\n",rom->preferences.frequency);
+			favorites[favoritesSize].frequency = rom->preferences.frequency;
 			strcpy(favorites[favoritesSize].filesDirectory,rom->directory);
 			favorites[favoritesSize].isConsoleApp = rom->isConsoleApp;
 			favoritesSize++;

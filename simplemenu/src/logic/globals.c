@@ -166,6 +166,7 @@ struct Favorite {
 	char executable[200];
 	char filesDirectory[400];
 	int isConsoleApp;
+	int frequency;
 };
 
 struct RomPreferences {
