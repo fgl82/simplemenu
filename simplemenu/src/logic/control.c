@@ -854,7 +854,7 @@ void performChoosingAction() {
 				rom->preferences.emulatorDir=0;
 			}
 		}
-#if defined TARGET_OD || defined TARGET_RFW || defined TARGET_BITTBOY
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
 		else {
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OC_OC;
