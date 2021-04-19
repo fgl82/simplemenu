@@ -367,15 +367,15 @@ void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
-	} else {
+//	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_UC) {
+//		strcpy(temp,"-");
+//		strcat(temp,buf);
+//	} else 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC) {
+//		strcpy(temp,"+");
+//		strcat(temp,buf);
+//	} else {
 		strcpy(temp,buf);
-	}
+//	}
 	int hAlign = 0;
 	if (gameListAlignment==0) {
 		hAlign = HAlignLeft;
@@ -408,15 +408,15 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
-	} else {
+//	if (currentCPU == OC_UC) {
+//		strcpy(temp,"-");
+//		strcat(temp,buf);
+//	} else 	if (currentCPU == OC_OC) {
+//		strcpy(temp,"+");
+//		strcat(temp,buf);
+//	} else {
 		strcpy(temp,buf);
-	}
+//	}
 	int color[3];
 //	if (colorfulFullscreenMenu) {
 //		color[0] = CURRENT_SECTION.fullscreenShadedMenuItemsColor[0];
@@ -453,10 +453,10 @@ void drawPictureTextOnScreen(char *buf) {
 	int h = 0;
 	TTF_SizeText(font, buf, NULL, &h);
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
+	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_UC) {
 		strcpy(temp,"-");
 		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
+	} else 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -710,7 +710,11 @@ void displayImageOnScreenCustom(char *fileName) {
 		if(artTextDistanceFromPicture>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
-			drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+			if (currentGameNameBeingDisplayed[0]=='+') {
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+			} else {
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+			}
 		}
 	} else {
 		int heartX = calculateProportionalSizeOrDistance(artX+(artWidth/2));

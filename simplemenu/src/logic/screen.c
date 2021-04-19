@@ -432,11 +432,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,"/");
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
-	if (rom!=NULL) {
-		displayImageOnScreenCustom(pictureWithFullPath);
-	} else {
-		displayImageOnScreenCustom(pictureWithFullPath);
-	}
+	displayImageOnScreenCustom(pictureWithFullPath);
 	free(pictureWithFullPath);
 	free(tempGameName);
 	logMessage("INFO","Displayed game picture");
@@ -541,27 +537,39 @@ void drawGameList() {
 			}
 		}
 		buf=strdup(nameWithoutExtension);
+
+		char *temp = malloc(strlen(buf)+2);
+		if (rom->preferences.frequency == OC_UC) {
+			strcpy(temp,"-");
+			strcat(temp,buf);
+		} else 	if (rom->preferences.frequency == OC_OC) {
+			strcpy(temp,"+");
+			strcat(temp,buf);
+		} else {
+			strcpy(temp,buf);
+		}
+
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
 			if(strlen(buf)>0) {
 				if(fullscreenMode) {
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-						drawShadedGameNameOnScreenPicMode(buf, nextLine);
+						drawShadedGameNameOnScreenPicMode(temp, nextLine);
 					}
 				} else {
 					MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidth);
-					strcpy(currentGameNameBeingDisplayed,buf);
-					drawShadedGameNameOnScreenCustom(buf, nextLine);
+					strcpy(currentGameNameBeingDisplayed,temp);
+					drawShadedGameNameOnScreenCustom(temp, nextLine);
 				}
 			}
 		} else {
 			if(strlen(buf)>0) {
 				if(fullscreenMode) {
 					if(!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-						drawNonShadedGameNameOnScreenPicMode(buf, nextLine);
+						drawNonShadedGameNameOnScreenPicMode(temp, nextLine);
 					}
 				} else {
 					MAGIC_NUMBER = calculateProportionalSizeOrDistance(gameListWidth);
-					drawNonShadedGameNameOnScreenCustom(buf, nextLine);
+					drawNonShadedGameNameOnScreenCustom(temp, nextLine);
 				}
 			}
 		}
@@ -572,6 +580,7 @@ void drawGameList() {
 		}
 		free(nameWithoutExtension);
 		free(buf);
+		free(temp);
 		currentNode = currentNode->next;
 	}
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);

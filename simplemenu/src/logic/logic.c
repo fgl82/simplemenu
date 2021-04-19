@@ -643,6 +643,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			strcpy(rom->alias, favorites[i].alias);
 			strcpy(rom->name, favorites[i].name);
 			rom->isConsoleApp = favorites[i].isConsoleApp;
+			loadRomPreferences(rom);
 			InsertAtTailInSection(&FAVORITES_SECTION, rom);
 			gameInPage++;
 			FAVORITES_SECTION.gameCount++;
@@ -988,6 +989,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 							CURRENT_SECTION.totalPages++;
 							game = 0;
 						}
+						loadRomPreferences(rom);
 						InsertAtTail(rom);
 						game++;
 						CURRENT_SECTION.gameCount++;
@@ -1072,6 +1074,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 									strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 									strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
 #endif
+									loadRomPreferences(rom);
 									InsertAtTail(rom);
 									game++;
 									CURRENT_SECTION.gameCount++;
@@ -1125,6 +1128,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 									game = 0;
 								}
 							}
+							loadRomPreferences(rom);
 							InsertAtTail(rom);
 							loadedFiles++;
 							game++;
