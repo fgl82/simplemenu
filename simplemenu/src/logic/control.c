@@ -819,10 +819,28 @@ void performSettingsChoosingAction() {
 
 void performChoosingAction() {
 	struct Rom *rom = CURRENT_SECTION.currentGameNode->data;
-	if (keys[BTN_UP] || keys[BTN_DOWN]) {
-		chosenChoosingOption=(-1*(chosenChoosingOption-1));
+	if (keys[BTN_UP]) {
+		chosenChoosingOption--;
+		if (chosenChoosingOption<0) {
+			chosenChoosingOption=2;
+		}
+	} else if (keys[BTN_DOWN]) {
+		chosenChoosingOption++;
+		if (chosenChoosingOption>2) {
+			chosenChoosingOption=0;
+		}
 	} else if (keys[BTN_LEFT]) {
 		if(chosenChoosingOption==0) {
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
+			if (rom->preferences.frequency==OC_NO) {
+				rom->preferences.frequency=OC_OC;
+			} else {
+				rom->preferences.frequency=OC_NO;
+			}
+#endif
+		} else if (chosenChoosingOption == 1){
+
+		} else {
 			if(rom->preferences.emulator>0) {
 				rom->preferences.emulator--;
 				rom->preferences.emulatorDir--;
@@ -835,17 +853,19 @@ void performChoosingAction() {
 				}
 			}
 		}
+	} else 	if (keys[BTN_RIGHT]) {
+		if(chosenChoosingOption==0) {
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
-		else {
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OC_OC;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}
-		}
 #endif
-	} else 	if (keys[BTN_RIGHT]) {
-		if(chosenChoosingOption==0) {
+		}
+		else if (chosenChoosingOption == 1){
+
+		} else {
 			if(CURRENT_SECTION.executables[rom->preferences.emulator+1]!=NULL) {
 				rom->preferences.emulator++;
 				rom->preferences.emulatorDir++;
@@ -854,15 +874,6 @@ void performChoosingAction() {
 				rom->preferences.emulatorDir=0;
 			}
 		}
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
-		else {
-			if (rom->preferences.frequency==OC_NO) {
-				rom->preferences.frequency=OC_OC;
-			} else {
-				rom->preferences.frequency=OC_NO;
-			}
-		}
-#endif
 	} else	if (keys[BTN_A]) {
 		if (currentState!=BROWSING_GAME_LIST) {
 			int emu = CURRENT_SECTION.currentGameNode->data->preferences.emulator;

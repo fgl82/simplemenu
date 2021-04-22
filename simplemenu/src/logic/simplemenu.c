@@ -80,7 +80,9 @@ void initialSetup() {
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	currentCPU = OC_NO;
+#ifndef TARGET_OD_BETA
 	setCPU(OC_NO);
+#endif
 	initializeDisplay();
 	checkThemes();
 	loadLastState();
