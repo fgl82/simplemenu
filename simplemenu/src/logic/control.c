@@ -170,8 +170,12 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	FILE *file=NULL;
 	char *error=malloc(3000);
 	char tempExec[3000];
-	emuDir[strlen(emuDir)-1]='\0';
-	rom->name[strlen(rom->name)-1]='\0';
+	if (emuDir[strlen(emuDir)-1]=='\n') {
+		emuDir[strlen(emuDir)-1]='\0';
+	}
+	if (rom->name[strlen(rom->name)-1]=='\n') {
+		rom->name[strlen(rom->name)-1]='\0';
+	}
 	printf("%s%s %s %d\n", emuDir, emuExec, rom->name, rom->isConsoleApp);
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
