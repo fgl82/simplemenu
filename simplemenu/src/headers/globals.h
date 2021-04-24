@@ -200,6 +200,12 @@ struct Rom {
 	int isConsoleApp;
 };
 
+struct AutostartRom {
+	struct Rom *rom;
+	char *emulator;
+	char *emulatorDir;
+};
+
 struct Node  {
 	struct Rom  *data;
 	struct Node *next;

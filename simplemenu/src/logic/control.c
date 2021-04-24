@@ -166,18 +166,18 @@ int rewindSection(int showLogo) {
 	return returnValue;
 }
 
-void launchAutoStartGame(struct Rom *rom, char *emuExec, char *emuDir) {
+void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	FILE *file=NULL;
 	char *error=malloc(3000);
 	char tempExec[3000];
-
+	emuDir[strlen(emuDir)-1]='\0';
+	rom->name[strlen(rom->name)-1]='\0';
+	printf("%s%s %s %d\n", emuDir, emuExec, rom->name, rom->isConsoleApp);
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
 	printf(" \n");
 	loadRomPreferences(rom);
-	if (isLaunchAtBoot(rom->name)) {
-		setRunningFlag();
-	}
+	setRunningFlag();
 	strcpy(tempExec,emuDir);
 	strcpy(tempExecFile,emuExec);
 	char *ptr = strtok(tempExec, " ");
@@ -193,7 +193,7 @@ void launchAutoStartGame(struct Rom *rom, char *emuExec, char *emuDir) {
 	}
 	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 		#ifndef TARGET_PC
-		executeCommand(emuDir, emuExec,getGameName(rom->name), rom->isConsoleApp);
+		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp);
 		#else
 		executeCommandPC(emuDir, getGameName(rom->name));
 		#endif
@@ -201,7 +201,7 @@ void launchAutoStartGame(struct Rom *rom, char *emuExec, char *emuDir) {
 		#ifdef TARGET_PC
 		executeCommandPC(emuExec, rom->name);
 		#else
-		executeCommand(emuDir, emuExec,rom->name, rom->isConsoleApp);
+		executeCommand(emuDir, emuExec, rom->name, rom->isConsoleApp);
 		#endif
 	}
 }
@@ -895,9 +895,9 @@ void performChoosingAction() {
 		} else if (chosenChoosingOption == 1){
 			launchAtBoot = 1+-1*launchAtBoot;
 			if (launchAtBoot==1) {
-				setLaunchAtBoot(rom->name);
+				setLaunchAtBoot(rom);
 			} else {
-				setLaunchAtBoot("\0");
+				setLaunchAtBoot(NULL);
 			}
 		} else {
 			if(rom->preferences.emulator>0) {
@@ -925,9 +925,9 @@ void performChoosingAction() {
 		else if (chosenChoosingOption == 1){
 			launchAtBoot = 1+-1*launchAtBoot;
 			if (launchAtBoot==1) {
-				setLaunchAtBoot(rom->name);
+				setLaunchAtBoot(rom);
 			} else {
-				setLaunchAtBoot("\0");
+				setLaunchAtBoot(NULL);
 			}
 		} else {
 			if(CURRENT_SECTION.executables[rom->preferences.emulator+1]!=NULL) {

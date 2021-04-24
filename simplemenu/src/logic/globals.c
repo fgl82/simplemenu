@@ -170,6 +170,12 @@ struct Favorite {
 	int frequency;
 };
 
+struct AutostartRom {
+	struct Rom *rom;
+	char *emulator;
+	char *emulatorDir;
+};
+
 struct RomPreferences {
 	int emulator;
 	int emulatorDir;

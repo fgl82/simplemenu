@@ -115,6 +115,7 @@ int isLaunchAtBoot(char *romName) {
 		return 0;
 	}
 	getline(&line, &len, fp);
+	line[strlen(line)-1] = '\0';
 	if (!strcmp(line,romName)) {
 		fclose(fp);
 		return 1;
@@ -123,27 +124,11 @@ int isLaunchAtBoot(char *romName) {
 	return 0;
 }
 
-char *getLaunchAtBoot() {
-	FILE *fp;
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char pathToAutostartFilePlusFileName[300];
-	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
-	fp = fopen(pathToAutostartFilePlusFileName, "r");
-	if (fp==NULL) {
-		return NULL;
-	}
-	getline(&line, &len, fp);
-	fclose(fp);
-	return line;
-}
-
 int wasRunningFlag() {
 	FILE * fp;
 	char pathToRunningFlagFilePlusFileName[300];
 	snprintf(pathToRunningFlagFilePlusFileName,sizeof(pathToRunningFlagFilePlusFileName),"%s/.simplemenu/rom_preferences/is_running.flg",home);
-	fp = fopen(pathToRunningFlagFilePlusFileName, "r");
+	fp = fopen(pathToRunningFlagFilePlusFileName, "rw");
 	if (fp==NULL) {
 		return 0;
 	}
@@ -161,13 +146,71 @@ void setRunningFlag() {
 	fclose(fp);
 }
 
-void setLaunchAtBoot(char *romName) {
+void setLaunchAtBoot(struct Rom *rom) {
 	FILE * fp;
 	char pathToAutostartFilePlusFileName[300];
 	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
-	fp = fopen(pathToAutostartFilePlusFileName, "w");
-	fprintf(fp,"%s", romName);
+	if (rom==NULL) {
+		remove(pathToAutostartFilePlusFileName);
+	} else {
+		fp = fopen(pathToAutostartFilePlusFileName, "w");
+		fprintf(fp,"%s\n", rom->name);
+		fprintf(fp,"%s\n", rom->directory);
+		if (rom->alias!=NULL) {
+			fprintf(fp,"%s\n", rom->alias);
+		} else {
+			fprintf(fp,"\n");
+		}
+		fprintf(fp,"%d\n", rom->isConsoleApp);
+		fprintf(fp,"%s\n", CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir]);
+		fprintf(fp,"%s", CURRENT_SECTION.executables[rom->preferences.emulator]);
+		fclose(fp);
+	}
+}
+
+struct AutostartRom *getLaunchAtBoot() {
+	FILE *fp;
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	char pathToAutostartFilePlusFileName[300];
+	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
+	fp = fopen(pathToAutostartFilePlusFileName, "r");
+	if (fp==NULL) {
+		return NULL;
+	}
+//	fprintf(fp,"%s", rom->name);
+//	fprintf(fp,"%s", rom->directory);
+//	fprintf(fp,"%s", rom->alias);
+//	fprintf(fp,"%s", rom->isConsoleApp);
+//	fprintf(fp,"%s", rom->preferences.emulator);
+//	fprintf(fp,"%s", rom->preferences.emulatorDir);
+//	fprintf(fp,"%s", rom->preferences.frequenc
+	struct Rom *rom = malloc(sizeof(struct Rom));
+	getline(&line, &len, fp);
+	rom->name=strdup(line);
+
+	getline(&line, &len, fp);
+	rom->directory=strdup(line);
+
+	getline(&line, &len, fp);
+	rom->alias=strdup(line);
+
+	getline(&line, &len, fp);
+	rom->isConsoleApp=atoifgl(line);
+
+	loadRomPreferences(rom);
+	struct AutostartRom *autostartRom = malloc(sizeof(struct AutostartRom));
+	autostartRom->rom = rom;
+
+	getline(&line, &len, fp);
+	autostartRom->emulatorDir = strdup(line);
+
+	getline(&line, &len, fp);
+	autostartRom->emulator = strdup(line);
+//	printf("%s%s%s%d\n", rom->name, rom->directory, rom->alias, rom->isConsoleApp);
 	fclose(fp);
+	return autostartRom;
 }
 
 uint32_t hex2int(char *hex) {

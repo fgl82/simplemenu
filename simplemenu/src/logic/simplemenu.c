@@ -119,7 +119,6 @@ void processEvents() {
 	SDL_Event event;
 	while (SDL_WaitEvent(&event)) {
 		if(event.type==getKeyDown()){
-			printf("down %d\n", currentState);
 			if (!isSuspended) {
 				switch (currentState) {
 					case BROWSING_GAME_LIST:
@@ -147,7 +146,6 @@ void processEvents() {
 			refreshScreen();
 		} else if (event.type==getKeyUp()&&!isUSBMode) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
-				printf("up %d\n", currentState);
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
 						beforeTryingToSwitchGroup = activeGroup;
@@ -171,7 +169,6 @@ void processEvents() {
 				refreshScreen();
 			}
 		} else if (event.type==SDL_MOUSEMOTION) {
-			printf("mouse %d\n", currentState);
 			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
 				loadGameList(0);
 				currentState=BROWSING_GAME_LIST;
@@ -185,21 +182,14 @@ void processEvents() {
 
 int main() {
 	initialSetup();
-	char *launchAtBootGame = getLaunchAtBoot();
+	struct AutostartRom *launchAtBootGame = getLaunchAtBoot();
 	if (launchAtBootGame!=NULL) {
 		if (wasRunningFlag()) {
 			currentState=AFTER_RUNNING_LAUNCH_AT_BOOT;
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshScreen();
 		} else {
-			struct Rom *rom;
-			rom=malloc(sizeof(struct Rom));
-			rom->name=launchAtBootGame;
-			rom->directory=getRomPath(launchAtBootGame);
-			strcat(rom->directory,"/");
-			if (rom!=NULL) {
-				launchAutoStartGame(rom, "gambatte-dms-gcw0-r572u4-20210328-test.opk","/media/sdcard/APPS/");
-			}
+			launchAutoStartGame(launchAtBootGame->rom, launchAtBootGame->emulatorDir, launchAtBootGame->emulator);
 		}
 	} else {
 		pushEvent();
