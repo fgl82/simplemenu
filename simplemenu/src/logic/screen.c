@@ -502,7 +502,11 @@ void drawTimedShutDownScreen() {
 	char text[30];
 	char text1[30];
 	char text2[30];
-	snprintf(text,30,"SHUTTING DOWN");
+	if (shutDownEnabled) {
+		snprintf(text,30,"SHUTTING DOWN");
+	} else {
+		snprintf(text,30,"QUITTING");
+	}
 	snprintf(text1,30,"IN %d SECONDS",countDown);
 	snprintf(text2,30,"X TO CANCEL");
 	genericDrawTextOnScreen(getBigFont(), NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/4, text, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);

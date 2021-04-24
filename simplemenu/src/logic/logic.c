@@ -190,7 +190,9 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 }
 
 void quit() {
-	saveLastState();
+//	if(getLaunchAtBoot()==NULL) {
+		saveLastState();
+//	}
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
@@ -286,7 +288,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		char pPictureMode[2]="";
 		snprintf(pSectionNumber,sizeof(pSectionNumber),"%d",currentSectionNumber);
 		snprintf(pPictureMode,sizeof(pPictureMode),"%d",fullscreenMode);
-		saveLastState();
+//		if(getLaunchAtBoot()==NULL) {
+			saveLastState();
+//		}
 #ifndef TARGET_PC
 		saveFavorites();
 		clearTimer();
@@ -937,9 +941,10 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		logMessage("INFO","Should we skip this?");
 		FILE *fp=NULL;
 		if (CURRENT_SECTION.initialized==0||refresh) {
-
-			drawLoadingText();
-			refreshScreen();
+			if(getLaunchAtBoot()==NULL) {
+				drawLoadingText();
+				refreshScreen();
+			}
 			logMessage("INFO","No, loading game list");
 			CURRENT_SECTION.initialized=1;
 			//We don't need to reload the alias file if just refreshing
@@ -970,8 +975,10 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 					logMessage("INFO","Using cache file");
 					char currentline[2000];
 					while (fgets(currentline, sizeof(currentline), fp) != NULL) {
-						drawLoadingText();
-						refreshScreen();
+						if(getLaunchAtBoot()==NULL) {
+							drawLoadingText();
+							refreshScreen();
+						}
 
 						int size = strlen(currentline)+1;
 
@@ -1027,8 +1034,10 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			}
 			free(filesDirectoriesCopy);
 			for(int k=0;k<dirCounter;k++) {
-				drawLoadingText();
-				refreshScreen();
+				if(getLaunchAtBoot()==NULL) {
+					drawLoadingText();
+					refreshScreen();
+				}
 
 				int n = 0;
 				logMessage("INFO","Scanning directory");

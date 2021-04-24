@@ -191,17 +191,16 @@ void processEvents() {
 
 int main() {
 	initialSetup();
+	initialSetup2();
 	struct AutostartRom *launchAtBootGame = getLaunchAtBoot();
 	if (launchAtBootGame!=NULL) {
 		if (wasRunningFlag()) {
-			initialSetup2();
 			currentState=AFTER_RUNNING_LAUNCH_AT_BOOT;
 			resetShutdownTimer();
 		} else {
 			launchAutoStartGame(launchAtBootGame->rom, launchAtBootGame->emulatorDir, launchAtBootGame->emulator);
 		}
 	} else {
-		initialSetup2();
 		currentState=BROWSING_GAME_LIST;
 		pushEvent();
 	}

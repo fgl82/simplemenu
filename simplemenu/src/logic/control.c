@@ -176,7 +176,6 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	if (rom->name[strlen(rom->name)-1]=='\n') {
 		rom->name[strlen(rom->name)-1]='\0';
 	}
-	printf("%s%s %s %d\n", emuDir, emuExec, rom->name, rom->isConsoleApp);
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
 	printf(" \n");
@@ -195,6 +194,7 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 		generateError(error,0);
 		return;
 	}
+	saveLastState();
 	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 		#ifndef TARGET_PC
 		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp);
