@@ -75,4 +75,5 @@ void drawSettingsOptionValueOnScreen(char *option, char *value, int position, in
 TTF_Font *getFont();
 TTF_Font *getFooterFont();
 TTF_Font *getSettingsFont();
+TTF_Font *getBigFont();
 #endif

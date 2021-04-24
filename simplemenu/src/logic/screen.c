@@ -16,6 +16,8 @@
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
+int countDown;
+
 void displayBackgroundPicture() {
 	if(fullscreenMode) {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,CURRENT_SECTION.bodyBackgroundColor);
@@ -494,6 +496,22 @@ void drawHeader() {
 	drawTextOnHeader();
 }
 
+void drawTimedShutDownScreen() {
+	int black[] = {0,0,0};
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
+	char text[30];
+	char text1[30];
+	char text2[30];
+	snprintf(text,30,"SHUTTING DOWN");
+	snprintf(text1,30,"IN %d SECONDS",countDown);
+	snprintf(text2,30,"X TO CANCEL");
+	genericDrawTextOnScreen(getBigFont(), NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/4, text, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+
+	genericDrawTextOnScreen(getBigFont(), NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text1, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+
+	genericDrawTextOnScreen(getBigFont(), NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT-SCREEN_HEIGHT/4, text2, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+}
+
 void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
@@ -963,7 +981,7 @@ void updateScreen(struct Node *node) {
 				drawShutDownScreen();
 				break;
 			case AFTER_RUNNING_LAUNCH_AT_BOOT:
-				drawShutDownScreen();
+				drawTimedShutDownScreen();
 				break;
 		}
 	} else if (isUSBMode) {
@@ -976,6 +994,34 @@ void updateScreen(struct Node *node) {
 void setupKeys() {
 	initializeKeys();
 	logMessage("INFO","Input successfully configured");
+}
+
+void clearShutdownTimer() {
+	if (shutdownTimer != NULL) {
+		SDL_RemoveTimer(shutdownTimer);
+	}
+	shutdownTimer = NULL;
+}
+
+uint32_t countDownToShutdown() {
+	countDown--;
+	if(countDown==0) {
+		running=0;
+		clearShutdownTimer();
+		pushEvent();
+		return 0;
+	}
+	updateScreen(NULL);
+	refreshScreen();
+	return 1000;
+}
+
+void resetShutdownTimer() {
+	countDown=3;
+	clearShutdownTimer();
+	shutdownTimer=SDL_AddTimer(1 * 1e3, countDownToShutdown, NULL);
+	updateScreen(NULL);
+	refreshScreen();
 }
 
 void clearPicModeHideMenuTimer() {

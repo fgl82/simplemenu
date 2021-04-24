@@ -36,6 +36,7 @@ int beforeTryingToSwitchGroup;
 int chosenSetting;
 int chosenChoosingOption;
 char currentGameNameBeingDisplayed [3000];
+SDL_TimerID shutdownTimer;
 SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;

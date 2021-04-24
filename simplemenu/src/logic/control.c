@@ -664,13 +664,11 @@ void performGroupChoosingAction() {
 }
 
 void performLaunchAtBootChoosingAction() {
-	printf("performing\n");
-	if (keys[BTN_A]) {
-		printf("performing A\n");
-		running=0;
-	} else if (keys[BTN_B]) {
-		printf("performing B\n");
+	if (keys[BTN_X]) {
+		setLaunchAtBoot(NULL);
+		clearShutdownTimer();
 		currentState=BROWSING_GAME_LIST;
+		running=1;
 	}
 }
 
@@ -949,6 +947,9 @@ void performChoosingAction() {
 				CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir=emu;
 				CURRENT_SECTION.currentGameNode->data->preferences.frequency=hz;
 				saveRomPreferences(CURRENT_SECTION.currentGameNode->data);
+			}
+			if (getLaunchAtBoot()!=NULL) {
+				launchGame(CURRENT_SECTION.currentGameNode->data);
 			}
 			currentState=BROWSING_GAME_LIST;
 		}

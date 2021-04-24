@@ -57,7 +57,7 @@ cat>default.${var}.desktop<<EOF
 Name=SimpleMenu
 Comment=A simple launcher
 Exec=simplemenu
-Terminal=true
+Terminal=false
 Type=Application
 StartupNotify=true
 Icon=simplemenu

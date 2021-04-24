@@ -8,7 +8,7 @@
 #define SETTINGS_SCREEN 3
 #define SELECTING_SECTION 4
 #define SHUTTING_DOWN 5
-#define AFTER_RUNNING_LAUNCH_AT_BOOT 6
+#define AFTER_RUNNING_LAUNCH_AT_BOOT 7
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -51,6 +51,7 @@ extern int chosenSetting;
 extern int chosenChoosingOption;
 extern char currentGameNameBeingDisplayed [3000];
 extern SDL_TimerID timeoutTimer;
+extern SDL_TimerID shutdownTimer;
 extern SDL_TimerID picModeHideMenuTimer;
 extern SDL_TimerID picModeHideLogoTimer;
 extern SDL_TimerID hideHeartTimer;

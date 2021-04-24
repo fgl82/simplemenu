@@ -89,6 +89,9 @@ void initialSetup() {
 	HW_Init();
 	setupKeys();
 	checkIfDefault();
+}
+
+void initialSetup2() {
 	char temp[300];
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
@@ -142,9 +145,11 @@ void processEvents() {
 				}
 			}
 			resetScreenOffTimer();
-			updateScreen(CURRENT_SECTION.currentGameNode);
-			refreshScreen();
-		} else if (event.type==getKeyUp()&&!isUSBMode) {
+			if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+				updateScreen(CURRENT_SECTION.currentGameNode);
+				refreshScreen();
+			}
+		} else if (event.type==getKeyUp()&&!isUSBMode&&currentState==BROWSING_GAME_LIST) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
@@ -165,16 +170,20 @@ void processEvents() {
 					currentState=BROWSING_GAME_LIST;
 				}
 				aKeyComboWasPressed=0;
-				updateScreen(CURRENT_SECTION.currentGameNode);
-				refreshScreen();
+				if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+					updateScreen(CURRENT_SECTION.currentGameNode);
+					refreshScreen();
+				}
 			}
 		} else if (event.type==SDL_MOUSEMOTION) {
 			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
 				loadGameList(0);
 				currentState=BROWSING_GAME_LIST;
 			}
-			updateScreen(CURRENT_SECTION.currentGameNode);
-			refreshScreen();
+			if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+				updateScreen(CURRENT_SECTION.currentGameNode);
+				refreshScreen();
+			}
 		}
 		break;
 	}
@@ -185,13 +194,15 @@ int main() {
 	struct AutostartRom *launchAtBootGame = getLaunchAtBoot();
 	if (launchAtBootGame!=NULL) {
 		if (wasRunningFlag()) {
+			initialSetup2();
 			currentState=AFTER_RUNNING_LAUNCH_AT_BOOT;
-			updateScreen(CURRENT_SECTION.currentGameNode);
-			refreshScreen();
+			resetShutdownTimer();
 		} else {
 			launchAutoStartGame(launchAtBootGame->rom, launchAtBootGame->emulatorDir, launchAtBootGame->emulator);
 		}
 	} else {
+		initialSetup2();
+		currentState=BROWSING_GAME_LIST;
 		pushEvent();
 	}
 	const int GAME_FPS=60;
