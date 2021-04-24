@@ -202,9 +202,10 @@ void showRomPreferences() {
 	filling[0] = 80;
 	filling[1] = 80;
 	filling[2] = 80;
-	textColor[0]=255;
-	textColor[1]=255;
-	textColor[2]=255;
+	textColor[0]=90;
+	textColor[1]=90;
+	textColor[2]=90;
+	int valueColor[3] = {0,147,131};
 
 	int textWidth;
 
@@ -215,56 +216,65 @@ void showRomPreferences() {
 	char *frequency = malloc(10);
 	snprintf(frequency, 10, "%d", CURRENT_SECTION.currentGameNode->data->preferences.frequency);
 
-	int width=calculateProportionalSizeOrDistance(280);
+	int width=calculateProportionalSizeOrDistance(316);
 	int height = calculateProportionalSizeOrDistance(72);
 
 	//Main rectangle
-	drawRectangleToScreen(width+calculateProportionalSizeOrDistance(4), height+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH/2-(width/2+calculateProportionalSizeOrDistance(2)), SCREEN_HEIGHT/2-(height/2+calculateProportionalSizeOrDistance(2)), (int[]) {200,200,200});
+	drawRectangleToScreen(width+calculateProportionalSizeOrDistance(4), height+calculateProportionalSizeOrDistance(4), SCREEN_WIDTH/2-(width/2+calculateProportionalSizeOrDistance(2)), SCREEN_HEIGHT/2-(height/2+calculateProportionalSizeOrDistance(2)), (int[]) {37,50,56});
 
 	//Overlay
-	drawRectangleToScreen(width, height, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, filling);
+	drawRectangleToScreen(width, height, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, (int[]) {250,250,250});
 
 	//Title Bar
-	drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, (int[]){0,0,100});
+	drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2, SCREEN_HEIGHT/2-height/2, (int[]){37,50,56});
 
 	//Selection
 	if (chosenChoosingOption==0) {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/4, (int[]){150,150,150});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/4, (int[]){219,219,219});
 	} else if (chosenChoosingOption==1) {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, (int[]){150,150,150});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, (int[]){219,219,219});
 	} else {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, (int[]){150,150,150});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, (int[]){219,219,219});
 	}
 
 	//Name
 	char * name = getNameWithoutPath(CURRENT_SECTION.currentGameNode->data->name);
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance(28), name, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(getFont(), NULL, calculateProportionalSizeOrDistance(6), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance(28), name, (int[]) {255,255,255}, VAlignMiddle | HAlignLeft);
 	free(name);
 
 	TTF_SizeText(getFont(), (const char *) "Overclock: " , &textWidth, NULL);
+	textWidth+=calculateProportionalSizeOrDistance(2);
 
 	//Frequency option text
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)-height/8.1, "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)-height/4, "Overclock: ", textColor, VAlignBottom | HAlignLeft);
 	//Frequency option value
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC) {
-		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-height/8.1, "yes", textColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-height/4, "yes", valueColor, VAlignBottom | HAlignLeft);
 	} else {
-		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-height/8.1, "no", textColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-height/4, "no", valueColor, VAlignBottom | HAlignLeft);
 	}
 #else
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-height/8, "unavailable", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-height/4, "unavailable", valueColor, VAlignBottom | HAlignLeft);
 #endif
 
-	//Emulator option text
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)+height/8.2, "Boot rom: ", textColor, VAlignMiddle | HAlignLeft);
-	//Emulator option value
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/8.2, "yes", textColor, VAlignMiddle | HAlignLeft);
+	drawRectangleToScreen(width, calculateProportionalSizeOrDistance(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, (int[]){219,219,219});
 
 	//Launch at boot option text
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)+height/2.7, "Emulator: ", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2), "Autostart: ", textColor, VAlignBottom | HAlignLeft);
 	//Launch at boot option value
-	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/2.7, emuName, textColor, VAlignMiddle | HAlignLeft);
+	if (launchAtBoot) {
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2), "yes", valueColor, VAlignBottom | HAlignLeft);
+	} else {
+		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2), "no", valueColor, VAlignBottom | HAlignLeft);
+	}
+
+	drawRectangleToScreen(width, calculateProportionalSizeOrDistance(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, (int[]){219,219,219});
+
+	//Emulator option text
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)+height/4, "Emulator: ", textColor, VAlignBottom | HAlignLeft);
+	//Emulator option value
+	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+height/4, emuName, valueColor, VAlignBottom | HAlignLeft);
 
 	free(emuName);
 	free(frequency);
@@ -950,6 +960,9 @@ void updateScreen(struct Node *node) {
 				showConsole();
 				break;
 			case SHUTTING_DOWN:
+				drawShutDownScreen();
+				break;
+			case AFTER_RUNNING_LAUNCH_AT_BOOT:
 				drawShutDownScreen();
 				break;
 		}

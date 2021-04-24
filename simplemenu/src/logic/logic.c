@@ -425,6 +425,17 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		return gamesCounter;
 	}
 
+	struct Rom *findGame(char *game) {
+		for (int i=0;i<CURRENT_SECTION.gameCount;i++) {
+			if (strcmp(CURRENT_SECTION.currentGameNode->data->name, game)==0) {
+				return (CURRENT_SECTION.currentGameNode->data);
+			}
+			if (CURRENT_SECTION.currentGameNode->next!=NULL) {
+				CURRENT_SECTION.currentGameNode = CURRENT_SECTION.currentGameNode->next;
+			}
+		}
+		return NULL;
+	}
 //	struct Node *split(struct Node *head)
 //	{
 //		struct Node *fast = head,*slow = head;

@@ -102,6 +102,74 @@ void checkIfDefault() {
 	logMessage("INFO","Default state checked");
 }
 
+int isLaunchAtBoot(char *romName) {
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	char pathToAutostartFilePlusFileName[300];
+	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
+
+	fp = fopen(pathToAutostartFilePlusFileName, "r");
+	if (fp==NULL) {
+		return 0;
+	}
+	getline(&line, &len, fp);
+	if (!strcmp(line,romName)) {
+		fclose(fp);
+		return 1;
+	}
+	fclose(fp);
+	return 0;
+}
+
+char *getLaunchAtBoot() {
+	FILE *fp;
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	char pathToAutostartFilePlusFileName[300];
+	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
+	fp = fopen(pathToAutostartFilePlusFileName, "r");
+	if (fp==NULL) {
+		return NULL;
+	}
+	getline(&line, &len, fp);
+	fclose(fp);
+	return line;
+}
+
+int wasRunningFlag() {
+	FILE * fp;
+	char pathToRunningFlagFilePlusFileName[300];
+	snprintf(pathToRunningFlagFilePlusFileName,sizeof(pathToRunningFlagFilePlusFileName),"%s/.simplemenu/rom_preferences/is_running.flg",home);
+	fp = fopen(pathToRunningFlagFilePlusFileName, "r");
+	if (fp==NULL) {
+		return 0;
+	}
+	fclose(fp);
+	remove(pathToRunningFlagFilePlusFileName);
+	return 1;
+}
+
+void setRunningFlag() {
+	FILE * fp;
+	char pathToRunningFlagFilePlusFileName[300];
+	snprintf(pathToRunningFlagFilePlusFileName,sizeof(pathToRunningFlagFilePlusFileName),"%s/.simplemenu/rom_preferences/is_running.flg",home);
+	fp = fopen(pathToRunningFlagFilePlusFileName, "w");
+	fprintf(fp,"%d", 1);
+	fclose(fp);
+}
+
+void setLaunchAtBoot(char *romName) {
+	FILE * fp;
+	char pathToAutostartFilePlusFileName[300];
+	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
+	fp = fopen(pathToAutostartFilePlusFileName, "w");
+	fprintf(fp,"%s", romName);
+	fclose(fp);
+}
+
 uint32_t hex2int(char *hex) {
 	char *hexCopy = malloc(strlen(hex)+1);
 	strcpy(hexCopy,hex);

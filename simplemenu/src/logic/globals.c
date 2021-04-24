@@ -13,6 +13,7 @@
 SDL_Surface *screen;
 /* STATUS */
 int updateScreenFlag;
+int launchAtBoot;
 char *errorMessage;
 int running;
 int itsStoppedBecauseOfAnError;

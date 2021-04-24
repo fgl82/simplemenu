@@ -178,6 +178,7 @@ int performAction(struct Node *node) {
 	if (keys[BTN_SELECT]&&!favoritesSectionSelected) {
 		currentState=SELECTING_EMULATOR;
 		chosenChoosingOption=0;
+		launchAtBoot=isLaunchAtBoot(CURRENT_SECTION.currentGameNode->data->name);
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]) {0,0,0},180);
 		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		return 0;

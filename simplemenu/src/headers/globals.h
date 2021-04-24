@@ -8,6 +8,7 @@
 #define SETTINGS_SCREEN 3
 #define SELECTING_SECTION 4
 #define SHUTTING_DOWN 5
+#define AFTER_RUNNING_LAUNCH_AT_BOOT 6
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -20,6 +21,7 @@
 #endif
 
 extern int updateScreenFlag;
+extern int launchAtBoot;
 
 extern SDL_Surface *screen;
 extern int displayLogo;

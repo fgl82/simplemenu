@@ -1059,10 +1059,10 @@ void refreshScreen() {
 void initializeSettingsFonts() {
 	logMessage("INFO","Initializing Settings Fonts");
 	char *akashi = "resources/akashi.ttf";
-	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
+	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
 	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));
-	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
-	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(16));
+	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
+	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
 	logMessage("INFO","Settings Fonts initialized");
 }
 

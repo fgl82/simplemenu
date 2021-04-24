@@ -166,6 +166,46 @@ int rewindSection(int showLogo) {
 	return returnValue;
 }
 
+void launchAutoStartGame(struct Rom *rom, char *emuExec, char *emuDir) {
+	FILE *file=NULL;
+	char *error=malloc(3000);
+	char tempExec[3000];
+
+	char tempExecDirPlusFileName[3000];
+	char tempExecFile[3000];
+	printf(" \n");
+	loadRomPreferences(rom);
+	if (isLaunchAtBoot(rom->name)) {
+		setRunningFlag();
+	}
+	strcpy(tempExec,emuDir);
+	strcpy(tempExecFile,emuExec);
+	char *ptr = strtok(tempExec, " ");
+	strcpy(tempExecDirPlusFileName,emuDir);
+	strcat(tempExecDirPlusFileName,tempExecFile);
+	file = fopen(ptr, "r");
+	strcat(tempExec,emuExec);
+	if (!file&&strstr(tempExec,"#")==NULL) {
+		strcpy(error,tempExecDirPlusFileName);
+		strcat(error,"-NOT FOUND");
+		generateError(error,0);
+		return;
+	}
+	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
+		#ifndef TARGET_PC
+		executeCommand(emuDir, emuExec,getGameName(rom->name), rom->isConsoleApp);
+		#else
+		executeCommandPC(emuDir, getGameName(rom->name));
+		#endif
+	} else {
+		#ifdef TARGET_PC
+		executeCommandPC(emuExec, rom->name);
+		#else
+		executeCommand(emuDir, emuExec,rom->name, rom->isConsoleApp);
+		#endif
+	}
+}
+
 void launchGame(struct Rom *rom) {
 	FILE *file=NULL;
 	char *error=malloc(3000);
@@ -192,13 +232,16 @@ void launchGame(struct Rom *rom) {
 		#endif
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
-		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
-		strcpy(tempExecFile,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
+		if (isLaunchAtBoot(rom->name)) {
+			setRunningFlag();
+		}
+		strcpy(tempExec,CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir]);
+		strcpy(tempExecFile,CURRENT_SECTION.executables[rom->preferences.emulator]);
 		char *ptr = strtok(tempExec, " ");
-		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir]);
+		strcpy(tempExecDirPlusFileName,CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir]);
 		strcat(tempExecDirPlusFileName,tempExecFile);
 		file = fopen(ptr, "r");
-		strcat(tempExec,CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator]);
+		strcat(tempExec,CURRENT_SECTION.executables[rom->preferences.emulator]);
 		if (!file&&strstr(tempExec,"#")==NULL) {
 			strcpy(error,tempExecDirPlusFileName);
 			strcat(error,"-NOT FOUND");
@@ -207,15 +250,15 @@ void launchGame(struct Rom *rom) {
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 			#ifndef TARGET_PC
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],getGameName(rom->name), rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name), rom->isConsoleApp);
 			#else
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],getGameName(rom->name));
+			executeCommandPC(CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name));
 			#endif
 		} else {
 			#ifdef TARGET_PC
-			executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],rom->name);
+			executeCommandPC(CURRENT_SECTION.executables[rom->preferences.emulator],rom->name);
 			#else
-			executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],rom->name, rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],rom->name, rom->isConsoleApp);
 			#endif
 		}
 	}
@@ -620,6 +663,17 @@ void performGroupChoosingAction() {
 	}
 }
 
+void performLaunchAtBootChoosingAction() {
+	printf("performing\n");
+	if (keys[BTN_A]) {
+		printf("performing A\n");
+		running=0;
+	} else if (keys[BTN_B]) {
+		printf("performing B\n");
+		currentState=BROWSING_GAME_LIST;
+	}
+}
+
 void performSettingsChoosingAction() {
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
@@ -839,7 +893,12 @@ void performChoosingAction() {
 			}
 #endif
 		} else if (chosenChoosingOption == 1){
-
+			launchAtBoot = 1+-1*launchAtBoot;
+			if (launchAtBoot==1) {
+				setLaunchAtBoot(rom->name);
+			} else {
+				setLaunchAtBoot("\0");
+			}
 		} else {
 			if(rom->preferences.emulator>0) {
 				rom->preferences.emulator--;
@@ -864,7 +923,12 @@ void performChoosingAction() {
 #endif
 		}
 		else if (chosenChoosingOption == 1){
-
+			launchAtBoot = 1+-1*launchAtBoot;
+			if (launchAtBoot==1) {
+				setLaunchAtBoot(rom->name);
+			} else {
+				setLaunchAtBoot("\0");
+			}
 		} else {
 			if(CURRENT_SECTION.executables[rom->preferences.emulator+1]!=NULL) {
 				rom->preferences.emulator++;
@@ -874,7 +938,7 @@ void performChoosingAction() {
 				rom->preferences.emulatorDir=0;
 			}
 		}
-	} else	if (keys[BTN_A]) {
+	} else	if (keys[BTN_SELECT]) {
 		if (currentState!=BROWSING_GAME_LIST) {
 			int emu = CURRENT_SECTION.currentGameNode->data->preferences.emulator;
 			int emuDir = CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir;
