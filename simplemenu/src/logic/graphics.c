@@ -226,10 +226,9 @@ int drawShadedTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char
 }
 
 int drawTextOnScreen(TTF_Font *pfont, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align) {
-//	if (pfont==NULL) {
-//		initializeFonts();
-//		pfont = font;
-//	}
+	if (pfont==NULL) {
+		pfont = getFont();
+	}
 	return genericDrawTextOnScreen(pfont, outline, x, y, buf, txtColor, align, NULL, 0);
 }
 
