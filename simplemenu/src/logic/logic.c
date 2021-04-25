@@ -903,7 +903,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			for (int i=0;i<n;i++){
 				free(files[i]);
 			}
-			if (value==1) {
+			if (value>0) {
 				section->hidden=0;
 				break;
 			}

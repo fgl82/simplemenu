@@ -293,7 +293,7 @@ void showConsole() {
 		snprintf(gameCount,100,"%d GAMES AVAILABLE",CURRENT_SECTION.gameCount);
 
 
-		TTF_Font *font = TTF_OpenFont("/home/bittboy/.simplemenu/themes/640x480/0A (copy)/resources/general/BebasNeue.otf", calculateProportionalSizeOrDistance(14));
+		TTF_Font *font = TTF_OpenFont("/media/data/local/home/.simplemenu/themes/640x480/Epic Cody/resources/general/BebasNeue.otf", calculateProportionalSizeOrDistance(14));
 		drawTextOnScreen(font,NULL,calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(149),gameCount,(int[]){255,174,0},0);
 		TTF_CloseFont(font);
 		font=NULL;
@@ -301,7 +301,7 @@ void showConsole() {
 
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
-		drawTextOnScreen(NULL,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
+		drawTextOnScreen(getFont(),NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
 	}
 	logMessage("INFO","Current console shown");
 }

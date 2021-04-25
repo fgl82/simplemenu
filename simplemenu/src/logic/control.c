@@ -109,7 +109,9 @@ int advanceSection(int showLogo) {
 		if (currentSectionNumber==menuSectionCounter-1) {
 			currentSectionNumber=0;
 		}
-		CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		if (CURRENT_SECTION.gameCount==0) {
+			CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		}
 		if (tempCurrentSection==currentSectionNumber) {
 			returnValue = 0;
 			break;
