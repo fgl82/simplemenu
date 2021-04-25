@@ -160,6 +160,13 @@ extern int colorfulFullscreenMenu;
 extern int fontOutline;
 extern int displaySectionGroupName;
 
+extern char gameCountFont[1000];
+extern int gameCountFontSize;
+extern int gameCountX;
+extern int gameCountY;
+extern int gameCountAlignment;
+extern int gameCountFontColor[3];
+
 /* STRUCTS */
 struct OPKDesktopFile {
 	char parentOPK[200];

@@ -37,6 +37,7 @@ TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
 TTF_Font *customCountFont = NULL;
 TTF_Font *footerFont = NULL;
+TTF_Font *gameCountFontFont = NULL;
 
 TTF_Font *outlineFont = NULL;
 TTF_Font *outlineMiniFont = NULL;
@@ -52,6 +53,10 @@ TTF_Font *settingsStatusFont = NULL;
 
 TTF_Font *customHeaderFont = NULL;
 TTF_Font *outlineCustomHeaderFont = NULL;
+
+TTF_Font *getGameCountFont() {
+	return gameCountFontFont;
+}
 
 TTF_Font *getFont() {
 	return font;
@@ -997,7 +1002,7 @@ void initializeDisplay() {
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 480;
+	SCREEN_HEIGHT = 240;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -1096,6 +1101,9 @@ void initializeFonts() {
 		TTF_SetFontOutline(outlineCustomHeaderFont,fontOutline);
 		TTF_SetFontOutline(outlineCustomCountFont,fontOutline);
 	}
+
+	gameCountFontFont = TTF_OpenFont(gameCountFont, calculateProportionalSizeOrDistance(gameCountFontSize));
+
 	logMessage("INFO","Fonts initialized");
 }
 
@@ -1128,6 +1136,8 @@ void freeFonts() {
 	outlineCustomCountFont = NULL;
 	TTF_CloseFont(outlineFooterFont);
 	outlineFooterFont = NULL;
+	TTF_CloseFont(gameCountFontFont);
+	gameCountFontFont = NULL;
 }
 
 void freeSettingsFonts() {

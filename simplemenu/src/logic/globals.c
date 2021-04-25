@@ -144,6 +144,13 @@ int colorfulFullscreenMenu;
 int fontOutline;
 int displaySectionGroupName;
 
+char gameCountFont[1000];
+int gameCountFontSize;
+int gameCountX;
+int gameCountY;
+int gameCountAlignment;
+int gameCountFontColor[3];
+
 /* STRUCTS */
 struct OPKDesktopFile {
 	char parentOPK[200];

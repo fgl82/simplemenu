@@ -292,11 +292,7 @@ void showConsole() {
 //		snprintf(gameCount,100,"%d GAMES AVAILABLE",theSectionHasGames(&CURRENT_SECTION));
 		snprintf(gameCount,100,"%d GAMES AVAILABLE",CURRENT_SECTION.gameCount);
 
-
-		TTF_Font *font = TTF_OpenFont("/media/data/local/home/.simplemenu/themes/640x480/Epic Cody/resources/general/BebasNeue.otf", calculateProportionalSizeOrDistance(14));
-		drawTextOnScreen(font,NULL,calculateProportionalSizeOrDistance(1),calculateProportionalSizeOrDistance(149),gameCount,(int[]){255,174,0},0);
-		TTF_CloseFont(font);
-		font=NULL;
+		drawTextOnScreen(getGameCountFont(),NULL,calculateProportionalSizeOrDistance(gameCountX),calculateProportionalSizeOrDistance(gameCountY),gameCount,gameCountFontColor,0);
 		free(gameCount);
 
 	} else {
