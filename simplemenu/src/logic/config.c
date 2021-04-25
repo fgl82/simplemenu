@@ -444,16 +444,22 @@ void loadTheme(char *theme) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
-		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
-		gameCountFontSize = atoifgl(value);
-		value = ini_get(themeConfig, "GENERAL", "game_count_x");
-		gameCountX = atoifgl(value);
-		value = ini_get(themeConfig, "GENERAL", "game_count_y");
-		gameCountY = atoifgl(value);
-		value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
-		gameCountAlignment = atoifgl(value);
-		value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
-		setRGBFromHex(gameCountFontColor, value);
+
+		value = ini_get(themeConfig, "GENERAL", "display_game_count");
+		displayGameCount=0;
+		if (value!=NULL) {
+			displayGameCount=1;
+			value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
+			gameCountFontSize = atoifgl(value);
+			value = ini_get(themeConfig, "GENERAL", "game_count_x");
+			gameCountX = atoifgl(value);
+			value = ini_get(themeConfig, "GENERAL", "game_count_y");
+			gameCountY = atoifgl(value);
+			value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
+			gameCountAlignment = atoifgl(value);
+			value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
+			setRGBFromHex(gameCountFontColor, value);
+		}
 
 		value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 		text2FontSize = atoi (value);
@@ -1143,17 +1149,23 @@ int loadSections(char *file) {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
-	setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
-	value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
-	gameCountFontSize = atoifgl(value);
-	value = ini_get(themeConfig, "GENERAL", "game_count_x");
-	gameCountX = atoifgl(value);
-	value = ini_get(themeConfig, "GENERAL", "game_count_y");
-	gameCountY = atoifgl(value);
-	value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
-	gameCountAlignment = atoifgl(value);
-	value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
-	setRGBFromHex(gameCountFontColor, value);
+
+	value = ini_get(themeConfig, "GENERAL", "display_game_count");
+	displayGameCount=0;
+	if (value!=NULL) {
+		displayGameCount=1;
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
+		gameCountFontSize = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_x");
+		gameCountX = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_y");
+		gameCountY = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
+		gameCountAlignment = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
+		setRGBFromHex(gameCountFontColor, value);
+	}
 
 	value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 

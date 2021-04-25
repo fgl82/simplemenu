@@ -160,6 +160,7 @@ extern int colorfulFullscreenMenu;
 extern int fontOutline;
 extern int displaySectionGroupName;
 
+extern int displayGameCount;
 extern char gameCountFont[1000];
 extern int gameCountFontSize;
 extern int gameCountX;

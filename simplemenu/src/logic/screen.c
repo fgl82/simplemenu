@@ -292,8 +292,10 @@ void showConsole() {
 //		snprintf(gameCount,100,"%d GAMES AVAILABLE",theSectionHasGames(&CURRENT_SECTION));
 		snprintf(gameCount,100,"%d GAMES AVAILABLE",CURRENT_SECTION.gameCount);
 
-		drawTextOnScreen(getGameCountFont(),NULL,calculateProportionalSizeOrDistance(gameCountX),calculateProportionalSizeOrDistance(gameCountY),gameCount,gameCountFontColor,0);
-		free(gameCount);
+		if (displayGameCount) {
+			drawTextOnScreen(getGameCountFont(),NULL,calculateProportionalSizeOrDistance(gameCountX),calculateProportionalSizeOrDistance(gameCountY),gameCount,gameCountFontColor,0);
+			free(gameCount);
+		}
 
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});

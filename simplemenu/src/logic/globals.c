@@ -144,6 +144,7 @@ int colorfulFullscreenMenu;
 int fontOutline;
 int displaySectionGroupName;
 
+int displayGameCount;
 char gameCountFont[1000];
 int gameCountFontSize;
 int gameCountX;
