@@ -76,4 +76,5 @@ TTF_Font *getFont();
 TTF_Font *getFooterFont();
 TTF_Font *getSettingsFont();
 TTF_Font *getBigFont();
+TTF_Font *getGameCountFont();
 #endif

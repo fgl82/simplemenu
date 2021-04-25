@@ -443,6 +443,18 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
+		gameCountFontSize = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_x");
+		gameCountX = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_y");
+		gameCountY = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
+		gameCountAlignment = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
+		setRGBFromHex(gameCountFontColor, value);
+
 		value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 		text2FontSize = atoi (value);
 
@@ -1130,6 +1142,19 @@ int loadSections(char *file) {
 	logMessage("INFO","Out 3");
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
+
+	setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+	value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
+	gameCountFontSize = atoifgl(value);
+	value = ini_get(themeConfig, "GENERAL", "game_count_x");
+	gameCountX = atoifgl(value);
+	value = ini_get(themeConfig, "GENERAL", "game_count_y");
+	gameCountY = atoifgl(value);
+	value = ini_get(themeConfig, "GENERAL", "game_count_alignment");
+	gameCountAlignment = atoifgl(value);
+	value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
+	setRGBFromHex(gameCountFontColor, value);
+
 	value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 
 	text2FontSize = atoi (value);
