@@ -865,18 +865,31 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		char *dirs[10];
 		char* ptr;
 		char dirsCopy[1000];
-		strcpy(dirsCopy,section->filesDirectories);
-		ptr = strtok(dirsCopy, ",");
+		char *filesDirectoriesCopy = strdup(section->filesDirectories);
+		char message[300];
+		snprintf(message, 300, "Directories %s ", filesDirectoriesCopy);
+		logMessage("INFO", message);
+		ptr = strtok(filesDirectoriesCopy, ",");
+		snprintf(message, 300, "Looking at %s", ptr);
+		logMessage("INFO", message);
 		char *files[MAX_GAMES_IN_SECTION];
 		int value = 0;
 		while (ptr!=NULL) {
-			dirs[dirCounter]=malloc(strlen(ptr)+1);
-			strcpy(dirs[dirCounter],ptr);
+			dirs[dirCounter]=strdup(ptr);
 			ptr = strtok(NULL, ",");
+			snprintf(message, 300, "Looking at %s", ptr);
+			logMessage("INFO", message);
 			dirCounter++;
 		}
+		snprintf(message, 300, "DirCounter is %d", dirCounter);
+		logMessage("INFO", message);
+		free(filesDirectoriesCopy);
 		for(int k=0;k<dirCounter;k++) {
+			snprintf(message, 300, "k is %d", k);
+			logMessage("INFO", message);
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
+			snprintf(message, 300, "Directory %s has %d files", dirs[k], n);
+			logMessage("INFO", message);
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
@@ -887,9 +900,13 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 						int desktopFilesCount=getOPK(files[i], desktopFiles);
 						int desktopCounter=0;
 						while(desktopCounter<desktopFilesCount) {
-							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
+							if(strstr(desktopFiles[desktopCounter].category,section->category)==NULL&&strcmp(section->category,"all")!=0) {
+								snprintf(message, 300, "%s discarded", desktopFiles[desktopCounter].displayName);
+								logMessage("INFO", message);
 								break;
 							} else {
+								snprintf(message, 300, "%s considered", desktopFiles[desktopCounter].displayName);
+								logMessage("INFO", message);
 								value++;
 							}
 							desktopCounter++;
@@ -897,7 +914,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 					} else {
 						value++;
 					}
-//					break;
 				}
 			}
 			for (int i=0;i<n;i++){
@@ -905,7 +921,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			}
 			if (value>0) {
 				section->hidden=0;
-				break;
 			}
 		}
 		for (int i=0;i<dirCounter;i++){
