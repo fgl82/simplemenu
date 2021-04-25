@@ -476,6 +476,8 @@ void loadTheme(char *theme) {
 		value = ini_get(themeConfig, menuSections[i].sectionName, "name");
 		if (value!=NULL) {
 			strcpy(menuSections[i].fantasyName, value);
+		} else {
+			strcpy(menuSections[i].fantasyName, "\0");
 		}
 
     	currentMode=3;
@@ -1035,6 +1037,8 @@ int loadSections(char *file) {
 
 		if (value!=NULL) {
 			strcpy(menuSections[menuSectionCounter].fantasyName, value);
+		} else {
+			strcpy(menuSections[menuSectionCounter].fantasyName, "\0");
 		}
 
 		menuSections[menuSectionCounter].currentPage=0;
