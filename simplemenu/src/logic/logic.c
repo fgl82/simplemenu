@@ -882,7 +882,21 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 						strcmp((files[i]),".")!=0 &&
 						isExtensionValid(ext,section->fileExtensions)) {
-					value++;
+					if(strcmp(ext,".opk")==0) {
+						struct OPKDesktopFile desktopFiles[10];
+						int desktopFilesCount=getOPK(files[i], desktopFiles);
+						int desktopCounter=0;
+						while(desktopCounter<desktopFilesCount) {
+							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
+								break;
+							} else {
+								value++;
+							}
+							desktopCounter++;
+						}
+					} else {
+						value++;
+					}
 //					break;
 				}
 			}
