@@ -109,7 +109,9 @@ int advanceSection(int showLogo) {
 		if (currentSectionNumber==menuSectionCounter-1) {
 			currentSectionNumber=0;
 		}
-		CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		if(!CURRENT_SECTION.counted&&!CURRENT_SECTION.initialized) {
+			CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		}
 		if (tempCurrentSection==currentSectionNumber) {
 			returnValue = 0;
 			break;
@@ -145,7 +147,9 @@ int rewindSection(int showLogo) {
 		if (currentSectionNumber==-1) {
 			currentSectionNumber=menuSectionCounter-2;
 		}
-		CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		if(!CURRENT_SECTION.counted&&!CURRENT_SECTION.initialized) {
+			CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+		}
 		if (tempCurrentSection==currentSectionNumber) {
 			returnValue = 0;
 			break;
@@ -611,6 +615,7 @@ void performGroupChoosingAction() {
 				currentSectionNumber=0;
 				for(int i=0;i<menuSectionCounter;i++) {
 					menuSections[i].initialized=0;
+					menuSections[i].counted=0;
 					menuSections[i].currentPage=0;
 					menuSections[i].realCurrentGameNumber=0;
 					menuSections[i].currentGameInPage=0;

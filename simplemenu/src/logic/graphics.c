@@ -1002,7 +1002,7 @@ void initializeDisplay() {
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 240;
+	SCREEN_HEIGHT = 480;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);

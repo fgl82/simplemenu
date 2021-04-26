@@ -926,6 +926,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		for (int i=0;i<dirCounter;i++){
 			free (dirs[i]);
 		}
+		section->counted=1;
 		return value;
 	}
 

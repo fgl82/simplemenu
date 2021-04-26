@@ -68,7 +68,7 @@ int performAction(struct Node *node) {
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
-	if(keys[BTN_B]) {
+	if(keys[BTN_B]&&!(currentState==SELECTING_SECTION)) {
 		hotKeyPressed=1;
 		if (currentState==BROWSING_GAME_LIST) {
 			if (rom!=NULL&&keys[BTN_A]) {
@@ -175,7 +175,7 @@ int performAction(struct Node *node) {
 			}
 		}
 	}
-	if (keys[BTN_SELECT]&&!favoritesSectionSelected) {
+	if (keys[BTN_SELECT]&&!favoritesSectionSelected&&!(currentState==SELECTING_SECTION)) {
 		currentState=SELECTING_EMULATOR;
 		chosenChoosingOption=0;
 		launchAtBoot=isLaunchAtBoot(CURRENT_SECTION.currentGameNode->data->name);
@@ -211,7 +211,7 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 
-	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!isUSBMode) {
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!isUSBMode&&!(currentState==SELECTING_SECTION)) {
 
 		if (rom!=NULL&&keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {

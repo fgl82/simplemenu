@@ -229,6 +229,7 @@ struct SectionGroup {
 };
 
 struct MenuSection {
+	int counted;
 	char sectionName[250];
 	char fantasyName[250];
 	char *emulatorDirectories[10];
