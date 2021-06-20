@@ -682,9 +682,6 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
-	if(systemX>0&&systemY>0) {
-		displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemX), calculateProportionalSizeOrDistance(systemY));
-	}
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
 		double h = screenshot->h;
@@ -709,15 +706,16 @@ void displayImageOnScreenCustom(char *fileName) {
 		int heartX = (calculateProportionalSizeOrDistance(artX)+(w/2));
 		int heartY = (calculateProportionalSizeOrDistance(artY)+(h/2));
 		displayHeart(heartX, heartY);
-		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY), 0, 0, w, h, 0, smoothing);
+		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2, 0, 0, w, h, 0, smoothing);
 		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			} else {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY)+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+//				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
 	} else {
@@ -732,6 +730,9 @@ void displayImageOnScreenCustom(char *fileName) {
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
+	}
+	if(systemX>0&&systemY>0) {
+		displaySurface(CURRENT_SECTION.systemPictureSurface,calculateProportionalSizeOrDistance(systemX), calculateProportionalSizeOrDistance(systemY));
 	}
 }
 
@@ -960,7 +961,7 @@ void initializeDisplay() {
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 #ifdef TARGET_OD
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(320, 240, 32, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
 	SDL_Quit();
 #endif
@@ -1002,7 +1003,7 @@ void initializeDisplay() {
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 480;
+	SCREEN_HEIGHT = 240;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -1038,11 +1039,11 @@ void initializeDisplay() {
 		}
 	}
 #endif
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
 	if (screen==NULL) {
 		SCREEN_WIDTH=320;
 		SCREEN_HEIGHT=240;
-		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
 	}
 
 #endif
