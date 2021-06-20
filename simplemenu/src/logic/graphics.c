@@ -712,7 +712,8 @@ void displayImageOnScreenCustom(char *fileName) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+//				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			} else {
 //				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
@@ -727,7 +728,11 @@ void displayImageOnScreenCustom(char *fileName) {
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidth/4)*3;
 			if (CURRENT_SECTION.gameCount>0) {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				if (currentGameNameBeingDisplayed[0]=='+') {
+					drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				} else {
+					drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
+				}
 			}
 		}
 	}
