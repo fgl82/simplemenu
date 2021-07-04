@@ -9,7 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include <opk.h>
+#include </home/bittboy/git/libopk/opk.h>
 
 #include <sys/ioctl.h>
 #if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
@@ -327,7 +327,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=3"); //2: integer scaling
 		}
 #endif
-		FILE *fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+		fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
 		if (fp!=NULL) {
 			fprintf(fp, "%d" , 1);
 			fclose(fp);

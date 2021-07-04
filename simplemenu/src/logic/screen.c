@@ -4,7 +4,6 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include <opk.h>
 
 #include "../headers/constants.h"
 #include "../headers/definitions.h"
@@ -758,7 +757,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		logMessage("INFO",values[DEFAULT_OPTION]);
 	}
 	#if defined TARGET_RFW
-	strcpy(values[USB_OPTION],"YES \0");
+	strcpy(values[USB_OPTION]," \0");
 	#else
 	if (hdmiChanged==1) {
 		strcpy(values[USB_OPTION],"enabled");
@@ -937,7 +936,7 @@ void updateScreen(struct Node *node) {
 	} else {
 		rom = node->data;
 	}
-	if (!isUSBMode&&!itsStoppedBecauseOfAnError) {
+	if (!itsStoppedBecauseOfAnError) {
 		switch(currentState) {
 			case BROWSING_GAME_LIST:
 				if (fullscreenMode) {
@@ -982,8 +981,6 @@ void updateScreen(struct Node *node) {
 				drawTimedShutDownScreen();
 				break;
 		}
-	} else if (isUSBMode) {
-		drawUSBScreen();
 	} else if (itsStoppedBecauseOfAnError) {
 		showErrorMessage(errorMessage);
 	}

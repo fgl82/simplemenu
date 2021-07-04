@@ -824,14 +824,15 @@ void performSettingsChoosingAction() {
 	}
 	#if defined TARGET_RFW
 	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
 		hotKeyPressed=0;
-		int returnedValue = system("./scripts/usb_mode_on.sh>/home/retrofw/apps/test.txt");
-		if (returnedValue==0) {
-			isUSBMode = 1;
-		} else {
-			generateError("USB MODE  NOT AVAILABLE",0);
-		}
-		currentState=BROWSING_GAME_LIST;
+//		int returnedValue = system("./scripts/usb_mode_on.sh");
+//		if (returnedValue==0) {
+////			isUSBMode = 1;
+//		} else {
+//			generateError("USB MODE  NOT AVAILABLE",0);
+//		}
+//		currentState=BROWSING_GAME_LIST;
 	}
 	#endif
 	else if (keys[BTN_START]) {

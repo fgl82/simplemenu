@@ -994,6 +994,7 @@ void initializeDisplay() {
 		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
+FILE *fp;
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
@@ -1001,7 +1002,7 @@ void initializeDisplay() {
 	//	1: aspect
 	//	2: original (fallback to aspect when downscale is needed)
 	//	3: 4:3
-	FILE *fp = fopen("/proc/jz/ipu","w");
+	fp = fopen("/proc/jz/ipu","w");
 	fprintf(fp,"0");
 	fclose(fp);
 #endif
@@ -1021,7 +1022,7 @@ void initializeDisplay() {
 
 	SDL_Rect** modes = SDL_ListModes(NULL,SDL_NOFRAME|SDL_SWSURFACE);
 
-	FILE *fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+	fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
 	if (fp!=NULL) {
 		fprintf(fp, "%d" , 0);
 		fclose(fp);

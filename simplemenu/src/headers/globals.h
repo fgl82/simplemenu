@@ -44,7 +44,7 @@ extern int currentState;
 extern int loading;
 extern int isPicModeMenuHidden;
 extern int isSuspended;
-extern int isUSBMode;
+//extern int isUSBMode;
 extern int activeGroup;
 extern int beforeTryingToSwitchGroup;
 extern int chosenSetting;

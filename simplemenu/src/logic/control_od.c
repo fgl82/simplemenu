@@ -56,15 +56,15 @@ int performAction(struct Node *node) {
 			return(1);
 		}
 	}
-	if (keys[BTN_START]&&isUSBMode) {
-		hotKeyPressed=0;
-		isUSBMode=0;
-		int ret = system("./usb_mode_off.sh");
-		if (ret==-1) {
-			generateError("FATAL ERROR", 1);
-		}
-		return 0;
-	}
+//	if (keys[BTN_START]&&isUSBMode) {
+//		hotKeyPressed=0;
+//		isUSBMode=0;
+//		int ret = system("./usb_mode_off.sh");
+//		if (ret==-1) {
+//			generateError("FATAL ERROR", 1);
+//		}
+//		return 0;
+//	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
@@ -211,7 +211,7 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 
-	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!isUSBMode&&!(currentState==SELECTING_SECTION)) {
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!(currentState==SELECTING_SECTION)) {
 
 		if (rom!=NULL&&keys[BTN_X]) {
 			if(!isPicModeMenuHidden) {

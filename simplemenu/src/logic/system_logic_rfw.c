@@ -44,16 +44,16 @@ void clearTimer() {
 
 uint32_t suspend() {
 	if(timeoutValue!=0) {
-		if (!isUSBMode) {
+//		if (!isUSBMode) {
 			clearTimer();
 			backlightValue = getBacklight();
 			oldCPU=currentCPU;
 			setBacklight(0);
 			setCPU(OC_SLEEP);
 			isSuspended=1;
-		} else {
-			resetScreenOffTimer();
-		}
+//		} else {
+//			resetScreenOffTimer();
+//		}
 	}
 	return 0;
 };
