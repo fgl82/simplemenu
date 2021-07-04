@@ -5,7 +5,7 @@ TARGET = simplemenu
 #PLATFORM = OD
 #PLATFORM = OD-BETA
 #PLATFORM = NPG
-PLATFORM = PC
+PLATFORM = RFW
 
 # Compiler
 ifeq ($(PLATFORM), BITTBOY)

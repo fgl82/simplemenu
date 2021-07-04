@@ -12,5 +12,5 @@ void checkIfDefault();
 void loadTheme(char *theme);
 void loadSectionGroups();
 void checkThemes();
-char *getLaunchAtBoot();
+struct AutostartRom *getLaunchAtBoot();
 #endif

@@ -84,6 +84,7 @@ void initialSetup() {
 	setCPU(OC_NO);
 #endif
 	initializeDisplay();
+	logMessage("INFO","2");
 	checkThemes();
 	loadLastState();
 	HW_Init();
@@ -149,7 +150,7 @@ void processEvents() {
 				updateScreen(CURRENT_SECTION.currentGameNode);
 				refreshScreen();
 			}
-		} else if (event.type==getKeyUp()&&!isUSBMode&&currentState==BROWSING_GAME_LIST) {
+		} else if (event.type==getKeyUp()&&currentState==BROWSING_GAME_LIST) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if (currentState!=SELECTING_SECTION) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {

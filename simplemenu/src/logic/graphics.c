@@ -703,8 +703,8 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-		int heartX = (calculateProportionalSizeOrDistance(artX)+(w/2));
-		int heartY = (calculateProportionalSizeOrDistance(artY)+(h/2));
+		int heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
+		int heartY = calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)/2;
 		displayHeart(heartX, heartY);
 		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2, 0, 0, w, h, 0, smoothing);
 		displayHeart(heartX, heartY);
@@ -712,16 +712,15 @@ void displayImageOnScreenCustom(char *fileName) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
-//				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			} else {
-//				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX+(artWidth/2)), calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2+h+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2, calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)+calculateProportionalSizeOrDistance(artTextDistanceFromPicture),calculateProportionalSizeOrDistance(artWidth));
 			}
 		}
 	} else {
-		int heartX = calculateProportionalSizeOrDistance(artX+(artWidth/2));
+		int heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
 		int heartY = calculateProportionalSizeOrDistance(artY)+(calculateProportionalSizeOrDistance((artWidth/4)*3)/2);
+//		int heartY = calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)/2;
 		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0) {
 			char temp[500];
@@ -994,6 +993,7 @@ void initializeDisplay() {
 		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
+FILE *fp;
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
@@ -1001,7 +1001,7 @@ void initializeDisplay() {
 	//	1: aspect
 	//	2: original (fallback to aspect when downscale is needed)
 	//	3: 4:3
-	FILE *fp = fopen("/proc/jz/ipu","w");
+	fp = fopen("/proc/jz/ipu","w");
 	fprintf(fp,"0");
 	fclose(fp);
 #endif
@@ -1021,7 +1021,7 @@ void initializeDisplay() {
 
 	SDL_Rect** modes = SDL_ListModes(NULL,SDL_NOFRAME|SDL_SWSURFACE);
 
-	FILE *fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+	fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
 	if (fp!=NULL) {
 		fprintf(fp, "%d" , 0);
 		fclose(fp);
