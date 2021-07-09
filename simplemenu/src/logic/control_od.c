@@ -211,6 +211,13 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
+		if (keys[BTN_L2]) {
+			showOrHideFavorites();
+			return 0;
+		}
+	}
+
 	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!(currentState==SELECTING_SECTION)) {
 
 		if (rom!=NULL&&keys[BTN_X]) {
@@ -236,10 +243,6 @@ int performAction(struct Node *node) {
 //			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
 //			pthread_create(&clockThread, NULL, updateClock,NULL);
-			return 0;
-		}
-		if (keys[BTN_L2]) {
-			showOrHideFavorites();
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_A]) {

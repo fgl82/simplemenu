@@ -21,14 +21,16 @@ void openLogFile() {
 
 void logMessage(const char* tag, const char* message) {
 	if (loggingEnabled) {
-		if (fp==NULL) {
-			openLogFile();
-		}
 		time_t now;
 		time(&now);
 		char *time = ctime(&now);
 		time[strlen(time)-1]='\0';
+		if (fp==NULL) {
+			openLogFile();
+		}
+		printf("%s | %-5s | %s\n", time, tag, message);
 		fprintf(fp,"%s | %-5s | %s\n", time, tag, message);
+
 	}
 }
 

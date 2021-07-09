@@ -80,14 +80,14 @@ void clearTimer() {
 
 uint32_t suspend() {
 	if(timeoutValue!=0&&hdmiEnabled==0) {
-		if (!isUSBMode) {
+//		if (!isUSBMode) {
 			clearTimer();
 			oldCPU=currentCPU;
 			turnScreenOnOrOff(0);
 			isSuspended=1;
-		} else {
-			resetScreenOffTimer();
-		}
+//		} else {
+//			resetScreenOffTimer();
+//		}
 	}
 	return 0;
 };
@@ -141,7 +141,7 @@ int getBatteryLevel() {
 	int max_voltage;
 	int voltage_now;
 	int total;
-	#if defined TARGET_OD_BETA
+	#if defined (TARGET_OD_BETA)
 	int min_voltage;
 		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);
@@ -160,7 +160,7 @@ int getBatteryLevel() {
 			return 100;
 		}
 		return total;
-	#elif defined TARGET_OD
+	#elif defined (TARGET_OD)
 		int min_voltage;
 		FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
 		fscanf(f, "%i", &max_voltage);

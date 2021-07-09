@@ -961,8 +961,9 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_ShowCursor(0);
-
+	logMessage("INFO","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
+	logMessage("INFO","maybe...");
 #ifdef TARGET_OD
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, 32, SDL_SWSURFACE);
@@ -970,6 +971,22 @@ void initializeDisplay() {
 	SDL_Quit();
 #endif
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+
+
+//#ifdef TARGET_BITTBOY
+//	logMessage("INFO","yes?");
+//	logMessage("INFO","333");
+//	SCREEN_WIDTH=320;
+//	SCREEN_HEIGHT=240;
+//	logMessage("INFO","444");
+//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+//	logMessage("INFO","555");
+//	//	TTF_Init();
+//	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+//	logMessage("INFO","Initialized Display");
+//	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
+//	return;
+//#endif
 
 	//    SDL_JoystickEventState(SDL_ENABLE);
 	//    joystick = SDL_JoystickOpen(0);

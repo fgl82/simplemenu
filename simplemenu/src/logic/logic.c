@@ -91,15 +91,18 @@ char *getRomRealName(char *romName) {
 }
 
 int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
+#ifndef TARGET_BITTBOY
 	struct OPK *opk = opk_open(package_path);
 	if (opk==NULL) {
 		return 0;
 	}
+#endif
 	char *name;
 	char *category;
 	char *terminal;
 
 	int i=0;
+#ifndef TARGET_BITTBOY
 	while (1) {
 		const char *metadata_name;
 		if (opk_open_metadata(opk, &metadata_name) <= 0) {
@@ -136,6 +139,7 @@ int getOPK(char *package_path, struct OPKDesktopFile* desktopFiles) {
 		i++;
 	}
 	opk_close(opk);
+#endif
 	return i;
 }
 
@@ -277,6 +281,7 @@ void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecu
 #else
 void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #endif
+		FILE *fp;
 		char *exec = malloc(strlen(executable)+5000);
 		strcpy(exec, executable);
 		//#ifndef TARGET_OD_BETA
@@ -312,7 +317,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		//	1: aspect
 		//	2: original (fallback to aspect when downscale is needed)
 		//	3: 4:3
-		FILE *fp = fopen("/proc/jz/ipu","w");
+		fp = fopen("/proc/jz/ipu","w");
 		fprintf(fp,CURRENT_SECTION.scaling);
 		fclose(fp);
 #endif

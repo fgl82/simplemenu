@@ -79,15 +79,17 @@ void initialSetup() {
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
-	currentCPU = OC_NO;
-#ifndef TARGET_OD_BETA
-	setCPU(OC_NO);
-#endif
+	logMessage("INFO","0000");
 	initializeDisplay();
 	logMessage("INFO","2");
 	checkThemes();
 	loadLastState();
 	HW_Init();
+	currentCPU = OC_NO;
+#ifndef TARGET_OD_BETA
+	logMessage("INFO", "Setting CPU to base");
+	setCPU(currentCPU);
+#endif
 	setupKeys();
 	checkIfDefault();
 }
@@ -176,7 +178,22 @@ void processEvents() {
 					refreshScreen();
 				}
 			}
-		} else if (event.type==SDL_MOUSEMOTION) {
+		}
+#if defined (TARGET_BITTBOY)
+		else if (event.type==getKeyUp()&&currentState==SELECTING_SECTION) {
+			if(((int)event.key.keysym.sym)==BTN_B) {
+				hotKeyPressed=0;
+				CURRENT_SECTION.alphabeticalPaging=0;
+				aKeyComboWasPressed=0;
+				currentState=BROWSING_GAME_LIST;
+				if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+					updateScreen(CURRENT_SECTION.currentGameNode);
+					refreshScreen();
+				}
+			}
+		}
+#endif
+		else if (event.type==SDL_MOUSEMOTION) {
 			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
 				loadGameList(0);
 				currentState=BROWSING_GAME_LIST;

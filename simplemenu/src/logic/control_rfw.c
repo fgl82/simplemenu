@@ -49,7 +49,8 @@ int performAction(struct Node *node) {
 			return 1;
 		}
 	}
-	if (rom!=NULL&&keys[BTN_R]&&keys[BTN_B]) {
+	if (rom!=NULL&&keys[BTN_R1]&&keys[BTN_B]) {
+		aKeyComboWasPressed=1;
 		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			loadGameList(1);
@@ -211,6 +212,13 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
+		if (keys[BTN_R]) {
+			showOrHideFavorites();
+			return 0;
+		}
+	}
+
 	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&!(currentState==SELECTING_SECTION)) {
 
 		if (rom!=NULL&&keys[BTN_X]) {
@@ -236,10 +244,6 @@ int performAction(struct Node *node) {
 //			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
 //			pthread_create(&clockThread, NULL, updateClock,NULL);
-			return 0;
-		}
-		if (keys[BTN_R]) {
-			showOrHideFavorites();
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_A]) {

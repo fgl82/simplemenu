@@ -282,22 +282,26 @@ int32_t memdev = 0;
 
 void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
-	#ifndef TARGET_PC
 	uint32_t x, v;
 	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
+	logMessage("INFO", "Into for");
 	for(x=0; x<total; x++) {
 		if((oc_table[x] >> 16) >= mhz) {
+			logMessage("INFO", "Found if");
 			v = memregs[0];
+			logMessage("INFO", "Found if 1");
 			v&= 0xffff0000;
+			logMessage("INFO", "Found if 2");
 			v|= (oc_table[x] &  0x0000ffff);
+			logMessage("INFO", "Found if 3");
 			memregs[0] = v;
+			logMessage("INFO", "Break");
 			break;
 		}
 	}
 	char temp[300];
 	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
 	logMessage("INFO",temp);
-	#endif
 }
 
 int getBacklight()
@@ -326,16 +330,16 @@ void clearTimer() {
 
 uint32_t suspend() {
 	if(timeoutValue!=0) {
-		if (!isUSBMode) {
+//		if (!isUSBMode) {
 			clearTimer();
 			backlightValue = getBacklight();
 			oldCPU=currentCPU;
 			setBacklight(0);
 			setCPU(OC_SLEEP);
 			isSuspended=1;
-		} else {
-			resetScreenOffTimer();
-		}
+//		} else {
+//			resetScreenOffTimer();
+//		}
 	}
 	return 0;
 };
