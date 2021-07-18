@@ -302,7 +302,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		clearPicModeHideLogoTimer();
 		clearPicModeHideMenuTimer();
 #endif
-		logMessage("INFO", "Launching Game");
+		logMessage("INFO","executeCommand","Launching Game");
 #ifndef TARGET_PC
 //		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		if (currentSectionNumber == favoritesSectionNumber) {
@@ -329,7 +329,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		} else if (strcmp(CURRENT_SECTION.scaling,"2")==0) {
 			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=2"); //2: integer scaling
 		} else if (strcmp(CURRENT_SECTION.scaling,"3")==0) {
-			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=3"); //2: integer scaling
+			SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE"); //3: not set
 		}
 #endif
 		fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
@@ -338,9 +338,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			fclose(fp);
 		}
 #ifndef TARGET_PC
-		logMessage("INFO",emulatorFolder);
-		logMessage("INFO",exec);
-		logMessage("INFO",fileToBeExecutedWithFullPath);
+		logMessage("INFO","executeCommand",emulatorFolder);
+		logMessage("INFO","executeCommand",exec);
+		logMessage("INFO","executeCommand",fileToBeExecutedWithFullPath);
 		SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 		SDL_ShowCursor(1);
 		freeResources();
@@ -391,11 +391,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		strcat(exec, " \"");
 		strcat(exec, fileToBeExecutedWithFullPath);
 		strcat(exec, "\"");
-		logMessage("INFO",exec);
+		logMessage("INFO","executeCommand",exec);
 		freeResources();
 		int ret = system(exec);
 		if(ret == -1) {
-			logMessage("ERROR","Error executing emulator");
+			logMessage("ERROR","executeCommand","Error executing emulator");
 		}
 		free(exec);
 		initializeDisplay();
@@ -411,7 +411,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		strcpy(fileExtensionsCopy, fileExtensions);
 		char *ptr = strtok(fileExtensionsCopy, ",");
 		while(ptr != NULL) {
-			int areStringsDifferent = strcmp(extension,ptr);
+			int areStringsDifferent = strcasecmp(extension,ptr);
 			if (!areStringsDifferent) {
 				return(1);
 			}
@@ -524,6 +524,20 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 //		return merge(head,second);
 //	}
 
+	int compareIgnoreCase(char * str1, char* str2) {
+		char* temp1 = strdup(str1);
+		char* temp2 = strdup(str2);
+		for(int i=0;temp1[i]; i++) {
+			temp1[i] = tolower(temp1[i]);
+		}
+		for(int i=0;temp2[i]; i++) {
+			temp2[i] = tolower(temp2[i]);
+		}
+		free(temp1);
+		free(temp2);
+		return strcmp(temp1, temp2);
+	}
+
 	struct Node* SortedMerge(struct Node* a, struct Node* b) {
 		struct Node* result = NULL;
 
@@ -558,7 +572,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			stripGameName(noPathS1Alias);
 			stripGameName(noPathS2Alias);
 		}
-		if (strcmp(noPathS1Alias, noPathS2Alias)<=0)
+		if (strcasecmp(noPathS1Alias, noPathS2Alias)<=0)
 		{
 			free(noPathS1Alias);
 			free(noPathS2Alias);
@@ -641,6 +655,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	void loadFavoritesSectionGameList() {
 		int gameInPage = 0;
 		int page = 0;
+		logMessage("ERROR","loadFavoritesSectionGameList", "Setting total pages");
 		FAVORITES_SECTION.totalPages=0;
 		FAVORITES_SECTION.gameCount=0;
 		cleanListForSection(&FAVORITES_SECTION);
@@ -649,6 +664,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				if(i!=favoritesSize) {
 					page++;
 					gameInPage = 0;
+					logMessage("ERROR","loadFavoritesSectionGameList", "Increasing total pages");
 					FAVORITES_SECTION.totalPages++;
 				}
 			}
@@ -680,7 +696,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		int j=0;
 		int n = scandir(directory, &result, NULL, alphasort);
 		if (n < 0) {
-			logMessage("ERROR: scandir(%s)\n", directory);
+			logMessage("ERROR","scanDirectory", directory);
 			return 0;
 		}
 		while (j<n) {
@@ -817,41 +833,41 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
 				strcpy(stolenFile->title,ptr);
-				logMessage("INFO", "STOLEN FILE title");
+				logMessage("INFO", "fillUpStolenGMenuFile","STOLEN FILE title");
 				if (stolenFile->title[strlen(stolenFile->title)-1]=='\n') {
-					logMessage("INFO", "HAD ENTER");
+					logMessage("INFO","fillUpStolenGMenuFile", "HAD ENTER");
 					stolenFile->title[strlen(stolenFile->title)-1]='\0';
 				}
-				logMessage("INFO", stolenFile->title);
+				logMessage("INFO","fillUpStolenGMenuFile", stolenFile->title);
 			} else if(strstr(line,"exec")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
 				strcpy(stolenFile->exec,ptr);
-				logMessage("INFO", "STOLEN FILE exec");
+				logMessage("INFO","fillUpStolenGMenuFile", "STOLEN FILE exec");
 				if (stolenFile->exec[strlen(stolenFile->exec)-1]=='\n') {
-					logMessage("INFO", "HAD ENTER");
+					logMessage("INFO", "fillUpStolenGMenuFile","HAD ENTER");
 					stolenFile->exec[strlen(stolenFile->exec)-1]='\0';
 				} else {
 					stolenFile->exec[strlen(stolenFile->exec)]='\0';
 				}
-				logMessage("INFO", stolenFile->exec);
+				logMessage("INFO","fillUpStolenGMenuFile", stolenFile->exec);
 			} else if(strstr(line,"params")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
 				strcpy(stolenFile->params,ptr);
-				logMessage("INFO", "STOLEN FILE params");
+				logMessage("INFO","fillUpStolenGMenuFile", "STOLEN FILE params");
 				if (stolenFile->params[strlen(stolenFile->params)-1]=='\n') {
-					logMessage("INFO", "HAD ENTER");
+					logMessage("INFO","fillUpStolenGMenuFile", "HAD ENTER");
 					stolenFile->params[strlen(stolenFile->params)-1]='\0';
 				}
-				logMessage("INFO", stolenFile->params);
+				logMessage("INFO","fillUpStolenGMenuFile", stolenFile->params);
 				paramsFlag=1;
 			} else if(strstr(line,"consoleapp")!=NULL) {
 				ptr = strtok(line, "=");
 				ptr = strtok(NULL, "=");
-				logMessage("INFO", "STOLEN FILE isConsoleApp");
+				logMessage("INFO","fillUpStolenGMenuFile", "STOLEN FILE isConsoleApp");
 				stolenFile->isConsoleApp=strcmp("false",ptr);
-				logMessage("INFO", (stolenFile->isConsoleApp==0?"false":"true"));
+				logMessage("INFO","fillUpStolenGMenuFile", (stolenFile->isConsoleApp==0?"false":"true"));
 				break;
 			}
 		}
@@ -873,28 +889,28 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		char *filesDirectoriesCopy = strdup(section->filesDirectories);
 		char message[300];
 		snprintf(message, 300, "Directories %s ", filesDirectoriesCopy);
-		logMessage("INFO", message);
+		logMessage("INFO","theSectionHasGames",message);
 		ptr = strtok(filesDirectoriesCopy, ",");
 		snprintf(message, 300, "Looking at %s", ptr);
-		logMessage("INFO", message);
+		logMessage("INFO","theSectionHasGames", message);
 		char *files[MAX_GAMES_IN_SECTION];
 		int value = 0;
 		while (ptr!=NULL) {
 			dirs[dirCounter]=strdup(ptr);
 			ptr = strtok(NULL, ",");
 			snprintf(message, 300, "Looking at %s", ptr);
-			logMessage("INFO", message);
+			logMessage("INFO","theSectionHasGames", message);
 			dirCounter++;
 		}
 		snprintf(message, 300, "DirCounter is %d", dirCounter);
-		logMessage("INFO", message);
+		logMessage("INFO","theSectionHasGames", message);
 		free(filesDirectoriesCopy);
 		for(int k=0;k<dirCounter;k++) {
 			snprintf(message, 300, "k is %d", k);
-			logMessage("INFO", message);
+			logMessage("INFO","theSectionHasGames", message);
 			int n = recursivelyScanDirectory(dirs[k], files, 0);
 			snprintf(message, 300, "Directory %s has %d files", dirs[k], n);
-			logMessage("INFO", message);
+			logMessage("INFO","theSectionHasGames", message);
 			for (int i=0;i<n;i++){
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
@@ -907,11 +923,11 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 						while(desktopCounter<desktopFilesCount) {
 							if(strstr(desktopFiles[desktopCounter].category,section->category)==NULL&&strcmp(section->category,"all")!=0) {
 								snprintf(message, 300, "%s discarded", desktopFiles[desktopCounter].displayName);
-								logMessage("INFO", message);
+								logMessage("INFO","theSectionHasGames", message);
 								break;
 							} else {
 								snprintf(message, 300, "%s considered", desktopFiles[desktopCounter].displayName);
-								logMessage("INFO", message);
+								logMessage("INFO","theSectionHasGames", message);
 								value++;
 							}
 							desktopCounter++;
@@ -971,16 +987,16 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 
 	void loadGameList(int refresh) {
 //		Uint32 startTime = SDL_GetTicks();
-		logMessage("INFO",CURRENT_SECTION.sectionName);
+		logMessage("INFO","loadGameList",CURRENT_SECTION.sectionName);
 		int loadedFiles=0;
-		logMessage("INFO","Should we skip this?");
+		logMessage("INFO","loadGameList","Should we skip this?");
 		FILE *fp=NULL;
 		if (CURRENT_SECTION.initialized==0||refresh) {
 			if(getLaunchAtBoot()==NULL) {
 				drawLoadingText();
 				refreshScreen();
 			}
-			logMessage("INFO","No, loading game list");
+			logMessage("INFO","loadGameList","No, loading game list");
 			CURRENT_SECTION.initialized=1;
 			//We don't need to reload the alias file if just refreshing
 			if (!refresh) {
@@ -998,7 +1014,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 
 			if (refresh) {
 				cleanListForSection(&CURRENT_SECTION);
-				logMessage("INFO","Cleaned section list");
+				logMessage("INFO","loadGameList","Cleaned section list");
 			}
 			if (useCache==1) {
 				if (refresh) {
@@ -1007,7 +1023,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 				fp = fopen(sectionCacheName,"r");
 				if (fp!=NULL) {
-					logMessage("INFO","Using cache file");
+					logMessage("INFO","loadGameList","Using cache file");
 					char currentline[2000];
 					while (fgets(currentline, sizeof(currentline), fp) != NULL) {
 						if(getLaunchAtBoot()==NULL) {
@@ -1047,7 +1063,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 						game++;
 						CURRENT_SECTION.gameCount++;
 					}
-					logMessage("INFO","Finished reading cache");
+					logMessage("INFO","loadGameList","Finished reading cache");
 					CURRENT_SECTION.tail=GetNthNode(CURRENT_SECTION.gameCount-1);
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 					if (fp!=NULL) {
@@ -1075,9 +1091,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				}
 
 				int n = 0;
-				logMessage("INFO","Scanning directory");
+				logMessage("INFO","loadGameList","Scanning directory");
 				n = scanDirectory(dirs[k], files, 0);
-				logMessage("INFO","Processing files");
+				logMessage("INFO","loadGameList","Processing files");
 				int realItemCount = n;
 				for (int i=0;i<n;i++){
 					char *ext = getExtension(files[i]);
@@ -1095,7 +1111,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 								} else {
 #ifdef TARGET_RFW
 									while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
-										logMessage("WARN", "Non-RetroFW desktop file found");
+										logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
 										desktopCounter++;
 									}
 #endif
@@ -1152,15 +1168,15 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 							//it's a custom link
 							if(strcmp(ext,".fgl")==0) {
 								struct StolenGMenuFile stolenFile;
-								logMessage("INFO", "STOLEN FILE!!!");
+								logMessage("INFO","loadGameList", "STOLEN FILE!!!");
 								fillUpStolenGMenuFile(&stolenFile, files[i]);
 								strcpy(rom->name,stolenFile.exec);
 								if(stolenFile.params[0]!='\0') {
 									strcat(rom->name," ");
 									strcat(rom->name,stolenFile.params);
 								}
-								logMessage("INFO", "FINAL NAME");
-								logMessage("INFO", rom->name);
+								logMessage("INFO","loadGameList", "FINAL NAME");
+								logMessage("INFO","loadGameList", rom->name);
 								rom->alias=malloc(strlen(stolenFile.title)+1);
 								strcpy(rom->alias, stolenFile.title);
 								rom->isConsoleApp=stolenFile.isConsoleApp;
@@ -1190,7 +1206,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 						}
 					}
 				}
-				logMessage("INFO","All files loaded");
+				logMessage("INFO","loadGameList","All files loaded");
 				for (int i=0;i<n;i++){
 					free(files[i]);
 				}
@@ -1207,10 +1223,10 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 				free (dirs[i]);
 			}
 
-			if (strlen(CURRENT_SECTION.aliasFileName) > 2) {
-				logMessage("INFO","The list needs to be sorted");
+//			if (strlen(CURRENT_SECTION.aliasFileName) > 0) {
+				logMessage("INFO","loadGameList","The list needs to be sorted");
 				mergeSort(&CURRENT_SECTION.head);
-			}
+//			}
 
 			if(useCache==1) {
 				fp = fopen(sectionCacheName,"w");
@@ -1262,42 +1278,43 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			return;
 		}
 		if(sectionCount==0||currentSectionNumber==favoritesSectionNumber) {
-			logMessage("INFO","No sections found or favorites was selected");
+			logMessage("INFO","determineStartingScreen","No sections found or favorites was selected");
 			favoritesSectionSelected=1;
 			loadFavoritesSectionGameList();
-			logMessage("INFO","Favorites loaded");
+			logMessage("INFO","determineStartingScreen","Favorites loaded");
 			if (CURRENT_SECTION.backgroundSurface == NULL) {
-				logMessage("INFO","Loading system background");
+				logMessage("INFO","determineStartingScreen","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
-			logMessage("INFO","Section background loaded and resized");
+			logMessage("INFO","determineStartingScreen","Section background loaded and resized");
 			int gamesInSection=CURRENT_SECTION.gameCount;
 			int pages = gamesInSection / ITEMS_PER_PAGE;
 			if (gamesInSection%ITEMS_PER_PAGE==0) {
 				pages--;
 			}
-			logMessage("INFO","Pages set");
+			logMessage("INFO","determineStartingScreen","Pages set");
 			CURRENT_SECTION.totalPages=pages;
 			if (favoritesSize==0&&sectionCount>0) {
-				logMessage("INFO","Favorites was selected but no favorites were found");
+				logMessage("INFO","determineStartingScreen","Favorites was selected but no favorites were found");
 				favoritesSectionSelected=0;
 				currentSectionNumber=0;
-				logMessage("INFO","Trying to determine starting section again");
+				logMessage("INFO","determineStartingScreen","Trying to determine starting section again");
 				determineStartingScreen(sectionCount);
 			}
 		} else {
-			logMessage("INFO","determineStartingScreen - Loading game list");
+			logMessage("INFO","determineStartingScreen","Loading game list");
 			loadGameList(0);
 			if (CURRENT_SECTION.gameCount==0){
 				advanceSection(0);
+				logMessage("INFO","determineStartingScreen","Loading game list again");
 				loadGameList(0);
 //				generateError("NO GAMES FOUND!", 0);
 			}
 			if (CURRENT_SECTION.backgroundSurface == NULL) {
-				logMessage("INFO","Loading system background");
+				logMessage("INFO","determineStartingScreen","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
@@ -1310,7 +1327,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			CURRENT_SECTION.totalPages=pages;
 
 		}
-		logMessage("INFO","Found starting screen");
+		logMessage("INFO","determineStartingScreen","Found starting screen");
 	}
 
 	void deleteGame(struct Rom *rom) {

@@ -53,7 +53,7 @@ void checkIfDefault() {
 	FILE *fp=NULL;
 	FILE *fpScripts=NULL;
 	#ifdef TARGET_BITTBOY
-	logMessage("INFO","Checking if default bittboy");
+	logMessage("INFO","checkIfDefault","Checking if default bittboy");
 	fp = fopen("/mnt/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
@@ -82,7 +82,7 @@ void checkIfDefault() {
 	}
 	c1 = getc(fp);
 	c2 = getc(fpScripts);
-	logMessage("INFO","Starting comparison");
+	logMessage("INFO", "checkIfDefault", "Starting comparison");
 	while (sameFile && c1 != EOF && c2 != EOF) {
 		if (c1 != c2) {
 			sameFile=0;
@@ -92,14 +92,14 @@ void checkIfDefault() {
 		c1 = getc(fp);
 		c2 = getc(fpScripts);
 	}
-	logMessage("INFO","Done comparing");
+	logMessage("INFO","checkIfDefault","Done comparing");
 	if (fp!=NULL) {
 		fclose(fp);
 	}
 	if (fpScripts!=NULL) {
 		fclose(fpScripts);
 	}
-	logMessage("INFO","Default state checked");
+	logMessage("INFO","checkIfDefault","Default state checked");
 }
 
 int isLaunchAtBoot(char *romName) {
@@ -329,29 +329,29 @@ void loadTheme(char *theme) {
 		systemHeight = atoifgl(value);
 
 		if (menuSections[i].systemLogoSurface!=NULL) {
-			logMessage("INFO","loadTheme - Freeing system logo");
+			logMessage("INFO","loadTheme","Freeing system logo");
 			SDL_FreeSurface(menuSections[i].systemLogoSurface);
 			menuSections[i].systemLogoSurface = NULL;
 		}
 		if (menuSections[i].systemPictureSurface!=NULL) {
-			logMessage("INFO","loadTheme - Freeing system picture");
+			logMessage("INFO","loadTheme","Freeing system picture");
 			SDL_FreeSurface(menuSections[i].systemPictureSurface);
 			menuSections[i].systemPictureSurface = NULL;
 		}
 		if (menuSections[i].backgroundSurface!=NULL) {
-			logMessage("INFO","loadTheme - Freeing system background");
+			logMessage("INFO","loadTheme","Freeing system background");
 			SDL_FreeSurface(menuSections[i].backgroundSurface);
 			menuSections[i].backgroundSurface = NULL;
 		}
 
 		if(i==currentSectionNumber) {
-			logMessage("INFO","loadTheme - Loading system logo");
+			logMessage("INFO","loadTheme","Loading system logo");
 			menuSections[i].systemLogoSurface = IMG_Load(menuSections[i].systemLogo);
 			resizeSectionSystemLogo(&menuSections[i]);
-			logMessage("INFO","Loading system background");
+			logMessage("INFO","loadTheme","Loading system background");
 			menuSections[i].backgroundSurface = IMG_Load(menuSections[i].background);
 			resizeSectionBackground(&menuSections[i]);
-			logMessage("INFO","Loading system picture");
+			logMessage("INFO","loadTheme","Loading system picture");
 			menuSections[i].systemPictureSurface = IMG_Load(menuSections[i].systemPicture);
 			resizeSectionSystemPicture(&menuSections[i]);
 		}
@@ -522,7 +522,7 @@ void checkThemes() {
 		free(files[i]);
 		themeCounter++;
 	}
-	logMessage("INFO","Themes checked");
+	logMessage("INFO","checkThemes","Themes checked");
 }
 
 void createConfigFilesInHomeIfTheyDontExist() {
@@ -530,14 +530,14 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToConfigFiles[5000];
 	char pathToAppFiles[5000];
 	char pathToGameFiles[5000];
-	char pathToThemeFiles[5000];
+//	char pathToThemeFiles[5000];
 	char pathToTempFiles[5000];
 	char pathToSectionGroupsFiles[5000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
 	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
-	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
+//	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
 	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%s/.simplemenu/tmp",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
@@ -561,13 +561,13 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-		char copyThemesCommand[5000];
-		mkdir(pathToThemeFiles,0700);
-		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r themes %s/.simplemenu",home);
-		ret = system(copyThemesCommand);
-		if (ret==-1) {
-			generateError("FATAL ERROR", 1);
-		}
+//		char copyThemesCommand[5000];
+//		mkdir(pathToThemeFiles,0700);
+//		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r themes %s/.simplemenu",home);
+//		ret = system(copyThemesCommand);
+//		if (ret==-1) {
+//			generateError("FATAL ERROR", 1);
+//		}
 		char copySectionGroupsCommand[5000];
 		mkdir(pathToSectionGroupsFiles,0700);
 		snprintf(copySectionGroupsCommand,sizeof(copySectionGroupsCommand),"cp -r section_groups %s/.simplemenu",home);
@@ -593,8 +593,27 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		}
 		mkdir(pathToTempFiles,0700);
 	}
-	logMessage("INFO","Validated configuration existence");
+	logMessage("INFO","createConfigFilesInHomeIfTheyDontExist","Validated configuration existence");
 }
+
+void createThemesInHomeIfTheyDontExist() {
+	char pathToThemeFiles[5000];
+	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
+	int directoryExists=mkdir(pathToThemeFiles,0700);
+	if (!directoryExists) {
+		drawCopyingText("COPYING FILES, PLEASE WAIT");
+		refreshScreen();
+		int ret=0;
+		char copyThemesCommand[5000];
+		mkdir(pathToThemeFiles,0700);
+		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r themes %s/.simplemenu",home);
+		ret = system(copyThemesCommand);
+		if (ret==-1) {
+			generateError("FATAL ERROR", 1);
+		}
+	}
+}
+
 
 void saveRomPreferences(struct Rom *rom) {
 	FILE * fp;
@@ -720,7 +739,7 @@ void loadFavorites() {
 		free(line);
 	}
 	qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
-	logMessage("INFO","Loaded favorites");
+	logMessage("INFO","loadFavorites","Loaded favorites");
 }
 
 int cmpfnc(const void *f1, const void *f2)
@@ -853,7 +872,7 @@ void loadConfig() {
 	}
 
 	ini_free(config);
-	logMessage("INFO","Config loaded");
+	logMessage("INFO","loadConfig","Config loaded");
 }
 
 void loadSectionGroups() {
@@ -893,7 +912,7 @@ void loadSectionGroups() {
 		strcat(temp3,".png");
 
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
-		logMessage("INFO","Loading group background");
+		logMessage("INFO","loadSectionGroups","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
 		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
@@ -913,7 +932,7 @@ void loadSectionGroups() {
 
 	qsort(sectionGroups, sectionGroupCounter, sizeof(struct SectionGroup), cmpfnc);
 	ini_free(themeConfig);
-	logMessage("INFO","Loaded section groups");
+	logMessage("INFO","loadSectionGroups","Loaded section groups");
 }
 
 int loadSections(char *file) {
@@ -944,7 +963,7 @@ int loadSections(char *file) {
 	free(consoles1);
 	while(menuSectionCounter<sectionCounter) {
 		char *sectionName = sectionNames[menuSectionCounter];
-		logMessage("INFO",sectionName);
+		logMessage("INFO","loadSections",sectionName);
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
 
 		//READ EXECS
@@ -974,16 +993,16 @@ int loadSections(char *file) {
 			currentExec = strtok(NULL,",");
 			execCounter++;
 		}
-		logMessage("INFO","Current exec ready");
+		logMessage("INFO","loadSections","Current exec ready");
 		free(value2);
-		logMessage("INFO","free as a bird");
+		logMessage("INFO","loadSections","free as a bird");
 		for (int i=execCounter;i<10;i++) {
 			menuSections[menuSectionCounter].executables[i]=NULL;
 			menuSections[menuSectionCounter].emulatorDirectories[i]=NULL;
 		}
-		logMessage("INFO","free as a bird 2");
+		logMessage("INFO","loadSections","free as a bird 2");
 		menuSections[menuSectionCounter].activeExecutable=0;
-		logMessage("INFO","Executable set");
+		logMessage("INFO","loadSections","Executable set");
 		setStringValueInSection (config, sectionName, "romDirs", menuSections[menuSectionCounter].filesDirectories,"\0");
 		setStringValueInSection (config, sectionName, "romExts", menuSections[menuSectionCounter].fileExtensions,"\0");
 		#ifdef TARGET_RFW
@@ -1012,7 +1031,7 @@ int loadSections(char *file) {
 			SDL_FreeSurface(menuSections[menuSectionCounter].backgroundSurface);
 			menuSections[menuSectionCounter].backgroundSurface = NULL;
 		}
-		logMessage("INFO","Setting logo, background and system");
+		logMessage("INFO","loadSections","Setting logo, background and system");
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
@@ -1024,18 +1043,18 @@ int loadSections(char *file) {
 		systemHeight = atoifgl(value);
 
 		if (menuSectionCounter==currentSectionNumber) {
-			logMessage("INFO","load sections - Loading system logo");
+			logMessage("INFO","loadSections","Loading system logo");
 			menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
 			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
-			logMessage("INFO","Loading system background");
+			logMessage("INFO","loadSections","Loading system background");
 			menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
 			resizeSectionBackground(&menuSections[menuSectionCounter]);
-			logMessage("INFO","Loading system picture");
+			logMessage("INFO","loadSections","Loading system picture");
 			menuSections[menuSectionCounter].systemPictureSurface = IMG_Load(menuSections[menuSectionCounter].systemPicture);
 			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
 		}
 
-		logMessage("INFO","Set");
+		logMessage("INFO","loadSections","Set");
 
 		value = ini_get(config, sectionName, "aliasFile");
 		if(value!=NULL) {
@@ -1063,7 +1082,7 @@ int loadSections(char *file) {
 		menuSections[menuSectionCounter].currentGameInPage=0;
 		menuSectionCounter++;
 		free(sectionName);
-		logMessage("INFO","Out");
+		logMessage("INFO","loadSections","Out");
 	}
 	value = ini_get(themeConfig, "GENERAL", "colorful_fullscreen_menu");
 	if (value == NULL) {
@@ -1078,7 +1097,7 @@ int loadSections(char *file) {
 	} else {
 		fontOutline = atoifgl(value);
 	}
-	logMessage("INFO","Out 1");
+	logMessage("INFO","loadSections","Out 1");
 	value = ini_get(themeConfig, "GENERAL", "display_section_group_name");
 	if (value == NULL) {
 		displaySectionGroupName = 0;
@@ -1110,7 +1129,7 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "game_list_position_in_full");
 	gameListPositionFullScreen = atoifgl(value);
 
-	logMessage("INFO","Out2");
+	logMessage("INFO","loadSections","Out2");
 
 	value = ini_get(themeConfig, "GENERAL", "art_max_w");
 	artWidth = atoifgl(value);
@@ -1145,7 +1164,7 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "text1_alignment");
 	text1Alignment = atoifgl(value);
 
-	logMessage("INFO","Out 3");
+	logMessage("INFO","loadSections","Out 3");
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
@@ -1198,7 +1217,7 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "fullscreen_footer_on_top");
 	footerOnTop = atoifgl(value);
 
-	logMessage("INFO","Out 4");
+	logMessage("INFO","loadSections","Out 4");
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "favorite_indicator", favoriteIndicator);
 
@@ -1208,7 +1227,7 @@ int loadSections(char *file) {
 	freeFonts();
 	initializeFonts();
 
-	logMessage("INFO","Out 5");
+	logMessage("INFO","loadSections","Out 5");
 
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
 	menuSections[menuSectionCounter].emulatorDirectories[0]=strdup("/some/folder/");
@@ -1234,13 +1253,13 @@ int loadSections(char *file) {
 		setRGBColorInSection(themeConfig, menuSections[menuSectionCounter].sectionName, "items_font_color", menuSections[menuSectionCounter].pictureTextColor);
 	}
 
-	logMessage("INFO","Out 6");
+	logMessage("INFO","loadSections","Out 6");
 
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
 
-	logMessage("INFO","Out 7");
+	logMessage("INFO","loadSections","Out 7");
 
 	menuSectionCounter++;
 	favoritesSectionNumber=menuSectionCounter-1;
@@ -1410,5 +1429,5 @@ void loadLastState() {
 	if (line) {
 		free(line);
 	}
-	logMessage("INFO","Last state loaded");
+	logMessage("INFO","loadLastState","Last state loaded");
 }

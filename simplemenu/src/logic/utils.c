@@ -19,7 +19,7 @@ void openLogFile() {
 	fp = fopen(pathToLogFilePlusFileName, "a");
 }
 
-void logMessage(const char* tag, const char* message) {
+void logMessage(const char* tag, const char* function, const char* message) {
 	if (loggingEnabled) {
 		time_t now;
 		time(&now);
@@ -28,8 +28,8 @@ void logMessage(const char* tag, const char* message) {
 		if (fp==NULL) {
 			openLogFile();
 		}
-		printf("%s | %-5s | %s\n", time, tag, message);
-		fprintf(fp,"%s | %-5s | %s\n", time, tag, message);
+		printf("%s | %-5s | %-40s | %s\n", time, tag, function, message);
+		fprintf(fp,"%s | %-5s | %-40s | %s\n", time, tag, function, message);
 
 	}
 }

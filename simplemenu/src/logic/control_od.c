@@ -22,14 +22,19 @@ int performAction(struct Node *node) {
 	if(currentState==SELECTING_SECTION) {
 		if (keys[BTN_A]) {
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
-				logMessage("INFO","Loading system background");
+				logMessage("INFO","performAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 				resizeSectionBackground(&CURRENT_SECTION);
-				logMessage("INFO","Loading system picture");
+				logMessage("INFO","performAction","Loading system picture");
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
-			loadGameList(0);
+			logMessage("INFO","performAction","Loading game list");
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(0);
+			} else {
+//				loadFavoritesSectionGameList();
+			}
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			}
@@ -52,6 +57,7 @@ int performAction(struct Node *node) {
 	if (rom!=NULL&&keys[BTN_R2]) {
 		hideFullScreenModeMenu();
 		if(currentSectionNumber!=favoritesSectionNumber) {
+			logMessage("INFO","performAction","Not Favs, loading game list");
 			loadGameList(1);
 			return(1);
 		}
@@ -138,12 +144,13 @@ int performAction(struct Node *node) {
 				int advanced = advanceSection(0);
 				if(advanced) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
-						logMessage("INFO","Loading system background");
+						logMessage("INFO","performAction","Loading system background");
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 						resizeSectionBackground(&CURRENT_SECTION);
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
+					logMessage("INFO","performAction","Advanced, loading game list");
 					loadGameList(0);
 				}
 				if(CURRENT_SECTION.gameCount>0) {
@@ -158,13 +165,14 @@ int performAction(struct Node *node) {
 				int rewinded = rewindSection(0);
 				if(rewinded) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
-						logMessage("INFO","Loading system background");
+						logMessage("INFO","performAction","Loading system background");
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 						resizeSectionBackground(&CURRENT_SECTION);
-						logMessage("INFO","Loading system picture");
+						logMessage("INFO","performAction","Loading system picture");
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
+					logMessage("INFO","performAction","Rewinded, loading game list");
 					loadGameList(0);
 				}
 				if(CURRENT_SECTION.gameCount>0) {

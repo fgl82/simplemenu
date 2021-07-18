@@ -46,25 +46,25 @@ void resetFrameBuffer () {
 	if (ret==-1) {
 		generateError("FATAL ERROR", 1);
 	}
-	logMessage("INFO","Reset Framebuffer");
+	logMessage("INFO","resetFrameBuffer","Reset Framebuffer");
 }
 
 void critical_error_handler()
 {
-	logMessage("ERROR","Nice, a critical error!!!");
+	logMessage("ERROR","critical_error_handler","Nice, a critical error!!!");
 	closeLogFile();
 	exit(0);
 }
 
 void sig_term_handler()
 {
-	logMessage("WARN","Received SIGTERM");
+	logMessage("WARN","sig_term_handler","Received SIGTERM");
 	running=0;
 }
 
 void initialSetup() {
 	initializeGlobals();
-	logMessage("INFO","Initialized Globals");
+	logMessage("INFO","initialSetup","Initialized Globals");
 	struct sigaction sa;
 	memset(&sa, 0, sizeof(struct sigaction));
 	sigemptyset(&sa.sa_mask);
@@ -79,17 +79,19 @@ void initialSetup() {
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
-	logMessage("INFO","0000");
 	initializeDisplay();
-	logMessage("INFO","2");
+	freeFonts();
+	initializeFonts();
+	initializeSettingsFonts();
+	createThemesInHomeIfTheyDontExist();
 	checkThemes();
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-#ifndef TARGET_OD_BETA
-	logMessage("INFO", "Setting CPU to base");
+//#ifndef TARGET_OD_BETA
+	logMessage("INFO","initialSetup","Setting CPU to base");
 	setCPU(currentCPU);
-#endif
+//#endif
 	setupKeys();
 	checkIfDefault();
 }
@@ -98,7 +100,7 @@ void initialSetup2() {
 	char temp[300];
 	strcpy(temp,themes[activeTheme]);
 	strcat(temp,"/theme.ini");
-	logMessage("INFO","Loading theme");
+	logMessage("INFO","initialSetup2","Loading theme");
 	loadTheme(temp);
 	loadSectionGroups();
 	int sectionCount=loadSections(sectionGroups[activeGroup].groupPath);
@@ -111,9 +113,6 @@ void initialSetup2() {
 	} else {
 		ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 	}
-	freeFonts();
-	initializeFonts();
-	initializeSettingsFonts();
 	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
 	initSuspendTimer();
 	#endif

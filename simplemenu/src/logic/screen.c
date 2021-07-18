@@ -194,7 +194,7 @@ void showCurrentGroup() {
 		drawCurrentSectionGroup(tempString, textColor);
 	}
 	free(tempString);
-	logMessage("INFO", "Group displayed");
+	logMessage("INFO", "showCurrentGroup", "Group displayed");
 }
 
 void showRomPreferences() {
@@ -276,7 +276,7 @@ void showRomPreferences() {
 	free(emuName);
 	free(frequency);
 
-	logMessage("INFO","Preferences shown");
+	logMessage("INFO","showRomPreferences","Preferences shown");
 }
 
 void showConsole() {
@@ -300,7 +300,7 @@ void showConsole() {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 		drawTextOnScreen(getFont(),NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
 	}
-	logMessage("INFO","Current console shown");
+	logMessage("INFO","showConsole","Current console shown");
 }
 
 void displayGamePicture(struct Rom *rom) {
@@ -417,7 +417,7 @@ void displayGamePicture(struct Rom *rom) {
 
 	free(pictureWithFullPath);
 	free(tempGameName);
-	logMessage("INFO","Displayed game picture - fullscreen");
+	logMessage("INFO","displayGamePicture","Displayed game picture - fullscreen");
 }
 
 void displayGamePictureInMenu(struct Rom *rom) {
@@ -446,7 +446,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	displayImageOnScreenCustom(pictureWithFullPath);
 	free(pictureWithFullPath);
 	free(tempGameName);
-	logMessage("INFO","Displayed game picture");
+	logMessage("INFO","displayGamePictureInMenu","Displayed game picture");
 }
 
 void drawHeader() {
@@ -615,7 +615,7 @@ void drawGameList() {
 		currentNode = currentNode->next;
 	}
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-	logMessage("INFO","Game list - Done");
+	logMessage("INFO","drawGameList","Game list - Done");
 }
 
 void setupDecorations() {
@@ -626,7 +626,7 @@ void setupDecorations() {
 	snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
 	drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2X), calculateProportionalSizeOrDistance(text2Y));
 	free(gameNumber);
-	logMessage("INFO","Decorations set");
+	logMessage("INFO","setupDecorations","Decorations set");
 }
 
 void setOptionsAndValues (char **options, char **values, char **hints){
@@ -664,13 +664,13 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names ");
 	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Fullscreen rom names ");
 	strcpy(options[FULL_SCREEN_MENU_OPTION],"Fullscreen menu ");
-	logMessage("INFO","Full screen menu option");
-	logMessage("INFO",options[FULL_SCREEN_MENU_OPTION]);
+	logMessage("INFO","setOptionsAndValues","Full screen menu option");
+	logMessage("INFO","setOptionsAndValues",options[FULL_SCREEN_MENU_OPTION]);
 	strcpy(options[THEME_OPTION],"Theme ");
 	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout ");
 	strcpy(options[DEFAULT_OPTION],"Default launcher  ");
-	logMessage("INFO","Default option");
-	logMessage("INFO",options[DEFAULT_OPTION]);
+	logMessage("INFO","setOptionsAndValues","Default option");
+	logMessage("INFO","setOptionsAndValues",options[DEFAULT_OPTION]);
 	#if defined TARGET_RFW
 	strcpy(options[USB_OPTION],"USB mode");
 	#else
@@ -682,13 +682,13 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
 	strcpy(hints[FULL_SCREEN_FOOTER_OPTION],"DISPLAY THE CURRENT ROM NAME");
 	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRANSLUCENT MENU");
-	logMessage("INFO","Full screen menu hint");
-	logMessage("INFO",hints[FULL_SCREEN_MENU_OPTION]);
+	logMessage("INFO","setOptionsAndValues","Full screen menu hint");
+	logMessage("INFO","setOptionsAndValues",hints[FULL_SCREEN_MENU_OPTION]);
 	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
 	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECONDS UNTIL THE SCREEN TURNS OFF");
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
-	logMessage("INFO","Default option hint");
-	logMessage("INFO",hints[DEFAULT_OPTION]);
+	logMessage("INFO","setOptionsAndValues","Default option hint");
+	logMessage("INFO","setOptionsAndValues",hints[DEFAULT_OPTION]);
 	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
 
 	#if defined TARGET_RFW
@@ -736,8 +736,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	} else {
 		strcpy(values[FULL_SCREEN_MENU_OPTION],"disabled");
 	}
-	logMessage("INFO","Full screen menu is...");
-	logMessage("INFO",values[FULL_SCREEN_MENU_OPTION]);
+	logMessage("INFO","setOptionsAndValues","Full screen menu is...");
+	logMessage("INFO","setOptionsAndValues",values[FULL_SCREEN_MENU_OPTION]);
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
 	strcpy(values[THEME_OPTION],themeName);
 	free(themeName);
@@ -749,12 +749,12 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 
 	if (shutDownEnabled) {
 		strcpy(values[DEFAULT_OPTION],"yes");
-		logMessage("INFO","Default option value");
-		logMessage("INFO",values[DEFAULT_OPTION]);
+		logMessage("INFO","setOptionsAndValues","Default option value");
+		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
 	} else {
 		strcpy(values[DEFAULT_OPTION],"no");
-		logMessage("INFO","Default option value");
-		logMessage("INFO",values[DEFAULT_OPTION]);
+		logMessage("INFO","setOptionsAndValues","Default option value");
+		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
 	}
 	#if defined TARGET_RFW
 	strcpy(values[USB_OPTION]," \0");
@@ -820,20 +820,20 @@ void drawSettingsScreen() {
 	char *values[10];
 	char *hints[10];
 
-	logMessage("INFO","Setting options and values");
+	logMessage("INFO","drawSettingsScreen","Setting options and values");
 	setOptionsAndValues(options, values, hints);
 
-	logMessage("INFO","Drawing shit");
+	logMessage("INFO","drawSettingsScreen","Drawing shit");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
 
-	logMessage("INFO","Positioning batt");
+	logMessage("INFO","drawSettingsScreen","Positioning batt");
 	int pos = (lastChargeLevel/10);
 
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
 
-	logMessage("INFO","Positioning batt 1");
+	logMessage("INFO","drawSettingsScreen","Positioning batt 1");
 	for (int i=pos;i>=0;i--) {
 		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);
 	}
@@ -847,19 +847,19 @@ void drawSettingsScreen() {
 	#else
 	int max = 8;
 	#endif
-	logMessage("INFO","Defining number of items");
-	logMessage("INFO","About to go through items");
+	logMessage("INFO","drawSettingsScreen","Defining number of items");
+	logMessage("INFO","drawSettingsScreen","About to go through items");
 	for (int i=0;i<max;i++) {
-		logMessage("INFO","one item");
+		logMessage("INFO","drawSettingsScreen","one item");
 		char temp[300];
 		strcpy(temp,options[i]);
 		if(strlen(values[i])>0) {
 			strcat(temp,values[i]);
 		}
 		if(i==chosenSetting) {
-			logMessage("INFO","Chosen setting");
-			logMessage("INFO",options[i]);
-			logMessage("INFO",values[i]);
+			logMessage("INFO","drawSettingsScreen","Chosen setting");
+			logMessage("INFO","drawSettingsScreen",options[i]);
+			logMessage("INFO","drawSettingsScreen",values[i]);
 //			drawRectangleToScreen(5, 20, 0, nextLine-3, bodyHighlightedText);
 			int lineColor[] = { 219,219,219};
 			if (i==0) {
@@ -873,28 +873,28 @@ void drawSettingsScreen() {
 			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,lineColor);
 			selected=i;
 		} else {
-			logMessage("INFO","Non-Chosen setting");
-			logMessage("INFO",options[i]);
-			logMessage("INFO",values[i]);
+			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
+			logMessage("INFO","drawSettingsScreen",options[i]);
+			logMessage("INFO","drawSettingsScreen",values[i]);
 			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
 			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText);
 		}
 		int lineColor[] = { 229,229,229};
-		logMessage("INFO","Drawing rect");
+		logMessage("INFO","drawSettingsScreen","Drawing rect");
 		if (i<max)  {
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(1), 0, nextLine+calculateProportionalSizeOrDistance(15), lineColor);
 		}
-		logMessage("INFO","Next line 1");
+		logMessage("INFO","drawSettingsScreen","Next line 1");
 		nextLine+=calculateProportionalSizeOrDistance(19);
-		logMessage("INFO","Next line 2");
+		logMessage("INFO","drawSettingsScreen","Next line 2");
 		nextLineText+=calculateProportionalSizeOrDistance(19);
-		logMessage("INFO","---");
+		logMessage("INFO","drawSettingsScreen","---");
 	}
-	logMessage("INFO","Out of the loop");
+	logMessage("INFO","drawSettingsScreen","Out of the loop");
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
-	logMessage("INFO","Drawing Footer");
+	logMessage("INFO","drawSettingsScreen","Drawing Footer");
 	drawTextOnSettingsFooterWithColor(hints[selected], bodyBackground);
-	logMessage("INFO","Freeign options");
+	logMessage("INFO","drawSettingsScreen","Freeign options");
 	free(options[TIDY_ROMS_OPTION]);
 	free(options[FULL_SCREEN_FOOTER_OPTION]);
 	free(options[FULL_SCREEN_MENU_OPTION]);
@@ -905,7 +905,7 @@ void drawSettingsScreen() {
 	free(options[USB_OPTION]);
 	free(options[AUTO_HIDE_LOGOS_OPTION]);
 
-	logMessage("INFO","Freeign values");
+	logMessage("INFO","drawSettingsScreen","Freeign values");
 	free(values[TIDY_ROMS_OPTION]);
 	free(values[FULL_SCREEN_FOOTER_OPTION]);
 	free(values[FULL_SCREEN_MENU_OPTION]);
@@ -916,7 +916,7 @@ void drawSettingsScreen() {
 	free(values[USB_OPTION]);
 	free(values[AUTO_HIDE_LOGOS_OPTION]);
 
-	logMessage("INFO","Freeign hints");
+	logMessage("INFO","drawSettingsScreen","Freeign hints");
 	free(hints[TIDY_ROMS_OPTION]);
 	free(hints[FULL_SCREEN_FOOTER_OPTION]);
 	free(hints[FULL_SCREEN_MENU_OPTION]);
@@ -926,7 +926,7 @@ void drawSettingsScreen() {
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[USB_OPTION]);
 	free(hints[AUTO_HIDE_LOGOS_OPTION]);
-	logMessage("INFO","Settings drawn");
+	logMessage("INFO","drawSettingsScreen","Settings drawn");
 }
 
 void updateScreen(struct Node *node) {
@@ -940,19 +940,19 @@ void updateScreen(struct Node *node) {
 		switch(currentState) {
 			case BROWSING_GAME_LIST:
 				if (fullscreenMode) {
-					logMessage("INFO","Fullscreen mode");
+					logMessage("INFO","updateScreen","Fullscreen mode");
 					displayGamePicture(rom);
 					drawGameList();
 					displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 				} else {
-					logMessage("INFO","Menu mode");
+					logMessage("INFO","updateScreen","Menu mode");
 					displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
 					drawGameList();
 					displayGamePictureInMenu(rom);
 					setupDecorations(rom);
 				}
 				if (CURRENT_SECTION.alphabeticalPaging) {
-					logMessage("INFO","Show alphabetical navigation bar");
+					logMessage("INFO","updateScreen","Show alphabetical navigation bar");
 					if (rom->name!=NULL) {
 						showLetter(rom);
 					}
@@ -988,7 +988,7 @@ void updateScreen(struct Node *node) {
 
 void setupKeys() {
 	initializeKeys();
-	logMessage("INFO","Input successfully configured");
+	logMessage("INFO","setupKeys","Input successfully configured");
 }
 
 void clearShutdownTimer() {
@@ -1055,10 +1055,10 @@ uint32_t hidePicModeLogo() {
 	hotKeyPressed=0;
 	aKeyComboWasPressed=0;
 	if (CURRENT_SECTION.backgroundSurface==NULL) {
-		logMessage("INFO","Loading system background");
+		logMessage("INFO","screen","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 		resizeSectionBackground(&CURRENT_SECTION);
-		logMessage("INFO","Loading system picture");
+		logMessage("INFO","screen","Loading system picture");
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}

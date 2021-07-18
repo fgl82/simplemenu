@@ -564,6 +564,11 @@ void drawLoadingText() {
 	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
 }
 
+void drawCopyingText(const char* text) {
+	int white[3]={255, 255, 255};
+	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
+}
+
 void drawTimeOnFooter(char *text) {
 	drawTextOnScreen(font, NULL, calculateProportionalSizeOrDistance(316), calculateProportionalSizeOrDistance(232), text, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | HAlignRight);
 }
@@ -594,13 +599,13 @@ void drawError(char *errorMessage, int textColor[]) {
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]) {
 	char temp[500];
 	snprintf(temp,sizeof(temp),"%d - %d - %d - %d - {%d,%d,%d}", width, height, x, y, rgbColor[0], rgbColor[1], rgbColor[2]);
-	logMessage("INFO",temp);
+	logMessage("INFO","drawRectangleToScreen",temp);
 	SDL_Rect rectangle;
 	rectangle.w = width;
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
-	logMessage("INFO","FIlling");
+	logMessage("INFO","drawRectangleToScreen","FIlling");
 	SDL_FillRect(screen, &rectangle, SDL_MapRGB(screen->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	return(rectangle);
 }
@@ -803,7 +808,7 @@ void* thread_func(void *picture) {
 
 SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 	if (surface==NULL) {
-		logMessage("WARN","Image not found, surface can't be resized");
+		logMessage("WARN","resizeSurfaceToFitScreen","Image not found, surface can't be resized");
 		return NULL;
 	}
 	if (SCREEN_WIDTH==surface->w&&SCREEN_HEIGHT==surface->h) {
@@ -827,7 +832,7 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 
 SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 	if (surface==NULL) {
-		logMessage("WARN","Image not found, surface can't be resized");
+		logMessage("WARN","resizeSurface","Image not found, surface can't be resized");
 		return NULL;
 	}
 	int newW = (float)calculateProportionalSizeOrDistance(w);
@@ -872,7 +877,7 @@ void resizeSectionSystemPicture(struct MenuSection *section) {
 
 void displayCenteredSurface(SDL_Surface *surface) {
 	if(surface==NULL) {
-		logMessage("WARN","Image not found, surface can't be displayed");
+		logMessage("WARN","displayCenteredSurface","Image not found, surface can't be displayed");
 		return;
 	}
 	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
@@ -882,12 +887,12 @@ void displayCenteredSurface(SDL_Surface *surface) {
 	rectangleDest.x = SCREEN_WIDTH/2-surface->w/2;
 	rectangleDest.y = ((SCREEN_HEIGHT)/2-surface->h/2);
 	SDL_BlitSurface(surface, NULL, screen, &rectangleDest);
-	logMessage("INFO","Displayed surface");
+	logMessage("INFO","displayCenteredSurface","Displayed surface");
 }
 
 void displaySurface(SDL_Surface *surface, int x, int y) {
 	if(surface==NULL) {
-		logMessage("WARN","Image not found, surface can't be displayed");
+		logMessage("WARN","displaySurface","Image not found, surface can't be displayed");
 		return;
 	}
 	SDL_Rect rectangleDest;
@@ -961,12 +966,12 @@ void drawUSBScreen() {
 
 void initializeDisplay() {
 	SDL_ShowCursor(0);
-	logMessage("INFO","well...");
+	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
-	logMessage("INFO","maybe...");
+	logMessage("INFO","initializeDisplay","maybe...");
 #ifdef TARGET_OD
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	screen = SDL_SetVideoMode(320, 240, 32, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
 	SDL_Quit();
 #endif
@@ -1025,7 +1030,7 @@ FILE *fp;
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 240;
+	SCREEN_HEIGHT = 480;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -1061,17 +1066,17 @@ FILE *fp;
 		}
 	}
 #endif
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 	if (screen==NULL) {
 		SCREEN_WIDTH=320;
 		SCREEN_HEIGHT=240;
-		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
+		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 	}
 
 #endif
 	//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-	logMessage("INFO","Initialized Display");
+	logMessage("INFO","initializeDisplay","Initialized Display");
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 }
 
@@ -1084,13 +1089,13 @@ void refreshScreen() {
 }
 
 void initializeSettingsFonts() {
-	logMessage("INFO","Initializing Settings Fonts");
+	logMessage("INFO","initializeSettingsFonts","Initializing Settings Fonts");
 	char *akashi = "resources/akashi.ttf";
 	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
 	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));
 	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
 	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
-	logMessage("INFO","Settings Fonts initialized");
+	logMessage("INFO","initializeSettingsFonts","Settings Fonts initialized");
 }
 
 void initializeFonts() {
@@ -1127,7 +1132,7 @@ void initializeFonts() {
 
 	gameCountFontFont = TTF_OpenFont(gameCountFont, calculateProportionalSizeOrDistance(gameCountFontSize));
 
-	logMessage("INFO","Fonts initialized");
+	logMessage("INFO","initializeFonts","Fonts initialized");
 }
 
 void freeFonts() {

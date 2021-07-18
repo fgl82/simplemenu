@@ -56,7 +56,7 @@ void setCPU(uint32_t mhz)
 		close(fd);
 		char temp[300];
 		snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
-		logMessage("INFO",temp);
+		logMessage("INFO","setCPU",temp);
 	#endif
 }
 
@@ -107,7 +107,7 @@ void resetScreenOffTimer() {
 void initSuspendTimer() {
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
 	isSuspended=0;
-	logMessage("INFO","Suspend timer initialized");
+	logMessage("INFO","initSuspendTimer","Suspend timer initialized");
 }
 
 void HW_Init()
@@ -120,7 +120,7 @@ void HW_Init()
 	effect_id=Shake_UploadEffect(device, &effect);
 	effect_id1=Shake_UploadEffect(device, &effect1);
 	#endif
-	logMessage("INFO","HW Initialized");
+	logMessage("INFO","HW_Init","HW Initialized");
 }
 
 void cycleFrequencies() {
@@ -183,13 +183,13 @@ int getBatteryLevel() {
 		FILE *f = fopen("/sys/class/power_supply/BAT0/charge_full", "r");
 		int ret = fscanf(f, "%i", &max_voltage);
 		if (ret==-1) {
-			logMessage("INFO","Error");
+			logMessage("INFO","getBatteryLevel","Error");
 		}
 		fclose(f);
 		f = fopen("/sys/class/power_supply/BAT0/charge_now", "r");
 		ret = fscanf(f, "%i", &voltage_now);
 		if (ret==-1) {
-			logMessage("INFO","Error");
+			logMessage("INFO","getBatteryLevel","Error");
 		}
 		fclose(f);
 
