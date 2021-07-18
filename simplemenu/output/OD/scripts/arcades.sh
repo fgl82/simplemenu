@@ -30,7 +30,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
-echo "aliasFile = /media/home/.simplemenu/alias.txt" >> ${consoles}
+echo "aliasFile = /media/data/local/home/.simplemenu/alias.txt" >> ${consoles}
 echo "onlyFileNamesNoPathOrExtension = no" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
-echo "aliasFile = /media/home/.simplemenu/alias.txt" >> ${consoles}
+echo "aliasFile = /media/data/local/home/.simplemenu/alias.txt" >> ${consoles}
 echo "onlyFileNamesNoPathOrExtension = no" >> ${consoles}
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -92,6 +92,6 @@ then
 else
 	echo "romDirs = ""$var""/" >> ${consoles}
 fi
-echo "aliasFile = /media/home/.simplemenu/alias.txt" >> ${consoles}
+echo "aliasFile = /media/data/local/home/.simplemenu/alias.txt" >> ${consoles}
 echo "onlyFileNamesNoPathOrExtension = no" >> ${consoles}
 echo "scaling = 0" >> ${consoles}
