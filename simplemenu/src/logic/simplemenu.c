@@ -88,10 +88,10 @@ void initialSetup() {
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-//#ifndef TARGET_OD_BETA
+#ifndef TARGET_OD_BETA
 	logMessage("INFO","initialSetup","Setting CPU to base");
 	setCPU(currentCPU);
-//#endif
+#endif
 	setupKeys();
 	checkIfDefault();
 }
