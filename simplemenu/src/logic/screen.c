@@ -306,6 +306,7 @@ void showConsole() {
 void displayGamePicture(struct Rom *rom) {
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
+	char *originalGameName = NULL;
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
@@ -313,19 +314,29 @@ void displayGamePicture(struct Rom *rom) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(pictureWithFullPath, favorite.filesDirectory);
 		tempGameName=getGameName(favorite.name);
+		originalGameName = favorite.name;
 	} else {
 		if (rom==NULL) {
 			strcpy(pictureWithFullPath, "NO GAMES FOUND");
 			tempGameName=getGameName("NO GAMES FOUND");
+			originalGameName = tempGameName;
 		} else {
 			strcpy(pictureWithFullPath, rom->directory);
 			tempGameName=getGameName(rom->name);
+			originalGameName = rom->name;
 		}
 	}
-	strcat(pictureWithFullPath,mediaFolder);
-	strcat(pictureWithFullPath,"/");
+
+	int len = strlen(originalGameName);
+	const char *lastFour = &originalGameName[len-4];
+
+	if (strcmp(lastFour,".png") != 0) {
+		strcat(pictureWithFullPath,mediaFolder);
+		strcat(pictureWithFullPath,"/");
+	}
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
+
 	displayBackgroundPicture();
 	if (rom==NULL) {
 		displayCenteredImageOnScreen(pictureWithFullPath, tempGameName, 1,1);
@@ -423,24 +434,37 @@ void displayGamePicture(struct Rom *rom) {
 void displayGamePictureInMenu(struct Rom *rom) {
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
+	char *originalGameName = NULL;
 	if (favoritesSectionSelected) {
 		if (favoritesSize == 0) {
 			return;
 		}
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(pictureWithFullPath, favorite.filesDirectory);
+		originalGameName = favorite.name;
 		tempGameName=getGameName(favorite.name);
 	} else {
 		if (rom==NULL) {
+			logMessage("INFO","displayGamePictureInMenu","No games!");
 			strcpy(pictureWithFullPath, "NO GAMES FOUND");
 			tempGameName=getGameName("NO GAMES FOUND");
+			originalGameName = tempGameName;
 		} else {
+			logMessage("INFO","displayGamePictureInMenu","Displaying...");
 			strcpy(pictureWithFullPath, rom->directory);
+			originalGameName = rom->name;
 			tempGameName=getGameName(rom->name);
 		}
 	}
-	strcat(pictureWithFullPath,mediaFolder);
-	strcat(pictureWithFullPath,"/");
+
+	int len = strlen(originalGameName);
+	const char *lastFour = &originalGameName[len-4];
+
+	if (strcmp(lastFour,".png") != 0) {
+		strcat(pictureWithFullPath,mediaFolder);
+		strcat(pictureWithFullPath,"/");
+	}
+
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	displayImageOnScreenCustom(pictureWithFullPath);
