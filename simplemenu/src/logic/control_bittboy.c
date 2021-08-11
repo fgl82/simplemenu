@@ -199,7 +199,17 @@ int performAction(struct Node *node) {
 	}
 
 	if(keys[BTN_R1]) {
-		showOrHideFavorites();
+		if (currentSectionNumber!=favoritesSectionNumber) {
+			currentState=SELECTING_SECTION;
+			hotKeyPressed=0;
+			int returnValue = advanceSection(1);
+			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
+				resetPicModeHideLogoTimer();
+			} else if (!returnValue) {
+				currentState=BROWSING_GAME_LIST;
+			}
+		}
+//		showOrHideFavorites();
 
 //		if (currentSectionNumber!=favoritesSectionNumber) {
 //			currentState=SELECTING_SECTION;
