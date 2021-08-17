@@ -388,6 +388,7 @@ int getBatteryLevel() {
 	int max_voltage = 4050;
 	int min_voltage = 3480;
 	int voltage_now;
+	int charging=0;
 	int total;
 	FILE *f = fopen("/sys/class/power_supply/miyoo-battery/voltage_max_design", "r");
 
@@ -395,9 +396,12 @@ int getBatteryLevel() {
 	fscanf(f, "%i", &voltage_now);
 	fclose(f);
 
-	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
-	if (total > 100 ) {
-		return 100;
+	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
+	if (charging==1) {
+		return 6;
 	}
+//	if (total>5) {
+//		return 5;
+//	}
 	return total;
 }

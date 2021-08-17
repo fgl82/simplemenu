@@ -14,6 +14,7 @@
 #include "../headers/string_utils.h"
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
+#include "../headers/system_logic.h"
 
 int countDown;
 
@@ -100,7 +101,7 @@ void showLetter(struct Rom *rom) {
 	char *letters[] = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 	char *existingLetters = getCurrentSectionExistingLetters();
 
-	if(isdigit(currentGameFirstLetter[0])) {
+	if(isdigit(currentGameFirstLetter[0])||!isalpha(currentGameFirstLetter[0])) {
 		currentGameFirstLetter[0]='#';
 	}
 	int x = 0;
@@ -468,13 +469,14 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
 	displayImageOnScreenCustom(pictureWithFullPath);
+
 	free(pictureWithFullPath);
 	free(tempGameName);
 	logMessage("INFO","displayGamePictureInMenu","Displayed game picture");
 }
 
 void drawHeader() {
-	char finalString [200];
+//	char finalString [200];
 //	if (currentCPU==OC_UC) {
 //		strcpy(finalString,"- ");
 //		if(currentSectionNumber==favoritesSectionNumber) {
@@ -663,7 +665,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	options[DEFAULT_OPTION]= malloc(100);
 	options[USB_OPTION]= malloc(100);
 	options[SHUTDOWN_OPTION]= malloc(100);
-	options[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
+	options[HELP_OPTION]= malloc(100);
 
 	values[TIDY_ROMS_OPTION]= malloc(10);
 	values[FULL_SCREEN_FOOTER_OPTION]= malloc(10);
@@ -673,7 +675,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	values[DEFAULT_OPTION]= malloc(4);
 	values[USB_OPTION]= malloc(100);
 	values[SHUTDOWN_OPTION]= malloc(30);
-	values[AUTO_HIDE_LOGOS_OPTION]= malloc(10);
+	values[HELP_OPTION]= malloc(10);
 
 	hints[TIDY_ROMS_OPTION]= malloc(100);
 	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
@@ -683,7 +685,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	hints[DEFAULT_OPTION]= malloc(100);
 	hints[USB_OPTION]= malloc(100);
 	hints[SHUTDOWN_OPTION]= malloc(100);
-	hints[AUTO_HIDE_LOGOS_OPTION]= malloc(100);
+	hints[HELP_OPTION]= malloc(100);
 
 	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names ");
 	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Fullscreen rom names ");
@@ -698,9 +700,9 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	#if defined TARGET_RFW
 	strcpy(options[USB_OPTION],"USB mode");
 	#else
-	strcpy(options[USB_OPTION],"HDMI ");
+	strcpy(options[USB_OPTION],"HDMI");
 	#endif
-	strcpy(options[AUTO_HIDE_LOGOS_OPTION],"Auto-hide logos ");
+	strcpy(options[HELP_OPTION],"Help");
 
 	strcpy(options[SHUTDOWN_OPTION],"Session ");
 	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
@@ -713,7 +715,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
 	logMessage("INFO","setOptionsAndValues","Default option hint");
 	logMessage("INFO","setOptionsAndValues",hints[DEFAULT_OPTION]);
-	strcpy(hints[AUTO_HIDE_LOGOS_OPTION],"HIDE LOGOS AFTER A SECOND");
+	strcpy(hints[HELP_OPTION],"HOW TO USE THIS MENU");
 
 	#if defined TARGET_RFW
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
@@ -789,10 +791,38 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		strcpy(values[USB_OPTION],"disabled");
 	}
 	#endif
-	if (autoHideLogos) {
-		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"enabled");
+//	if (autoHideLogos) {
+//		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"enabled");
+//	} else {
+		strcpy(values[HELP_OPTION]," \0");
+//	}
+}
+
+void drawBatteryMeter() {
+	int batteryLevel80to100[] = {1,255,1};
+	int batteryLevel60to80[] = {153,254,0};
+	int batteryLevel40to60[] = {255,254,3};
+	int batteryLevel20to40[] = {255,152,1};
+	int batteryLevel0to20[] = {255,51,0};
+
+	int gray5[]={121, 121, 121};
+
+	int *levels[5];
+	levels[0] = batteryLevel0to20;
+	levels[1] = batteryLevel20to40;
+	levels[2] = batteryLevel40to60;
+	levels[3] = batteryLevel60to80;
+	levels[4] = batteryLevel80to100;
+
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
+	int pos = (lastChargeLevel);
+	logMessage("INFO","drawSettingsScreen","Positioning batt 1");
+	if (pos<6) {
+		for (int i=pos-1;i>=0;i--) {
+			drawRectangleToScreen(SCREEN_WIDTH/5, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/5)*i, calculateProportionalSizeOrDistance(42), levels[i]);
+		}
 	} else {
-		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"disabled");
+		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), (int[]){80,80,255});
 	}
 }
 
@@ -801,44 +831,22 @@ void drawSettingsScreen() {
 	THEME_OPTION=1;
 	SCREEN_TIMEOUT_OPTION=2;
 	TIDY_ROMS_OPTION=3;
-	AUTO_HIDE_LOGOS_OPTION=4;
-	FULL_SCREEN_FOOTER_OPTION=5;
-	FULL_SCREEN_MENU_OPTION=6;
-	DEFAULT_OPTION=7;
+	FULL_SCREEN_FOOTER_OPTION=4;
+	FULL_SCREEN_MENU_OPTION=5;
+	DEFAULT_OPTION=6;
+	#if defined TARGET_BITTBOY
 	USB_OPTION=8;
+	HELP_OPTION=7;
+	#else
+	USB_OPTION=7;
+	HELP_OPTION=8;
+	#endif
 
 	int headerAndFooterBackground[3]={37,50,56};
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
 	int bodyHighlightedText[3]= {0,147,131};
 	int bodyBackground[3]={250,250,250};
-
-	int batteryLevel90to100[] = {1,255,1};
-	int batteryLevel80to90[] = {51,255,0};
-	int batteryLevel70to80[] = {101,255,0};
-	int batteryLevel60to70[] = {153,254,0};
-	int batteryLevel50to60[] = {202,253,0};
-	int batteryLevel40to50[] = {255,254,3};
-	int batteryLevel30to40[] = {255,204,0};
-	int batteryLevel20to30[] = {255,152,1};
-	int batteryLevel10to20[] = {255,102,0};
-	int batteryLevel0to10[] = {255,51,0};
-
-
-	int gray5[]={121, 121, 121};
-
-	int *levels[11];
-	levels[0] = batteryLevel0to10;
-	levels[1] = batteryLevel10to20;
-	levels[2] = batteryLevel20to30;
-	levels[3] = batteryLevel30to40;
-	levels[4] = batteryLevel40to50;
-	levels[5] = batteryLevel50to60;
-	levels[6] = batteryLevel60to70;
-	levels[7] = batteryLevel70to80;
-	levels[8] = batteryLevel80to90;
-	levels[9] = batteryLevel90to100;
-	levels[10] = batteryLevel90to100;
 
 	char *options[10];
 	char *values[10];
@@ -852,15 +860,8 @@ void drawSettingsScreen() {
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
 	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
 
-	logMessage("INFO","drawSettingsScreen","Positioning batt");
-	int pos = (lastChargeLevel/10);
+	drawBatteryMeter();
 
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(4), 0, calculateProportionalSizeOrDistance(42), gray5);
-
-	logMessage("INFO","drawSettingsScreen","Positioning batt 1");
-	for (int i=pos;i>=0;i--) {
-		drawRectangleToScreen(SCREEN_WIDTH/10, calculateProportionalSizeOrDistance(4), (SCREEN_WIDTH/10)*i, calculateProportionalSizeOrDistance(42), levels[i]);
-	}
 	int nextLine = calculateProportionalSizeOrDistance(50);
 	int nextLineText = calculateProportionalSizeOrDistance(50);
 	int selected=0;
@@ -884,7 +885,6 @@ void drawSettingsScreen() {
 			logMessage("INFO","drawSettingsScreen","Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
-//			drawRectangleToScreen(5, 20, 0, nextLine-3, bodyHighlightedText);
 			int lineColor[] = { 219,219,219};
 			if (i==0) {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(19), 0, nextLine-calculateProportionalSizeOrDistance(4), lineColor);
@@ -901,7 +901,7 @@ void drawSettingsScreen() {
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
 			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText);
+			drawSettingsOptionValueOnScreen(values[i], nextLineText, bodyHighlightedText);
 		}
 		int lineColor[] = { 229,229,229};
 		logMessage("INFO","drawSettingsScreen","Drawing rect");
@@ -927,7 +927,7 @@ void drawSettingsScreen() {
 	free(options[DEFAULT_OPTION]);
 	free(options[SHUTDOWN_OPTION]);
 	free(options[USB_OPTION]);
-	free(options[AUTO_HIDE_LOGOS_OPTION]);
+	free(options[HELP_OPTION]);
 
 	logMessage("INFO","drawSettingsScreen","Freeign values");
 	free(values[TIDY_ROMS_OPTION]);
@@ -938,7 +938,7 @@ void drawSettingsScreen() {
 	free(values[DEFAULT_OPTION]);
 	free(values[SHUTDOWN_OPTION]);
 	free(values[USB_OPTION]);
-	free(values[AUTO_HIDE_LOGOS_OPTION]);
+	free(values[HELP_OPTION]);
 
 	logMessage("INFO","drawSettingsScreen","Freeign hints");
 	free(hints[TIDY_ROMS_OPTION]);
@@ -949,8 +949,105 @@ void drawSettingsScreen() {
 	free(hints[DEFAULT_OPTION]);
 	free(hints[SHUTDOWN_OPTION]);
 	free(hints[USB_OPTION]);
-	free(hints[AUTO_HIDE_LOGOS_OPTION]);
+	free(hints[HELP_OPTION]);
 	logMessage("INFO","drawSettingsScreen","Settings drawn");
+}
+
+void drawHelpScreen(int page) {
+	int headerAndFooterBackground[3]={37,50,56};
+	int headerAndFooterText[3]={255,255,255};
+	int bodyText[3]= {90,90,90};
+	int bodyHighlightedText[3]= {0,147,131};
+	int bodyBackground[3]={250,250,250};
+
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), 0,calculateProportionalSizeOrDistance(22), bodyBackground);
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(42), 0, 0, headerAndFooterBackground);
+	char temp[300];
+	sprintf(temp,"HELP - %d/2", page);
+	drawTextOnSettingsHeaderLeftWithColor(temp,headerAndFooterText);
+
+	drawBatteryMeter();
+
+	int nextLine = calculateProportionalSizeOrDistance(50);
+	int nextLineText = calculateProportionalSizeOrDistance(50);
+	int max = 9;
+	switch (page) {
+		case 1:
+			for (int i=0;i<max;i++) {
+				switch (i) {
+					case 0:
+						drawNonShadedSettingsOptionOnScreen("A", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Confirm", nextLineText, bodyHighlightedText);
+						break;
+					case 1:
+						drawNonShadedSettingsOptionOnScreen("B", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Back/Function key", nextLineText, bodyHighlightedText);
+						break;
+					case 2:
+						drawNonShadedSettingsOptionOnScreen("X", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Mark favorite", nextLineText, bodyHighlightedText);
+						break;
+					case 3:
+						drawNonShadedSettingsOptionOnScreen("Y", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Show/Hide favorites", nextLineText, bodyHighlightedText);
+						break;
+					case 4:
+						#if defined TARGET_BITTBOY
+						drawNonShadedSettingsOptionOnScreen("R1", nextLineText, bodyText);
+						#else
+						drawNonShadedSettingsOptionOnScreen("R", nextLineText, bodyText);
+						#endif
+						drawSettingsOptionValueOnScreen("Fullscreen mode", nextLineText, bodyHighlightedText);
+						break;
+					case 5:
+						drawNonShadedSettingsOptionOnScreen("Select", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Game options", nextLineText, bodyHighlightedText);
+						break;
+					case 6:
+						drawNonShadedSettingsOptionOnScreen("Up/Down/Left/Right", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Scroll", nextLineText, bodyHighlightedText);
+						break;
+					case 7:
+						drawNonShadedSettingsOptionOnScreen("B+Left/Right", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Previous/Next letter", nextLineText, bodyHighlightedText);
+						break;
+					case 8:
+						drawNonShadedSettingsOptionOnScreen("B+Up/Down", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Quick switch", nextLineText, bodyHighlightedText);
+						break;
+				}
+				int lineColor[] = { 229,229,229};
+				if (i<max)  {
+					drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(1), 0, nextLine+calculateProportionalSizeOrDistance(15), lineColor);
+				}
+				nextLine+=calculateProportionalSizeOrDistance(19);
+				nextLineText+=calculateProportionalSizeOrDistance(19);
+			}
+			break;
+		case 2:
+			for (int i=0;i<max;i++) {
+				switch (i) {
+					case 0:
+						drawNonShadedSettingsOptionOnScreen("B+Select", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Random select", nextLineText, bodyHighlightedText);
+						break;
+					case 1:
+						drawNonShadedSettingsOptionOnScreen("B+X", nextLineText, bodyText);
+						drawSettingsOptionValueOnScreen("Delete game", nextLineText, bodyHighlightedText);
+						break;
+				}
+				int lineColor[] = { 229,229,229};
+				if (i<max)  {
+					drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(1), 0, nextLine+calculateProportionalSizeOrDistance(15), lineColor);
+				}
+				nextLine+=calculateProportionalSizeOrDistance(19);
+				nextLineText+=calculateProportionalSizeOrDistance(19);
+			}
+			break;
+	}
+	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
+	drawTextOnSettingsFooterWithColor("PRESS B TO RETURN TO SETTINGS", bodyBackground);
+
 }
 
 void updateScreen(struct Node *node) {
@@ -973,6 +1070,30 @@ void updateScreen(struct Node *node) {
 					displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
 					drawGameList();
 					displayGamePictureInMenu(rom);
+					SDL_Surface *battery = NULL;
+					switch (lastChargeLevel) {
+						case 1:
+							battery = IMG_Load(batt1);
+							break;
+						case 2:
+							battery = IMG_Load(batt2);
+							break;
+						case 3:
+							battery = IMG_Load(batt3);
+							break;
+						case 4:
+							battery = IMG_Load(batt4);
+							break;
+						case 5:
+							battery = IMG_Load(batt5);
+							break;
+						default:
+							battery = IMG_Load(battCharging);
+							break;
+					}
+					if (battX>-1 && battery!= NULL) {
+						drawImage(screen, battery, calculateProportionalSizeOrDistance(battX), calculateProportionalSizeOrDistance(battY), 0, 0, calculateProportionalSizeOrDistance(battery->w), calculateProportionalSizeOrDistance(battery->h), 0, 0);
+					}
 					setupDecorations(rom);
 				}
 				if (CURRENT_SECTION.alphabeticalPaging) {
@@ -988,6 +1109,12 @@ void updateScreen(struct Node *node) {
 				break;
 			case SETTINGS_SCREEN:
 				drawSettingsScreen();
+				break;
+			case HELP_SCREEN_1:
+				drawHelpScreen(1);
+				break;
+			case HELP_SCREEN_2:
+				drawHelpScreen(2);
 				break;
 			case CHOOSING_GROUP:
 				showCurrentGroup();
@@ -1027,11 +1154,13 @@ uint32_t countDownToShutdown() {
 	if(countDown==0) {
 		running=0;
 		clearShutdownTimer();
+		refreshRequest=1;
 		pushEvent();
 		return 0;
 	}
-	updateScreen(NULL);
-	refreshScreen();
+	refreshRequest=1;
+//	updateScreen(NULL);
+//	refreshScreen();
 	return 1000;
 }
 
@@ -1055,6 +1184,7 @@ uint32_t hideFullScreenModeMenu() {
 		clearPicModeHideMenuTimer();
 		isPicModeMenuHidden=1;
 	}
+	refreshRequest=1;
 	pushEvent();
 	return 0;
 }
@@ -1087,6 +1217,7 @@ uint32_t hidePicModeLogo() {
 		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	currentState=BROWSING_GAME_LIST_AFTER_TIMER;
+	refreshRequest=1;
 	pushEvent();
 	return 0;
 }
@@ -1108,6 +1239,7 @@ uint32_t hideHeart() {
 	if(!isPicModeMenuHidden) {
 		resetPicModeHideMenuTimer();
 	}
+	refreshRequest=1;
 	pushEvent();
 	return 0;
 }
@@ -1117,11 +1249,20 @@ void resetHideHeartTimer() {
 	hideHeartTimer=SDL_AddTimer(0.5 * 1e3, hideHeart, NULL);
 }
 
-uint32_t controlsCallBack() {
-	return 16.666667;
+void clearBatteryTimer() {
+	if (batteryTimer != NULL) {
+		SDL_RemoveTimer(batteryTimer);
+	}
+	batteryTimer = NULL;
+}
+
+uint32_t batteryCallBack() {
+	lastChargeLevel = getBatteryLevel();
+	refreshRequest=1;
+	return 60000;
 }
 
 
-void startControlsTimer() {
-	screenTimer=SDL_AddTimer(16.666667, controlsCallBack, NULL);
+void startBatteryTimer() {
+	batteryTimer=SDL_AddTimer(1 * 60e3, batteryCallBack, NULL);
 }

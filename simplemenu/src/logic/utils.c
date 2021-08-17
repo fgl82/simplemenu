@@ -45,8 +45,8 @@ int isLoggingEnabled() {
 }
 
 void pushEvent() {
-    SDL_Event sdlevent;
-    sdlevent.type = SDL_MOUSEMOTION;
-    sdlevent.motion.x = 1;
-    SDL_PushEvent(&sdlevent);
+//    SDL_Event sdlevent;
+//    sdlevent.type = SDL_MOUSEMOTION;
+//    sdlevent.motion.x = 1;
+//    SDL_PushEvent(&sdlevent);
 }

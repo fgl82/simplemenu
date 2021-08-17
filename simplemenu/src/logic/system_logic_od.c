@@ -52,7 +52,10 @@ void setCPU(uint32_t mhz)
 		char strMhz[10];
 		int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
 		to_string(strMhz, (mhz * 1000));
-		int ret = write(fd, strMhz, strlen(strMhz));
+		ssize_t ret = write(fd, strMhz, strlen(strMhz));
+		if (ret==-1) {
+			logMessage("ERROR", "setCPU", "Error writting to file");
+		}
 		close(fd);
 		char temp[300];
 		snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
@@ -139,64 +142,73 @@ void rumble() {
 
 int getBatteryLevel() {
 	int max_voltage;
+	int charging=0;
 	int voltage_now;
 	int total;
-	#if defined (TARGET_OD_BETA)
+#if defined (TARGET_OD_BETA)
 	int min_voltage;
-		FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
-		fscanf(f, "%i", &max_voltage);
-		fclose(f);
+	FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
+	fscanf(f, "%i", &max_voltage);
+	fclose(f);
 
-		f = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
-		fscanf(f, "%i", &min_voltage);
-		fclose(f);
+	f = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
+	fscanf(f, "%i", &min_voltage);
+	fclose(f);
 
-		f = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
-		fscanf(f, "%i", &voltage_now);
-		fclose(f);
+	f = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
+	fscanf(f, "%i", &voltage_now);
+	fclose(f);
 
-		total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
-		if (total > 100 ) {
-			return 100;
-		}
-		return total;
-	#elif defined (TARGET_OD)
-		int min_voltage;
-		FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
-		fscanf(f, "%i", &max_voltage);
-		fclose(f);
+	f = fopen("/sys/class/power_supply/usb-charger/online", "r");
+	fscanf(f, "%i", &charging);
+	fclose(f);
 
-		f = fopen("/sys/class/power_supply/battery/voltage_min_design", "r");
-		fscanf(f, "%i", &min_voltage);
-		fclose(f);
+//	total = (voltage_now-min_voltage)*100/ (max_voltage-min_voltage);
+	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
+	if (charging==1) {
+		return 6;
+	}
+	if (total>5) {
+		return 5;
+	}
+	return total;
+#elif defined (TARGET_OD)
+	int min_voltage;
+	FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
+	fscanf(f, "%i", &max_voltage);
+	fclose(f);
 
-		f = fopen("/sys/class/power_supply/battery/voltage_now", "r");
-		fscanf(f, "%i", &voltage_now);
-		fclose(f);
+	f = fopen("/sys/class/power_supply/battery/voltage_min_design", "r");
+	fscanf(f, "%i", &min_voltage);
+	fclose(f);
 
-		total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
-		if (total > 100 ) {
-			return 100;
-		}
-		return total;
-	#else
-		FILE *f = fopen("/sys/class/power_supply/BAT0/charge_full", "r");
-		int ret = fscanf(f, "%i", &max_voltage);
-		if (ret==-1) {
-			logMessage("INFO","getBatteryLevel","Error");
-		}
-		fclose(f);
-		f = fopen("/sys/class/power_supply/BAT0/charge_now", "r");
-		ret = fscanf(f, "%i", &voltage_now);
-		if (ret==-1) {
-			logMessage("INFO","getBatteryLevel","Error");
-		}
-		fclose(f);
+	f = fopen("/sys/class/power_supply/battery/voltage_now", "r");
+	fscanf(f, "%i", &voltage_now);
+	fclose(f);
 
-		total = (voltage_now*100)/(max_voltage);
-		if (total > 100 ) {
-			return 100;
-		}
-		return total;
-	#endif
+	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+	if (total > 100 ) {
+		return 100;
+	}
+	return total;
+#else
+	FILE *f = fopen("/sys/class/power_supply/BAT0/charge_full", "r");
+	int ret = fscanf(f, "%i", &max_voltage);
+	if (ret==-1) {
+		logMessage("INFO","getBatteryLevel","Error");
+	}
+	fclose(f);
+	f = fopen("/sys/class/power_supply/BAT0/charge_now", "r");
+	ret = fscanf(f, "%i", &voltage_now);
+	if (ret==-1) {
+		logMessage("INFO","getBatteryLevel","Error");
+	}
+	fclose(f);
+
+	total = (voltage_now*6)/(max_voltage);
+//	if (total > 5 ) {
+//		return 5;
+//	}
+	return total;
+#endif
 }

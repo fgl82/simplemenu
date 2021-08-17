@@ -198,6 +198,7 @@ void quit() {
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearPicModeHideMenuTimer();
+	clearBatteryTimer();
 	freeResources();
 	if (shutDownEnabled) {
 #ifdef TARGET_PC
@@ -298,6 +299,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
+	clearBatteryTimer();
 	clearPicModeHideMenuTimer();
 #endif
 	logMessage("INFO", "executeCommand", "Launching Game");
@@ -895,7 +897,7 @@ int theSectionHasGames(struct MenuSection *section) {
 	int dirCounter = 0;
 	char *dirs[10];
 	char *ptr;
-	char dirsCopy[1000];
+//	char dirsCopy[1000];
 	char *filesDirectoriesCopy = strdup(section->filesDirectories);
 	char message[300];
 	snprintf(message, 300, "Directories %s ", filesDirectoriesCopy);
@@ -1003,11 +1005,10 @@ void loadGameList(int refresh) {
 	logMessage("INFO","loadGameList","Should we skip this?");
 	FILE *fp=NULL;
 	if (CURRENT_SECTION.initialized==0||refresh) {
+		logMessage("INFO","loadGameList","No, loading game list");
 		if(getLaunchAtBoot()==NULL) {
 			drawLoadingText();
-			refreshScreen();
 		}
-		logMessage("INFO","loadGameList","No, loading game list");
 		CURRENT_SECTION.initialized=1;
 		//We don't need to reload the alias file if just refreshing
 		if (!refresh) {
@@ -1039,7 +1040,6 @@ void loadGameList(int refresh) {
 				while (fgets(currentline, sizeof(currentline), fp) != NULL) {
 					if(getLaunchAtBoot()==NULL) {
 						drawLoadingText();
-						refreshScreen();
 					}
 
 					int size = strlen(currentline)+1;
@@ -1098,7 +1098,6 @@ void loadGameList(int refresh) {
 		for(int k=0;k<dirCounter;k++) {
 			if(getLaunchAtBoot()==NULL) {
 				drawLoadingText();
-				refreshScreen();
 			}
 
 			int n = 0;
@@ -1253,6 +1252,7 @@ void loadGameList(int refresh) {
 			fclose(fp);
 		}
 	}
+	logMessage("INFO","loadGameList","Finished");
 	loading=0;
 }
 

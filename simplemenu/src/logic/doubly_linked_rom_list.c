@@ -115,7 +115,7 @@ char *getCurrentSectionExistingLetters() {
 		upperInitialLetter[0]=toupper(name[0]);
 		upperInitialLetter[1]='\0';
 		if (strstr(letters,upperInitialLetter)==NULL) {
-			if(isdigit(upperInitialLetter[0])) {
+			if(isdigit(upperInitialLetter[0])||!isalpha(upperInitialLetter[0])) {
 				if(!hadNumbers) {
 					strcat(letters,"#");
 				}
