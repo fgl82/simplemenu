@@ -19,6 +19,9 @@ int isSelectPressed();
 void performChoosingAction();
 void performGroupChoosingAction();
 void performSettingsChoosingAction();
+void performHelpAction();
 int performAction();
 void callDeleteGame(struct Rom * rom);
+void performLaunchAtBootQuitScreenChoosingAction();
+void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec);
 #endif

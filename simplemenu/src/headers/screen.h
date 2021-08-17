@@ -20,4 +20,9 @@ void clearPicModeHideLogoTimer();
 void clearHideHeartTimer();
 void resetHideHeartTimer();
 void drawSettingsScreen();
+void drawHelpScreen(int page);
+void clearShutdownTimer();
+void resetShutdownTimer();
+void startBatteryTimer();
+void clearBatteryTimer();
 #endif
