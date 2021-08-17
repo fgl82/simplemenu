@@ -607,7 +607,7 @@ SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
-	logMessage("INFO","drawRectangleToScreen","FIlling");
+	logMessage("INFO","drawRectangleToScreen","Filling");
 	SDL_FillRect(screen, &rectangle, SDL_MapRGB(screen->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	return(rectangle);
 }

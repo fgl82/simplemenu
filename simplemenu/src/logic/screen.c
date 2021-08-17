@@ -1061,10 +1061,12 @@ void updateScreen(struct Node *node) {
 		switch(currentState) {
 			case BROWSING_GAME_LIST:
 				if (fullscreenMode) {
-					logMessage("INFO","updateScreen","Fullscreen mode");
-					displayGamePicture(rom);
-					drawGameList();
-					displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+					if (currentSectionNumber == favoritesSectionNumber || CURRENT_SECTION.gameCount>0) {
+						logMessage("INFO","updateScreen","Fullscreen mode");
+						displayGamePicture(rom);
+						drawGameList();
+						displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+					}
 				} else {
 					logMessage("INFO","updateScreen","Menu mode");
 					displayCenteredSurface(CURRENT_SECTION.backgroundSurface);
@@ -1103,6 +1105,9 @@ void updateScreen(struct Node *node) {
 					}
 				}
 				if (currentSectionNumber != favoritesSectionNumber && CURRENT_SECTION.gameCount==0) {
+					if(fullscreenMode) {
+						drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0});
+					}
 					generateError("NO GAMES FOUND-FOR THIS SECTION GROUP", 0);
 					showErrorMessage(errorMessage);
 				}

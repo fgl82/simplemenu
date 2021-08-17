@@ -125,7 +125,6 @@ void initialSetup2() {
 }
 
 void processEvents() {
-	logMessage("INFO","processEvents","Event");
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		if(event.type==getKeyDown()){
