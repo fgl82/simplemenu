@@ -179,6 +179,7 @@ extern int gameCountX;
 extern int gameCountY;
 extern int gameCountAlignment;
 extern int gameCountFontColor[3];
+extern char gameCountText[100];
 
 /* STRUCTS */
 struct OPKDesktopFile {

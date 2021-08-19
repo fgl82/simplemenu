@@ -482,8 +482,15 @@ void loadTheme(char *theme) {
 
 		value = ini_get(themeConfig, "GENERAL", "display_game_count");
 		displayGameCount=0;
-		if (value!=NULL) {
+		if (value!=NULL && atoi(value)==1) {
 			displayGameCount=1;
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+			value = ini_get(themeConfig, "GENERAL", "game_count_text");
+			if(value!=NULL) {
+				char *temp = replaceWord(value, "#", "%d");
+				strcpy (gameCountText, temp);
+				free(temp);
+			}
 			value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 			gameCountFontSize = atoifgl(value);
 			value = ini_get(themeConfig, "GENERAL", "game_count_x");
@@ -1227,9 +1234,15 @@ int loadSections(char *file) {
 
 	value = ini_get(themeConfig, "GENERAL", "display_game_count");
 	displayGameCount=0;
-	if (value!=NULL) {
+	if (value!=NULL && atoi(value)==1) {
 		displayGameCount=1;
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+		value = ini_get(themeConfig, "GENERAL", "game_count_text");
+		if(value!=NULL) {
+			char *temp = replaceWord(value, "#", "%d");
+			strcpy (gameCountText, temp);
+			free(temp);
+		}
 		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 		gameCountFontSize = atoifgl(value);
 		value = ini_get(themeConfig, "GENERAL", "game_count_x");

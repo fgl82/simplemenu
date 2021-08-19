@@ -290,7 +290,7 @@ void showConsole() {
 		displayCenteredSurface(CURRENT_SECTION.systemLogoSurface);
 		char *gameCount=malloc(100);
 //		snprintf(gameCount,100,"%d GAMES AVAILABLE",theSectionHasGames(&CURRENT_SECTION));
-		snprintf(gameCount,100,"%d GAMES AVAILABLE",CURRENT_SECTION.gameCount);
+		snprintf(gameCount,100,gameCountText,CURRENT_SECTION.gameCount);
 
 		int alignment = 0;
 		switch(gameCountAlignment) {
