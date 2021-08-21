@@ -44,6 +44,7 @@ int performAction(struct Node *node) {
 		}
 		if (keys[BTN_START]) {
 			currentState=SETTINGS_SCREEN;
+			themeChanged = activeTheme;
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currRawtime = time(NULL);
@@ -54,14 +55,14 @@ int performAction(struct Node *node) {
 			return 1;
 		}
 	}
-//	if (rom!=NULL&&keys[BTN_R2]) {
-//		hideFullScreenModeMenu();
-//		if(currentSectionNumber!=favoritesSectionNumber) {
-//			logMessage("INFO","performAction","Not Favs, loading game list");
-//			loadGameList(1);
-//			return(1);
-//		}
-//	}
+	if (rom!=NULL&&keys[BTN_R2]) {
+		hideFullScreenModeMenu();
+		if(currentSectionNumber!=favoritesSectionNumber) {
+			logMessage("INFO","performAction","Not Favs, loading game list");
+			loadGameList(1);
+			return(1);
+		}
+	}
 //	if (keys[BTN_START]&&isUSBMode) {
 //		hotKeyPressed=0;
 //		isUSBMode=0;
@@ -192,24 +193,23 @@ int performAction(struct Node *node) {
 		return 0;
 	}
 	if((currentState==SELECTING_SECTION&&(keys[BTN_UP]))) {
-		if (currentSectionNumber!=favoritesSectionNumber) {
+		if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			int returnValue = rewindSection(1);
+			rewindSection(1);
 //			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
 //				resetPicModeHideLogoTimer();
 //			} else if (!returnValue) {
 //				currentState=BROWSING_GAME_LIST;
 //			}
 		}
-		return 0;
 	}
 
 	if((currentState==SELECTING_SECTION&&(keys[BTN_DOWN]))) {
 		if (currentSectionNumber!=favoritesSectionNumber) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			int returnValue = advanceSection(1);
+			advanceSection(1);
 //			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
 //				resetPicModeHideLogoTimer();
 //			}else if (!returnValue) {
@@ -246,6 +246,7 @@ int performAction(struct Node *node) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentState=SETTINGS_SCREEN;
+			themeChanged=activeTheme;
 //			currRawtime = time(NULL);
 //			currTime = localtime(&currRawtime);
 //			lastMin=currTime->tm_min;

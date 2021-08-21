@@ -560,6 +560,8 @@ int isSelectPressed() {
 void performGroupChoosingAction() {
 	int existed = 0;
 	if (keys[BTN_START]) {
+		chosenSetting=SHUTDOWN_OPTION;
+		themeChanged=activeTheme;
 		previousState=CHOOSING_GROUP;
 		if(activeGroup!=beforeTryingToSwitchGroup) {
 			activeGroup = beforeTryingToSwitchGroup;
@@ -769,7 +771,7 @@ void performSettingsChoosingAction() {
 		else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
 			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==THEME_OPTION) {
-			drawLoadingText();
+//			drawLoadingText();
 			if (keys[BTN_LEFT]) {
 				if (activeTheme>0) {
 					activeTheme--;
@@ -783,15 +785,15 @@ void performSettingsChoosingAction() {
 					activeTheme=0;
 				}
 			}
-			char *temp=malloc(8000);
-			strcpy(temp,themes[activeTheme]);
-			strcat(temp,"/theme.ini");
-			loadTheme(temp);
-			loadSectionGroups();
-			free(temp);
-			currentMode=3;
-			MENU_ITEMS_PER_PAGE=itemsPerPage;
-			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
+//			char *temp=malloc(8000);
+//			strcpy(temp,themes[activeTheme]);
+//			strcat(temp,"/theme.ini");
+//			loadTheme(temp);
+//			loadSectionGroups();
+//			free(temp);
+//			currentMode=3;
+//			MENU_ITEMS_PER_PAGE=itemsPerPage;
+//			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if(!hdmiEnabled) {
 				if (keys[BTN_LEFT]) {
@@ -861,6 +863,7 @@ void performSettingsChoosingAction() {
 	}
 	#endif
 	else if (keys[BTN_B]) {
+
 //		pthread_cancel(clockThread);
 		#if defined TARGET_OD || defined TARGET_OD_BETA
 		if (hdmiChanged!=hdmiEnabled) {
@@ -887,9 +890,22 @@ void performSettingsChoosingAction() {
 				currentState=BROWSING_GAME_LIST;
 //			}
 //		}
+		if(themeChanged!=activeTheme) {
+			int headerAndFooterBackground[3]={37,50,56};
+			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
+			drawLoadingText();
+			refreshScreen();
+			char *temp=malloc(8000);
+			strcpy(temp,themes[activeTheme]);
+			strcat(temp,"/theme.ini");
+			loadTheme(temp);
+			loadSectionGroups();
+			free(temp);
+//			currentMode=3;
+			MENU_ITEMS_PER_PAGE=itemsPerPage;
+			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
+		}
 		previousState=SETTINGS_SCREEN;
-		int headerAndFooterBackground[3]={37,50,56};
-		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
 		if (CURRENT_SECTION.backgroundSurface==NULL) {
 			logMessage("INFO","performSettingsChoosingAction","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
@@ -903,10 +919,12 @@ void performSettingsChoosingAction() {
 		} else {
 			ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 		}
-		if (currentSectionNumber!=favoritesSectionNumber) {
-			loadGameList(2);
-		} else {
-			loadFavoritesSectionGameList(1);
+		if(themeChanged!=activeTheme) {
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				loadGameList(2);
+			} else {
+				loadFavoritesSectionGameList(1);
+			}
 		}
 	}
 }

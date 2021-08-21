@@ -1003,9 +1003,9 @@ void drawHelpScreen(int page) {
 						break;
 					case 4:
 						#if defined TARGET_BITTBOY
-						drawNonShadedSettingsOptionOnScreen("R1", nextLineText, bodyText);
-						#else
 						drawNonShadedSettingsOptionOnScreen("R", nextLineText, bodyText);
+						#else
+						drawNonShadedSettingsOptionOnScreen("R1", nextLineText, bodyText);
 						#endif
 						drawSettingsOptionValueOnScreen("Fullscreen mode", nextLineText, bodyHighlightedText);
 						break;

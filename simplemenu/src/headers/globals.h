@@ -113,6 +113,7 @@ extern pthread_t myThread;
 
 /* THEME */
 extern char *themes[100];
+extern int themeChanged;
 extern int activeTheme;
 extern int themeCounter;
 extern int currentMode;

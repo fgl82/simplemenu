@@ -97,6 +97,7 @@ pthread_t myThread;
 /* THEME */
 char *themes[100];
 int activeTheme;
+int themeChanged;
 int themeCounter;
 int currentMode;
 char menuFont[1000];

@@ -1123,7 +1123,7 @@ void initializeDisplay() {
 		}
 	}
 #endif
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
 	if (screen==NULL) {
 		SCREEN_WIDTH=320;
 		SCREEN_HEIGHT=240;

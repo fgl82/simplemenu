@@ -485,12 +485,14 @@ void loadTheme(char *theme) {
 		if (value!=NULL && atoi(value)==1) {
 			displayGameCount=1;
 			setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+			strcpy (gameCountText, "# Games Available");
 			value = ini_get(themeConfig, "GENERAL", "game_count_text");
 			if(value!=NULL) {
-				char *temp = replaceWord(value, "#", "%d");
-				strcpy (gameCountText, temp);
-				free(temp);
+				strcpy (gameCountText, value);
 			}
+			char *temp = replaceWord(gameCountText, "#", "%d");
+			strcpy (gameCountText, temp);
+			free(temp);
 			value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 			gameCountFontSize = atoifgl(value);
 			value = ini_get(themeConfig, "GENERAL", "game_count_x");
@@ -926,11 +928,7 @@ void loadSectionGroups() {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
-	if (strlen(sectionGroupsFolder)>1) {
-		snprintf(tempString,sizeof(tempString),"%s",sectionGroupsFolder);
-	} else {
-		snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
-	}
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
 
 	int n = recursivelyScanDirectory(tempString, files, 0);
 
@@ -957,6 +955,16 @@ void loadSectionGroups() {
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
 		logMessage("INFO","loadSectionGroups","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+
+		if (sectionGroups[sectionGroupCounter].groupBackgroundSurface==NULL) {
+			strcpy(temp3,sectionGroupPath);
+			strcat(temp3,"/");
+			strcat(temp3,temp1);
+			strcat(temp3,".png");
+			strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+		}
+
 		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
 		char *temp2 = toUpper(temp1);
@@ -1237,12 +1245,14 @@ int loadSections(char *file) {
 	if (value!=NULL && atoi(value)==1) {
 		displayGameCount=1;
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+		strcpy (gameCountText, "# Games Available");
 		value = ini_get(themeConfig, "GENERAL", "game_count_text");
 		if(value!=NULL) {
-			char *temp = replaceWord(value, "#", "%d");
-			strcpy (gameCountText, temp);
-			free(temp);
+			strcpy (gameCountText, value);
 		}
+		char *temp = replaceWord(gameCountText, "#", "%d");
+		strcpy (gameCountText, temp);
+		free(temp);
 		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 		gameCountFontSize = atoifgl(value);
 		value = ini_get(themeConfig, "GENERAL", "game_count_x");

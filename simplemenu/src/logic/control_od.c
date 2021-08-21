@@ -45,6 +45,7 @@ int performAction(struct Node *node) {
 		if (keys[BTN_START]) {
 			currentState=SETTINGS_SCREEN;
 			chosenSetting=SHUTDOWN_OPTION;
+			themeChanged = activeTheme;
 			selectedShutDownOption=0;
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
@@ -245,6 +246,7 @@ int performAction(struct Node *node) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentState=SETTINGS_SCREEN;
+			themeChanged=activeTheme;
 //			currRawtime = time(NULL);
 //			currTime = localtime(&currRawtime);
 //			lastMin=currTime->tm_min;
