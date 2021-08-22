@@ -186,9 +186,13 @@ int getBatteryLevel() {
 	fscanf(f, "%i", &voltage_now);
 	fclose(f);
 
-	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
-	if (total > 100 ) {
-		return 100;
+//	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
+	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
+	if (charging==1) {
+		return 6;
+	}
+	if (total>5) {
+		return 5;
 	}
 	return total;
 #else
