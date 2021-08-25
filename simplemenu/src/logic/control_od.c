@@ -45,6 +45,7 @@ int performAction(struct Node *node) {
 		if (keys[BTN_START]) {
 			currentState=SETTINGS_SCREEN;
 			chosenSetting=SHUTDOWN_OPTION;
+			themeChanged = activeTheme;
 			selectedShutDownOption=0;
 			currRawtime = time(NULL);
 			currTime = localtime(&currRawtime);
@@ -116,7 +117,7 @@ int performAction(struct Node *node) {
 				}
 				launchGame(CURRENT_SECTION.currentGameNode->data);
 			}
-			if (rom!=NULL&&keys[BTN_DOWN]) {
+			if (rom!=NULL&&keys[BTN_RIGHT]) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				advancePage(rom);
@@ -126,7 +127,7 @@ int performAction(struct Node *node) {
 				aKeyComboWasPressed=1;
 				return 0;
 			}
-			if (rom!=NULL&&keys[BTN_UP]) {
+			if (rom!=NULL&&keys[BTN_LEFT]) {
 				hotKeyPressed=1;
 				CURRENT_SECTION.alphabeticalPaging=1;
 				rewindPage(rom);
@@ -137,9 +138,9 @@ int performAction(struct Node *node) {
 				return 0;
 			}
 		}
-		if (currentState == BROWSING_GAME_LIST || (fullscreenMode)) {
-			if(keys[BTN_RIGHT]) {
-				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
+		if (currentState == BROWSING_GAME_LIST) {
+			if(keys[BTN_DOWN]) {
+//				currentState=(fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST);
 				hotKeyPressed=0;
 				int advanced = advanceSection(0);
 				if(advanced) {
@@ -159,8 +160,8 @@ int performAction(struct Node *node) {
 				aKeyComboWasPressed=1;
 				return 0;
 			}
-			if(keys[BTN_LEFT]) {
-				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
+			if(keys[BTN_UP]) {
+//				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
 				hotKeyPressed=0;
 				int rewinded = rewindSection(0);
 				if(rewinded) {
@@ -191,36 +192,35 @@ int performAction(struct Node *node) {
 		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 		return 0;
 	}
-	if(keys[BTN_L1]) {
-		if (currentSectionNumber!=favoritesSectionNumber) {
+	if((currentState==SELECTING_SECTION&&(keys[BTN_UP]))) {
+		if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			int returnValue = rewindSection(1);
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-				resetPicModeHideLogoTimer();
-			} else if (!returnValue) {
-				currentState=BROWSING_GAME_LIST;
-			}
+			rewindSection(1);
+//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
+//				resetPicModeHideLogoTimer();
+//			} else if (!returnValue) {
+//				currentState=BROWSING_GAME_LIST;
+//			}
 		}
-		return 0;
 	}
 
-	if(keys[BTN_R1]) {
+	if((currentState==SELECTING_SECTION&&(keys[BTN_DOWN]))) {
 		if (currentSectionNumber!=favoritesSectionNumber) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
-			int returnValue = advanceSection(1);
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-				resetPicModeHideLogoTimer();
-			}else if (!returnValue) {
-				currentState=BROWSING_GAME_LIST;
-			}
+			advanceSection(1);
+//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
+//				resetPicModeHideLogoTimer();
+//			}else if (!returnValue) {
+//				currentState=BROWSING_GAME_LIST;
+//			}
 		}
 		return 0;
 	}
 
 	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
-		if (keys[BTN_L2]) {
+		if (keys[BTN_Y]) {
 			showOrHideFavorites();
 			return 0;
 		}
@@ -246,6 +246,7 @@ int performAction(struct Node *node) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			currentState=SETTINGS_SCREEN;
+			themeChanged=activeTheme;
 //			currRawtime = time(NULL);
 //			currTime = localtime(&currRawtime);
 //			lastMin=currTime->tm_min;
@@ -274,7 +275,7 @@ int performAction(struct Node *node) {
 			}
 			return 0;
 		}
-		if (keys[BTN_Y]) {
+		if (keys[BTN_R1]) {
 			int number = CURRENT_GAME_NUMBER;
 			if (fullscreenMode) {
 				fullscreenMode=0;

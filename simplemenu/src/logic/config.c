@@ -12,6 +12,7 @@
 #include "../headers/ini2.h"
 #include "../headers/graphics.h"
 #include "../headers/utils.h"
+#include "../headers/config.h"
 
 char home[5000];
 char pathToThemeConfigFile[1000];
@@ -102,11 +103,18 @@ void checkIfDefault() {
 	logMessage("INFO","checkIfDefault","Default state checked");
 }
 
+//void myGetLine(char * line, size_t len, FILE * fp) {
+//	__ssize_t result = getline(&line, &len, fp);
+//	if(result==-1) {
+//		logMessage("INFO", "myGetLine", "Huh?");
+//	}
+//}
+
 int isLaunchAtBoot(char *romName) {
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
-	ssize_t read;
+//	ssize_t read;
 	char pathToAutostartFilePlusFileName[300];
 	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
 
@@ -114,6 +122,7 @@ int isLaunchAtBoot(char *romName) {
 	if (fp==NULL) {
 		return 0;
 	}
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	line[strlen(line)-1] = '\0';
 	if (!strcmp(line,romName)) {
@@ -172,7 +181,6 @@ struct AutostartRom *getLaunchAtBoot() {
 	FILE *fp;
 	char *line = NULL;
 	size_t len = 0;
-	ssize_t read;
 	char pathToAutostartFilePlusFileName[300];
 	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
 	fp = fopen(pathToAutostartFilePlusFileName, "r");
@@ -187,15 +195,19 @@ struct AutostartRom *getLaunchAtBoot() {
 //	fprintf(fp,"%s", rom->preferences.emulatorDir);
 //	fprintf(fp,"%s", rom->preferences.frequenc
 	struct Rom *rom = malloc(sizeof(struct Rom));
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	rom->name=strdup(line);
 
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	rom->directory=strdup(line);
 
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	rom->alias=strdup(line);
 
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	rom->isConsoleApp=atoifgl(line);
 
@@ -203,9 +215,11 @@ struct AutostartRom *getLaunchAtBoot() {
 	struct AutostartRom *autostartRom = malloc(sizeof(struct AutostartRom));
 	autostartRom->rom = rom;
 
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	autostartRom->emulatorDir = strdup(line);
 
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	autostartRom->emulator = strdup(line);
 //	printf("%s%s%s%d\n", rom->name, rom->directory, rom->alias, rom->isConsoleApp);
@@ -384,6 +398,13 @@ void loadTheme(char *theme) {
 			displaySectionGroupName = atoifgl(value);
 		}
 
+		value = ini_get(themeConfig, "GENERAL", "show_art");
+		if (value == NULL) {
+			showArt = 1;
+		} else {
+			showArt = atoifgl(value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "items");
 		itemsPerPage = atoifgl(value);
 
@@ -443,12 +464,35 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
+		battX = -1;
+		value = ini_get(themeConfig, "GENERAL", "batt_x");
+		if(value!=NULL) {
+			battX = atoifgl(value);
+			value = ini_get(themeConfig, "GENERAL", "batt_y");
+			battY = atoifgl(value);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_1", batt1);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_2", batt2);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_3", batt3);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_4", batt4);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_5", batt5);
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_charging", battCharging);
+		}
+
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
 
 		value = ini_get(themeConfig, "GENERAL", "display_game_count");
 		displayGameCount=0;
-		if (value!=NULL) {
+		if (value!=NULL && atoi(value)==1) {
 			displayGameCount=1;
+			setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+			strcpy (gameCountText, "# Games Available");
+			value = ini_get(themeConfig, "GENERAL", "game_count_text");
+			if(value!=NULL) {
+				strcpy (gameCountText, value);
+			}
+			char *temp = replaceWord(gameCountText, "#", "%d");
+			strcpy (gameCountText, temp);
+			free(temp);
 			value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 			gameCountFontSize = atoifgl(value);
 			value = ini_get(themeConfig, "GENERAL", "game_count_x");
@@ -649,6 +693,7 @@ void loadRomPreferences(struct Rom *rom) {
 	}
 	char *configurations[4];
 	char *ptr;
+//	myGetLine(line, len, fp);
 	getline(&line, &len, fp);
 	ptr = strtok(line, ";");
 	int i=0;
@@ -883,11 +928,7 @@ void loadSectionGroups() {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "section_groups_folder", sectionGroupsFolder);
 
-	if (strlen(sectionGroupsFolder)>1) {
-		snprintf(tempString,sizeof(tempString),"%s",sectionGroupsFolder);
-	} else {
-		snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
-	}
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
 
 	int n = recursivelyScanDirectory(tempString, files, 0);
 
@@ -914,6 +955,16 @@ void loadSectionGroups() {
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
 		logMessage("INFO","loadSectionGroups","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+
+		if (sectionGroups[sectionGroupCounter].groupBackgroundSurface==NULL) {
+			strcpy(temp3,sectionGroupPath);
+			strcat(temp3,"/");
+			strcat(temp3,temp1);
+			strcat(temp3,".png");
+			strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+		}
+
 		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
 		char *temp2 = toUpper(temp1);
@@ -1105,6 +1156,13 @@ int loadSections(char *file) {
 		displaySectionGroupName = atoifgl(value);
 	}
 
+	value = ini_get(themeConfig, "GENERAL", "show_art");
+	if (value == NULL) {
+		showArt = 1;
+	} else {
+		showArt = atoifgl(value);
+	}
+
 	value = ini_get(themeConfig, "GENERAL", "items");
 	itemsPerPage = atoifgl(value);
 
@@ -1168,12 +1226,33 @@ int loadSections(char *file) {
 
 	setThemeResourceValueInSection (themeConfig, "GENERAL", "textX_font", textXFont);
 
+	battX = -1;
+	value = ini_get(themeConfig, "GENERAL", "batt_x");
+	if(value!=NULL) {
+		battX = atoifgl(value);
+		value = ini_get(themeConfig, "GENERAL", "batt_y");
+		battY = atoifgl(value);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_1", batt1);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_2", batt2);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_3", batt3);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_4", batt4);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_5", batt5);
+		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_charging", battCharging);
+	}
 
 	value = ini_get(themeConfig, "GENERAL", "display_game_count");
 	displayGameCount=0;
-	if (value!=NULL) {
+	if (value!=NULL && atoi(value)==1) {
 		displayGameCount=1;
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
+		strcpy (gameCountText, "# Games Available");
+		value = ini_get(themeConfig, "GENERAL", "game_count_text");
+		if(value!=NULL) {
+			strcpy (gameCountText, value);
+		}
+		char *temp = replaceWord(gameCountText, "#", "%d");
+		strcpy (gameCountText, temp);
+		free(temp);
 		value = ini_get(themeConfig, "GENERAL", "game_count_font_size");
 		gameCountFontSize = atoifgl(value);
 		value = ini_get(themeConfig, "GENERAL", "game_count_x");
@@ -1297,14 +1376,13 @@ void saveLastState() {
 	char pathToStatesFilePlusFileName[300];
 	snprintf(pathToStatesFilePlusFileName,sizeof(pathToStatesFilePlusFileName),"%s/.simplemenu/last_state.sav",home);
 	fp = fopen(pathToStatesFilePlusFileName, "w");
-	fprintf(fp, "%d;\n", 61);
+	fprintf(fp, "%d;\n", 10);
 	fprintf(fp, "%d;\n", stripGames);
 	fprintf(fp, "%d;\n", fullscreenMode);
 	fprintf(fp, "%d;\n", footerVisibleInFullscreenMode);
 	fprintf(fp, "%d;\n", menuVisibleInFullscreenMode);
 	fprintf(fp, "%d;\n", activeTheme);
 	fprintf(fp, "%d;\n", timeoutValue);
-	fprintf(fp, "%d;\n", autoHideLogos);
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	fprintf(fp, "%d;\n", currentMode);
@@ -1348,7 +1426,6 @@ void loadLastState() {
 	int menuVisible= -1;
 	int themeRead= -1;
 	int timeout= -1;
-	int readAutoHideLogos= -1;
 	int groupCounter=-1;
 	int savedVersion=-1;
 	int itemsRead=-1;
@@ -1362,7 +1439,7 @@ void loadLastState() {
 		}
 		if (savedVersion==-1) {
 			savedVersion=atoifgl(configurations[0]);
-			if(savedVersion!=61) {
+			if(savedVersion!=10) {
 				saveLastState();
 				fclose(fp);
 				if (line) {
@@ -1382,8 +1459,6 @@ void loadLastState() {
 			themeRead=atoifgl(configurations[0]);
 		} else if(timeout==-1) {
 			timeout=atoifgl(configurations[0]);
-		} else if(readAutoHideLogos==-1) {
-			readAutoHideLogos=atoifgl(configurations[0]);
 		} else if (startInGroup==-1) {
 			startInGroup = atoifgl(configurations[0]);
 		} else if (startInSection==-1) {
@@ -1421,7 +1496,6 @@ void loadLastState() {
 	menuVisibleInFullscreenMode=menuVisible;
 	activeTheme=themeRead;
 	timeoutValue=timeout;
-	autoHideLogos=readAutoHideLogos;
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
 	currentMode=itemsRead;

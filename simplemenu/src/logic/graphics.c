@@ -89,7 +89,12 @@ int calculateProportionalSizeOrDistance(int number) {
 	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
 		return ((float)SCREEN_HEIGHT*(float)number)/240;
 	else {
-		return (((float)SCREEN_HEIGHT-((float)SCREEN_HEIGHT*60/240))*(float)number)/180;
+		int result = (((SCREEN_HEIGHT-(SCREEN_HEIGHT*60/240))*number)/180);
+//		printf("FGL: %d\n", result);
+//		if (result==476) {
+//			result=480;
+//		}
+		return result;
 	}
 }
 
@@ -298,12 +303,8 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
 }
 
-void drawSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[]) {
-	int retW=1;
-	int retW2=1;
+void drawSettingsOptionValueOnScreen(char *value, int position, int txtColor[]) {
 	int retW3=3;
-	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
-	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
 	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
 	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5)-retW3, position, value, txtColor, VAlignBottom | HAlignLeft);
 }
@@ -562,9 +563,10 @@ void drawBigWhiteText(char *text) {
 void drawLoadingText() {
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
+	refreshScreen();
 }
 
-void drawCopyingText(const char* text) {
+void drawCopyingText(char* text) {
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
 }
@@ -605,7 +607,7 @@ SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor
 	rectangle.h = height;
 	rectangle.x = x;
 	rectangle.y = y;
-	logMessage("INFO","drawRectangleToScreen","FIlling");
+	logMessage("INFO","drawRectangleToScreen","Filling");
 	SDL_FillRect(screen, &rectangle, SDL_MapRGB(screen->format, rgbColor[0], rgbColor[1], rgbColor[2]));
 	return(rectangle);
 }
@@ -687,6 +689,7 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
+
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
 		double h = screenshot->h;
@@ -708,12 +711,22 @@ void displayImageOnScreenCustom(char *fileName) {
 			smoothing=1;
 		}
 		smoothing=0;
-		int heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
-		int heartY = calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)/2;
+		int heartX = 0;
+		int heartY = 0;
+
+		if (showArt) {
+			heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
+			heartY = calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)/2;
+		} else {
+			heartX = SCREEN_WIDTH/2;
+			heartY = SCREEN_HEIGHT/2;
+		}
+//		displayHeart(heartX, heartY);
+		if (showArt) {
+			drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2, 0, 0, w, h, 0, smoothing);
+		}
 		displayHeart(heartX, heartY);
-		drawImage(screen, screenshot, calculateProportionalSizeOrDistance(artX+(artWidth/2))-w/2, calculateProportionalSizeOrDistance(artY+(artHeight/2))-h/2, 0, 0, w, h, 0, smoothing);
-		displayHeart(heartX, heartY);
-		if(artTextDistanceFromPicture>=0) {
+		if(artTextDistanceFromPicture>=0 && showArt) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
@@ -723,11 +736,18 @@ void displayImageOnScreenCustom(char *fileName) {
 			}
 		}
 	} else {
-		int heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
-		int heartY = calculateProportionalSizeOrDistance(artY)+(calculateProportionalSizeOrDistance((artWidth/4)*3)/2);
+		int heartX = 0;
+		int heartY = 0;
+		if (showArt) {
+			heartX = calculateProportionalSizeOrDistance(artX)+calculateProportionalSizeOrDistance(artWidth)/2;
+			heartY = calculateProportionalSizeOrDistance(artY)+(calculateProportionalSizeOrDistance((artWidth/4)*3)/2);
+		} else {
+			heartX = SCREEN_WIDTH/2;
+			heartY = SCREEN_HEIGHT/2;
+		}
 //		int heartY = calculateProportionalSizeOrDistance(artY)+calculateProportionalSizeOrDistance(artHeight)/2;
 		displayHeart(heartX, heartY);
-		if(artTextDistanceFromPicture>=0) {
+		if(artTextDistanceFromPicture>=0 && showArt) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidth/4)*3;
@@ -826,7 +846,39 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 		Uint32 colorkey = surface->format->colorkey;
 		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
 	}
+	printf("asdasdas%d\n",sized->h);
+	if(sized->h==(SCREEN_HEIGHT-1)) {
+		sized->h+=1;
+	}
 	free(surface);
+	return sized;
+}
+
+SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface) {
+	if (surface==NULL) {
+		logMessage("WARN","resizeSurface","Image not found, surface can't be resized");
+		return NULL;
+	}
+	int newW = SCREEN_WIDTH;
+	int newH = SCREEN_HEIGHT;
+	if (newW==surface->w&&newH==surface->h) {
+		return surface;
+	}
+	int smoothing = 1;
+//	if ((surface->w!=calculateProportionalSizeOrDistance(w) || surface->h!=calculateProportionalSizeOrDistance(h)) && !(calculateProportionalSizeOrDistance(w)%surface->w==0 && calculateProportionalSizeOrDistance(h)%surface->h==0)) {
+//		smoothing=1;
+//	}
+	double zoomx = (double)(newW / (double)surface->w);
+	double zoomy = (double)(newH / (double)surface->h);
+
+	SDL_Surface *sized = NULL;
+	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
+	if(surface->flags & SDL_SRCCOLORKEY ) {
+		Uint32 colorkey = surface->format->colorkey;
+		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
+	}
+	SDL_FreeSurface(surface);
+	surface=NULL;
 	return sized;
 }
 
@@ -860,15 +912,15 @@ SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 
 
 void resizeSectionSystemLogo(struct MenuSection *section) {
-	section->systemLogoSurface = resizeSurfaceToFitScreen(section->systemLogoSurface);
+	section->systemLogoSurface = resizeSurfaceToScreenSize(section->systemLogoSurface);
 }
 
 void resizeSectionBackground(struct MenuSection *section) {
-	section->backgroundSurface = resizeSurfaceToFitScreen(section->backgroundSurface);
+	section->backgroundSurface = resizeSurfaceToScreenSize(section->backgroundSurface);
 }
 
 void resizeGroupBackground(struct SectionGroup *group) {
-	group->groupBackgroundSurface = resizeSurfaceToFitScreen(group->groupBackgroundSurface);
+	group->groupBackgroundSurface = resizeSurfaceToScreenSize(group->groupBackgroundSurface);
 }
 
 void resizeSectionSystemPicture(struct MenuSection *section) {
@@ -1015,7 +1067,7 @@ void initializeDisplay() {
 		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-FILE *fp;
+
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
@@ -1023,6 +1075,7 @@ FILE *fp;
 	//	1: aspect
 	//	2: original (fallback to aspect when downscale is needed)
 	//	3: 4:3
+	FILE *fp;
 	fp = fopen("/proc/jz/ipu","w");
 	fprintf(fp,"0");
 	fclose(fp);
@@ -1030,12 +1083,16 @@ FILE *fp;
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 480;
+	SCREEN_HEIGHT = 240;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
+	char msg[1000];
+	snprintf(msg,1000,"%dx%d",SCREEN_WIDTH,SCREEN_HEIGHT);
+	logMessage("INFO", "initializeDisplay", msg);
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_NOFRAME);
 //	SDL_ShowCursor(0);
 #else
+	FILE *fp1;
 	SDL_ShowCursor(0);
 
 	SCREEN_WIDTH=320;
@@ -1043,10 +1100,10 @@ FILE *fp;
 
 	SDL_Rect** modes = SDL_ListModes(NULL,SDL_NOFRAME|SDL_SWSURFACE);
 
-	fp = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
-	if (fp!=NULL) {
-		fprintf(fp, "%d" , 0);
-		fclose(fp);
+	fp1 = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
+	if (fp1!=NULL) {
+		fprintf(fp1, "%d" , 0);
+		fclose(fp1);
 	}
 
 #if defined TARGET_OD || defined TARGET_OD_BETA

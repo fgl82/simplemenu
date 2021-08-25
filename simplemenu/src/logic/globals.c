@@ -27,6 +27,7 @@ int fullscreenMode;
 int hotKeyPressed;
 int aKeyComboWasPressed;
 int currentState;
+int previousState;
 int loading;
 int isPicModeMenuHidden;
 int isSuspended;
@@ -41,7 +42,7 @@ SDL_TimerID timeoutTimer;
 SDL_TimerID picModeHideMenuTimer;
 SDL_TimerID picModeHideLogoTimer;
 SDL_TimerID hideHeartTimer;
-SDL_TimerID screenTimer;
+SDL_TimerID batteryTimer;
 
 typedef struct thread_picture {
 	  SDL_Surface* display;
@@ -76,7 +77,7 @@ int SCREEN_TIMEOUT_OPTION;
 int DEFAULT_OPTION;
 int USB_OPTION;
 int SHUTDOWN_OPTION;
-int AUTO_HIDE_LOGOS_OPTION;
+int HELP_OPTION;
 char mediaFolder[1000];
 int stripGames;
 int useCache;
@@ -84,7 +85,6 @@ int shutDownEnabled;
 int selectedShutDownOption;
 int footerVisibleInFullscreenMode;
 int menuVisibleInFullscreenMode;
-int autoHideLogos;
 int timeoutValue;
 int OC_UC;
 int OC_NO;
@@ -97,6 +97,7 @@ pthread_t myThread;
 /* THEME */
 char *themes[100];
 int activeTheme;
+int themeChanged;
 int themeCounter;
 int currentMode;
 char menuFont[1000];
@@ -111,6 +112,14 @@ int itemsPerPage;
 int itemsPerPageFullscreen;
 int itemsSeparation;
 char textXFont[1000];
+char batt1[1000];
+char batt2[1000];
+char batt3[1000];
+char batt4[1000];
+char batt5[1000];
+char battCharging[1000];
+int battX;
+int battY;
 int text1FontSize;
 int text1X;
 int text1Y;
@@ -143,6 +152,8 @@ int fontSize;
 int colorfulFullscreenMenu;
 int fontOutline;
 int displaySectionGroupName;
+int showArt;
+int refreshRequest;
 
 int displayGameCount;
 char gameCountFont[1000];
@@ -151,6 +162,7 @@ int gameCountX;
 int gameCountY;
 int gameCountAlignment;
 int gameCountFontColor[3];
+char gameCountText[100];
 
 /* STRUCTS */
 struct OPKDesktopFile {

@@ -9,6 +9,8 @@
 #define SHUTTING_DOWN 5
 #define BROWSING_GAME_LIST_AFTER_TIMER 6
 #define AFTER_RUNNING_LAUNCH_AT_BOOT 7
+#define HELP_SCREEN_1 8
+#define HELP_SCREEN_2 9
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -41,6 +43,7 @@ extern int hotKeyPressed;
 extern int aKeyComboWasPressed;
 extern int currentlySectionSwitching;
 extern int currentState;
+extern int previousState;
 extern int loading;
 extern int isPicModeMenuHidden;
 extern int isSuspended;
@@ -55,7 +58,7 @@ extern SDL_TimerID shutdownTimer;
 extern SDL_TimerID picModeHideMenuTimer;
 extern SDL_TimerID picModeHideLogoTimer;
 extern SDL_TimerID hideHeartTimer;
-extern SDL_TimerID screenTimer;
+extern SDL_TimerID batteryTimer;
 
 typedef struct thread_picture {
 	  SDL_Surface* display;
@@ -90,7 +93,7 @@ extern int SCREEN_TIMEOUT_OPTION;
 extern int DEFAULT_OPTION;
 extern int USB_OPTION;
 extern int SHUTDOWN_OPTION;
-extern int AUTO_HIDE_LOGOS_OPTION;
+extern int HELP_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern char mediaFolder[1000];
 extern int stripGames;
@@ -99,7 +102,6 @@ extern int shutDownEnabled;
 extern int selectedShutDownOption;
 extern int footerVisibleInFullscreenMode;
 extern int menuVisibleInFullscreenMode;
-extern int autoHideLogos;
 extern int timeoutValue;
 extern int OC_UC;
 extern int OC_NO;
@@ -111,6 +113,7 @@ extern pthread_t myThread;
 
 /* THEME */
 extern char *themes[100];
+extern int themeChanged;
 extern int activeTheme;
 extern int themeCounter;
 extern int currentMode;
@@ -127,6 +130,14 @@ extern int itemsPerPage;
 extern int itemsPerPageFullscreen;
 extern int itemsSeparation;
 extern char textXFont[1000];
+extern char batt1[1000];
+extern char batt2[1000];
+extern char batt3[1000];
+extern char batt4[1000];
+extern char batt5[1000];
+extern char battCharging[1000];
+extern int battX;
+extern int battY;
 extern int text1FontSize;
 extern int text1X;
 extern int text1Y;
@@ -159,6 +170,8 @@ extern int fontSize;
 extern int colorfulFullscreenMenu;
 extern int fontOutline;
 extern int displaySectionGroupName;
+extern int showArt;
+extern int refreshRequest;
 
 extern int displayGameCount;
 extern char gameCountFont[1000];
@@ -167,6 +180,7 @@ extern int gameCountX;
 extern int gameCountY;
 extern int gameCountAlignment;
 extern int gameCountFontColor[3];
+extern char gameCountText[100];
 
 /* STRUCTS */
 struct OPKDesktopFile {

@@ -191,9 +191,7 @@ int performAction(struct Node *node) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
 			int returnValue = rewindSection(1);
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-				resetPicModeHideLogoTimer();
-			} else if (!returnValue) {
+			if (!returnValue) {
 				currentState=BROWSING_GAME_LIST;
 			}
 		}
@@ -205,9 +203,7 @@ int performAction(struct Node *node) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
 			int returnValue = advanceSection(1);
-			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-				resetPicModeHideLogoTimer();
-			}else if (!returnValue) {
+			if (!returnValue) {
 				currentState=BROWSING_GAME_LIST;
 			}
 		}
