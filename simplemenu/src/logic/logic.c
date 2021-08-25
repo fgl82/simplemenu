@@ -399,7 +399,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 			logMessage("ERROR","executeCommand","Error executing emulator");
 		}
 		free(exec);
-		initializeDisplay();
+		initializeDisplay(SCREEN_WIDTH, SCREEN_HEIGHT);
 		setupKeys();
 		enableKeyRepeat();
 		initializeFonts();

@@ -1016,7 +1016,7 @@ void drawUSBScreen() {
 	drawTextOnScreen(headerFont, NULL, 161,217,"PRESS START TO END",white,VAlignMiddle | HAlignCenter);
 }
 
-void initializeDisplay() {
+void initializeDisplay(int w, int h) {
 	SDL_ShowCursor(0);
 	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
@@ -1083,8 +1083,8 @@ void initializeDisplay() {
 #ifdef TARGET_PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
-	SCREEN_HEIGHT = 240;
-	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
+	SCREEN_HEIGHT = h;
+	SCREEN_WIDTH = w;
 	char msg[1000];
 	snprintf(msg,1000,"%dx%d",SCREEN_WIDTH,SCREEN_HEIGHT);
 	logMessage("INFO", "initializeDisplay", msg);
