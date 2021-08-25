@@ -62,7 +62,7 @@ void sig_term_handler()
 	running=0;
 }
 
-void initialSetup() {
+void initialSetup(int w, int h) {
 	initializeGlobals();
 	logMessage("INFO","initialSetup","Initialized Globals");
 	struct sigaction sa;
@@ -79,7 +79,7 @@ void initialSetup() {
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
-	initializeDisplay();
+	initializeDisplay(w,h);
 	freeFonts();
 	initializeFonts();
 	initializeSettingsFonts();
@@ -237,9 +237,9 @@ void processEvents() {
 	}
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	logMessage("INFO","main","Setup 1");
-	initialSetup();
+	initialSetup(atoi(argv[1]), atoi(argv[2]));
 	logMessage("INFO","main","Setup 2");
 	initialSetup2();
 	logMessage("INFO","main","Checking launch at boot");
