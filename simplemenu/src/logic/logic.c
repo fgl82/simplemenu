@@ -300,7 +300,6 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearBatteryTimer();
-	clearPicModeHideMenuTimer();
 #endif
 	logMessage("INFO", "executeCommand", "Launching Game");
 #ifndef TARGET_PC
