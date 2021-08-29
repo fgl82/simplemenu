@@ -108,5 +108,18 @@ void cycleFrequencies() {
 }
 
 int getBatteryLevel() {
-	return 100;
+	int val = -1;
+	FILE *f = fopen("/proc/jz/battery", "r");
+	fscanf(f, "%i", &val);
+	fclose(f);
+	char temp[30];
+	sprintf( temp, "%d", val );
+	logMessage("INFO", "getBatteryLevel", val);
+	if ((val > 10000) || (val < 0)) return 6;
+	if (val > 4000) return 5; // 100%
+	if (val > 3900) return 4; // 80%
+	if (val > 3800) return 3; // 60%
+	if (val > 3700) return 2; // 40%
+	if (val > 3520) return 1; // 20%
+	return 0;
 }

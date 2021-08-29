@@ -123,7 +123,7 @@ int advanceSection(int showLogo) {
 	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-		resizeSectionSystemLogo(&CURRENT_SECTION);
+//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
 //	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
@@ -162,7 +162,7 @@ int rewindSection(int showLogo) {
 	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-		resizeSectionSystemLogo(&CURRENT_SECTION);
+//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
 //	#ifdef TARGET_BITTBOY
 	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
@@ -406,14 +406,14 @@ void showOrHideFavorites() {
 		if (CURRENT_SECTION.systemLogoSurface == NULL) {
 			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 			logMessage("INFO","showOrHideFavorites","Loading system logo");
-			resizeSectionSystemLogo(&CURRENT_SECTION);
+//			resizeSectionSystemLogo(&CURRENT_SECTION);
 		}
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","showOrHideFavorites","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			resizeSectionBackground(&CURRENT_SECTION);
+//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			resizeSectionSystemPicture(&CURRENT_SECTION);
+//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
 			currentState=SELECTING_SECTION;
@@ -445,14 +445,14 @@ void showOrHideFavorites() {
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		logMessage("WARN","showOrHideFavorites","Loading system logo");
-		resizeSectionSystemLogo(&CURRENT_SECTION);
+//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.backgroundSurface == NULL) {
 		logMessage("WARN","showOrHideFavorites","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-		resizeSectionBackground(&CURRENT_SECTION);
+//		resizeSectionBackground(&CURRENT_SECTION);
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-		resizeSectionSystemPicture(&CURRENT_SECTION);
+//		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 //	if (autoHideLogos) {
 //		resetPicModeHideLogoTimer();
@@ -644,12 +644,12 @@ void performGroupChoosingAction() {
 							logMessage("INFO","performGroupChoosingAction","Loading system logo");
 							CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 							drawLoadingText();
-							resizeSectionSystemLogo(&CURRENT_SECTION);
+//							resizeSectionSystemLogo(&CURRENT_SECTION);
 							logMessage("INFO","performGroupChoosingAction","Loading system background");
 							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-							resizeSectionBackground(&CURRENT_SECTION);
+//							resizeSectionBackground(&CURRENT_SECTION);
 							CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-							resizeSectionSystemPicture(&CURRENT_SECTION);
+//							resizeSectionSystemPicture(&CURRENT_SECTION);
 							existed = 1;
 
 						}
@@ -668,12 +668,12 @@ void performGroupChoosingAction() {
 				drawLoadingText();
 				logMessage("INFO","performGroupChoosingAction","performGroupChoosingAction !existed - Loading system logo");
 				CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-				resizeSectionSystemLogo(&CURRENT_SECTION);
+//				resizeSectionSystemLogo(&CURRENT_SECTION);
 				logMessage("INFO","performGroupChoosingAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-				resizeSectionBackground(&CURRENT_SECTION);
+//				resizeSectionBackground(&CURRENT_SECTION);
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-				resizeSectionSystemPicture(&CURRENT_SECTION);
+//				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			if (CURRENT_SECTION.gameCount==0) {
 				advanceSection(0);
@@ -892,9 +892,9 @@ void performSettingsChoosingAction() {
 //		}
 		if(themeChanged!=activeTheme) {
 			int headerAndFooterBackground[3]={37,50,56};
-			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance(22), headerAndFooterBackground);
+			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
 			drawLoadingText();
-			refreshScreen();
+//			refreshScreen();
 			char *temp=malloc(8000);
 			strcpy(temp,themes[activeTheme]);
 			strcat(temp,"/theme.ini");
@@ -909,10 +909,10 @@ void performSettingsChoosingAction() {
 		if (CURRENT_SECTION.backgroundSurface==NULL) {
 			logMessage("INFO","performSettingsChoosingAction","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			resizeSectionBackground(&CURRENT_SECTION);
+//			resizeSectionBackground(&CURRENT_SECTION);
 			logMessage("INFO","performSettingsChoosingAction","Loading system picture");
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			resizeSectionSystemPicture(&CURRENT_SECTION);
+//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if(fullscreenMode==0) {
 			ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

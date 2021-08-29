@@ -943,6 +943,19 @@ int theSectionHasGames(struct MenuSection *section) {
 							snprintf(message, 300, "%s considered",
 									desktopFiles[desktopCounter].displayName);
 							logMessage("INFO", "theSectionHasGames", message);
+#ifdef TARGET_RFW
+								if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
+									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
+									desktopCounter++;
+									continue;
+								}
+#else
+								if(strstr(desktopFiles[desktopCounter].name,"gcw0")==NULL) {
+									logMessage("WARN", "loadGameList", "Non-OD desktop file found");
+									desktopCounter++;
+									continue;
+								}
+#endif
 							value++;
 						}
 						desktopCounter++;
@@ -1119,9 +1132,16 @@ void loadGameList(int refresh) {
 								break;
 							} else {
 #ifdef TARGET_RFW
-								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
+								if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
 									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
 									desktopCounter++;
+									continue;
+								}
+#else
+								if(strstr(desktopFiles[desktopCounter].name,"gcw0")==NULL) {
+									logMessage("WARN", "loadGameList", "Non-OD desktop file found");
+									desktopCounter++;
+									continue;
 								}
 #endif
 								realItemCount++;
@@ -1295,9 +1315,9 @@ void determineStartingScreen(int sectionCount) {
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			resizeSectionBackground(&CURRENT_SECTION);
+//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			resizeSectionSystemPicture(&CURRENT_SECTION);
+//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		logMessage("INFO", "determineStartingScreen", "Section background loaded and resized");
 		int gamesInSection = CURRENT_SECTION.gameCount;
@@ -1326,9 +1346,9 @@ void determineStartingScreen(int sectionCount) {
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			resizeSectionBackground(&CURRENT_SECTION);
+//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			resizeSectionSystemPicture(&CURRENT_SECTION);
+//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages > 0 && CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

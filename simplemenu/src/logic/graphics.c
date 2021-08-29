@@ -86,6 +86,19 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 int calculateProportionalSizeOrDistance(int number) {
+//	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
+//		return ((float)SCREEN_HEIGHT*(float)number)/240;
+//	else {
+//		int result = (((SCREEN_HEIGHT-(SCREEN_HEIGHT*60/240))*number)/180);
+////		printf("FGL: %d\n", result);
+////		if (result==476) {
+////			result=480;
+////		}
+		return number;
+//	}
+}
+
+int calculateProportionalSizeOrDistance1(int number) {
 	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
 		return ((float)SCREEN_HEIGHT*(float)number)/240;
 	else {
@@ -94,7 +107,7 @@ int calculateProportionalSizeOrDistance(int number) {
 //		if (result==476) {
 //			result=480;
 //		}
-		return result;
+		return number;
 	}
 }
 
@@ -508,7 +521,7 @@ void drawTextOnFooterWithColor(char *text, int txtColor[]) {
 }
 
 void drawTextOnSettingsFooterWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(231), text, txtColor, VAlignMiddle| HAlignLeft);
+	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(231), text, txtColor, VAlignMiddle| HAlignLeft);
 }
 
 void drawTextOnHeader() {
@@ -536,19 +549,19 @@ void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
 }
 
 void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(settingsStatusFont, NULL, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance1(13), text, txtColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsHeaderFont, NULL, calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(24), text, txtColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(settingsHeaderFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(24), text, txtColor, VAlignMiddle | HAlignLeft);
 }
 
 void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(5), calculateProportionalSizeOrDistance(13), text, txtColor, VAlignMiddle | HAlignRight);
+	drawTextOnScreen(settingsStatusFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(13), text, txtColor, VAlignMiddle | HAlignRight);
 }
 
 void drawTextOnSettingsHeaderRightWithColor1(char *text, int x, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, x, calculateProportionalSizeOrDistance(33), text, txtColor, VAlignMiddle | HAlignRight);
+	drawTextOnScreen(settingsStatusFont, NULL, x, calculateProportionalSizeOrDistance1(33), text, txtColor, VAlignMiddle | HAlignRight);
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
@@ -562,7 +575,7 @@ void drawBigWhiteText(char *text) {
 
 void drawLoadingText() {
 	int white[3]={255, 255, 255};
-	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
 	refreshScreen();
 }
 
@@ -932,7 +945,7 @@ void displayCenteredSurface(SDL_Surface *surface) {
 		logMessage("WARN","displayCenteredSurface","Image not found, surface can't be displayed");
 		return;
 	}
-	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
+//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
@@ -1108,13 +1121,12 @@ void initializeDisplay(int w, int h) {
 
 #if defined TARGET_OD || defined TARGET_OD_BETA
 	if(modes==(SDL_Rect **)0) {
-		printf("No available modes\n");
+		logMessage("INFO", "initializeDisplay", "No available modes");
 	} else if(modes==(SDL_Rect **)-1) {
-		printf("All modes available\n");
+		logMessage("INFO", "initializeDisplay", "All modes available");
 	} else {
-		printf("Available modes:\n");
+		logMessage("INFO", "initializeDisplay", "Some Available modes");
 		for(int i=0; modes[i]; i++) {
-			printf("%dx%d\n", modes[i]->w, modes[i]->h);
 			if (modes[i]->w==640 && modes[i]->h ==480) {
 				SCREEN_WIDTH=640;
 				SCREEN_HEIGHT=480;
@@ -1123,7 +1135,7 @@ void initializeDisplay(int w, int h) {
 		}
 	}
 #endif
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
 	if (screen==NULL) {
 		SCREEN_WIDTH=320;
 		SCREEN_HEIGHT=240;
@@ -1132,7 +1144,7 @@ void initializeDisplay(int w, int h) {
 
 #endif
 	//	TTF_Init();
-	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
+	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance1(2);
 	logMessage("INFO","initializeDisplay","Initialized Display");
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 }
@@ -1148,10 +1160,10 @@ void refreshScreen() {
 void initializeSettingsFonts() {
 	logMessage("INFO","initializeSettingsFonts","Initializing Settings Fonts");
 	char *akashi = "resources/akashi.ttf";
-	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
-	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(27));
-	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14));
-	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(15));
+	settingsfont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(14));
+	settingsHeaderFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(27));
+	settingsStatusFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(14));
+	settingsFooterFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(15));
 	logMessage("INFO","initializeSettingsFonts","Settings Fonts initialized");
 }
 

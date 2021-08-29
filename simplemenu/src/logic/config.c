@@ -361,13 +361,13 @@ void loadTheme(char *theme) {
 		if(i==currentSectionNumber) {
 			logMessage("INFO","loadTheme","Loading system logo");
 			menuSections[i].systemLogoSurface = IMG_Load(menuSections[i].systemLogo);
-			resizeSectionSystemLogo(&menuSections[i]);
+//			resizeSectionSystemLogo(&menuSections[i]);
 			logMessage("INFO","loadTheme","Loading system background");
 			menuSections[i].backgroundSurface = IMG_Load(menuSections[i].background);
-			resizeSectionBackground(&menuSections[i]);
+//			resizeSectionBackground(&menuSections[i]);
 			logMessage("INFO","loadTheme","Loading system picture");
 			menuSections[i].systemPictureSurface = IMG_Load(menuSections[i].systemPicture);
-			resizeSectionSystemPicture(&menuSections[i]);
+//			resizeSectionSystemPicture(&menuSections[i]);
 		}
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
@@ -965,7 +965,7 @@ void loadSectionGroups() {
 			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
 		}
 
-		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
+//		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 
 		char *temp2 = toUpper(temp1);
 		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
@@ -1096,13 +1096,13 @@ int loadSections(char *file) {
 		if (menuSectionCounter==currentSectionNumber) {
 			logMessage("INFO","loadSections","Loading system logo");
 			menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
-			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
+//			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
 			logMessage("INFO","loadSections","Loading system background");
 			menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
-			resizeSectionBackground(&menuSections[menuSectionCounter]);
+//			resizeSectionBackground(&menuSections[menuSectionCounter]);
 			logMessage("INFO","loadSections","Loading system picture");
 			menuSections[menuSectionCounter].systemPictureSurface = IMG_Load(menuSections[menuSectionCounter].systemPicture);
-			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
+//			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
 		}
 
 		logMessage("INFO","loadSections","Set");
