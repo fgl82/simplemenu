@@ -6,7 +6,6 @@
 #include <SDL/SDL_timer.h>
 #include <unistd.h>
 
-#include "../headers/string_utils.h"
 
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -1030,13 +1029,18 @@ void drawUSBScreen() {
 }
 
 void initializeDisplay(int w, int h) {
+	int depth=16;
+#ifndef TARGET_PC
+	Uint32 flags = SDL_SWSURFACE|SDL_NOFRAME;
+#endif
+	Uint32 pcflags = SDL_HWSURFACE|SDL_NOFRAME;
 	SDL_ShowCursor(0);
 	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 	logMessage("INFO","initializeDisplay","maybe...");
 #ifdef TARGET_OD
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(320, 240, depth, flags);
 	SDL_FreeSurface(screen);
 	SDL_Quit();
 #endif
@@ -1102,7 +1106,7 @@ void initializeDisplay(int w, int h) {
 	snprintf(msg,1000,"%dx%d",SCREEN_WIDTH,SCREEN_HEIGHT);
 	logMessage("INFO", "initializeDisplay", msg);
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_NOFRAME);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, pcflags);
 //	SDL_ShowCursor(0);
 #else
 	FILE *fp1;
@@ -1135,11 +1139,11 @@ void initializeDisplay(int w, int h) {
 		}
 	}
 #endif
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_NOFRAME|SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, flags);
 	if (screen==NULL) {
 		SCREEN_WIDTH=320;
 		SCREEN_HEIGHT=240;
-		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+		screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, flags);
 	}
 
 #endif

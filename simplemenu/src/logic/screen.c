@@ -1082,29 +1082,27 @@ void updateScreen(struct Node *node) {
 					displaySurface(CURRENT_SECTION.backgroundSurface, 0, 0);
 					drawGameList();
 					displayGamePictureInMenu(rom);
-					SDL_Surface *battery = NULL;
-					switch (lastChargeLevel) {
-						case 1:
-							battery = IMG_Load(batt1);
-							break;
-						case 2:
-							battery = IMG_Load(batt2);
-							break;
-						case 3:
-							battery = IMG_Load(batt3);
-							break;
-						case 4:
-							battery = IMG_Load(batt4);
-							break;
-						case 5:
-							battery = IMG_Load(batt5);
-							break;
-						default:
-							battery = IMG_Load(battCharging);
-							break;
-					}
-					if (battX>-1 && battery!= NULL) {
-						drawImage(screen, battery, calculateProportionalSizeOrDistance(battX), calculateProportionalSizeOrDistance(battY), 0, 0, calculateProportionalSizeOrDistance(battery->w), calculateProportionalSizeOrDistance(battery->h), 0, 0);
+					if (battX>-1 && surfaceBatt1!= NULL) {
+						switch (lastChargeLevel) {
+							case 1:
+								displaySurface(surfaceBatt1, battX, battY);
+								break;
+							case 2:
+								displaySurface(surfaceBatt2, battX, battY);
+								break;
+							case 3:
+								displaySurface(surfaceBatt3, battX, battY);
+								break;
+							case 4:
+								displaySurface(surfaceBatt4, battX, battY);
+								break;
+							case 5:
+								displaySurface(surfaceBatt5, battX, battY);
+								break;
+							default:
+								displaySurface(surfaceBattCharging, battX, battY);
+								break;
+						}
 					}
 					setupDecorations(rom);
 				}

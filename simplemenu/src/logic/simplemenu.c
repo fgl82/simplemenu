@@ -266,6 +266,7 @@ int main(int argc, char* argv[]) {
 		start_time=SDL_GetTicks();
 		processEvents();
 		if(refreshRequest) {
+//			printf("YES!!!\n");
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshRequest=0;
 			refreshScreen();

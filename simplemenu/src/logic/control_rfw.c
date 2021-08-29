@@ -24,10 +24,10 @@ int performAction(struct Node *node) {
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
 				logMessage("INFO","performAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-				resizeSectionBackground(&CURRENT_SECTION);
+//				resizeSectionBackground(&CURRENT_SECTION);
 				logMessage("INFO","performAction","Loading system picture");
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-				resizeSectionSystemPicture(&CURRENT_SECTION);
+//				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			logMessage("INFO","performAction","Loading game list");
 			if (currentSectionNumber!=favoritesSectionNumber) {
@@ -149,7 +149,7 @@ int performAction(struct Node *node) {
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 						resizeSectionBackground(&CURRENT_SECTION);
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-						resizeSectionSystemPicture(&CURRENT_SECTION);
+//						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Advanced, loading game list");
 					loadGameList(0);
@@ -168,10 +168,10 @@ int performAction(struct Node *node) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
 						logMessage("INFO","performAction","Loading system background");
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-						resizeSectionBackground(&CURRENT_SECTION);
+//						resizeSectionBackground(&CURRENT_SECTION);
 						logMessage("INFO","performAction","Loading system picture");
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-						resizeSectionSystemPicture(&CURRENT_SECTION);
+//						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Rewinded, loading game list");
 					loadGameList(0);

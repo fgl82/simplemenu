@@ -476,6 +476,12 @@ void loadTheme(char *theme) {
 			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_4", batt4);
 			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_5", batt5);
 			setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_charging", battCharging);
+			surfaceBatt1 = IMG_Load(batt1);
+			surfaceBatt2 = IMG_Load(batt2);
+			surfaceBatt3 = IMG_Load(batt3);
+			surfaceBatt4 = IMG_Load(batt4);
+			surfaceBatt5 = IMG_Load(batt5);
+			surfaceBattCharging = IMG_Load(battCharging);
 		}
 
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "game_count_font", gameCountFont);
@@ -1238,6 +1244,12 @@ int loadSections(char *file) {
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_4", batt4);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_5", batt5);
 		setThemeResourceValueInSection (themeConfig, "GENERAL", "batt_charging", battCharging);
+		surfaceBatt1 = IMG_Load(batt1);
+		surfaceBatt2 = IMG_Load(batt2);
+		surfaceBatt3 = IMG_Load(batt3);
+		surfaceBatt4 = IMG_Load(batt4);
+		surfaceBatt5 = IMG_Load(batt5);
+		surfaceBattCharging = IMG_Load(battCharging);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "display_game_count");

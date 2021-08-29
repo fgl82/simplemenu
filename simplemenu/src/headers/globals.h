@@ -11,6 +11,7 @@
 #define AFTER_RUNNING_LAUNCH_AT_BOOT 7
 #define HELP_SCREEN_1 8
 #define HELP_SCREEN_2 9
+#define LOADING 10
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -131,11 +132,17 @@ extern int itemsPerPageFullscreen;
 extern int itemsSeparation;
 extern char textXFont[1000];
 extern char batt1[1000];
+extern SDL_Surface* surfaceBatt1;
 extern char batt2[1000];
+extern SDL_Surface* surfaceBatt2;
 extern char batt3[1000];
+extern SDL_Surface* surfaceBatt3;
 extern char batt4[1000];
+extern SDL_Surface* surfaceBatt4;
 extern char batt5[1000];
+extern SDL_Surface* surfaceBatt5;
 extern char battCharging[1000];
+extern SDL_Surface* surfaceBattCharging;
 extern int battX;
 extern int battY;
 extern int text1FontSize;

@@ -12,6 +12,7 @@
 #endif
 SDL_Surface *screen;
 /* STATUS */
+int nullUpdate;
 int updateScreenFlag;
 int launchAtBoot;
 char *errorMessage;
@@ -113,11 +114,17 @@ int itemsPerPageFullscreen;
 int itemsSeparation;
 char textXFont[1000];
 char batt1[1000];
+SDL_Surface* surfaceBatt1;
 char batt2[1000];
+SDL_Surface* surfaceBatt2;
 char batt3[1000];
+SDL_Surface* surfaceBatt3;
 char batt4[1000];
+SDL_Surface* surfaceBatt4;
 char batt5[1000];
+SDL_Surface* surfaceBatt5;
 char battCharging[1000];
+SDL_Surface* surfaceBattCharging;
 int battX;
 int battY;
 int text1FontSize;

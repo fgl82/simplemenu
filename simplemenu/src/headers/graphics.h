@@ -80,4 +80,5 @@ TTF_Font *getFooterFont();
 TTF_Font *getSettingsFont();
 TTF_Font *getBigFont();
 TTF_Font *getGameCountFont();
+void drawLoad();
 #endif
