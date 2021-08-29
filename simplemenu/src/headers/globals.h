@@ -290,6 +290,7 @@ struct MenuSection {
 	SDL_Surface *backgroundSurface;
 	int hasDirs;
 //	char *fileList[50000];
+	char noArtPicture[4000];
 };
 
 extern struct SectionGroup sectionGroups[100];

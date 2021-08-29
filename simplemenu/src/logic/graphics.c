@@ -702,6 +702,10 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 void displayImageOnScreenCustom(char *fileName) {
 	SDL_Surface *screenshot = IMG_Load(fileName);
 
+	if(screenshot==NULL) {
+		screenshot = IMG_Load(menuSections[currentSectionNumber].noArtPicture);
+	}
+
 	if (screenshot!=NULL) {
 		double w = screenshot->w;
 		double h = screenshot->h;

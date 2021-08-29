@@ -334,6 +334,7 @@ void loadTheme(char *theme) {
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "logo", menuSections[i].systemLogo);
+		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "no_art_picture", menuSections[i].noArtPicture);
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "background", menuSections[i].background);
 
 		value = ini_get(themeConfig, "GENERAL", "system_w");
@@ -1090,6 +1091,7 @@ int loadSections(char *file) {
 		}
 		logMessage("INFO","loadSections","Setting logo, background and system");
 		setThemeResourceValueInSection (themeConfig, sectionName, "logo", menuSections[menuSectionCounter].systemLogo);
+		setThemeResourceValueInSection (themeConfig, sectionName, "no_art_picture", menuSections[menuSectionCounter].noArtPicture);
 		setThemeResourceValueInSection (themeConfig, sectionName, "background", menuSections[menuSectionCounter].background);
 		setThemeResourceValueInSection (themeConfig, sectionName, "system", menuSections[menuSectionCounter].systemPicture);
 
@@ -1348,6 +1350,7 @@ int loadSections(char *file) {
 
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "logo", menuSections[menuSectionCounter].systemLogo);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
+	setThemeResourceValueInSection (themeConfig, "FAVORITES", "no_art_picture", menuSections[menuSectionCounter].noArtPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
 
 	logMessage("INFO","loadSections","Out 7");
