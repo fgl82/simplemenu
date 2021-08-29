@@ -593,12 +593,12 @@ void drawBatteryOnFooter(char *text) {
 }
 
 void drawCurrentSectionGroup(char *groupName, int textColor[]) {
-	drawTextOnScreen(BIGFont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawError(char *errorMessage, int textColor[]) {
 	if(strchr(errorMessage,'-')==NULL) {
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);
 	} else {
 		char *line2 = strchr(errorMessage,'-');
 		int index = (line2-errorMessage);
@@ -606,8 +606,8 @@ void drawError(char *errorMessage, int textColor[]) {
 		char line1[200];
 		strcpy(line1, errorMessage);
 		line1[index]='\0';
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3)-calculateProportionalSizeOrDistance(12), line1, textColor, VAlignMiddle | HAlignCenter);
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance(3)+calculateProportionalSizeOrDistance(12), line2, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)-calculateProportionalSizeOrDistance1(12), line1, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)+calculateProportionalSizeOrDistance1(12), line2, textColor, VAlignMiddle | HAlignCenter);
 	}
 }
 
@@ -1177,13 +1177,13 @@ void initializeFonts() {
 	miniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSize));
 	outlineMiniFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(artTextFontSize));
 
-	picModeFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+5));
-	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(fontSize+18));
-	headerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
-	outlineHeaderFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+6));
+	picModeFont = TTF_OpenFont(menuFont, fontSize+calculateProportionalSizeOrDistance1(5));
+	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(16)+calculateProportionalSizeOrDistance1(17));
+	headerFont = TTF_OpenFont(menuFont, fontSize+calculateProportionalSizeOrDistance1(6));
+	outlineHeaderFont = TTF_OpenFont(menuFont, fontSize+calculateProportionalSizeOrDistance1(6));
 
-	footerFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+2));
-	outlineFooterFont = TTF_OpenFont(menuFont, calculateProportionalSizeOrDistance(fontSize+2));
+	footerFont = TTF_OpenFont(menuFont, fontSize+calculateProportionalSizeOrDistance1(2));
+	outlineFooterFont = TTF_OpenFont(menuFont, fontSize+calculateProportionalSizeOrDistance1(2));
 
 	customHeaderFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text1FontSize));
 	outlineCustomHeaderFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text1FontSize));

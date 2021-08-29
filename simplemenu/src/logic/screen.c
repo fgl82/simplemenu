@@ -28,11 +28,11 @@ void displayBackgroundPicture() {
 
 
 void showErrorMessage(char *errorMessage) {
-	int width = ((calculateProportionalSizeOrDistance(strlen(errorMessage)))*(180)/calculateProportionalSizeOrDistance(18));
-	int height = calculateProportionalSizeOrDistance(40);
+	int width = ((calculateProportionalSizeOrDistance1(strlen(errorMessage)))*(180)/calculateProportionalSizeOrDistance1(18));
+	int height = calculateProportionalSizeOrDistance1(40);
 	if(strchr(errorMessage,'-')!=NULL) {
-		height = calculateProportionalSizeOrDistance(60);
-		width = ((calculateProportionalSizeOrDistance(strlen(errorMessage))/2*calculateProportionalSizeOrDistance(200))/calculateProportionalSizeOrDistance(18))+calculateProportionalSizeOrDistance(20);
+		height = calculateProportionalSizeOrDistance1(60);
+		width = ((calculateProportionalSizeOrDistance1(strlen(errorMessage))/2*calculateProportionalSizeOrDistance1(200))/calculateProportionalSizeOrDistance1(18))+calculateProportionalSizeOrDistance1(20);
 	}
 	int filling[3];
 	int borderColor[3];
@@ -43,7 +43,7 @@ void showErrorMessage(char *errorMessage) {
 	filling[1]=0;
 	filling[2]=0;
 	int textColor[3]={255, 255, 255};
-	drawRectangleToScreen(width+calculateProportionalSizeOrDistance(10), height+calculateProportionalSizeOrDistance(10), SCREEN_WIDTH/2-width/2-calculateProportionalSizeOrDistance(5),SCREEN_HEIGHT/2-height/2-calculateProportionalSizeOrDistance(5), borderColor);
+	drawRectangleToScreen(width+calculateProportionalSizeOrDistance1(10), height+calculateProportionalSizeOrDistance1(10), SCREEN_WIDTH/2-width/2-calculateProportionalSizeOrDistance1(5),SCREEN_HEIGHT/2-height/2-calculateProportionalSizeOrDistance1(5), borderColor);
 	drawRectangleToScreen(width, height, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/2, filling);
 	drawError(errorMessage, textColor);
 	itsStoppedBecauseOfAnError=0;
@@ -179,7 +179,7 @@ void showLetter(struct Rom *rom) {
 
 
 void showCurrentGroup() {
-	int height = SCREEN_HEIGHT;
+	int height = sectionGroups[activeGroup].groupBackgroundSurface->h;
 	int backgroundColor[3];
 	backgroundColor[0]=30;
 	backgroundColor[1]=30;
@@ -188,10 +188,10 @@ void showCurrentGroup() {
 	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
-	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
+//	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
 	displaySurface(sectionGroups[activeGroup].groupBackgroundSurface, 0, 0);
 	if (displaySectionGroupName) {
-		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance(38), backgroundColor, 50);
+		drawTransparentRectangleToScreen(sectionGroups[activeGroup].groupBackgroundSurface->w, calculateProportionalSizeOrDistance1(70), 0, sectionGroups[activeGroup].groupBackgroundSurface->h/2-calculateProportionalSizeOrDistance1(38), backgroundColor, 50);
 		drawCurrentSectionGroup(tempString, textColor);
 	}
 	free(tempString);
