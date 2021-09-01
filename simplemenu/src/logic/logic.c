@@ -919,7 +919,7 @@ int theSectionHasGames(struct MenuSection *section) {
 	for (int k = 0; k < dirCounter; k++) {
 		snprintf(message, 300, "k is %d", k);
 		logMessage("INFO", "theSectionHasGames", message);
-		int n = recursivelyScanDirectory(dirs[k], files, 0);
+		int n = scanDirectory(dirs[k], files, 0);
 		snprintf(message, 300, "Directory %s has %d files", dirs[k], n);
 		logMessage("INFO", "theSectionHasGames", message);
 		for (int i = 0; i < n; i++) {
@@ -1114,7 +1114,7 @@ void loadGameList(int refresh) {
 
 			int n = 0;
 			logMessage("INFO","loadGameList","Scanning directory");
-			n = recursivelyScanDirectory(dirs[k], files, 0);
+			n = scanDirectory(dirs[k], files, 0);
 			logMessage("INFO","loadGameList","Processing files");
 			int realItemCount = n;
 			for (int i=0;i<n;i++) {
