@@ -830,6 +830,13 @@ void loadConfig() {
 	value = ini_get(config, "GENERAL", "cache");
 	useCache = atoifgl(value);
 
+	value = ini_get(config, "GENERAL", "original_controls");
+	if(value) {
+		alternateControls=atoifgl(value);
+	} else {
+		alternateControls=0;
+	}
+
 	value = ini_get(config, "CPU", "underclocked_speed");
 	OC_UC=atoifgl(value);
 

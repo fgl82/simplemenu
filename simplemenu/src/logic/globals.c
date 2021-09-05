@@ -15,6 +15,7 @@ SDL_Surface *screen;
 int nullUpdate;
 int updateScreenFlag;
 int launchAtBoot;
+int alternateControls;
 char *errorMessage;
 int running;
 int itsStoppedBecauseOfAnError;

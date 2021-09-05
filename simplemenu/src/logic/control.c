@@ -416,14 +416,22 @@ void showOrHideFavorites() {
 //			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
-			currentState=SELECTING_SECTION;
+			if(!alternateControls) {
+				currentState=SELECTING_SECTION;
+			} else {
+				currentState=BROWSING_GAME_LIST;
+			}
 //			if (autoHideLogos) {
 //				resetPicModeHideLogoTimer();
 //			}
 			logMessage("INFO","showOrHideFavorites","Determining starting screen");
 			determineStartingScreen(menuSectionCounter);
 		} else {
-				currentState=SELECTING_SECTION;
+				if(!alternateControls) {
+					currentState=SELECTING_SECTION;
+				} else {
+					currentState=BROWSING_GAME_LIST;
+				}
 //				if (autoHideLogos) {
 //					resetPicModeHideLogoTimer();
 //				}
@@ -457,7 +465,11 @@ void showOrHideFavorites() {
 //	if (autoHideLogos) {
 //		resetPicModeHideLogoTimer();
 //	}
-	currentState = SELECTING_SECTION;
+	if(!alternateControls) {
+		currentState=SELECTING_SECTION;
+	} else {
+		currentState=BROWSING_GAME_LIST;
+	}
 	logMessage("WARN","showOrHideFavorites","Displaying system logo 3");
 	loadFavoritesSectionGameList();
 }
@@ -570,7 +582,7 @@ void performGroupChoosingAction() {
 //		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
-	if (keys[BTN_UP]) {
+	if ((!alternateControls&&keys[BTN_UP])||keys[BTN_L1]) {
 		if(activeGroup>0) {
 			activeGroup--;
 		} else {
@@ -578,7 +590,7 @@ void performGroupChoosingAction() {
 		}
 		return;
 	}
-	if (keys[BTN_DOWN]) {
+	if ((!alternateControls&&keys[BTN_DOWN])||keys[BTN_R1]) {
 		if(activeGroup<sectionGroupCounter-1) {
 			activeGroup++;
 		} else {
@@ -627,7 +639,11 @@ void performGroupChoosingAction() {
 			}
 			if (currentState!=BROWSING_GAME_LIST) {
 				loadSections(sectionGroups[activeGroup].groupPath);
-				currentState=SELECTING_SECTION;
+				if(!alternateControls) {
+					currentState=SELECTING_SECTION;
+				} else {
+					currentState=BROWSING_GAME_LIST;
+				}
 				currentSectionNumber=0;
 				for(int i=0;i<menuSectionCounter;i++) {
 					menuSections[i].initialized=0;
@@ -681,7 +697,11 @@ void performGroupChoosingAction() {
 			}
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
-			currentState=SELECTING_SECTION;
+			if(!alternateControls) {
+				currentState=SELECTING_SECTION;
+			} else {
+				currentState=BROWSING_GAME_LIST;
+			}
 		}
 	}
 }
@@ -730,7 +750,7 @@ void performSettingsChoosingAction() {
 		if (chosenSetting==TIDY_ROMS_OPTION) {
 			stripGames=1+stripGames*-1;
 		}
-		#if defined TARGET_OD || defined TARGET_OD_BETA || TARGET_PC
+		#if defined TARGET_OD
 		else if (chosenSetting==USB_OPTION) {
 			hdmiChanged=1+hdmiChanged*-1;
 		}
@@ -849,10 +869,14 @@ void performSettingsChoosingAction() {
 	} else if (chosenSetting==HELP_OPTION&&keys[BTN_A]) {
 		currentState=HELP_SCREEN_1;
 	}
-	#if defined TARGET_RFW
 	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+		#if defined TARGET_RFW
 		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
 		hotKeyPressed=0;
+		#elif defined TARGET_OD_BETA
+		selectedShutDownOption=1;
+		running=0;
+		#endif
 //		int returnedValue = system("./scripts/usb_mode_on.sh");
 //		if (returnedValue==0) {
 ////			isUSBMode = 1;
@@ -861,11 +885,10 @@ void performSettingsChoosingAction() {
 //		}
 //		currentState=BROWSING_GAME_LIST;
 	}
-	#endif
 	else if (keys[BTN_B]) {
 
 //		pthread_cancel(clockThread);
-		#if defined TARGET_OD || defined TARGET_OD_BETA
+		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
 			if (fp!=NULL) {
@@ -881,16 +904,21 @@ void performSettingsChoosingAction() {
 			execlp("./simplemenu","invoker",NULL);
 		}
 		#endif
-//		if (activeGroup!=beforeTryingToSwitchGroup) {
-//			currentState=CHOOSING_GROUP;
-//		} else {
-//			if(previousState==SELECTING_SECTION) {
-//				currentState=SELECTING_SECTION;
-//			} else {
-				currentState=BROWSING_GAME_LIST;
-//			}
-//		}
-		if(themeChanged!=activeTheme) {
+		if(!alternateControls) {
+			if (activeGroup!=beforeTryingToSwitchGroup) {
+				printf("SET 2\n");
+				currentState=CHOOSING_GROUP;
+			} else {
+				if(previousState==SELECTING_SECTION) {
+					currentState=SELECTING_SECTION;
+				} else {
+					currentState=BROWSING_GAME_LIST;
+				}
+			}
+		} else {
+			currentState=BROWSING_GAME_LIST;
+		}
+		if(themeChanged!=activeTheme){
 			int headerAndFooterBackground[3]={37,50,56};
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
 			drawLoadingText();
@@ -919,9 +947,13 @@ void performSettingsChoosingAction() {
 		} else {
 			ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 		}
-		if(themeChanged!=activeTheme) {
+		if(themeChanged!=activeTheme || CURRENT_SECTION.initialized==0) {
 			if (currentSectionNumber!=favoritesSectionNumber) {
-				loadGameList(2);
+				if (CURRENT_SECTION.initialized==0) {
+					loadGameList(0);
+				} else {
+					loadGameList(2);
+				}
 			} else {
 				loadFavoritesSectionGameList(1);
 			}

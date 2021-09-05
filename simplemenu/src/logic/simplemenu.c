@@ -162,8 +162,8 @@ void processEvents() {
 //				updateScreen(CURRENT_SECTION.currentGameNode);
 //				refreshScreen();
 			}
-		} else if (event.type==getKeyUp()) {
-			if (currentState==BROWSING_GAME_LIST &&  previousState != SETTINGS_SCREEN && previousState != SELECTING_EMULATOR ) {
+		} else if (event.type==getKeyUp()&&!alternateControls) {
+			if (currentState==BROWSING_GAME_LIST && previousState != SETTINGS_SCREEN && previousState != SELECTING_EMULATOR ) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber) {
 						currentState=SELECTING_SECTION;
@@ -187,7 +187,7 @@ void processEvents() {
 //						refreshScreen();
 					}
 				}
-			} else 	if (currentState==SELECTING_SECTION) {
+			} else if (currentState==SELECTING_SECTION) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
 					if (aKeyComboWasPressed==0) {
 						if (currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
@@ -202,38 +202,44 @@ void processEvents() {
 					}
 					if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
 						refreshRequest=1;
-//						updateScreen(CURRENT_SECTION.currentGameNode);
-//						refreshScreen();
 					}
 				}
 			}
 			previousState = currentState;
+		} else if (alternateControls&&event.type==getKeyUp()) {
+			printf("Current: %d\n", currentState);
+			printf("Previous: %d\n", previousState);
+			if(((int)event.key.keysym.sym)==BTN_B) {
+				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SETTINGS_SCREEN && previousState != SELECTING_EMULATOR) {
+					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+						beforeTryingToSwitchGroup = activeGroup;
+						printf("SET 1\n");
+						currentState=CHOOSING_GROUP;
+					}
+				}
+				hotKeyPressed=0;
+				if(fullscreenMode) {
+					if(alternateControls&&currentState==SELECTING_SECTION) {
+						hideFullScreenModeMenu();
+					} else if (CURRENT_SECTION.alphabeticalPaging) {
+						resetPicModeHideMenuTimer();
+					}
+				}
+				CURRENT_SECTION.alphabeticalPaging=0;
+				if (aKeyComboWasPressed) {
+					currentState=BROWSING_GAME_LIST;
+				}
+				aKeyComboWasPressed=0;
+				if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+					refreshRequest=1;
+				}
+			}
+			previousState = currentState;
 		}
-//#if defined (TARGET_BITTBOY)
-//		else if (event.type==getKeyUp()&&currentState==SELECTING_SECTION) {
-//			if(aKeyComboWasPressed==1&&((int)event.key.keysym.sym)==BTN_B) {
-//				hotKeyPressed=0;
-//				CURRENT_SECTION.alphabeticalPaging=0;
-//				aKeyComboWasPressed=0;
-//				currentState=BROWSING_GAME_LIST;
-//				if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
-//					updateScreen(CURRENT_SECTION.currentGameNode);
-//					refreshScreen();
-//				}
-//			}
-//		}
-//#endif
-//		else if (event.type==SDL_MOUSEMOTION) {
-			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
-				loadGameList(0);
-				currentState=BROWSING_GAME_LIST;
-			}
-			if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
-//				updateScreen(CURRENT_SECTION.currentGameNode);
-//				refreshScreen();
-			}
-//		}
-//		break;
+		if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
+			loadGameList(0);
+			currentState=BROWSING_GAME_LIST;
+		}
 	}
 }
 

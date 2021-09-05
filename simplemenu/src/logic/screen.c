@@ -729,6 +729,8 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 
 	#if defined TARGET_RFW
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
+	#elif defined TARGET_OD_BETA
+	strcpy(hints[USB_OPTION],"PRESS A TO REBOOT AND ENABLE HDMI");
 	#else
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
 	#endif
@@ -792,7 +794,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		logMessage("INFO","setOptionsAndValues","Default option value");
 		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
 	}
-	#if defined TARGET_RFW
+	#if defined TARGET_RFW || defined TARGET_OD_BETA
 	strcpy(values[USB_OPTION]," \0");
 	#else
 	if (hdmiChanged==1) {

@@ -25,6 +25,7 @@
 
 extern int updateScreenFlag;
 extern int launchAtBoot;
+extern int alternateControls;
 
 extern SDL_Surface *screen;
 extern int displayLogo;
