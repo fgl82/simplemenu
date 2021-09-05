@@ -70,8 +70,10 @@ TTF_Font *getFooterFont() {
 }
 
 TTF_Font *getBigFont() {
-	char *akashi = "resources/akashi.ttf";
-	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
+	if(BIGFont==NULL) {
+		char *akashi = "resources/akashi.ttf";
+		BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance1(16)+calculateProportionalSizeOrDistance1(17));
+	}
 	return BIGFont;
 }
 

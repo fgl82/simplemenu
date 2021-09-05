@@ -179,19 +179,23 @@ void showLetter(struct Rom *rom) {
 
 
 void showCurrentGroup() {
-	int height = sectionGroups[activeGroup].groupBackgroundSurface->h;
 	int backgroundColor[3];
-	backgroundColor[0]=30;
-	backgroundColor[1]=30;
-	backgroundColor[2]=130;
+	backgroundColor[0]=50;
+	backgroundColor[1]=50;
+	backgroundColor[2]=50;
 	int textColor[3]= {255, 255, 255};
 	char *tempString = malloc(strlen(sectionGroups[activeGroup].groupName)+1);
 	strcpy(tempString,sectionGroups[activeGroup].groupName);
 	strcat(tempString,"\0");
-//	drawRectangleToScreen(calculateProportionalSizeOrDistance(SCREEN_WIDTH), calculateProportionalSizeOrDistance(height), 0, 0, backgroundColor);
-	displaySurface(sectionGroups[activeGroup].groupBackgroundSurface, 0, 0);
-	if (displaySectionGroupName) {
-		drawTransparentRectangleToScreen(sectionGroups[activeGroup].groupBackgroundSurface->w, calculateProportionalSizeOrDistance1(70), 0, sectionGroups[activeGroup].groupBackgroundSurface->h/2-calculateProportionalSizeOrDistance1(38), backgroundColor, 50);
+
+	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, backgroundColor);
+
+	if (sectionGroups[activeGroup].groupBackgroundSurface!=NULL) {
+		displaySurface(sectionGroups[activeGroup].groupBackgroundSurface, 0, 0);
+	}
+
+	if (displaySectionGroupName || sectionGroups[activeGroup].groupBackgroundSurface==NULL) {
+		drawTransparentRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(70), 0, SCREEN_HEIGHT/2-calculateProportionalSizeOrDistance1(38), (int[]){0,0,0}, 50);
 		drawCurrentSectionGroup(tempString, textColor);
 	}
 	free(tempString);

@@ -575,9 +575,9 @@ void performGroupChoosingAction() {
 		chosenSetting=SHUTDOWN_OPTION;
 		themeChanged=activeTheme;
 		previousState=CHOOSING_GROUP;
-		if(activeGroup!=beforeTryingToSwitchGroup) {
-			activeGroup = beforeTryingToSwitchGroup;
-		}
+//		if(activeGroup!=beforeTryingToSwitchGroup) {
+//			activeGroup = beforeTryingToSwitchGroup;
+//		}
 		currentState=SETTINGS_SCREEN;
 //		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
@@ -695,6 +695,7 @@ void performGroupChoosingAction() {
 				advanceSection(0);
 				loadGameList(0);
 			}
+			beforeTryingToSwitchGroup=activeGroup;
 		} else {
 			activeGroup = beforeTryingToSwitchGroup;
 			if(!alternateControls) {
@@ -886,7 +887,6 @@ void performSettingsChoosingAction() {
 //		currentState=BROWSING_GAME_LIST;
 	}
 	else if (keys[BTN_B]) {
-
 //		pthread_cancel(clockThread);
 		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {
@@ -904,20 +904,8 @@ void performSettingsChoosingAction() {
 			execlp("./simplemenu","invoker",NULL);
 		}
 		#endif
-		if(!alternateControls) {
-			if (activeGroup!=beforeTryingToSwitchGroup) {
-				printf("SET 2\n");
-				currentState=CHOOSING_GROUP;
-			} else {
-				if(previousState==SELECTING_SECTION) {
-					currentState=SELECTING_SECTION;
-				} else {
-					currentState=BROWSING_GAME_LIST;
-				}
-			}
-		} else {
-			currentState=BROWSING_GAME_LIST;
-		}
+		currentState=previousState;
+		previousState=SETTINGS_SCREEN;
 		if(themeChanged!=activeTheme){
 			int headerAndFooterBackground[3]={37,50,56};
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
@@ -933,7 +921,6 @@ void performSettingsChoosingAction() {
 			MENU_ITEMS_PER_PAGE=itemsPerPage;
 			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
 		}
-		previousState=SETTINGS_SCREEN;
 		if (CURRENT_SECTION.backgroundSurface==NULL) {
 			logMessage("INFO","performSettingsChoosingAction","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);

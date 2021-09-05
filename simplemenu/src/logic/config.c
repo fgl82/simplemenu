@@ -831,7 +831,7 @@ void loadConfig() {
 	useCache = atoifgl(value);
 
 	value = ini_get(config, "GENERAL", "original_controls");
-	if(value) {
+	if(value!=NULL) {
 		alternateControls=atoifgl(value);
 	} else {
 		alternateControls=0;
@@ -960,24 +960,22 @@ void loadSectionGroups() {
 		if (strlen(sectionGroupsFolder)>1) {
 			strcpy(temp3,sectionGroupsFolder);
 		} else {
-			strcpy(temp3,sectionGroupPath);
-			strcat(temp3,"/");
+			strcpy(temp3,"\0");
 		}
 		strcat(temp3,temp1);
 		strcat(temp3,".png");
-
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
 		logMessage("INFO","loadSectionGroups","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
 
-		if (sectionGroups[sectionGroupCounter].groupBackgroundSurface==NULL) {
-			strcpy(temp3,sectionGroupPath);
-			strcat(temp3,"/");
-			strcat(temp3,temp1);
-			strcat(temp3,".png");
-			strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
-			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
-		}
+//		if (sectionGroups[sectionGroupCounter].groupBackgroundSurface==NULL) {
+//			strcpy(temp3,sectionGroupPath);
+//			strcat(temp3,"/");
+//			strcat(temp3,temp1);
+//			strcat(temp3,".png");
+//			strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
+//			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
+//		}
 
 //		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
 

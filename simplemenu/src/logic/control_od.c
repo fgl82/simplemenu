@@ -43,6 +43,7 @@ int performAction(struct Node *node) {
 			return 1;
 		}
 		if (keys[BTN_START]) {
+			previousState=currentState;
 			currentState=SETTINGS_SCREEN;
 			chosenSetting=SHUTDOWN_OPTION;
 			themeChanged = activeTheme;
@@ -276,6 +277,7 @@ int performAction(struct Node *node) {
 		if (keys[BTN_START]) {
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
+			previousState=currentState;
 			currentState=SETTINGS_SCREEN;
 			themeChanged=activeTheme;
 //			currRawtime = time(NULL);

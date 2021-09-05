@@ -122,6 +122,7 @@ void initialSetup2() {
 	determineStartingScreen(sectionCount);
 	enableKeyRepeat();
 	lastChargeLevel=getBatteryLevel();
+	beforeTryingToSwitchGroup = activeGroup;
 }
 
 void processEvents() {
@@ -131,15 +132,18 @@ void processEvents() {
 			if (!isSuspended) {
 				switch (currentState) {
 					case BROWSING_GAME_LIST:
+						previousState=BROWSING_GAME_LIST;
 						performAction(CURRENT_SECTION.currentGameNode);
 						break;
 					case SELECTING_SECTION:
+						previousState=SELECTING_SECTION;
 						performAction(CURRENT_SECTION.currentGameNode);
 						break;
 					case SELECTING_EMULATOR:
 						performChoosingAction();
 						break;
 					case CHOOSING_GROUP:
+						previousState=CHOOSING_GROUP;
 						performGroupChoosingAction();
 						break;
 					case SETTINGS_SCREEN:
@@ -163,9 +167,9 @@ void processEvents() {
 //				refreshScreen();
 			}
 		} else if (event.type==getKeyUp()&&!alternateControls) {
-			if (currentState==BROWSING_GAME_LIST && previousState != SETTINGS_SCREEN && previousState != SELECTING_EMULATOR ) {
+			if (currentState==BROWSING_GAME_LIST && previousState != SELECTING_EMULATOR ) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
-					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber) {
+					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&previousState!=SETTINGS_SCREEN) {
 						currentState=SELECTING_SECTION;
 					}
 					hotKeyPressed=0;
@@ -190,7 +194,7 @@ void processEvents() {
 			} else if (currentState==SELECTING_SECTION) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
 					if (aKeyComboWasPressed==0) {
-						if (currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+						if (currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
 							beforeTryingToSwitchGroup = activeGroup;
 							currentState=CHOOSING_GROUP;
 						}
@@ -205,15 +209,14 @@ void processEvents() {
 					}
 				}
 			}
-			previousState = currentState;
+//			previousState = currentState;
 		} else if (alternateControls&&event.type==getKeyUp()) {
 			printf("Current: %d\n", currentState);
 			printf("Previous: %d\n", previousState);
 			if(((int)event.key.keysym.sym)==BTN_B) {
-				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SETTINGS_SCREEN && previousState != SELECTING_EMULATOR) {
-					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1) {
+				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SELECTING_EMULATOR) {
+					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
 						beforeTryingToSwitchGroup = activeGroup;
-						printf("SET 1\n");
 						currentState=CHOOSING_GROUP;
 					}
 				}
@@ -234,7 +237,7 @@ void processEvents() {
 					refreshRequest=1;
 				}
 			}
-			previousState = currentState;
+//			previousState = currentState;
 		}
 		if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
 			loadGameList(0);
