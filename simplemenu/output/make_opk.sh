@@ -91,7 +91,7 @@ if [ "$1" = 'OD' ] || [ "$1" = 'PG2' ] || [ "$1" = 'OD-BETA' ]; then
     while true; do
         read -p "Transfer?" yn
         case $yn in
-            [Yy]* ) scp SimpleMenu-${1}.opk $user_name@10.1.1.2:/media/sdcard/apps/SimpleMenu-${1}.opk; break;;
+            [Yy]* ) scp SimpleMenu-${1}.opk $user_name@10.1.1.2:/media/data/apps/SimpleMenu-${1}.opk; break;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac
