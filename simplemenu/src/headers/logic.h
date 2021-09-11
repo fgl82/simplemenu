@@ -3,11 +3,7 @@
 #define LOGIC
 void generateError(char *pErrorMessage, int pThereIsACriticalError);
 void quit();
-#ifndef TARGET_PC
 void executeCommand (char *emulatorFolder, char *executable, char *fileToBeExecutedWithFullPath, int isConsoleApp);
-#else
-void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath);
-#endif
 void loadGameList(int refresh);
 void loadFavoritesSectionGameList();
 int countFiles (char* directoryName, char *fileExtensions);

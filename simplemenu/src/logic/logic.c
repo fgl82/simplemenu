@@ -191,9 +191,9 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 }
 
 void quit() {
-//	if(getLaunchAtBoot()==NULL) {
+	//	if(getLaunchAtBoot()==NULL) {
 	saveLastState();
-//	}
+	//	}
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
@@ -273,12 +273,8 @@ void resetFrameBuffer1() {
 	}
 }
 
-#ifndef TARGET_PC
 void executeCommand(char *emulatorFolder, char *executable,
 		char *fileToBeExecutedWithFullPath, int consoleApp) {
-#else
-void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
-#endif
 	FILE *fp;
 	char *exec = malloc(strlen(executable) + 5000);
 	strcpy(exec, executable);
@@ -292,24 +288,24 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	snprintf(pSectionNumber, sizeof(pSectionNumber), "%d",
 			currentSectionNumber);
 	snprintf(pPictureMode, sizeof(pPictureMode), "%d", fullscreenMode);
-//		if(getLaunchAtBoot()==NULL) {
+	//		if(getLaunchAtBoot()==NULL) {
 	saveLastState();
-//		}
-#ifndef TARGET_PC
+	//		}
+
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearBatteryTimer();
-#endif
+
 	logMessage("INFO", "executeCommand", "Launching Game");
-#ifndef TARGET_PC
-//		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
+
+	//		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 	if (currentSectionNumber == favoritesSectionNumber) {
 		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
 	} else {
 		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
 	}
-#endif
+
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
@@ -336,7 +332,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		fprintf(fp, "%d", 1);
 		fclose(fp);
 	}
-#ifndef TARGET_PC
+
 	logMessage("INFO", "executeCommand", emulatorFolder);
 	logMessage("INFO", "executeCommand", exec);
 	logMessage("INFO", "executeCommand", fileToBeExecutedWithFullPath);
@@ -348,63 +344,45 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	resetFrameBuffer1();
 #endif
 	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-//		#if defined TARGET_RFW
-	printf("\n");
-//		#endif
+	//		#if defined TARGET_RFW
+	//	printf("\n");
+	//		#endif
 	if (consoleApp) {
-#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
-			/* Enable the framebuffer console */
-			char c = '1';
-			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
-			if (fd < 0) {
-				printf("Unable to open fbcon handle\n");
-			} else {
-				write(fd, &c, 1);
-				close(fd);
-			}
+#if defined(TARGET_OD) || defined TARGET_OD_BETA
+		/* Enable the framebuffer console */
+		char c = '1';
+		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
+		if (fd < 0) {
+			printf("Unable to open fbcon handle\n");
+		} else {
+			write(fd, &c, 1);
+			close(fd);
+		}
 
-			fd = open("/dev/tty1", O_RDWR);
-			if (fd < 0) {
-				printf("Unable to open tty1 handle\n");
-			} else {
-				if (ioctl(fd, VT_ACTIVATE, 1) < 0)
-					printf("Unable to activate tty1\n");
-				close(fd);
-			}
-		#endif
+		fd = open("/dev/tty1", O_RDWR);
+		if (fd < 0) {
+			printf("Unable to open tty1 handle\n");
+		} else {
+			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
+				printf("Unable to activate tty1\n");
+			close(fd);
+		}
+#endif
 	}
-	char states[] = { };
 
-//		char menuDirectory[100] = "";
-//		char *directory="/home/retrofw/apps";
-//		getcwd(menuDirectory, sizeof(menuDirectory));
-//		int ret = chdir(directory);
+	//		char menuDirectory[100] = "";
+	//		char *directory="/home/retrofw/apps";
+	//		getcwd(menuDirectory, sizeof(menuDirectory));
+	//		int ret = chdir(directory);
 	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-//		#if defined TARGET_RFW
+	//		#if defined TARGET_RFW
 	printf("            ");
-//		#endif
-//		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
+	//		#endif
+	//		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
 
 	execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
-			fileToBeExecutedWithFullPath, states, pSectionNumber, pReturnTo,
-			pPictureMode, NULL);
-#else
-		strcat(exec, " \"");
-		strcat(exec, fileToBeExecutedWithFullPath);
-		strcat(exec, "\"");
-		logMessage("INFO","executeCommand",exec);
-		freeResources();
-		int ret = system(exec);
-		if(ret == -1) {
-			logMessage("ERROR","executeCommand","Error executing emulator");
-		}
-		free(exec);
-		initializeDisplay(SCREEN_WIDTH, SCREEN_HEIGHT);
-		setupKeys();
-		enableKeyRepeat();
-		initializeFonts();
-		initializeSettingsFonts();
-#endif
+			fileToBeExecutedWithFullPath, NULL);
+
 }
 
 int isExtensionValid(char *extension, char *fileExtensions) {
@@ -582,7 +560,7 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
 		a->next->prev = a;
 		a->prev = NULL;
 		result = a;
-//			result->next = SortedMerge(a->next, b);
+		//			result->next = SortedMerge(a->next, b);
 	} else {
 		free(noPathS1Alias);
 		free(noPathS2Alias);
@@ -590,17 +568,17 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
 		b->next->prev = b;
 		b->prev = NULL;
 		result = b;
-//			result->next = SortedMerge(a, b->next);
+		//			result->next = SortedMerge(a, b->next);
 	}
 
 	/* Pick either a or b, and recur */
-//	    if (a->data <= b->data) {
-//	        result = a;
-//	        result->next = SortedMerge(a->next, b);
-//	    } else {
-//	        result = b;
-//	        result->next = SortedMerge(a, b->next);
-//	    }
+	//	    if (a->data <= b->data) {
+	//	        result = a;
+	//	        result->next = SortedMerge(a->next, b);
+	//	    } else {
+	//	        result = b;
+	//	        result->next = SortedMerge(a, b->next);
+	//	    }
 	return (result);
 
 }
@@ -896,7 +874,7 @@ int theSectionHasGames(struct MenuSection *section) {
 	int dirCounter = 0;
 	char *dirs[10];
 	char *ptr;
-//	char dirsCopy[1000];
+	//	char dirsCopy[1000];
 	char *filesDirectoriesCopy = strdup(section->filesDirectories);
 	char message[300];
 	snprintf(message, 300, "Directories %s ", filesDirectoriesCopy);
@@ -944,17 +922,17 @@ int theSectionHasGames(struct MenuSection *section) {
 									desktopFiles[desktopCounter].displayName);
 							logMessage("INFO", "theSectionHasGames", message);
 #ifdef TARGET_RFW
-								if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
-									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
-									desktopCounter++;
-									continue;
-								}
+							if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
+								logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
+								desktopCounter++;
+								continue;
+							}
 #else
-								if(strstr(desktopFiles[desktopCounter].name,"gcw0")==NULL) {
-									logMessage("WARN", "loadGameList", "Non-OD desktop file found");
-									desktopCounter++;
-									continue;
-								}
+							if(strstr(desktopFiles[desktopCounter].name,"gcw0")==NULL) {
+								logMessage("WARN", "loadGameList", "Non-OD desktop file found");
+								desktopCounter++;
+								continue;
+							}
 #endif
 							value++;
 						}
@@ -1011,7 +989,7 @@ char* readline(FILE *fp, char *buffer) {
 }
 
 void loadGameList(int refresh) {
-//		Uint32 startTime = SDL_GetTicks();
+	//		Uint32 startTime = SDL_GetTicks();
 	logMessage("INFO", "loadGameList", CURRENT_SECTION.sectionName);
 	int loadedFiles=0;
 	logMessage("INFO","loadGameList","Should we skip this?");
@@ -1120,8 +1098,8 @@ void loadGameList(int refresh) {
 			for (int i=0;i<n;i++) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
-				strcmp((files[i]),".")!=0 &&
-				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+						strcmp((files[i]),".")!=0 &&
+						isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {
 						struct OPKDesktopFile desktopFiles[10];
@@ -1252,10 +1230,10 @@ void loadGameList(int refresh) {
 			free (dirs[i]);
 		}
 
-//			if (strlen(CURRENT_SECTION.aliasFileName) > 0) {
+		//			if (strlen(CURRENT_SECTION.aliasFileName) > 0) {
 		logMessage("INFO","loadGameList","The list needs to be sorted");
 		mergeSort(&CURRENT_SECTION.head);
-//			}
+		//			}
 
 		if(useCache==1) {
 			fp = fopen(sectionCacheName,"w");
@@ -1315,9 +1293,9 @@ void determineStartingScreen(int sectionCount) {
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//			resizeSectionBackground(&CURRENT_SECTION);
+			//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//			resizeSectionSystemPicture(&CURRENT_SECTION);
+			//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		logMessage("INFO", "determineStartingScreen", "Section background loaded and resized");
 		int gamesInSection = CURRENT_SECTION.gameCount;
@@ -1341,14 +1319,14 @@ void determineStartingScreen(int sectionCount) {
 			advanceSection(0);
 			logMessage("INFO","determineStartingScreen","Loading game list again");
 			loadGameList(0);
-//			generateError("NO GAMES FOUND!", 0);
+			//			generateError("NO GAMES FOUND!", 0);
 		}
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//			resizeSectionBackground(&CURRENT_SECTION);
+			//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//			resizeSectionSystemPicture(&CURRENT_SECTION);
+			//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages > 0 && CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

@@ -208,7 +208,7 @@ void showRomPreferences() {
 	textColor[1]=90;
 	textColor[2]=90;
 	int valueColor[3] = {0,147,131};
-
+	int problematicGray[3] = {219,219,219};
 	int textWidth;
 
 	char *emuName = malloc(strlen(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator])+1);
@@ -232,11 +232,11 @@ void showRomPreferences() {
 
 	//Selection
 	if (chosenChoosingOption==0) {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/4, (int[]){219,219,219});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/4, problematicGray);
 	} else if (chosenChoosingOption==1) {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, (int[]){219,219,219});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, problematicGray);
 	} else {
-		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, (int[]){219,219,219});
+		drawRectangleToScreen(width, height/4, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, problematicGray);
 	}
 
 	//Name
@@ -260,7 +260,7 @@ void showRomPreferences() {
 	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "unavailable", valueColor, VAlignMiddle | HAlignLeft);
 #endif
 
-	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, (int[]){219,219,219});
+	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, problematicGray);
 
 	//Launch at boot option text
 	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "Autostart: ", textColor, VAlignMiddle | HAlignLeft);
@@ -271,7 +271,7 @@ void showRomPreferences() {
 		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft);
 	}
 
-	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, (int[]){219,219,219});
+	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, problematicGray);
 
 	//Emulator option text
 	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(27), "Emulator: ", textColor, VAlignMiddle | HAlignLeft);
@@ -863,6 +863,7 @@ void drawSettingsScreen() {
 	int bodyText[3]= {90,90,90};
 	int bodyHighlightedText[3]= {0,147,131};
 	int bodyBackground[3]={250,250,250};
+	int problematicGray[3] = {225,225,225};
 
 	char *options[10];
 	char *values[10];
@@ -901,16 +902,15 @@ void drawSettingsScreen() {
 			logMessage("INFO","drawSettingsScreen","Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
-			int lineColor[] = { 219,219,219};
 			if (i==0) {
-				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(19), 0, nextLine-calculateProportionalSizeOrDistance1(4), lineColor);
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(19), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			} else if (i==max){
-				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(21), 0, nextLine-calculateProportionalSizeOrDistance1(4), lineColor);
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(21), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			} else {
-				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(20), 0, nextLine-calculateProportionalSizeOrDistance1(4), lineColor);
+				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(20), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			}
 			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,lineColor);
+			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,problematicGray);
 			selected=i;
 		} else {
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");

@@ -205,19 +205,11 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	logMessage("INFO","launchAutoStartGame","Saving last state");
 	saveLastState();
 	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
-		#ifndef TARGET_PC
-		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp);
-		#else
 		logMessage("INFO","launchAutoStartGame","Executing");
-		executeCommandPC(emuDir, getGameName(rom->name));
-		#endif
+		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp);
 	} else {
-		#ifdef TARGET_PC
-		executeCommandPC(emuExec, rom->name);
-		#else
 		logMessage("INFO","launchAutoStartGame","Executing 2");
 		executeCommand(emuDir, emuExec, rom->name, rom->isConsoleApp);
-		#endif
 	}
 }
 
@@ -240,11 +232,7 @@ void launchGame(struct Rom *rom) {
 			generateError(error,0);
 			return;
 		}
-		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp);
-		#else
-		executeCommandPC(favorite.executable,favorite.name);
-		#endif
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
 		if (isLaunchAtBoot(rom->name)) {
@@ -264,17 +252,9 @@ void launchGame(struct Rom *rom) {
 			return;
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
-			#ifndef TARGET_PC
 			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name), rom->isConsoleApp);
-			#else
-			executeCommandPC(CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name));
-			#endif
 		} else {
-			#ifdef TARGET_PC
-			executeCommandPC(CURRENT_SECTION.executables[rom->preferences.emulator],rom->name);
-			#else
 			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],rom->name, rom->isConsoleApp);
-			#endif
 		}
 	}
 }
@@ -282,18 +262,10 @@ void launchGame(struct Rom *rom) {
 void launchEmulator(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
-		#ifndef TARGET_PC
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp);
-		#else
-		executeCommandPC(favorite.executable,"*");
-		#endif
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
-		#ifndef TARGET_PC
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*", 0);
-		#else
-		executeCommandPC(CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*");
-		#endif
 	}
 }
 
