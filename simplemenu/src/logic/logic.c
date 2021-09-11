@@ -278,6 +278,11 @@ void executeCommand(char *emulatorFolder, char *executable,
 	FILE *fp;
 	char *exec = malloc(strlen(executable) + 5000);
 	strcpy(exec, executable);
+	char *fileToBeExecutedWithFullPath1 = malloc(strlen(fileToBeExecutedWithFullPath) + 10);
+	if(consoleApp) {
+		strcpy(fileToBeExecutedWithFullPath1, "sh -c ");
+		strcat(fileToBeExecutedWithFullPath1, fileToBeExecutedWithFullPath);
+	}
 	//#ifndef TARGET_OD_BETA
 	unsetenv("SDL_FBCON_DONT_CLEAR");
 	//#endif
@@ -370,18 +375,13 @@ void executeCommand(char *emulatorFolder, char *executable,
 #endif
 	}
 
-	//		char menuDirectory[100] = "";
-	//		char *directory="/home/retrofw/apps";
-	//		getcwd(menuDirectory, sizeof(menuDirectory));
-	//		int ret = chdir(directory);
-	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-	//		#if defined TARGET_RFW
-	printf("            ");
-	//		#endif
-	//		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
-
-	execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
-			fileToBeExecutedWithFullPath, NULL);
+	if(consoleApp) {
+		execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
+				fileToBeExecutedWithFullPath1, NULL);
+	} else {
+		execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
+				fileToBeExecutedWithFullPath, NULL);
+	}
 
 }
 
