@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Reset the console
 /usr/bin/reset
 
@@ -21,6 +23,8 @@ done
 
 # Restore the loading splash if needed
 if [ `cat /sys/class/vtconsole/vtcon1/bind` -ne 0 -o ! -f /var/tmp/.boot_complete ] ; then
+	touch /var/tmp/.boot_complete
+	
 	VSIZE=$(cat /sys/class/graphics/fb0/virtual_size)
 
 	if [ -r /usr/local/share/opendingux/loading.png ] ; then
