@@ -978,9 +978,7 @@ void drawHelpScreen(int page) {
 
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), 0,calculateProportionalSizeOrDistance1(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(42), 0, 0, headerAndFooterBackground);
-	char temp[300];
-	sprintf(temp,"HELP - %d/2", page);
-	drawTextOnSettingsHeaderLeftWithColor(temp,headerAndFooterText);
+	drawTextOnSettingsHeaderLeftWithColor("HELP",headerAndFooterText);
 
 	drawBatteryMeter();
 
@@ -1062,7 +1060,9 @@ void drawHelpScreen(int page) {
 			break;
 	}
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
-	drawTextOnSettingsFooterWithColor("PRESS B TO RETURN TO SETTINGS", bodyBackground);
+	char temp[300];
+	sprintf(temp,"PAGE %d/2 - PRESS B TO RETURN", page);
+	drawTextOnSettingsFooterWithColor(temp, bodyBackground);
 
 }
 
