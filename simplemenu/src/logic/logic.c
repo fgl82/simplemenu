@@ -280,12 +280,16 @@ void executeCommand(char *emulatorFolder, char *executable,
 	strcpy(exec, executable);
 	char *fileToBeExecutedWithFullPath1 = malloc(strlen(fileToBeExecutedWithFullPath) + 10);
 	if(consoleApp) {
-		strcpy(fileToBeExecutedWithFullPath1, "sh -c ");
+		if(strstr(fileToBeExecutedWithFullPath,"opk")==NULL) {
+			strcpy(fileToBeExecutedWithFullPath1, "sh -c ");
+		} else {
+			strcpy(fileToBeExecutedWithFullPath1, "");
+		}
 		strcat(fileToBeExecutedWithFullPath1, fileToBeExecutedWithFullPath);
 	}
-	//#ifndef TARGET_OD_BETA
+	#ifndef TARGET_OD_BETA
 	unsetenv("SDL_FBCON_DONT_CLEAR");
-	//#endif
+	#endif
 	char pReturnTo[3];
 	snprintf(pReturnTo, sizeof(pReturnTo), "%d;", returnTo);
 	char pSectionNumber[3] = "";
@@ -341,37 +345,37 @@ void executeCommand(char *emulatorFolder, char *executable,
 	logMessage("INFO", "executeCommand", emulatorFolder);
 	logMessage("INFO", "executeCommand", exec);
 	logMessage("INFO", "executeCommand", fileToBeExecutedWithFullPath);
-	SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+//	SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_ShowCursor(1);
 	freeResources();
-	SDL_ShowCursor(1);
+//	SDL_ShowCursor(1);
 #ifndef TARGET_OD_BETA
 	resetFrameBuffer1();
 #endif
 	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
 	//		#if defined TARGET_RFW
-	//	printf("\n");
+//		printf("            \n");
 	//		#endif
 	if (consoleApp) {
 #if defined(TARGET_OD) || defined TARGET_OD_BETA
 		/* Enable the framebuffer console */
-		char c = '1';
-		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
-		if (fd < 0) {
-			printf("Unable to open fbcon handle\n");
-		} else {
-			write(fd, &c, 1);
-			close(fd);
-		}
-
-		fd = open("/dev/tty1", O_RDWR);
-		if (fd < 0) {
-			printf("Unable to open tty1 handle\n");
-		} else {
-			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
-				printf("Unable to activate tty1\n");
-			close(fd);
-		}
+//		char c = '1';
+//		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
+//		if (fd < 0) {
+//			printf("Unable to open fbcon handle\n");
+//		} else {
+//			write(fd, &c, 1);
+//			close(fd);
+//		}
+//
+//		fd = open("/dev/tty1", O_RDWR);
+//		if (fd < 0) {
+//			printf("Unable to open tty1 handle\n");
+//		} else {
+//			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
+//				printf("Unable to activate tty1\n");
+//			close(fd);
+//		}
 #endif
 	}
 
