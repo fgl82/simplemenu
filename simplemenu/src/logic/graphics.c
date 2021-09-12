@@ -1038,8 +1038,9 @@ void initializeDisplay(int w, int h) {
 	int depth=16;
 #ifndef TARGET_PC
 	Uint32 flags = SDL_SWSURFACE|SDL_NOFRAME;
-#endif
+#else
 	Uint32 pcflags = SDL_HWSURFACE|SDL_NOFRAME;
+#endif
 	SDL_ShowCursor(0);
 	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
