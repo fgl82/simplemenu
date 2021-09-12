@@ -248,7 +248,11 @@ void processEvents() {
 
 int main(int argc, char* argv[]) {
 	logMessage("INFO","main","Setup 1");
+#ifdef TARGET_PC
 	initialSetup(atoi(argv[1]), atoi(argv[2]));
+#else
+	initialSetup(320,240);
+#endif
 	logMessage("INFO","main","Setup 2");
 	initialSetup2();
 	logMessage("INFO","main","Checking launch at boot");
