@@ -359,23 +359,23 @@ void executeCommand(char *emulatorFolder, char *executable,
 	if (consoleApp) {
 #if defined(TARGET_OD) || defined TARGET_OD_BETA
 		/* Enable the framebuffer console */
-//		char c = '1';
-//		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
-//		if (fd < 0) {
-//			printf("Unable to open fbcon handle\n");
-//		} else {
-//			write(fd, &c, 1);
-//			close(fd);
-//		}
-//
-//		fd = open("/dev/tty1", O_RDWR);
-//		if (fd < 0) {
-//			printf("Unable to open tty1 handle\n");
-//		} else {
-//			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
-//				printf("Unable to activate tty1\n");
-//			close(fd);
-//		}
+		char c = '1';
+		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
+		if (fd < 0) {
+			printf("Unable to open fbcon handle\n");
+		} else {
+			write(fd, &c, 1);
+			close(fd);
+		}
+
+		fd = open("/dev/tty1", O_RDWR);
+		if (fd < 0) {
+			printf("Unable to open tty1 handle\n");
+		} else {
+			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
+				printf("Unable to activate tty1\n");
+			close(fd);
+		}
 #endif
 	}
 
@@ -1149,12 +1149,14 @@ void loadGameList(int refresh) {
 								strcat(rom->name,"|");
 								strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
+								rom->isConsoleApp = desktopFiles[desktopCounter].isConsoleApp;
 #else
 								strcpy(rom->name,"-m|");
 								strcat(rom->name,desktopFiles[desktopCounter].name);
 								strcat(rom->name,"|");
 								strcat(rom->name,desktopFiles[desktopCounter].parentOPK);
 								strcpy(rom->alias,desktopFiles[desktopCounter].displayName);
+								rom->isConsoleApp = desktopFiles[desktopCounter].isConsoleApp;
 #endif
 								loadRomPreferences(rom);
 								InsertAtTail(rom);
