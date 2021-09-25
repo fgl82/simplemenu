@@ -691,36 +691,40 @@ void performHelpAction() {
 }
 
 void performAppearanceSettingsChoosingAction() {
+	if (chosenSetting==TIDY_ROMS_OPTION) {
+		stripGames=1+stripGames*-1;
+	} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
+		footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
+	} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
+		menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+	}
 	chosenSetting=previouslyChosenSetting;
 	currentState=SETTINGS_SCREEN;
 }
 
 void performSystemSettingsChoosingAction() {
+	VOLUME_OPTION=0;
+	BRIGHTNESS_OPTION=1;
+	SCREEN_TIMEOUT_OPTION=2;
+	OC_OPTION=3;
+	USB_OPTION=4;
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=2;
+			chosenSetting=4;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<5) {
+		if(chosenSetting<4) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
 		}
 	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
-		if (chosenSetting==TIDY_ROMS_OPTION) {
-			stripGames=1+stripGames*-1;
-		}
-#if defined TARGET_OD
-		else if (chosenSetting==USB_OPTION) {
+		if (chosenSetting==USB_OPTION) {
+#if defined TARGET_OD || defined TARGET_PC
 			hdmiChanged=1+hdmiChanged*-1;
-		}
 #endif
-		else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
-			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
-		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
-			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if(!hdmiEnabled) {
 				if (keys[BTN_LEFT]) {
@@ -733,8 +737,30 @@ void performSystemSettingsChoosingAction() {
 					}
 				}
 			}
+		} else if (chosenSetting==VOLUME_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (volumeValue>0) {
+					volumeValue-=1;
+				}
+			} else {
+				if (volumeValue<100) {
+					volumeValue+=1;
+				}
+			}
+		} else if (chosenSetting==BRIGHTNESS_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (brightnessValue>0) {
+					brightnessValue-=20;
+				}
+			} else {
+				if (brightnessValue<100) {
+					brightnessValue+=20;
+				}
+			}
+		} else if (chosenSetting==OC_OPTION) {
+			OCValue=1+OCValue*-1;
 		}
-	}  else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 #if defined TARGET_RFW
 		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
 		hotKeyPressed=0;
@@ -742,9 +768,10 @@ void performSystemSettingsChoosingAction() {
 		selectedShutDownOption=1;
 		running=0;
 #endif
+	} else if (keys[BTN_B]) {
+		chosenSetting=previouslyChosenSetting;
+		currentState=SETTINGS_SCREEN;
 	}
-	chosenSetting=previouslyChosenSetting;
-	currentState=SETTINGS_SCREEN;
 }
 
 void performSettingsChoosingAction() {

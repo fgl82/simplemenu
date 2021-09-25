@@ -1068,42 +1068,6 @@ void displayGamePictureInMenu(struct Rom *rom) {
 }
 
 void drawHeader() {
-//	char finalString [200];
-//	if (currentCPU==OC_UC) {
-//		strcpy(finalString,"- ");
-//		if(currentSectionNumber==favoritesSectionNumber) {
-//			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
-//		} else{
-//			if (menuSections[currentSectionNumber].fantasyName!=NULL) {
-//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
-//			} else {
-//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
-//			}
-//		}
-//		strcat(finalString," -");
-//	} else if (currentCPU==OC_NO) {
-//		if(currentSectionNumber==favoritesSectionNumber) {
-//			strcpy(finalString,favorites[CURRENT_GAME_NUMBER].section);
-//		} else{
-//			if (strlen(menuSections[currentSectionNumber].fantasyName)>3) {
-//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
-//			} else {
-//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
-//			}
-//		}
-//	} else {
-//		strcpy(finalString,"+ ");
-//		if(currentSectionNumber==favoritesSectionNumber) {
-//			strcat(finalString,favorites[CURRENT_GAME_NUMBER].section);
-//		} else{
-//			if (menuSections[currentSectionNumber].fantasyName!=NULL) {
-//				strcat(finalString,menuSections[currentSectionNumber].fantasyName);
-//			} else {
-//				strcat(finalString,menuSections[currentSectionNumber].sectionName);
-//			}
-//		}
-//		strcat(finalString," +");
-//	}
 	drawTextOnHeader();
 }
 
@@ -1277,7 +1241,6 @@ void drawBatteryMeter() {
 }
 
 void drawSpecialScreen(char *title, char **options, char** values, char** hints, int interactive) {
-	printf("%d\n",chosenSetting);
 	int headerAndFooterBackground[3]={37,50,56};
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
@@ -1427,35 +1390,55 @@ void setupAppearanceSettings() {
 }
 
 void setupSystemSettings() {
-	options[0]="Screen timeout ";
-	values[0]=malloc(100);
-	if (timeoutValue>0&&hdmiEnabled==0) {
-		sprintf(values[0],"%d",timeoutValue);
-	} else {
-		sprintf(values[0],"%s","always on");
-	}
-	hints[0] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+	printf("%d\n",1);
 
-	options[1]="Volume ";
+	options[0]="Volume ";
+	values[0]=malloc(100);
+	sprintf(values[0],"%d",volumeValue);
 	hints[0] = "ADJUST VOLUME LEVEL";
 
-	options[2]="HDMI ";
+	options[1]="Brightness ";
+	values[1]=malloc(100);
+	sprintf(values[1],"%d",brightnessValue);
+	hints[1] = "ADJUST BRIGHTNESS LEVEL";
+
+	options[2]="Screen timeout ";
+	values[2]=malloc(100);
+	if (timeoutValue>0&&hdmiEnabled==0) {
+		sprintf(values[2],"%d",timeoutValue);
+	} else {
+		sprintf(values[2],"%s","always on");
+	}
+	hints[2] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+
+	options[3]="Overclocking level";
+
+	if (OCValue==0) {
+		values[3]="low";
+	} else {
+		values[3]="high";
+	}
+	hints[3] = "ADJUST OVERCLOCKING LEVEL";
+
+	printf("%d\n",3);
+
+	options[4]="HDMI ";
 #if defined TARGET_RFW || defined TARGET_OD_BETA
-	values[2] = " \0";
+	values[4] = " \0";
 #else
 	if (hdmiChanged==1) {
-		values[2] = "enabled";
+		values[4] = "enabled";
 	} else {
-		values[2] = "disabled";
+		values[4] = "disabled";
 	}
 #endif
 
 #if defined TARGET_RFW
-	hints[3] = "PRESS A TO ENABLE USB";
+	hints[4] = "PRESS A TO ENABLE USB";
 #elif defined TARGET_OD_BETA
-	hints[3] = "PRESS A TO REBOOT AND ENABLE HDMI";
+	hints[4] = "PRESS A TO REBOOT AND ENABLE HDMI";
 #else
-	hints[3] = "ENABLE OR DISABLE HDMI";
+	hints[4] = "ENABLE OR DISABLE HDMI";
 #endif
 }
 
