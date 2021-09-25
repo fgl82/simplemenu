@@ -449,18 +449,6 @@ void drawTextOnHeader() {
 	}
 }
 
-void drawUSBScreen() {
-	int white[3]={255, 255, 255};
-	int black[3]={0, 0, 0};
-	displayCenteredImageOnScreen("./usb.png"," ",1,0);
-	drawTextOnScreen(headerFont, NULL, 163,27,"USB MODE",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont, NULL, 163,29,"USB MODE",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont, NULL, 161,27,"USB MODE",white,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont, NULL, 163,217,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont, NULL, 163,219,"PRESS START TO END",black,VAlignMiddle | HAlignCenter);
-	drawTextOnScreen(headerFont, NULL, 161,217,"PRESS START TO END",white,VAlignMiddle | HAlignCenter);
-}
-
 void initializeSettingsFonts() {
 	logMessage("INFO","initializeSettingsFonts","Initializing Settings Fonts");
 	char *akashi = "resources/akashi.ttf";
