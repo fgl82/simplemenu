@@ -30,4 +30,6 @@ SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface);
 SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h);
 SDL_Surface *loadImage (char *fileName);
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]);
+SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b);
+SDL_Surface * getBlendedText(TTF_Font *font, const char *text, int color[]);
 #endif

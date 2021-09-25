@@ -38,6 +38,10 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 	return c;
 }
 
+SDL_Surface * getBlendedText(TTF_Font *font, const char *text, int txtColor[]) {
+	return TTF_RenderText_Blended(font, text, make_color(txtColor[0], txtColor[1], txtColor[2]));
+}
+
 int calculateProportionalSizeOrDistance1(int number) {
 	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
 		return ((float)SCREEN_HEIGHT*(float)number)/240;
@@ -192,43 +196,6 @@ int drawShadedTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char
 
 int drawTextOnScreen(TTF_Font *pfont, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align) {
 	return genericDrawTextOnScreen(pfont, outline, x, y, buf, txtColor, align, NULL, 0);
-}
-
-void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, const char buf[300], int txtColor[], int align){
-	SDL_Surface *msg;
-	SDL_Surface *msg1;
-
-	char *bufCopy=malloc(300);
-	char *bufCopy1=malloc(300);
-	strcpy(bufCopy,buf);
-	strcpy(bufCopy1,buf);
-	bufCopy1[1]='\0';
-	msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
-	msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50,50,50));
-	if (align & HAlignCenter) {
-		x -= msg->w / 2;
-	} else if (align & HAlignRight) {
-		x -= msg->w;
-	}
-
-	if (align & VAlignMiddle) {
-		y -= msg->h / 2;
-	} else if (align & VAlignTop) {
-		y -= msg->h;
-	}
-	SDL_Rect rect2;
-	rect2.x = x;
-	rect2.y = y+120;
-	rect2.w = msg->w;
-	rect2.h = msg->h;
-
-	SDL_Rect rect = {1, 1, msg1->w, msg1->h};
-	SDL_BlitSurface(msg, NULL, msg1, &rect);
-	SDL_BlitSurface(msg1, NULL, screen, &rect2);
-	SDL_FreeSurface(msg1);
-
-	SDL_FreeSurface(msg);
-	free(bufCopy);
 }
 
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]) {

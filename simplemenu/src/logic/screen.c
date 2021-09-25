@@ -44,7 +44,7 @@ int countDown;
 
 void displayHeart(int x, int y) {
 	if(hideHeartTimer!=NULL) {
-		SDL_Surface *heart = IMG_Load(favoriteIndicator);
+		SDL_Surface *heart = loadImage(favoriteIndicator);
 		if (heart!=NULL) {
 			double wh = heart->w;
 			double hh = heart->h;
@@ -167,6 +167,43 @@ void drawCurrentSectionGroup(char *groupName, int textColor[]) {
 
 void drawCustomGameNameUnderPictureOnScreen(char *buf, int x, int y, int maxWidth) {
 	genericDrawMultiLineTextOnScreen(miniFont, outlineMiniFont, x, y, buf, CURRENT_SECTION.pictureTextColor, VAlignBottom|HAlignCenter, maxWidth, artTextLineSeparation);
+}
+
+void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, const char buf[300], int txtColor[], int align){
+	SDL_Surface *msg;
+	SDL_Surface *msg1;
+
+	char *bufCopy=malloc(300);
+	char *bufCopy1=malloc(300);
+	strcpy(bufCopy,buf);
+	strcpy(bufCopy1,buf);
+	bufCopy1[1]='\0';
+	msg = getBlendedText(font, bufCopy, (int[]) {txtColor[0], txtColor[1], txtColor[2]});
+	msg1 = getBlendedText(outline, bufCopy, (int[]) {50, 50, 50});
+	if (align & HAlignCenter) {
+		x -= msg->w / 2;
+	} else if (align & HAlignRight) {
+		x -= msg->w;
+	}
+
+	if (align & VAlignMiddle) {
+		y -= msg->h / 2;
+	} else if (align & VAlignTop) {
+		y -= msg->h;
+	}
+	SDL_Rect rect2;
+	rect2.x = x;
+	rect2.y = y+120;
+	rect2.w = msg->w;
+	rect2.h = msg->h;
+
+	SDL_Rect rect = {1, 1, msg1->w, msg1->h};
+	SDL_BlitSurface(msg, NULL, msg1, &rect);
+	SDL_BlitSurface(msg1, NULL, screen, &rect2);
+	SDL_FreeSurface(msg1);
+
+	SDL_FreeSurface(msg);
+	free(bufCopy);
 }
 
 void drawCustomGameNumber(char *buf, int x, int y) {
@@ -338,10 +375,10 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 }
 
 void displayImageOnScreenCustom(char *fileName) {
-	SDL_Surface *screenshot = IMG_Load(fileName);
+	SDL_Surface *screenshot = loadImage(fileName);
 
 	if(screenshot==NULL) {
-		screenshot = IMG_Load(menuSections[currentSectionNumber].noArtPicture);
+		screenshot = loadImage(menuSections[currentSectionNumber].noArtPicture);
 	}
 
 	if (screenshot!=NULL) {
@@ -1816,10 +1853,10 @@ uint32_t hidePicModeLogo() {
 	aKeyComboWasPressed=0;
 	if (CURRENT_SECTION.backgroundSurface==NULL) {
 		logMessage("INFO","screen","Loading system background");
-		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+		CURRENT_SECTION.backgroundSurface = loadImage(CURRENT_SECTION.background);
 //		resizeSectionBackground(&CURRENT_SECTION);
 		logMessage("INFO","screen","Loading system picture");
-		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+		CURRENT_SECTION.systemPictureSurface = loadImage(CURRENT_SECTION.systemPicture);
 //		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	currentState=BROWSING_GAME_LIST_AFTER_TIMER;
