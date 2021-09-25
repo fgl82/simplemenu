@@ -21,7 +21,7 @@ void initializeDisplay(int w, int h);
 void refreshScreen();
 void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int maxWidth, int lineSeparation);
 void displayCenteredSurface(SDL_Surface *surface);
-void drawCustomGameNumber(char *buf, int x, int y);
+void drawGameNumber(char *buf, int x, int y);
 void displaySurface(SDL_Surface *surface, int x, int y);
 int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded);
 int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing);

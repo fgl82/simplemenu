@@ -700,6 +700,21 @@ void performHelpAction() {
 }
 
 void performSettingsChoosingAction() {
+	SHUTDOWN_OPTION=0;
+	THEME_OPTION=1;
+	SCREEN_TIMEOUT_OPTION=2;
+	TIDY_ROMS_OPTION=3;
+	FULL_SCREEN_FOOTER_OPTION=4;
+	FULL_SCREEN_MENU_OPTION=5;
+	DEFAULT_OPTION=6;
+#if defined TARGET_BITTBOY
+	USB_OPTION=8;
+	HELP_OPTION=7;
+#else
+	USB_OPTION=7;
+	HELP_OPTION=8;
+#endif
+
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;

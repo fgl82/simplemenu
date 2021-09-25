@@ -21,9 +21,9 @@ TTF_Font *miniFont = NULL;
 TTF_Font *picModeFont = NULL;
 TTF_Font *BIGFont = NULL;
 TTF_Font *headerFont = NULL;
-TTF_Font *customCountFont = NULL;
+TTF_Font *inMenuGameCountFont = NULL;
 TTF_Font *footerFont = NULL;
-TTF_Font *gameCountFontFont = NULL;
+TTF_Font *sectionCardsGameCountFont = NULL;
 
 TTF_Font *outlineFont = NULL;
 TTF_Font *outlineMiniFont = NULL;
@@ -39,6 +39,9 @@ TTF_Font *settingsStatusFont = NULL;
 TTF_Font *customHeaderFont = NULL;
 TTF_Font *outlineCustomHeaderFont = NULL;
 
+char *options[10];
+char *values[10];
+char *hints[10];
 
 int countDown;
 
@@ -165,18 +168,18 @@ void drawCurrentSectionGroup(char *groupName, int textColor[]) {
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
 }
 
-void drawCustomGameNameUnderPictureOnScreen(char *buf, int x, int y, int maxWidth) {
+void drawGameNameUnderPicture(char *buf, int x, int y, int maxWidth) {
 	genericDrawMultiLineTextOnScreen(miniFont, outlineMiniFont, x, y, buf, CURRENT_SECTION.pictureTextColor, VAlignBottom|HAlignCenter, maxWidth, artTextLineSeparation);
 }
 
-void drawCustomGameNumber(char *buf, int x, int y) {
+void drawGameNumber(char *buf, int x, int y) {
 	int hAlign = HAlignLeft;
 	if(text2Alignment==1) {
 		hAlign = HAlignCenter;
 	} else if (text2Alignment==2) {
 		hAlign = HAlignRight;
 	}
-	genericDrawTextOnScreen(customCountFont, outlineCustomCountFont, x, y, buf, CURRENT_SECTION.fullscreenMenuItemsColor, VAlignMiddle|hAlign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+	genericDrawTextOnScreen(inMenuGameCountFont, outlineCustomCountFont, x, y, buf, CURRENT_SECTION.fullscreenMenuItemsColor, VAlignMiddle|hAlign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 }
 
 void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
@@ -337,7 +340,7 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 	drawTextOnScreen(font, outlineFont, 5, position, buf, color, VAlignMiddle | HAlignLeft);
 }
 
-void displayImageOnScreenCustom(char *fileName) {
+void displayImageOnMenuScreen(char *fileName) {
 	SDL_Surface *screenshot = loadImage(fileName);
 
 	if(screenshot==NULL) {
@@ -386,9 +389,9 @@ void displayImageOnScreenCustom(char *fileName) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+				drawGameNameUnderPicture(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
 			} else {
-				drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+				drawGameNameUnderPicture(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
 			}
 		}
 	} else {
@@ -409,9 +412,9 @@ void displayImageOnScreenCustom(char *fileName) {
 			int artHeight = (artWidth/4)*3;
 			if (CURRENT_SECTION.gameCount>0) {
 				if (currentGameNameBeingDisplayed[0]=='+') {
-					drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+					drawGameNameUnderPicture(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
 				} else {
-					drawCustomGameNameUnderPictureOnScreen(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+					drawGameNameUnderPicture(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
 				}
 			}
 		}
@@ -480,7 +483,7 @@ void initializeFonts() {
 	customHeaderFont = TTF_OpenFont(textXFont, text1FontSize);
 	outlineCustomHeaderFont = TTF_OpenFont(textXFont, text1FontSize);
 
-	customCountFont = TTF_OpenFont(textXFont, text2FontSize);
+	inMenuGameCountFont = TTF_OpenFont(textXFont, text2FontSize);
 	outlineCustomCountFont = TTF_OpenFont(textXFont, text2FontSize);
 	if (menuFont!=NULL && strlen(menuFont)>2) {
 		TTF_SetFontOutline(outlineFont,fontOutline);
@@ -491,7 +494,7 @@ void initializeFonts() {
 		TTF_SetFontOutline(outlineCustomCountFont,fontOutline);
 	}
 
-	gameCountFontFont = TTF_OpenFont(gameCountFont, gameCountFontSize);
+	sectionCardsGameCountFont = TTF_OpenFont(gameCountFont, gameCountFontSize);
 
 	logMessage("INFO","initializeFonts","Fonts initialized");
 }
@@ -503,8 +506,8 @@ void freeFonts() {
 	headerFont = NULL;
 	TTF_CloseFont(customHeaderFont);
 	customHeaderFont = NULL;
-	TTF_CloseFont(customCountFont);
-	customCountFont = NULL;
+	TTF_CloseFont(inMenuGameCountFont);
+	inMenuGameCountFont = NULL;
 	TTF_CloseFont(footerFont);
 	footerFont = NULL;
 	TTF_CloseFont(picModeFont);
@@ -525,8 +528,8 @@ void freeFonts() {
 	outlineCustomCountFont = NULL;
 	TTF_CloseFont(outlineFooterFont);
 	outlineFooterFont = NULL;
-	TTF_CloseFont(gameCountFontFont);
-	gameCountFontFont = NULL;
+	TTF_CloseFont(sectionCardsGameCountFont);
+	sectionCardsGameCountFont = NULL;
 }
 
 void freeSettingsFonts() {
@@ -860,7 +863,7 @@ void showConsole() {
 		}
 
 		if (displayGameCount) {
-			drawTextOnScreen(gameCountFontFont,NULL,gameCountX,gameCountY,gameCount,gameCountFontColor,alignment);
+			drawTextOnScreen(sectionCardsGameCountFont,NULL,gameCountX,gameCountY,gameCount,gameCountFontColor,alignment);
 			free(gameCount);
 		}
 
@@ -1057,7 +1060,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 
 	strcat(pictureWithFullPath,tempGameName);
 	strcat(pictureWithFullPath,".png");
-	displayImageOnScreenCustom(pictureWithFullPath);
+	displayImageOnMenuScreen(pictureWithFullPath);
 
 	free(pictureWithFullPath);
 	free(tempGameName);
@@ -1240,154 +1243,9 @@ void setupDecorations() {
 	}
 	char *gameNumber=malloc(10);
 	snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
-	drawCustomGameNumber(gameNumber, text2X, text2Y);
+	drawGameNumber(gameNumber, text2X, text2Y);
 	free(gameNumber);
 	logMessage("INFO","setupDecorations","Decorations set");
-}
-
-void setOptionsAndValues (char **options, char **values, char **hints){
-
-	options[TIDY_ROMS_OPTION]= malloc(100);
-	options[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
-	options[FULL_SCREEN_MENU_OPTION]= malloc(100);
-	options[THEME_OPTION]= malloc(100);
-	options[SCREEN_TIMEOUT_OPTION]= malloc(100);
-	options[DEFAULT_OPTION]= malloc(100);
-	options[USB_OPTION]= malloc(100);
-	options[SHUTDOWN_OPTION]= malloc(100);
-	options[HELP_OPTION]= malloc(100);
-
-	values[TIDY_ROMS_OPTION]= malloc(10);
-	values[FULL_SCREEN_FOOTER_OPTION]= malloc(10);
-	values[FULL_SCREEN_MENU_OPTION]= malloc(10);
-	values[THEME_OPTION]= malloc(2000);
-	values[SCREEN_TIMEOUT_OPTION]= malloc(40);
-	values[DEFAULT_OPTION]= malloc(4);
-	values[USB_OPTION]= malloc(100);
-	values[SHUTDOWN_OPTION]= malloc(30);
-	values[HELP_OPTION]= malloc(10);
-
-	hints[TIDY_ROMS_OPTION]= malloc(100);
-	hints[FULL_SCREEN_FOOTER_OPTION]= malloc(100);
-	hints[FULL_SCREEN_MENU_OPTION]= malloc(100);
-	hints[THEME_OPTION]= malloc(100);
-	hints[SCREEN_TIMEOUT_OPTION]= malloc(100);
-	hints[DEFAULT_OPTION]= malloc(100);
-	hints[USB_OPTION]= malloc(100);
-	hints[SHUTDOWN_OPTION]= malloc(100);
-	hints[HELP_OPTION]= malloc(100);
-
-	strcpy(options[TIDY_ROMS_OPTION],"Tidy rom names ");
-	strcpy(options[FULL_SCREEN_FOOTER_OPTION],"Fullscreen rom names ");
-	strcpy(options[FULL_SCREEN_MENU_OPTION],"Fullscreen menu ");
-	logMessage("INFO","setOptionsAndValues","Full screen menu option");
-	logMessage("INFO","setOptionsAndValues",options[FULL_SCREEN_MENU_OPTION]);
-	strcpy(options[THEME_OPTION],"Theme ");
-	strcpy(options[SCREEN_TIMEOUT_OPTION],"Screen timeout ");
-	strcpy(options[DEFAULT_OPTION],"Default launcher  ");
-	logMessage("INFO","setOptionsAndValues","Default option");
-	logMessage("INFO","setOptionsAndValues",options[DEFAULT_OPTION]);
-	#if defined TARGET_RFW
-	strcpy(options[USB_OPTION],"USB mode");
-	#else
-	strcpy(options[USB_OPTION],"HDMI");
-	#endif
-	strcpy(options[HELP_OPTION],"Help");
-
-	strcpy(options[SHUTDOWN_OPTION],"Session ");
-	strcpy(hints[TIDY_ROMS_OPTION],"CUT DETAILS OUT OF ROM NAMES");
-	strcpy(hints[FULL_SCREEN_FOOTER_OPTION],"DISPLAY THE CURRENT ROM NAME");
-	strcpy(hints[FULL_SCREEN_MENU_OPTION],"DISPLAY A TRANSLUCENT MENU");
-	logMessage("INFO","setOptionsAndValues","Full screen menu hint");
-	logMessage("INFO","setOptionsAndValues",hints[FULL_SCREEN_MENU_OPTION]);
-	strcpy(hints[THEME_OPTION],"LAUNCHER THEME");
-	strcpy(hints[SCREEN_TIMEOUT_OPTION],"SECONDS UNTIL THE SCREEN TURNS OFF");
-	strcpy(hints[DEFAULT_OPTION],"LAUNCH AFTER BOOTING");
-	logMessage("INFO","setOptionsAndValues","Default option hint");
-	logMessage("INFO","setOptionsAndValues",hints[DEFAULT_OPTION]);
-	strcpy(hints[HELP_OPTION],"HOW TO USE THIS MENU");
-
-	#if defined TARGET_RFW
-	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
-	#elif defined TARGET_OD_BETA
-	strcpy(hints[USB_OPTION],"PRESS A TO REBOOT AND ENABLE HDMI");
-	#else
-	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
-	#endif
-	strcpy(hints[SHUTDOWN_OPTION],"A TO CONFIRM - LEFT/RIGHT TO CHOOSE");
-	if (shutDownEnabled) {
-		switch (selectedShutDownOption) {
-			case 0:
-				strcpy(values[SHUTDOWN_OPTION],"shutdown");
-				break;
-			case 1:
-				strcpy(values[SHUTDOWN_OPTION],"reboot");
-				break;
-		}
-	} else {
-		switch (selectedShutDownOption) {
-			case 0:
-				strcpy(values[SHUTDOWN_OPTION],"quit");
-				break;
-			case 1:
-				strcpy(values[SHUTDOWN_OPTION],"reboot");
-				break;
-			case 2:
-				strcpy(values[SHUTDOWN_OPTION],"shutdown");
-				break;
-		}
-	}
-
-
-	if (stripGames) {
-		strcpy(values[TIDY_ROMS_OPTION],"enabled");
-	} else {
-		strcpy(values[TIDY_ROMS_OPTION],"disabled");
-	}
-	if (footerVisibleInFullscreenMode) {
-		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"enabled");
-	} else {
-		strcpy(values[FULL_SCREEN_FOOTER_OPTION],"disabled");
-	}
-	if (menuVisibleInFullscreenMode) {
-		strcpy(values[FULL_SCREEN_MENU_OPTION],"enabled");
-	} else {
-		strcpy(values[FULL_SCREEN_MENU_OPTION],"disabled");
-	}
-	logMessage("INFO","setOptionsAndValues","Full screen menu is...");
-	logMessage("INFO","setOptionsAndValues",values[FULL_SCREEN_MENU_OPTION]);
-	char *themeName=getNameWithoutPath((themes[activeTheme]));
-	strcpy(values[THEME_OPTION],themeName);
-	free(themeName);
-	if (timeoutValue>0&&hdmiEnabled==0) {
-		sprintf(values[SCREEN_TIMEOUT_OPTION],"%d",timeoutValue);
-	} else {
-		sprintf(values[SCREEN_TIMEOUT_OPTION],"%s","always on");
-	}
-
-	if (shutDownEnabled) {
-		strcpy(values[DEFAULT_OPTION],"yes");
-		logMessage("INFO","setOptionsAndValues","Default option value");
-		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
-	} else {
-		strcpy(values[DEFAULT_OPTION],"no");
-		logMessage("INFO","setOptionsAndValues","Default option value");
-		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
-	}
-	#if defined TARGET_RFW || defined TARGET_OD_BETA
-	strcpy(values[USB_OPTION]," \0");
-	#else
-	if (hdmiChanged==1) {
-		strcpy(values[USB_OPTION],"enabled");
-	} else {
-		strcpy(values[USB_OPTION],"disabled");
-	}
-	#endif
-//	if (autoHideLogos) {
-//		strcpy(values[AUTO_HIDE_LOGOS_OPTION],"enabled");
-//	} else {
-		strcpy(values[HELP_OPTION]," \0");
-//	}
 }
 
 void drawBatteryMeter() {
@@ -1418,22 +1276,7 @@ void drawBatteryMeter() {
 	}
 }
 
-void drawSettingsScreen() {
-	SHUTDOWN_OPTION=0;
-	THEME_OPTION=1;
-	SCREEN_TIMEOUT_OPTION=2;
-	TIDY_ROMS_OPTION=3;
-	FULL_SCREEN_FOOTER_OPTION=4;
-	FULL_SCREEN_MENU_OPTION=5;
-	DEFAULT_OPTION=6;
-	#if defined TARGET_BITTBOY
-	USB_OPTION=8;
-	HELP_OPTION=7;
-	#else
-	USB_OPTION=7;
-	HELP_OPTION=8;
-	#endif
-
+void drawSettingsScreen(char *title, char **options, char** values, char** hints) {
 	int headerAndFooterBackground[3]={37,50,56};
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
@@ -1441,17 +1284,12 @@ void drawSettingsScreen() {
 	int bodyBackground[3]={250,250,250};
 	int problematicGray[3] = {225,225,225};
 
-	char *options[10];
-	char *values[10];
-	char *hints[10];
-
 	logMessage("INFO","drawSettingsScreen","Setting options and values");
-	setOptionsAndValues(options, values, hints);
 
 	logMessage("INFO","drawSettingsScreen","Drawing shit");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), 0,calculateProportionalSizeOrDistance1(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(42), 0, 0, headerAndFooterBackground);
-	drawTextOnSettingsHeaderLeftWithColor("SETTINGS",headerAndFooterText);
+	drawTextOnSettingsHeaderLeftWithColor(title,headerAndFooterText);
 
 	drawBatteryMeter();
 
@@ -1468,7 +1306,7 @@ void drawSettingsScreen() {
 	logMessage("INFO","drawSettingsScreen","Defining number of items");
 	logMessage("INFO","drawSettingsScreen","About to go through items");
 	for (int i=0;i<max;i++) {
-		logMessage("INFO","drawSettingsScreen","one item");
+		logMessage("INFO","drawSettingsScreen",options[i]);
 		char temp[300];
 		strcpy(temp,options[i]);
 		if(strlen(values[i])>0) {
@@ -1511,37 +1349,37 @@ void drawSettingsScreen() {
 	logMessage("INFO","drawSettingsScreen","Drawing Footer");
 	drawTextOnSettingsFooterWithColor(hints[selected], bodyBackground);
 	logMessage("INFO","drawSettingsScreen","Freeign options");
-	free(options[TIDY_ROMS_OPTION]);
-	free(options[FULL_SCREEN_FOOTER_OPTION]);
-	free(options[FULL_SCREEN_MENU_OPTION]);
-	free(options[THEME_OPTION]);
-	free(options[SCREEN_TIMEOUT_OPTION]);
-	free(options[DEFAULT_OPTION]);
-	free(options[SHUTDOWN_OPTION]);
-	free(options[USB_OPTION]);
-	free(options[HELP_OPTION]);
+//	free(options[TIDY_ROMS_OPTION]);
+//	free(options[FULL_SCREEN_FOOTER_OPTION]);
+//	free(options[FULL_SCREEN_MENU_OPTION]);
+//	free(options[THEME_OPTION]);
+//	free(options[SCREEN_TIMEOUT_OPTION]);
+//	free(options[DEFAULT_OPTION]);
+//	free(options[SHUTDOWN_OPTION]);
+//	free(options[USB_OPTION]);
+//	free(options[HELP_OPTION]);
 
 	logMessage("INFO","drawSettingsScreen","Freeign values");
-	free(values[TIDY_ROMS_OPTION]);
-	free(values[FULL_SCREEN_FOOTER_OPTION]);
-	free(values[FULL_SCREEN_MENU_OPTION]);
-	free(values[THEME_OPTION]);
-	free(values[SCREEN_TIMEOUT_OPTION]);
-	free(values[DEFAULT_OPTION]);
-	free(values[SHUTDOWN_OPTION]);
-	free(values[USB_OPTION]);
-	free(values[HELP_OPTION]);
+//	free(values[TIDY_ROMS_OPTION]);
+//	free(values[FULL_SCREEN_FOOTER_OPTION]);
+//	free(values[FULL_SCREEN_MENU_OPTION]);
+//	free(values[THEME_OPTION]);
+//	free(values[SCREEN_TIMEOUT_OPTION]);
+//	free(values[DEFAULT_OPTION]);
+//	free(values[SHUTDOWN_OPTION]);
+//	free(values[USB_OPTION]);
+//	free(values[HELP_OPTION]);
 
 	logMessage("INFO","drawSettingsScreen","Freeign hints");
-	free(hints[TIDY_ROMS_OPTION]);
-	free(hints[FULL_SCREEN_FOOTER_OPTION]);
-	free(hints[FULL_SCREEN_MENU_OPTION]);
-	free(hints[THEME_OPTION]);
-	free(hints[SCREEN_TIMEOUT_OPTION]);
-	free(hints[DEFAULT_OPTION]);
-	free(hints[SHUTDOWN_OPTION]);
-	free(hints[USB_OPTION]);
-	free(hints[HELP_OPTION]);
+//	free(hints[TIDY_ROMS_OPTION]);
+//	free(hints[FULL_SCREEN_FOOTER_OPTION]);
+//	free(hints[FULL_SCREEN_MENU_OPTION]);
+//	free(hints[THEME_OPTION]);
+//	free(hints[SCREEN_TIMEOUT_OPTION]);
+//	free(hints[DEFAULT_OPTION]);
+//	free(hints[SHUTDOWN_OPTION]);
+//	free(hints[USB_OPTION]);
+//	free(hints[HELP_OPTION]);
 	logMessage("INFO","drawSettingsScreen","Settings drawn");
 }
 
@@ -1642,6 +1480,98 @@ void drawHelpScreen(int page) {
 
 }
 
+void setupSettingsScreen() {
+	options[0]="Session ";
+	options[1]="Theme ";
+	options[2]="Screen timeout ";
+	options[3]="Tidy rom names ";
+	options[4]="Fullscreen rom names ";
+	options[5]="Fullscreen menu ";
+	options[6]="Default launcher ";
+	options[7]="HDMI ";
+	options[8]="Help ";
+
+	if (shutDownEnabled) {
+		switch (selectedShutDownOption) {
+			case 0:
+				values[0] = "shutdown";
+				break;
+			case 1:
+				values[0] = "reboot";
+				break;
+		}
+	} else {
+		switch (selectedShutDownOption) {
+			case 0:
+				values[0] = "quit";
+				break;
+			case 1:
+				values[0] = "reboot";
+				break;
+			case 2:
+				values[0] = "shutdown";
+				break;
+		}
+	}
+
+	char *themeName=getNameWithoutPath((themes[activeTheme]));
+	values[1] = themeName;
+	values[2]=malloc(100);
+	if (timeoutValue>0&&hdmiEnabled==0) {
+		sprintf(values[2],"%d",timeoutValue);
+	} else {
+		sprintf(values[2],"%s","always on");
+	}
+
+	if (stripGames) {
+		values[3] = "enabled";
+	} else {
+		values[3] = "disabled";
+	}
+	if (footerVisibleInFullscreenMode) {
+		values[4] = "enabled";
+	} else {
+		values[4] = "disabled";
+	}
+	if (menuVisibleInFullscreenMode) {
+		values[5] = "enabled";
+	} else {
+		values[5] = "disabled";
+	}
+
+	if (shutDownEnabled) {
+		values[6] = "yes";
+	} else {
+		values[6] = "no";
+	}
+#if defined TARGET_RFW || defined TARGET_OD_BETA
+	values[7] = " \0";
+#else
+	if (hdmiChanged==1) {
+		values[7] = "enabled";
+	} else {
+		values[7] = "disabled";
+	}
+#endif
+	values[8] = " \0";
+
+	hints[0] = "A TO CONFIRM - LEFT/RIGHT TO CHOOSE";
+	hints[1] = "LAUNCHER THEME";
+	hints[2] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+	hints[3] = "CUT DETAILS OUT OF ROM NAMES";
+	hints[4] = "DISPLAY THE CURRENT ROM NAME";
+	hints[5] = "DISPLAY A TRANSLUCENT MENU";
+	hints[6] = "LAUNCH AFTER BOOTING";
+#if defined TARGET_RFW
+	hints[7] = "PRESS A TO ENABLE USB";
+#elif defined TARGET_OD_BETA
+	hints[7] = "PRESS A TO REBOOT AND ENABLE HDMI";
+#else
+	hints[7] = "ENABLE OR DISABLE HDMI";
+#endif
+	hints[8] = "HOW TO USE THIS MENU";
+}
+
 void updateScreen(struct Node *node) {
 	struct Rom *rom;
 	if (node==NULL) {
@@ -1702,7 +1632,8 @@ void updateScreen(struct Node *node) {
 				}
 				break;
 			case SETTINGS_SCREEN:
-				drawSettingsScreen();
+				setupSettingsScreen();
+				drawSettingsScreen("SETTINGS", options, values, hints);
 				break;
 			case HELP_SCREEN_1:
 				drawHelpScreen(1);
