@@ -43,6 +43,7 @@ int performAction(struct Node *node) {
 			return 1;
 		}
 		if (keys[BTN_START]) {
+			chosenSetting=0;
 			previousState=currentState;
 			currentState=SETTINGS_SCREEN;
 			chosenSetting=SHUTDOWN_OPTION;

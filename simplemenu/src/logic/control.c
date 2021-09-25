@@ -696,6 +696,53 @@ void performAppearanceSettingsChoosingAction() {
 }
 
 void performSystemSettingsChoosingAction() {
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		} else {
+			chosenSetting=2;
+		}
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<5) {
+			chosenSetting++;
+		} else {
+			chosenSetting=0;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==TIDY_ROMS_OPTION) {
+			stripGames=1+stripGames*-1;
+		}
+#if defined TARGET_OD
+		else if (chosenSetting==USB_OPTION) {
+			hdmiChanged=1+hdmiChanged*-1;
+		}
+#endif
+		else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
+			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
+			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
+			if(!hdmiEnabled) {
+				if (keys[BTN_LEFT]) {
+					if (timeoutValue>0) {
+						timeoutValue-=5;
+					}
+				} else {
+					if (timeoutValue<60) {
+						timeoutValue+=5;
+					}
+				}
+			}
+		}
+	}  else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
+#if defined TARGET_RFW
+		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
+		hotKeyPressed=0;
+#elif defined TARGET_OD_BETA
+		selectedShutDownOption=1;
+		running=0;
+#endif
+	}
 	chosenSetting=previouslyChosenSetting;
 	currentState=SETTINGS_SCREEN;
 }
@@ -721,15 +768,7 @@ void performSettingsChoosingAction() {
 			chosenSetting=0;
 		}
 	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
-		if (chosenSetting==TIDY_ROMS_OPTION) {
-			stripGames=1+stripGames*-1;
-		}
-		#if defined TARGET_OD
-		else if (chosenSetting==USB_OPTION) {
-			hdmiChanged=1+hdmiChanged*-1;
-		}
-		#endif
-		else if (chosenSetting==SHUTDOWN_OPTION) {
+		if (chosenSetting==SHUTDOWN_OPTION) {
 			if (shutDownEnabled) {
 				selectedShutDownOption=1+selectedShutDownOption*-1;
 			} else {
@@ -756,11 +795,6 @@ void performSettingsChoosingAction() {
 					}
 				}
 			}
-		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
-			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
-		}
-		else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
-			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==THEME_OPTION) {
 			if (keys[BTN_LEFT]) {
 				if (activeTheme>0) {
@@ -773,18 +807,6 @@ void performSettingsChoosingAction() {
 					activeTheme++;
 				} else {
 					activeTheme=0;
-				}
-			}
-		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
-			if(!hdmiEnabled) {
-				if (keys[BTN_LEFT]) {
-					if (timeoutValue>0) {
-						timeoutValue-=5;
-					}
-				} else {
-					if (timeoutValue<60) {
-						timeoutValue+=5;
-					}
 				}
 			}
 		} else if (chosenSetting==DEFAULT_OPTION) {
@@ -839,17 +861,7 @@ void performSettingsChoosingAction() {
 		previouslyChosenSetting=chosenSetting;
 		chosenSetting=0;
 		currentState=SYSTEM_SETTINGS;
-	}
-	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
-		#if defined TARGET_RFW
-		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
-		hotKeyPressed=0;
-		#elif defined TARGET_OD_BETA
-		selectedShutDownOption=1;
-		running=0;
-		#endif
-	}
-	else if (keys[BTN_B]) {
+	} else if (keys[BTN_B]) {
 		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");

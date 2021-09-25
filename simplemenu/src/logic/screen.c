@@ -1277,6 +1277,7 @@ void drawBatteryMeter() {
 }
 
 void drawSpecialScreen(char *title, char **options, char** values, char** hints, int interactive) {
+	printf("%d\n",chosenSetting);
 	int headerAndFooterBackground[3]={37,50,56};
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
