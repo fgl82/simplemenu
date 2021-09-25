@@ -169,43 +169,6 @@ void drawCustomGameNameUnderPictureOnScreen(char *buf, int x, int y, int maxWidt
 	genericDrawMultiLineTextOnScreen(miniFont, outlineMiniFont, x, y, buf, CURRENT_SECTION.pictureTextColor, VAlignBottom|HAlignCenter, maxWidth, artTextLineSeparation);
 }
 
-void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, const char buf[300], int txtColor[], int align){
-	SDL_Surface *msg;
-	SDL_Surface *msg1;
-
-	char *bufCopy=malloc(300);
-	char *bufCopy1=malloc(300);
-	strcpy(bufCopy,buf);
-	strcpy(bufCopy1,buf);
-	bufCopy1[1]='\0';
-	msg = getBlendedText(font, bufCopy, (int[]) {txtColor[0], txtColor[1], txtColor[2]});
-	msg1 = getBlendedText(outline, bufCopy, (int[]) {50, 50, 50});
-	if (align & HAlignCenter) {
-		x -= msg->w / 2;
-	} else if (align & HAlignRight) {
-		x -= msg->w;
-	}
-
-	if (align & VAlignMiddle) {
-		y -= msg->h / 2;
-	} else if (align & VAlignTop) {
-		y -= msg->h;
-	}
-	SDL_Rect rect2;
-	rect2.x = x;
-	rect2.y = y+120;
-	rect2.w = msg->w;
-	rect2.h = msg->h;
-
-	SDL_Rect rect = {1, 1, msg1->w, msg1->h};
-	SDL_BlitSurface(msg, NULL, msg1, &rect);
-	SDL_BlitSurface(msg1, NULL, screen, &rect2);
-	SDL_FreeSurface(msg1);
-
-	SDL_FreeSurface(msg);
-	free(bufCopy);
-}
-
 void drawCustomGameNumber(char *buf, int x, int y) {
 	int hAlign = HAlignLeft;
 	if(text2Alignment==1) {
@@ -220,9 +183,9 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 	int retW=1;
 	int retW2=1;
 	int retW3=3;
-	TTF_SizeText(settingsfont, (const char *) option, &retW, NULL);
-	TTF_SizeText(settingsfont, (const char *) " ", &retW2, NULL);
-	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
+	getTextWidth(settingsfont, option, &retW);
+	getTextWidth(settingsfont, " ", &retW2);
+	getTextWidth(settingsfont, value, &retW3);
 	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
 }
 

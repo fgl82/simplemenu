@@ -575,7 +575,9 @@ void initializeDisplay(int w, int h) {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 }
 
-
+void getTextWidth(TTF_Font *font, char *text, int *widthToBeSet){
+	TTF_SizeText(font, (const char *) text, widthToBeSet, NULL);
+}
 
 void refreshScreen() {
 	SDL_Flip(screen);
