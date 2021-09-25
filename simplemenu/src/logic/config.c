@@ -8,6 +8,7 @@
 #include "../headers/definitions.h"
 #include "../headers/globals.h"
 #include "../headers/logic.h"
+#include "../headers/screen.h"
 #include "../headers/string_utils.h"
 #include "../headers/ini2.h"
 #include "../headers/graphics.h"
@@ -123,7 +124,10 @@ int isLaunchAtBoot(char *romName) {
 		return 0;
 	}
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	int i = getline(&line, &len, fp);
+	if (i==-1) {
+		logMessage("ERROR", "isLaunchAtBoot", "Error reading line");
+	}
 	line[strlen(line)-1] = '\0';
 	if (!strcmp(line,romName)) {
 		fclose(fp);
@@ -196,19 +200,19 @@ struct AutostartRom *getLaunchAtBoot() {
 //	fprintf(fp,"%s", rom->preferences.frequenc
 	struct Rom *rom = malloc(sizeof(struct Rom));
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	int i = getline(&line, &len, fp);
 	rom->name=strdup(line);
 
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	i = getline(&line, &len, fp);
 	rom->directory=strdup(line);
 
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	i = getline(&line, &len, fp);
 	rom->alias=strdup(line);
 
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	i = getline(&line, &len, fp);
 	rom->isConsoleApp=atoifgl(line);
 
 	loadRomPreferences(rom);
@@ -216,11 +220,14 @@ struct AutostartRom *getLaunchAtBoot() {
 	autostartRom->rom = rom;
 
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	i = getline(&line, &len, fp);
 	autostartRom->emulatorDir = strdup(line);
 
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	i = getline(&line, &len, fp);
+	if (i==-1) {
+		logMessage("ERROR", "getLaunchAtBoot", "Error reading line");
+	}
 	autostartRom->emulator = strdup(line);
 //	printf("%s%s%s%d\n", rom->name, rom->directory, rom->alias, rom->isConsoleApp);
 	fclose(fp);
@@ -652,7 +659,7 @@ void createThemesInHomeIfTheyDontExist() {
 	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
 	int directoryExists=mkdir(pathToThemeFiles,0700);
 	if (!directoryExists) {
-		drawCopyingText("COPYING FILES, PLEASE WAIT");
+		drawCopyingText();
 		refreshScreen();
 		int ret=0;
 		char copyThemesCommand[5000];
@@ -701,7 +708,10 @@ void loadRomPreferences(struct Rom *rom) {
 	char *configurations[4];
 	char *ptr;
 //	myGetLine(line, len, fp);
-	getline(&line, &len, fp);
+	int getLineResult = getline(&line, &len, fp);
+	if (getLineResult==-1) {
+		logMessage("ERROR", "loadRomPreferences", "Error reading line");
+	}
 	ptr = strtok(line, ";");
 	int i=0;
 	while(ptr != NULL) {

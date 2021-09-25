@@ -25,4 +25,13 @@ void clearShutdownTimer();
 void resetShutdownTimer();
 void startBatteryTimer();
 void clearBatteryTimer();
+void drawLoadingText();
+void drawCopyingText();
+void resizeSectionBackground(struct MenuSection *section);
+void initializeFonts();
+void freeResources();
+void freeFonts();
+void freeSettingsFonts();
+void initializeSettingsFonts();
+
 #endif

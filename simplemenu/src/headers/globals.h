@@ -167,6 +167,8 @@ extern int artWidth;
 extern int artHeight;
 extern int artX;
 extern int artY;
+extern int currentW;
+extern int currentH;
 extern int artTextDistanceFromPicture;
 extern int artTextLineSeparation;
 extern int artTextFontSize;

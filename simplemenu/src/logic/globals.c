@@ -147,6 +147,8 @@ int gameListWidth;
 int gameListPositionFullScreen;
 int artWidth;
 int artHeight;
+int currentW;
+int currentH;
 int artX;
 int artY;
 int artTextDistanceFromPicture;

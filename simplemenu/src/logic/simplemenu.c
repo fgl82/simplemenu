@@ -245,8 +245,15 @@ void processEvents() {
 		}
 	}
 }
-
-int main(int argc, char* argv[]) {
+#ifdef TARGET_PC
+	int main(int argc, char* argv[]) {
+		if(argc<3) {
+			printf("Usage: simplemenu-x86 [width] [height] \n");
+			exit(0);
+		}
+#else
+	int main() {
+#endif
 	logMessage("INFO","main","Setup 1");
 #ifdef TARGET_PC
 	initialSetup(atoi(argv[1]), atoi(argv[2]));
