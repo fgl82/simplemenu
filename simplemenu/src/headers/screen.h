@@ -19,7 +19,7 @@ void clearPicModeHideMenuTimer();
 void clearPicModeHideLogoTimer();
 void clearHideHeartTimer();
 void resetHideHeartTimer();
-void drawSettingsScreen();
+void drawSpecialScreen();
 void drawHelpScreen(int page);
 void clearShutdownTimer();
 void resetShutdownTimer();

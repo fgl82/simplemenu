@@ -149,6 +149,12 @@ void processEvents() {
 					case SETTINGS_SCREEN:
 						performSettingsChoosingAction();
 						break;
+					case APPEARANCE_SETTINGS:
+						performAppearanceSettingsChoosingAction();
+						break;
+					case SYSTEM_SETTINGS:
+						performSystemSettingsChoosingAction();
+						break;
 					case HELP_SCREEN_1:
 						performHelpAction();
 						break;

@@ -80,6 +80,9 @@ int DEFAULT_OPTION;
 int USB_OPTION;
 int SHUTDOWN_OPTION;
 int HELP_OPTION;
+int APPEARANCE_OPTION;
+int SYSTEM_OPTION;
+
 char mediaFolder[1000];
 int stripGames;
 int useCache;

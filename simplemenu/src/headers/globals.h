@@ -12,6 +12,8 @@
 #define HELP_SCREEN_1 8
 #define HELP_SCREEN_2 9
 #define LOADING 10
+#define APPEARANCE_SETTINGS 11
+#define SYSTEM_SETTINGS 12
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -97,6 +99,9 @@ extern int USB_OPTION;
 extern int SHUTDOWN_OPTION;
 extern int HELP_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
+extern int APPEARANCE_OPTION;
+extern int SYSTEM_OPTION;
+
 extern char mediaFolder[1000];
 extern int stripGames;
 extern int useCache;

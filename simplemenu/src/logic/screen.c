@@ -1276,7 +1276,7 @@ void drawBatteryMeter() {
 	}
 }
 
-void drawSettingsScreen(char *title, char **options, char** values, char** hints) {
+void drawSpecialScreen(char *title, char **options, char** values, char** hints, int interactive) {
 	int headerAndFooterBackground[3]={37,50,56};
 	int headerAndFooterText[3]={255,255,255};
 	int bodyText[3]= {90,90,90};
@@ -1312,7 +1312,7 @@ void drawSettingsScreen(char *title, char **options, char** values, char** hints
 		if(strlen(values[i])>0) {
 			strcat(temp,values[i]);
 		}
-		if(i==chosenSetting) {
+		if(i==chosenSetting && interactive) {
 			logMessage("INFO","drawSettingsScreen","Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
@@ -1327,6 +1327,7 @@ void drawSettingsScreen(char *title, char **options, char** values, char** hints
 			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,problematicGray);
 			selected=i;
 		} else {
+			selected=0;
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
@@ -1348,149 +1349,118 @@ void drawSettingsScreen(char *title, char **options, char** values, char** hints
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
 	logMessage("INFO","drawSettingsScreen","Drawing Footer");
 	drawTextOnSettingsFooterWithColor(hints[selected], bodyBackground);
-	logMessage("INFO","drawSettingsScreen","Freeign options");
-//	free(options[TIDY_ROMS_OPTION]);
-//	free(options[FULL_SCREEN_FOOTER_OPTION]);
-//	free(options[FULL_SCREEN_MENU_OPTION]);
-//	free(options[THEME_OPTION]);
-//	free(options[SCREEN_TIMEOUT_OPTION]);
-//	free(options[DEFAULT_OPTION]);
-//	free(options[SHUTDOWN_OPTION]);
-//	free(options[USB_OPTION]);
-//	free(options[HELP_OPTION]);
-
-	logMessage("INFO","drawSettingsScreen","Freeign values");
-//	free(values[TIDY_ROMS_OPTION]);
-//	free(values[FULL_SCREEN_FOOTER_OPTION]);
-//	free(values[FULL_SCREEN_MENU_OPTION]);
-//	free(values[THEME_OPTION]);
-//	free(values[SCREEN_TIMEOUT_OPTION]);
-//	free(values[DEFAULT_OPTION]);
-//	free(values[SHUTDOWN_OPTION]);
-//	free(values[USB_OPTION]);
-//	free(values[HELP_OPTION]);
-
-	logMessage("INFO","drawSettingsScreen","Freeign hints");
-//	free(hints[TIDY_ROMS_OPTION]);
-//	free(hints[FULL_SCREEN_FOOTER_OPTION]);
-//	free(hints[FULL_SCREEN_MENU_OPTION]);
-//	free(hints[THEME_OPTION]);
-//	free(hints[SCREEN_TIMEOUT_OPTION]);
-//	free(hints[DEFAULT_OPTION]);
-//	free(hints[SHUTDOWN_OPTION]);
-//	free(hints[USB_OPTION]);
-//	free(hints[HELP_OPTION]);
-	logMessage("INFO","drawSettingsScreen","Settings drawn");
 }
 
-void drawHelpScreen(int page) {
-	int headerAndFooterBackground[3]={37,50,56};
-	int headerAndFooterText[3]={255,255,255};
-	int bodyText[3]= {90,90,90};
-	int bodyHighlightedText[3]= {0,147,131};
-	int bodyBackground[3]={250,250,250};
-
-	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), 0,calculateProportionalSizeOrDistance1(22), bodyBackground);
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(42), 0, 0, headerAndFooterBackground);
-	drawTextOnSettingsHeaderLeftWithColor("HELP",headerAndFooterText);
-
-	drawBatteryMeter();
-
-	int nextLine = calculateProportionalSizeOrDistance1(50);
-	int nextLineText = calculateProportionalSizeOrDistance1(50);
-	int max = 9;
+void setupHelpScreen(int page) {
 	switch (page) {
 		case 1:
-			for (int i=0;i<max;i++) {
-				switch (i) {
-					case 0:
-						drawNonShadedSettingsOptionOnScreen("A", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Confirm", nextLineText, bodyHighlightedText);
-						break;
-					case 1:
-						drawNonShadedSettingsOptionOnScreen("B", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Back/Function key", nextLineText, bodyHighlightedText);
-						break;
-					case 2:
-						drawNonShadedSettingsOptionOnScreen("X", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Mark favorite", nextLineText, bodyHighlightedText);
-						break;
-					case 3:
-						drawNonShadedSettingsOptionOnScreen("Y", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Show/Hide favorites", nextLineText, bodyHighlightedText);
-						break;
-					case 4:
-						#if defined TARGET_BITTBOY
-						drawNonShadedSettingsOptionOnScreen("R", nextLineText, bodyText);
-						#else
-						drawNonShadedSettingsOptionOnScreen("R1", nextLineText, bodyText);
-						#endif
-						drawSettingsOptionValueOnScreen("Fullscreen mode", nextLineText, bodyHighlightedText);
-						break;
-					case 5:
-						drawNonShadedSettingsOptionOnScreen("Select", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Game options", nextLineText, bodyHighlightedText);
-						break;
-					case 6:
-						drawNonShadedSettingsOptionOnScreen("Up/Down/Left/Right", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Scroll", nextLineText, bodyHighlightedText);
-						break;
-					case 7:
-						drawNonShadedSettingsOptionOnScreen("B+Left/Right", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Previous/Next letter", nextLineText, bodyHighlightedText);
-						break;
-					case 8:
-						drawNonShadedSettingsOptionOnScreen("B+Up/Down", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Quick switch", nextLineText, bodyHighlightedText);
-						break;
-				}
-				int lineColor[] = { 229,229,229};
-				if (i<max)  {
-					drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(1), 0, nextLine+calculateProportionalSizeOrDistance1(15), lineColor);
-				}
-				nextLine+=calculateProportionalSizeOrDistance1(19);
-				nextLineText+=calculateProportionalSizeOrDistance1(19);
-			}
+			options[0]="A";
+			values[0]="Confirm";
+
+			options[1]="B";
+			values[1]="Back/Function key";
+
+			options[2]="X";
+			values[2]="Mark favorite";
+
+			options[3]="Y";
+			values[3]="Show/Hide favorites";
+
+#if defined TARGET_BITTBOY
+			options[4]="R";
+#else
+			options[4]="R1";
+#endif
+			values[4]="Fullscreen mode";
+
+			options[5]="Select";
+			values[5]="Game options";
+
+			options[6]="Up/Down/Left/Right";
+			values[6]="Scroll";
+
+			options[7]="B+Left/Right";
+			values[7]="Previous/Next letter";
+
+			options[8]="B+Up/Down";
+			values[8]="Quick switch";
 			break;
 		case 2:
-			for (int i=0;i<max;i++) {
-				switch (i) {
-					case 0:
-						drawNonShadedSettingsOptionOnScreen("B+Select", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Random select", nextLineText, bodyHighlightedText);
-						break;
-					case 1:
-						drawNonShadedSettingsOptionOnScreen("B+X", nextLineText, bodyText);
-						drawSettingsOptionValueOnScreen("Delete game", nextLineText, bodyHighlightedText);
-						break;
-				}
-				int lineColor[] = { 229,229,229};
-				if (i<max)  {
-					drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(1), 0, nextLine+calculateProportionalSizeOrDistance1(15), lineColor);
-				}
-				nextLine+=calculateProportionalSizeOrDistance1(19);
-				nextLineText+=calculateProportionalSizeOrDistance1(19);
-			}
+			options[0] = "B+Select";
+			values[0] = "Random select";
+
+			options[1] = "B+X";
+			values[1] = "Delete game";
 			break;
 	}
-	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
+
 	char temp[300];
 	sprintf(temp,"PAGE %d/2 - PRESS B TO RETURN", page);
-	drawTextOnSettingsFooterWithColor(temp, bodyBackground);
+	hints[0] = temp;
+}
 
+void setupAppearanceSettings() {\
+	options[0]="Tidy rom names ";
+	if (stripGames) {
+		values[0] = "enabled";
+	} else {
+		values[0] = "disabled";
+	}
+	hints[0] = "CUT DETAILS OUT OF ROM NAMES";
+
+	options[1]="Fullscreen rom names ";
+	if (footerVisibleInFullscreenMode) {
+		values[1] = "enabled";
+	} else {
+		values[1] = "disabled";
+	}
+	hints[1] = "DISPLAY THE CURRENT ROM NAME";
+
+	options[2]="Fullscreen menu ";
+	if (menuVisibleInFullscreenMode) {
+		values[2] = "enabled";
+	} else {
+		values[2] = "disabled";
+	}
+	hints[2] = "DISPLAY A TRANSLUCENT MENU";
+}
+
+void setupSystemSettings() {
+	options[0]="Screen timeout ";
+	values[0]=malloc(100);
+	if (timeoutValue>0&&hdmiEnabled==0) {
+		sprintf(values[0],"%d",timeoutValue);
+	} else {
+		sprintf(values[0],"%s","always on");
+	}
+	hints[0] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+
+	options[1]="Volume ";
+	hints[0] = "ADJUST VOLUME LEVEL";
+
+	options[2]="HDMI ";
+#if defined TARGET_RFW || defined TARGET_OD_BETA
+	values[3] = " \0";
+#else
+	if (hdmiChanged==1) {
+		values[3] = "enabled";
+	} else {
+		values[3] = "disabled";
+	}
+#endif
+
+#if defined TARGET_RFW
+	hints[3] = "PRESS A TO ENABLE USB";
+#elif defined TARGET_OD_BETA
+	hints[3] = "PRESS A TO REBOOT AND ENABLE HDMI";
+#else
+	hints[3] = "ENABLE OR DISABLE HDMI";
+#endif
 }
 
 void setupSettingsScreen() {
 	options[0]="Session ";
-	options[1]="Theme ";
-	options[2]="Screen timeout ";
-	options[3]="Tidy rom names ";
-	options[4]="Fullscreen rom names ";
-	options[5]="Fullscreen menu ";
-	options[6]="Default launcher ";
-	options[7]="HDMI ";
-	options[8]="Help ";
-
+	hints[0] = "A TO CONFIRM - LEFT/RIGHT TO CHOOSE";
 	if (shutDownEnabled) {
 		switch (selectedShutDownOption) {
 			case 0:
@@ -1514,62 +1484,36 @@ void setupSettingsScreen() {
 		}
 	}
 
+	options[1]="Theme ";
 	char *themeName=getNameWithoutPath((themes[activeTheme]));
 	values[1] = themeName;
-	values[2]=malloc(100);
-	if (timeoutValue>0&&hdmiEnabled==0) {
-		sprintf(values[2],"%d",timeoutValue);
-	} else {
-		sprintf(values[2],"%s","always on");
-	}
-
-	if (stripGames) {
-		values[3] = "enabled";
-	} else {
-		values[3] = "disabled";
-	}
-	if (footerVisibleInFullscreenMode) {
-		values[4] = "enabled";
-	} else {
-		values[4] = "disabled";
-	}
-	if (menuVisibleInFullscreenMode) {
-		values[5] = "enabled";
-	} else {
-		values[5] = "disabled";
-	}
-
-	if (shutDownEnabled) {
-		values[6] = "yes";
-	} else {
-		values[6] = "no";
-	}
-#if defined TARGET_RFW || defined TARGET_OD_BETA
-	values[7] = " \0";
-#else
-	if (hdmiChanged==1) {
-		values[7] = "enabled";
-	} else {
-		values[7] = "disabled";
-	}
-#endif
-	values[8] = " \0";
-
-	hints[0] = "A TO CONFIRM - LEFT/RIGHT TO CHOOSE";
 	hints[1] = "LAUNCHER THEME";
-	hints[2] = "SECONDS UNTIL THE SCREEN TURNS OFF";
-	hints[3] = "CUT DETAILS OUT OF ROM NAMES";
-	hints[4] = "DISPLAY THE CURRENT ROM NAME";
-	hints[5] = "DISPLAY A TRANSLUCENT MENU";
-	hints[6] = "LAUNCH AFTER BOOTING";
-#if defined TARGET_RFW
-	hints[7] = "PRESS A TO ENABLE USB";
-#elif defined TARGET_OD_BETA
-	hints[7] = "PRESS A TO REBOOT AND ENABLE HDMI";
-#else
-	hints[7] = "ENABLE OR DISABLE HDMI";
-#endif
-	hints[8] = "HOW TO USE THIS MENU";
+
+	options[2]="Default launcher ";
+	if (shutDownEnabled) {
+		values[2] = "yes";
+	} else {
+		values[2] = "no";
+	}
+	hints[2] = "LAUNCH AFTER BOOTING";
+
+	options[3]="Appearance ";
+	hints[3] = "APPEARANCE OPTIONS";
+
+	options[4]="System ";
+	hints[4] = "SYSTEM OPTIONS";
+
+	options[5]="Help ";
+	hints[5] = "HOW TO USE THIS MENU";
+}
+
+
+void clearOptionsValuesAndHints() {
+	for (int i=0; i<10; i++) {
+		options[i] = " ";
+		values[i] = " ";
+		hints[i] = " ";
+	}
 }
 
 void updateScreen(struct Node *node) {
@@ -1632,14 +1576,29 @@ void updateScreen(struct Node *node) {
 				}
 				break;
 			case SETTINGS_SCREEN:
+				clearOptionsValuesAndHints();
 				setupSettingsScreen();
-				drawSettingsScreen("SETTINGS", options, values, hints);
+				drawSpecialScreen("SETTINGS", options, values, hints, 1);
 				break;
 			case HELP_SCREEN_1:
-				drawHelpScreen(1);
+				clearOptionsValuesAndHints();
+				setupHelpScreen(1);
+				drawSpecialScreen("HELP", options, values, hints, 0);
 				break;
 			case HELP_SCREEN_2:
-				drawHelpScreen(2);
+				clearOptionsValuesAndHints();
+				setupHelpScreen(2);
+				drawSpecialScreen("HELP", options, values, hints, 0);
+				break;
+			case APPEARANCE_SETTINGS:
+				clearOptionsValuesAndHints();
+				setupAppearanceSettings();
+				drawSpecialScreen("APPEARANCE", options, values, hints, 1);
+				break;
+			case SYSTEM_SETTINGS:
+				clearOptionsValuesAndHints();
+				setupSystemSettings();
+				drawSpecialScreen("SYSTEM", options, values, hints, 1);
 				break;
 			case CHOOSING_GROUP:
 				showCurrentGroup();

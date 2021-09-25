@@ -548,11 +548,7 @@ void performGroupChoosingAction() {
 		chosenSetting=SHUTDOWN_OPTION;
 		themeChanged=activeTheme;
 		previousState=CHOOSING_GROUP;
-//		if(activeGroup!=beforeTryingToSwitchGroup) {
-//			activeGroup = beforeTryingToSwitchGroup;
-//		}
 		currentState=SETTINGS_SCREEN;
-//		pthread_create(&clockThread, NULL, updateClock,NULL);
 		return;
 	}
 	if ((!alternateControls&&keys[BTN_UP])||keys[BTN_L1]) {
@@ -633,12 +629,9 @@ void performGroupChoosingAction() {
 							logMessage("INFO","performGroupChoosingAction","Loading system logo");
 							CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 							drawLoadingText();
-//							resizeSectionSystemLogo(&CURRENT_SECTION);
 							logMessage("INFO","performGroupChoosingAction","Loading system background");
 							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//							resizeSectionBackground(&CURRENT_SECTION);
 							CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//							resizeSectionSystemPicture(&CURRENT_SECTION);
 							existed = 1;
 
 						}
@@ -657,12 +650,9 @@ void performGroupChoosingAction() {
 				drawLoadingText();
 				logMessage("INFO","performGroupChoosingAction","performGroupChoosingAction !existed - Loading system logo");
 				CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-//				resizeSectionSystemLogo(&CURRENT_SECTION);
 				logMessage("INFO","performGroupChoosingAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//				resizeSectionBackground(&CURRENT_SECTION);
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			if (CURRENT_SECTION.gameCount==0) {
 				advanceSection(0);
@@ -699,38 +689,30 @@ void performHelpAction() {
 	}
 }
 
+void performAppearanceSettingsChoosingAction() {
+	currentState=SETTINGS_SCREEN;
+}
+
+void performSystemSettingsChoosingAction() {
+	currentState=SETTINGS_SCREEN;
+}
+
 void performSettingsChoosingAction() {
 	SHUTDOWN_OPTION=0;
 	THEME_OPTION=1;
-	SCREEN_TIMEOUT_OPTION=2;
-	TIDY_ROMS_OPTION=3;
-	FULL_SCREEN_FOOTER_OPTION=4;
-	FULL_SCREEN_MENU_OPTION=5;
-	DEFAULT_OPTION=6;
-#if defined TARGET_BITTBOY
-	USB_OPTION=8;
-	HELP_OPTION=7;
-#else
-	USB_OPTION=7;
-	HELP_OPTION=8;
-#endif
+	DEFAULT_OPTION=2;
+	APPEARANCE_OPTION=3;
+	SYSTEM_OPTION=4;
+	HELP_OPTION=5;
 
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			#if defined TARGET_RFW || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
-			chosenSetting=8;
-			#else
-			chosenSetting=7;
-			#endif
+			chosenSetting=5;
 		}
 	} else if (keys[BTN_DOWN]) {
-		#if defined TARGET_RFW || defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
-		if(chosenSetting<8) {
-		#else
-		if(chosenSetting<7) {
-		#endif
+		if(chosenSetting<5) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -774,13 +756,9 @@ void performSettingsChoosingAction() {
 		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
 			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
 		}
-//		else if (chosenSetting==AUTO_HIDE_LOGOS_OPTION) {
-//			autoHideLogos=1+autoHideLogos*-1;
-//		}
 		else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
 			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
 		} else if (chosenSetting==THEME_OPTION) {
-//			drawLoadingText();
 			if (keys[BTN_LEFT]) {
 				if (activeTheme>0) {
 					activeTheme--;
@@ -794,15 +772,6 @@ void performSettingsChoosingAction() {
 					activeTheme=0;
 				}
 			}
-//			char *temp=malloc(8000);
-//			strcpy(temp,themes[activeTheme]);
-//			strcat(temp,"/theme.ini");
-//			loadTheme(temp);
-//			loadSectionGroups();
-//			free(temp);
-//			currentMode=3;
-//			MENU_ITEMS_PER_PAGE=itemsPerPage;
-//			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
 		} else if (chosenSetting==SCREEN_TIMEOUT_OPTION) {
 			if(!hdmiEnabled) {
 				if (keys[BTN_LEFT]) {
@@ -857,6 +826,10 @@ void performSettingsChoosingAction() {
 		running=0;
 	} else if (chosenSetting==HELP_OPTION&&keys[BTN_A]) {
 		currentState=HELP_SCREEN_1;
+	} else if (chosenSetting==APPEARANCE_OPTION&&keys[BTN_A]) {
+		currentState=APPEARANCE_SETTINGS;
+	} else if (chosenSetting==SYSTEM_OPTION&&keys[BTN_A]) {
+		currentState=SYSTEM_SETTINGS;
 	}
 	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 		#if defined TARGET_RFW
@@ -866,16 +839,8 @@ void performSettingsChoosingAction() {
 		selectedShutDownOption=1;
 		running=0;
 		#endif
-//		int returnedValue = system("./scripts/usb_mode_on.sh");
-//		if (returnedValue==0) {
-////			isUSBMode = 1;
-//		} else {
-//			generateError("USB MODE  NOT AVAILABLE",0);
-//		}
-//		currentState=BROWSING_GAME_LIST;
 	}
 	else if (keys[BTN_B]) {
-//		pthread_cancel(clockThread);
 		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {
 			FILE *fp = fopen("/sys/class/hdmi/hdmi","w");
@@ -898,24 +863,20 @@ void performSettingsChoosingAction() {
 			int headerAndFooterBackground[3]={37,50,56};
 			drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(22), 0, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), headerAndFooterBackground);
 			drawLoadingText();
-//			refreshScreen();
 			char *temp=malloc(8000);
 			strcpy(temp,themes[activeTheme]);
 			strcat(temp,"/theme.ini");
 			loadTheme(temp);
 			loadSectionGroups();
 			free(temp);
-//			currentMode=3;
 			MENU_ITEMS_PER_PAGE=itemsPerPage;
 			FULLSCREEN_ITEMS_PER_PAGE=itemsPerPageFullscreen;
 		}
 		if (CURRENT_SECTION.backgroundSurface==NULL) {
 			logMessage("INFO","performSettingsChoosingAction","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//			resizeSectionBackground(&CURRENT_SECTION);
 			logMessage("INFO","performSettingsChoosingAction","Loading system picture");
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if(fullscreenMode==0) {
 			ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;

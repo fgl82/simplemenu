@@ -19,6 +19,8 @@ int isSelectPressed();
 void performChoosingAction();
 void performGroupChoosingAction();
 void performSettingsChoosingAction();
+void performAppearanceSettingsChoosingAction();
+void performSystemSettingsChoosingAction();
 void performHelpAction();
 int performAction();
 void callDeleteGame(struct Rom * rom);
