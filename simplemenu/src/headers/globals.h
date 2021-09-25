@@ -55,6 +55,7 @@ extern int isSuspended;
 extern int activeGroup;
 extern int beforeTryingToSwitchGroup;
 extern int chosenSetting;
+extern int previouslyChosenSetting;
 extern int chosenChoosingOption;
 extern char currentGameNameBeingDisplayed [3000];
 extern SDL_TimerID timeoutTimer;

@@ -1399,7 +1399,7 @@ void setupHelpScreen(int page) {
 	hints[0] = temp;
 }
 
-void setupAppearanceSettings() {\
+void setupAppearanceSettings() {
 	options[0]="Tidy rom names ";
 	if (stripGames) {
 		values[0] = "enabled";
@@ -1440,12 +1440,12 @@ void setupSystemSettings() {
 
 	options[2]="HDMI ";
 #if defined TARGET_RFW || defined TARGET_OD_BETA
-	values[3] = " \0";
+	values[2] = " \0";
 #else
 	if (hdmiChanged==1) {
-		values[3] = "enabled";
+		values[2] = "enabled";
 	} else {
-		values[3] = "disabled";
+		values[2] = "disabled";
 	}
 #endif
 

@@ -681,6 +681,7 @@ void performLaunchAtBootQuitScreenChoosingAction() {
 
 void performHelpAction() {
 	if (keys[BTN_B]) {
+		chosenSetting=previouslyChosenSetting;
 		currentState=SETTINGS_SCREEN;
 	} else 	if (keys[BTN_DOWN]) {
 		currentState=HELP_SCREEN_2;
@@ -690,10 +691,12 @@ void performHelpAction() {
 }
 
 void performAppearanceSettingsChoosingAction() {
+	chosenSetting=previouslyChosenSetting;
 	currentState=SETTINGS_SCREEN;
 }
 
 void performSystemSettingsChoosingAction() {
+	chosenSetting=previouslyChosenSetting;
 	currentState=SETTINGS_SCREEN;
 }
 
@@ -825,10 +828,16 @@ void performSettingsChoosingAction() {
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
 	} else if (chosenSetting==HELP_OPTION&&keys[BTN_A]) {
+		previouslyChosenSetting=chosenSetting;
+		chosenSetting=0;
 		currentState=HELP_SCREEN_1;
 	} else if (chosenSetting==APPEARANCE_OPTION&&keys[BTN_A]) {
+		previouslyChosenSetting=chosenSetting;
+		chosenSetting=0;
 		currentState=APPEARANCE_SETTINGS;
 	} else if (chosenSetting==SYSTEM_OPTION&&keys[BTN_A]) {
+		previouslyChosenSetting=chosenSetting;
+		chosenSetting=0;
 		currentState=SYSTEM_SETTINGS;
 	}
 	else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {

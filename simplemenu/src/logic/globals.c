@@ -37,6 +37,7 @@ int isSuspended;
 int activeGroup;
 int beforeTryingToSwitchGroup;
 int chosenSetting;
+int previouslyChosenSetting;
 int chosenChoosingOption;
 char currentGameNameBeingDisplayed [3000];
 SDL_TimerID shutdownTimer;
