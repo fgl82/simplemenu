@@ -1416,6 +1416,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", activeGroup);
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	fprintf(fp, "%d;\n", currentMode);
+	fprintf(fp, "%d;\n", OCValue);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
 		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
 		for (int sectionCount=0;sectionCount<=sectionsNum;sectionCount++) {
@@ -1459,6 +1460,7 @@ void loadLastState() {
 	int groupCounter=-1;
 	int savedVersion=-1;
 	int itemsRead=-1;
+	int OCValueRead=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -1495,8 +1497,9 @@ void loadLastState() {
 			startInSection=atoifgl(configurations[0]);
 		} else if (itemsRead==-1) {
 			itemsRead=atoifgl(configurations[0]);
-		}
-		else {
+		} else if (OCValueRead==-1) {
+			OCValueRead=atoifgl(configurations[0]);
+		} else {
 			if(atoifgl(configurations[1])==0) {
 				groupCounter++;
 			}
@@ -1529,6 +1532,7 @@ void loadLastState() {
 	currentSectionNumber=startInSection;
 	activeGroup = startInGroup;
 	currentMode=itemsRead;
+	OCValue=OCValueRead;
 	fclose(fp);
 	if (line) {
 		free(line);

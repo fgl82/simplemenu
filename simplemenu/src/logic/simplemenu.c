@@ -78,6 +78,7 @@ void initialSetup(int w, int h) {
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
+	OCValue = OC_NO;
 	loadConfig();
 	initializeDisplay(w,h);
 	freeFonts();
@@ -88,11 +89,6 @@ void initialSetup(int w, int h) {
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-#if defined TARGET_OD_BETA
-	OCValue = OC_OC_LOW;
-#else
-	OCValue = OC_NO;
-#endif
 	printf("%d\n",OCValue);
 #ifndef TARGET_OD_BETA
 	logMessage("INFO","initialSetup","Setting CPU to base");

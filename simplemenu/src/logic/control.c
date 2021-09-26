@@ -691,15 +691,33 @@ void performHelpAction() {
 }
 
 void performAppearanceSettingsChoosingAction() {
-	if (chosenSetting==TIDY_ROMS_OPTION) {
-		stripGames=1+stripGames*-1;
-	} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
-		footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
-	} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
-		menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+	TIDY_ROMS_OPTION=0;
+	FULL_SCREEN_FOOTER_OPTION=1;
+	FULL_SCREEN_MENU_OPTION=2;
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		} else {
+			chosenSetting=2;
+		}
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<2) {
+			chosenSetting++;
+		} else {
+			chosenSetting=0;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==TIDY_ROMS_OPTION) {
+			stripGames=1+stripGames*-1;
+		} else if (chosenSetting==FULL_SCREEN_FOOTER_OPTION) {
+			footerVisibleInFullscreenMode=1+footerVisibleInFullscreenMode*-1;
+		} else if (chosenSetting==FULL_SCREEN_MENU_OPTION) {
+			menuVisibleInFullscreenMode=1+menuVisibleInFullscreenMode*-1;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_B]) {
+		chosenSetting=previouslyChosenSetting;
+		currentState=SETTINGS_SCREEN;
 	}
-	chosenSetting=previouslyChosenSetting;
-	currentState=SETTINGS_SCREEN;
 }
 
 void performSystemSettingsChoosingAction() {
