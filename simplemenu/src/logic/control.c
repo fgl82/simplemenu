@@ -737,28 +737,32 @@ void performSystemSettingsChoosingAction() {
 					}
 				}
 			}
-		} else if (chosenSetting==VOLUME_OPTION) {
-			if (keys[BTN_LEFT]) {
-				if (volumeValue>0) {
-					volumeValue-=1;
-				}
-			} else {
-				if (volumeValue<100) {
-					volumeValue+=1;
-				}
-			}
 		} else if (chosenSetting==BRIGHTNESS_OPTION) {
 			if (keys[BTN_LEFT]) {
-				if (brightnessValue>0) {
-					brightnessValue-=20;
+				if (brightnessValue>1) {
+					brightnessValue-=1;
 				}
 			} else {
-				if (brightnessValue<100) {
-					brightnessValue+=20;
+				if (brightnessValue<maxBrightnessValue) {
+					brightnessValue+=1;
 				}
 			}
+			setBrightness(brightnessValue);
 		} else if (chosenSetting==OC_OPTION) {
-			OCValue=1+OCValue*-1;
+#if defined TARGET_OD_BETA
+			if (OCValue==OC_OC_LOW) {
+				OCValue=OC_OC_HIGH;
+			} else {
+				OCValue=OC_OC_LOW;
+			}
+		}
+#else
+			OCValue=OC_NO;
+		}
+#endif
+	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
+		if (keys[BTN_A]) {
+			executeCommand ("/usr/bin", "alsamixer", "#", 1);
 		}
 	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 #if defined TARGET_RFW
@@ -963,7 +967,7 @@ void performChoosingAction() {
 		if(chosenChoosingOption==0) {
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
 			if (rom->preferences.frequency==OC_NO) {
-				rom->preferences.frequency=OC_OC;
+				rom->preferences.frequency=OCValue;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}
@@ -992,7 +996,7 @@ void performChoosingAction() {
 		if(chosenChoosingOption==0) {
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
 			if (rom->preferences.frequency==OC_NO) {
-				rom->preferences.frequency=OC_OC;
+				rom->preferences.frequency=OCValue;
 			} else {
 				rom->preferences.frequency=OC_NO;
 			}

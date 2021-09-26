@@ -12,4 +12,7 @@ int getBacklight();
 void resetScreenOffTimer();
 int getBatteryLevel();
 void rumble();
+int getCurrentBrightness();
+int getMaxBrightness();
+void setBrightness(int value);
 #endif

@@ -126,16 +126,6 @@ void HW_Init()
 	logMessage("INFO","HW_Init","HW Initialized");
 }
 
-void cycleFrequencies() {
-	if(currentCPU==OC_UC) {
-		currentCPU = OC_NO;
-	} else if (currentCPU==OC_NO) {
-		currentCPU = OC_OC;
-	} else {
-		currentCPU = OC_UC;
-	}
-}
-
 void rumble() {
 
 }
@@ -217,3 +207,46 @@ int getBatteryLevel() {
 	return total;
 #endif
 }
+
+int getCurrentBrightness() {
+	int level;
+	FILE *f = fopen("/sys/class/backlight/backlight/brightness", "r");
+	if (f==NULL) {
+		logMessage("INFO","getCurrentBrightness","Error, file not found");
+		return 12;
+	} else {
+		int ret = fscanf(f, "%i", &level);
+		if(ret==-1) {
+			logMessage("INFO","getCurrentBrightness","Error reading file");
+			return 12;
+		}
+		fclose(f);
+	}
+	return level;
+}
+
+int getMaxBrightness() {
+	int level;
+	FILE *f = fopen("/sys/class/backlight/backlight/max_brightness", "r");
+	if (f==NULL) {
+		logMessage("INFO","getCurrentBrightness","Error, file not found");
+		return 12;
+	} else {
+		int ret = fscanf(f, "%i", &level);
+		if(ret==-1) {
+			logMessage("INFO","getCurrentBrightness","Error reading file");
+			return 12;
+		}
+		fclose(f);
+	}
+	return level;
+}
+
+void setBrightness(int value) {
+	FILE *f = fopen("/sys/class/backlight/backlight/brightness", "w");
+	if (f!=NULL) {
+		fprintf(f, "%d", value);
+		fclose(f);
+	}
+}
+

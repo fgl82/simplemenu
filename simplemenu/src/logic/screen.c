@@ -72,10 +72,7 @@ void drawPictureTextOnScreen(char *buf) {
 	int h = 0;
 	TTF_SizeText(font, buf, NULL, &h);
 	char *temp = malloc(strlen(buf)+2);
-	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC) {
+	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_LOW||CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_HIGH) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -100,10 +97,7 @@ void drawPictureTextOnScreen(char *buf) {
 void drawImgFallbackTextOnScreen(char *fallBackText) {
 	if(!footerVisibleInFullscreenMode) {
 		char *temp = malloc(strlen(fallBackText)+2);
-		if (currentCPU == OC_UC) {
-			strcpy(temp,"-");
-			strcat(temp,fallBackText);
-		} else 	if (currentCPU == OC_OC) {
+		if (currentCPU == OC_OC_HIGH || currentCPU == OC_OC_LOW) {
 			strcpy(temp,"+");
 			strcat(temp,fallBackText);
 		} else {
@@ -204,10 +198,7 @@ void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]
 
 void drawShadedGameNameOnScreen(char *buf, int position) {
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
+	if (currentCPU == OC_OC_LOW||currentCPU == OC_OC_HIGH) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -219,10 +210,7 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 
 void drawShadedGameNameOnScreenLeft(char *buf, int position) {
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
+	if (currentCPU == OC_OC_LOW || currentCPU == OC_OC_HIGH) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -238,10 +226,7 @@ void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
 
 void drawShadedGameNameOnScreenCenter(char *buf, int position) {
 	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_UC) {
-		strcpy(temp,"-");
-		strcat(temp,buf);
-	} else 	if (currentCPU == OC_OC) {
+	if (currentCPU == OC_OC_LOW  || currentCPU == OC_OC_HIGH) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -807,13 +792,13 @@ void showRomPreferences() {
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
 	//Frequency option value
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
-	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC) {
+	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_LOW || CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_HIGH) {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft);
 	} else {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft);
 	}
 #else
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "unavailable", valueColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "not available", valueColor, VAlignMiddle | HAlignLeft);
 #endif
 
 	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, problematicGray);
@@ -1152,10 +1137,7 @@ void drawGameList() {
 		buf=strdup(nameWithoutExtension);
 
 		char *temp = malloc(strlen(buf)+2);
-		if (rom->preferences.frequency == OC_UC) {
-			strcpy(temp,"-");
-			strcat(temp,buf);
-		} else 	if (rom->preferences.frequency == OC_OC) {
+		if (rom->preferences.frequency == OC_OC_HIGH||rom->preferences.frequency == OC_OC_LOW) {
 			strcpy(temp,"+");
 			strcat(temp,buf);
 		} else {
@@ -1392,10 +1374,8 @@ void setupAppearanceSettings() {
 void setupSystemSettings() {
 	printf("%d\n",1);
 
-	options[0]="Volume ";
-	values[0]=malloc(100);
-	sprintf(values[0],"%d",volumeValue);
-	hints[0] = "ADJUST VOLUME LEVEL";
+	options[0]="Sound ";
+	hints[0] = "PRESS A TO LAUNCH ALSAMIXER";
 
 	options[1]="Brightness ";
 	values[1]=malloc(100);
@@ -1413,14 +1393,17 @@ void setupSystemSettings() {
 
 	options[3]="Overclocking level";
 
-	if (OCValue==0) {
+#if defined TARGET_OD_BETA
+	if (OCValue==OC_OC_LOW) {
 		values[3]="low";
-	} else {
+	} else if (OCValue==OC_OC_HIGH){
 		values[3]="high";
 	}
-	hints[3] = "ADJUST OVERCLOCKING LEVEL";
+#else
+	values[3]="not available";
+#endif
 
-	printf("%d\n",3);
+	hints[3] = "USED IN THE ROM MENU";
 
 	options[4]="HDMI ";
 #if defined TARGET_RFW || defined TARGET_OD_BETA

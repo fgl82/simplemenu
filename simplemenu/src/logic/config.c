@@ -847,14 +847,14 @@ void loadConfig() {
 		alternateControls=0;
 	}
 
-	value = ini_get(config, "CPU", "underclocked_speed");
-	OC_UC=atoifgl(value);
+	value = ini_get(config, "CPU", "overclocked_speed_low");
+	OC_OC_LOW=atoifgl(value);
 
 	value = ini_get(config, "CPU", "normal_speed");
 	OC_NO=atoifgl(value);
 
-	value = ini_get(config, "CPU", "overclocked_speed");
-	OC_OC=atoifgl(value);
+	value = ini_get(config, "CPU", "overclocked_speed_high");
+	OC_OC_HIGH=atoifgl(value);
 
 	value = ini_get(config, "CPU", "sleep_speed");
 	OC_SLEEP=atoifgl(value);
