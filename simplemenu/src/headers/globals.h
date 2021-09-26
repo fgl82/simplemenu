@@ -223,6 +223,7 @@ struct StolenGMenuFile {
 
 struct Favorite {
 	char section[300];
+	char sectionAlias[300];
 	char name[300];
 	char alias[300];
 	char emulatorFolder[200];

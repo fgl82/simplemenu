@@ -676,7 +676,7 @@ void createThemesInHomeIfTheyDontExist() {
 void saveRomPreferences(struct Rom *rom) {
 	FILE * fp;
 	char pathToPreferencesFilePlusFileName[300];
-	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s",home, getNameWithoutPath(rom->name));
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s/%s", home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
 	fp = fopen(pathToPreferencesFilePlusFileName, "w");
 	fprintf(fp,"%d;", rom->preferences.emulatorDir);
 	fprintf(fp,"%d;", rom->preferences.emulator);
@@ -691,10 +691,14 @@ void loadRomPreferences(struct Rom *rom) {
 	size_t len = 0;
 	char pathToPreferencesFilePlusFileName[800];
 	char pathToPreferencesFiles[800];
-	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s",home, getNameWithoutPath(rom->name));
-	snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%s/.simplemenu/rom_preferences",home);
-
-	mkdir(pathToPreferencesFiles,0700);
+	if (currentSectionNumber!=favoritesSectionNumber) {
+		snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s/%s",home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
+		snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%s/.simplemenu/rom_preferences/%s", home, CURRENT_SECTION.sectionName);
+		mkdir(pathToPreferencesFiles,0700);
+	} else {
+		snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s/%s",home, favorites[CURRENT_GAME_NUMBER].section, getNameWithoutPath(rom->name));
+		snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%s/.simplemenu/rom_preferences/%s", home, favorites[CURRENT_GAME_NUMBER].section);
+	}
 
 	rom->preferences.emulatorDir=0;
 	rom->preferences.emulator=0;
@@ -741,6 +745,7 @@ void saveFavorites() {
 				fprintf(fp,"\n");
 			}
 			fprintf(fp,"%s;",favorite.section);
+			fprintf(fp,"%s;",favorite.sectionAlias);
 			fprintf(fp,"%s;",favorite.name);
 			if(favorite.alias[0]=='\0') {
 				fprintf(fp," ;");
@@ -783,13 +788,14 @@ void loadFavorites() {
 			i++;
 		}
 		strcpy(favorites[favoritesSize].section,configurations[0]);
-		strcpy(favorites[favoritesSize].name,configurations[1]);
-		strcpy(favorites[favoritesSize].alias,configurations[2]);
-		strcpy(favorites[favoritesSize].emulatorFolder,configurations[3]);
-		strcpy(favorites[favoritesSize].executable,configurations[4]);
-		favorites[favoritesSize].isConsoleApp = atoi(configurations[5]);
-		strcpy(favorites[favoritesSize].filesDirectory,configurations[6]);
-		favorites[favoritesSize].frequency = atoi(configurations[7]);
+		strcpy(favorites[favoritesSize].sectionAlias,configurations[1]);
+		strcpy(favorites[favoritesSize].name,configurations[2]);
+		strcpy(favorites[favoritesSize].alias,configurations[3]);
+		strcpy(favorites[favoritesSize].emulatorFolder,configurations[4]);
+		strcpy(favorites[favoritesSize].executable,configurations[5]);
+		favorites[favoritesSize].isConsoleApp = atoi(configurations[6]);
+		strcpy(favorites[favoritesSize].filesDirectory,configurations[7]);
+		favorites[favoritesSize].frequency = atoi(configurations[8]);
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';

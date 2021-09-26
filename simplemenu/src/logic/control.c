@@ -522,10 +522,9 @@ void markAsFavorite(struct Rom *rom) {
 				favorites[favoritesSize].alias[0]=' ';
 			}
 			if (strlen(CURRENT_SECTION.fantasyName)>0) {
-				strcpy(favorites[favoritesSize].section,CURRENT_SECTION.fantasyName);
-			} else {
-				strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
+				strcpy(favorites[favoritesSize].sectionAlias,CURRENT_SECTION.fantasyName);
 			}
+			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			loadRomPreferences(rom);
 			strcpy(favorites[favoritesSize].emulatorFolder,CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir]);
 			strcpy(favorites[favoritesSize].executable,CURRENT_SECTION.executables[rom->preferences.emulator]);
