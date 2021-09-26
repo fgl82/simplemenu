@@ -89,7 +89,6 @@ void initialSetup(int w, int h) {
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-	printf("%d\n",OCValue);
 #ifndef TARGET_OD_BETA
 	logMessage("INFO","initialSetup","Setting CPU to base");
 	setCPU(currentCPU);
@@ -221,8 +220,6 @@ void processEvents() {
 			}
 //			previousState = currentState;
 		} else if (alternateControls&&event.type==getKeyUp()) {
-			printf("Current: %d\n", currentState);
-			printf("Previous: %d\n", previousState);
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SELECTING_EMULATOR) {
 					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
@@ -296,7 +293,6 @@ void processEvents() {
 		start_time=SDL_GetTicks();
 		processEvents();
 		if(refreshRequest) {
-//			printf("YES!!!\n");
 			updateScreen(CURRENT_SECTION.currentGameNode);
 			refreshRequest=0;
 			refreshScreen();

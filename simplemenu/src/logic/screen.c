@@ -1273,7 +1273,9 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,problematicGray);
 			selected=i;
 		} else {
-			selected=0;
+			if(!interactive) {
+				selected=0;
+			}
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
@@ -1372,8 +1374,6 @@ void setupAppearanceSettings() {
 }
 
 void setupSystemSettings() {
-	printf("%d\n",1);
-
 	options[0]="Sound ";
 	hints[0] = "PRESS A TO LAUNCH ALSAMIXER";
 
@@ -1382,46 +1382,58 @@ void setupSystemSettings() {
 	sprintf(values[1],"%d",brightnessValue);
 	hints[1] = "ADJUST BRIGHTNESS LEVEL";
 
-	options[2]="Screen timeout ";
+	options[2]="Sharpness ";
 	values[2]=malloc(100);
-	if (timeoutValue>0&&hdmiEnabled==0) {
-		sprintf(values[2],"%d",timeoutValue);
+	char *temp = getenv("SDL_VIDEO_KMSDRM_SCALING_SHARPNESS");
+	if (temp!=NULL) {
+		sprintf(values[2],"%s",temp);
+		sharpnessValue=atoi(values[2]);
 	} else {
-		sprintf(values[2],"%s","always on");
+		sharpnessValue=0;
+		values[2]="0";
 	}
-	hints[2] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+	hints[2] = "ADJUST SHARPNESS LEVEL";
 
-	options[3]="Overclocking level";
+	options[3]="Screen timeout ";
+	values[3]=malloc(100);
+	if (timeoutValue>0&&hdmiEnabled==0) {
+		sprintf(values[3],"%d",timeoutValue);
+	} else {
+		sprintf(values[3],"%s","always on");
+	}
+	hints[3] = "SECONDS UNTIL THE SCREEN TURNS OFF";
+
+	options[4]="Overclocking level";
 
 #if defined TARGET_OD_BETA
 	if (OCValue==OC_OC_LOW) {
-		values[3]="low";
+		values[4]="low";
 	} else if (OCValue==OC_OC_HIGH){
-		values[3]="high";
+		values[4]="high";
 	}
 #else
-	values[3]="not available";
+	values[4]="not available";
 #endif
 
-	hints[3] = "USED IN THE ROM MENU";
+	hints[4] = "AFFECTS THE ROM MENU OC SETTING";
 
-	options[4]="HDMI ";
+	options[5]="HDMI ";
 #if defined TARGET_RFW || defined TARGET_OD_BETA
-	values[4] = " \0";
+	values[5] = " \0";
 #else
 	if (hdmiChanged==1) {
-		values[4] = "enabled";
+		values[5] = "enabled";
 	} else {
-		values[4] = "disabled";
+		values[5] = "disabled";
 	}
 #endif
 
 #if defined TARGET_RFW
-	hints[4] = "PRESS A TO ENABLE USB";
+	hints[5] = "PRESS A TO ENABLE USB";
 #elif defined TARGET_OD_BETA
-	hints[4] = "PRESS A TO REBOOT AND ENABLE HDMI";
+	hints[5] = "PRESS A TO REBOOT AND ENABLE HDMI";
 #else
-	hints[4] = "ENABLE OR DISABLE HDMI";
+	hints[5] = "ENABLE OR DISABLE HDMI";
 #endif
 }
 

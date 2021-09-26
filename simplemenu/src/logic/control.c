@@ -722,17 +722,18 @@ void performAppearanceSettingsChoosingAction() {
 void performSystemSettingsChoosingAction() {
 	VOLUME_OPTION=0;
 	BRIGHTNESS_OPTION=1;
-	SCREEN_TIMEOUT_OPTION=2;
-	OC_OPTION=3;
-	USB_OPTION=4;
+	SHARPNESS_OPTION=2;
+	SCREEN_TIMEOUT_OPTION=3;
+	OC_OPTION=4;
+	USB_OPTION=5;
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=4;
+			chosenSetting=5;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<4) {
+		if(chosenSetting<5) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -765,6 +766,19 @@ void performSystemSettingsChoosingAction() {
 				}
 			}
 			setBrightness(brightnessValue);
+		} else if (chosenSetting==SHARPNESS_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (sharpnessValue>0) {
+					sharpnessValue-=1;
+				}
+			} else {
+				if (sharpnessValue<15) {
+					sharpnessValue+=1;
+				}
+			}
+			char *temp = malloc(1000);
+			sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%d",sharpnessValue);
+			SDL_putenv(temp);
 		} else if (chosenSetting==OC_OPTION) {
 #if defined TARGET_OD_BETA
 			if (OCValue==OC_OC_LOW) {

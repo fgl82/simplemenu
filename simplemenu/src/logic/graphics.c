@@ -307,7 +307,6 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 		Uint32 colorkey = surface->format->colorkey;
 		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
 	}
-	printf("asdasdas%d\n",sized->h);
 	if(sized->h==(SCREEN_HEIGHT-1)) {
 		sized->h+=1;
 	}
