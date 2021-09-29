@@ -408,7 +408,11 @@ void drawTextOnHeader() {
 		break;
 	}
 	if (currentSectionNumber==favoritesSectionNumber) {
-		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		if (favorites[CURRENT_GAME_NUMBER].sectionAlias[0]!=' ') {
+			genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		} else {
+			genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		}
 	} else {
 		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, strlen(menuSections[currentSectionNumber].fantasyName)>1?menuSections[currentSectionNumber].fantasyName:menuSections[currentSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 	}
