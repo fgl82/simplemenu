@@ -207,10 +207,10 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	saveLastState();
 	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 		logMessage("INFO","launchAutoStartGame","Executing");
-		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp);
+		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp, rom->preferences.frequency);
 	} else {
 		logMessage("INFO","launchAutoStartGame","Executing 2");
-		executeCommand(emuDir, emuExec, rom->name, rom->isConsoleApp);
+		executeCommand(emuDir, emuExec, rom->name, rom->isConsoleApp, rom->preferences.frequency);
 	}
 }
 
@@ -233,7 +233,7 @@ void launchGame(struct Rom *rom) {
 			generateError(error,0);
 			return;
 		}
-		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp);
+		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp, favorite.frequency);
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
 		if (isLaunchAtBoot(rom->name)) {
@@ -253,9 +253,9 @@ void launchGame(struct Rom *rom) {
 			return;
 		}
 		if (CURRENT_SECTION.onlyFileNamesNoExtension) {
-			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name), rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],getGameName(rom->name), rom->isConsoleApp, rom->preferences.frequency);
 		} else {
-			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],rom->name, rom->isConsoleApp);
+			executeCommand(CURRENT_SECTION.emulatorDirectories[rom->preferences.emulatorDir], CURRENT_SECTION.executables[rom->preferences.emulator],rom->name, rom->isConsoleApp, rom->preferences.frequency);
 		}
 	}
 }
@@ -263,10 +263,10 @@ void launchGame(struct Rom *rom) {
 void launchEmulator(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
-		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp);
+		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp, favorite.frequency);
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
-		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*", 0);
+		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*", 0, rom->preferences.frequency);
 	}
 }
 
@@ -460,7 +460,9 @@ void removeFavorite() {
 			strcpy(favorites[i].filesDirectory,favorites[i+1].filesDirectory);
 			strcpy(favorites[i].name,favorites[i+1].name);
 			strcpy(favorites[i].alias,favorites[i+1].alias);
+			strcpy(favorites[i].sectionAlias,favorites[i+1].sectionAlias);
 			favorites[i].isConsoleApp = favorites[i+1].isConsoleApp;
+			favorites[i].frequency = favorites[i+1].frequency;
 		}
 		strcpy(favorites[favoritesSize-1].section,"\0");
 		strcpy(favorites[favoritesSize-1].emulatorFolder,"\0");
@@ -468,6 +470,8 @@ void removeFavorite() {
 		strcpy(favorites[favoritesSize-1].filesDirectory,"\0");
 		strcpy(favorites[favoritesSize-1].name,"\0");
 		strcpy(favorites[favoritesSize-1].alias,"\0");
+		strcpy(favorites[favoritesSize-1].sectionAlias,"\0");
+		favorites[favoritesSize-1].frequency = OC_NO;
 		favorites[favoritesSize-1].isConsoleApp = 0;
 		favoritesSize--;
 		if (CURRENT_GAME_NUMBER==favoritesSize) {
@@ -521,8 +525,10 @@ void markAsFavorite(struct Rom *rom) {
 			} else {
 				favorites[favoritesSize].alias[0]=' ';
 			}
-			if (strlen(CURRENT_SECTION.fantasyName)>0) {
+			if (strlen(CURRENT_SECTION.fantasyName)>1) {
 				strcpy(favorites[favoritesSize].sectionAlias,CURRENT_SECTION.fantasyName);
+			} else {
+				favorites[favoritesSize].sectionAlias[0]=' ';
 			}
 			strcpy(favorites[favoritesSize].section,CURRENT_SECTION.sectionName);
 			loadRomPreferences(rom);
@@ -777,10 +783,10 @@ void performSystemSettingsChoosingAction() {
 				}
 			}
 			char *temp = malloc(1000);
-			sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%d",sharpnessValue);
+			sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%i",sharpnessValue);
 			SDL_putenv(temp);
 		} else if (chosenSetting==OC_OPTION) {
-#if defined TARGET_OD_BETA
+#if defined TARGET_OD_BETA || defined TARGET_PC
 			if (OCValue==OC_OC_LOW) {
 				OCValue=OC_OC_HIGH;
 			} else {
@@ -793,11 +799,11 @@ void performSystemSettingsChoosingAction() {
 #endif
 	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
 		if (keys[BTN_A]) {
-			executeCommand ("/usr/bin", "alsamixer", "#", 1);
+			executeCommand ("/usr/bin", "alsamixer", "#", 1, OC_NO);
 		}
 	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 #if defined TARGET_RFW
-		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0);
+		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0, OC_NO);
 		hotKeyPressed=0;
 #elif defined TARGET_OD_BETA
 		selectedShutDownOption=1;
@@ -996,7 +1002,7 @@ void performChoosingAction() {
 		}
 	} else if (keys[BTN_LEFT]) {
 		if(chosenChoosingOption==0) {
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OCValue;
 			} else {
@@ -1025,7 +1031,7 @@ void performChoosingAction() {
 		}
 	} else 	if (keys[BTN_RIGHT]) {
 		if(chosenChoosingOption==0) {
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC
 			if (rom->preferences.frequency==OC_NO) {
 				rom->preferences.frequency=OCValue;
 			} else {

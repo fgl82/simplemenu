@@ -72,11 +72,20 @@ void drawPictureTextOnScreen(char *buf) {
 	int h = 0;
 	TTF_SizeText(font, buf, NULL, &h);
 	char *temp = malloc(strlen(buf)+2);
-	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_LOW||CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_HIGH) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
+	if(currentSectionNumber!=favoritesSectionNumber) {
+		if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_LOW||CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_HIGH) {
+			strcpy(temp,"+");
+			strcat(temp,buf);
+		} else {
+			strcpy(temp,buf);
+		}
 	} else {
-		strcpy(temp,buf);
+		if (favorites[CURRENT_GAME_NUMBER].frequency == OC_OC_LOW||favorites[CURRENT_GAME_NUMBER].frequency == OC_OC_HIGH) {
+			strcpy(temp,"+");
+			strcat(temp,buf);
+		} else {
+			strcpy(temp,buf);
+		}
 	}
 	if(!favoritesSectionSelected) {
 		if (colorfulFullscreenMenu) {
@@ -208,40 +217,8 @@ void drawShadedGameNameOnScreen(char *buf, int position) {
 	free(temp);
 }
 
-void drawShadedGameNameOnScreenLeft(char *buf, int position) {
-	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_OC_LOW || currentCPU == OC_OC_HIGH) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
-	} else {
-		strcpy(temp,buf);
-	}
-	drawShadedTextOnScreen(font, outlineFont, 3, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignLeft, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	free(temp);
-}
-
 void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
 	drawTextOnScreen(font, outlineFont, 3, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft);
-}
-
-void drawShadedGameNameOnScreenCenter(char *buf, int position) {
-	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_OC_LOW  || currentCPU == OC_OC_HIGH) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
-	} else {
-		strcpy(temp,buf);
-	}
-	int screenDivisions=(SCREEN_RATIO*5)/1.33;
-	int centerRomList = (SCREEN_WIDTH-2*(SCREEN_WIDTH/screenDivisions))/2;
-	drawShadedTextOnScreen(font, outlineFont, centerRomList, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	free(temp);
-}
-
-void drawNonShadedGameNameOnScreenCenter(char *buf, int position) {
-	int screenDivisions=(SCREEN_RATIO*5)/1.33;
-	int centerRomList = (SCREEN_WIDTH-2*(SCREEN_WIDTH/screenDivisions))/2;
-	drawTextOnScreen(font, outlineFont, centerRomList, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter);
 }
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
@@ -791,7 +768,7 @@ void showRomPreferences() {
 	//Frequency option text
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
 	//Frequency option value
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_LOW || CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_HIGH) {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft);
 	} else {
@@ -1137,11 +1114,20 @@ void drawGameList() {
 		buf=strdup(nameWithoutExtension);
 
 		char *temp = malloc(strlen(buf)+2);
-		if (rom->preferences.frequency == OC_OC_HIGH||rom->preferences.frequency == OC_OC_LOW) {
-			strcpy(temp,"+");
-			strcat(temp,buf);
+		if(currentSectionNumber!=favoritesSectionNumber) {
+			if (rom->preferences.frequency == OC_OC_HIGH||rom->preferences.frequency == OC_OC_LOW) {
+				strcpy(temp,"+");
+				strcat(temp,buf);
+			} else {
+				strcpy(temp,buf);
+			}
 		} else {
-			strcpy(temp,buf);
+			if (favorites[i].frequency == OC_OC_HIGH||favorites[i].frequency == OC_OC_LOW) {
+				strcpy(temp,"+");
+				strcat(temp,buf);
+			} else {
+				strcpy(temp,buf);
+			}
 		}
 
 		if (i==menuSections[currentSectionNumber].currentGameInPage) {
@@ -1405,7 +1391,7 @@ void setupSystemSettings() {
 
 	options[4]="Overclocking level";
 
-#if defined TARGET_OD_BETA
+#if defined TARGET_OD_BETA || defined TARGET_PC
 	if (OCValue==OC_OC_LOW) {
 		values[4]="low";
 	} else if (OCValue==OC_OC_HIGH){

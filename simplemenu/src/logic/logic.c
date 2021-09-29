@@ -273,8 +273,7 @@ void resetFrameBuffer1() {
 	}
 }
 
-void executeCommand(char *emulatorFolder, char *executable,
-		char *fileToBeExecutedWithFullPath, int consoleApp) {
+void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecutedWithFullPath, int consoleApp, int frequency) {
 	FILE *fp;
 	char *exec = malloc(strlen(executable) + 5000);
 	strcpy(exec, executable);
@@ -309,11 +308,12 @@ void executeCommand(char *emulatorFolder, char *executable,
 	logMessage("INFO", "executeCommand", "Launching Game");
 
 	//		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
-	if (currentSectionNumber == favoritesSectionNumber) {
-		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
-	} else {
-		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
-	}
+//	if (currentSectionNumber == favoritesSectionNumber) {
+//		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
+//	} else {
+		setCPU(frequency);
+		printf("%d\n",frequency);
+//	}
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):

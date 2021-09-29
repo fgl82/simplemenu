@@ -745,7 +745,11 @@ void saveFavorites() {
 				fprintf(fp,"\n");
 			}
 			fprintf(fp,"%s;",favorite.section);
-			fprintf(fp,"%s;",favorite.sectionAlias);
+			if(favorite.sectionAlias[0]=='\0') {
+				fprintf(fp," ;");
+			} else {
+				fprintf(fp,"%s;",favorite.sectionAlias);
+			}
 			fprintf(fp,"%s;",favorite.name);
 			if(favorite.alias[0]=='\0') {
 				fprintf(fp," ;");
@@ -776,7 +780,7 @@ void loadFavorites() {
 		generateError("FAVORITES FILE NOT FOUND",1);
 		return;
 	}
-	char *configurations[8];
+	char *configurations[10];
 	char *ptr;
 	favoritesSize=0;
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -787,15 +791,25 @@ void loadFavorites() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
+		printf("%s\n", "PAPA1");
 		strcpy(favorites[favoritesSize].section,configurations[0]);
+		printf("%s\n", "PAPA2");
 		strcpy(favorites[favoritesSize].sectionAlias,configurations[1]);
+		printf("%s\n", "PAPA3");
 		strcpy(favorites[favoritesSize].name,configurations[2]);
+		printf("%s\n", "PAPA4");
 		strcpy(favorites[favoritesSize].alias,configurations[3]);
+		printf("%s\n", "PAPA5");
 		strcpy(favorites[favoritesSize].emulatorFolder,configurations[4]);
+		printf("%s\n", "PAPA6");
 		strcpy(favorites[favoritesSize].executable,configurations[5]);
+		printf("%s\n", "PAPA7");
 		favorites[favoritesSize].isConsoleApp = atoi(configurations[6]);
+		printf("%s\n", "PAPA8");
 		strcpy(favorites[favoritesSize].filesDirectory,configurations[7]);
+		printf("%s\n", "PAPA9");
 		favorites[favoritesSize].frequency = atoi(configurations[8]);
+		printf("%s\n", "PAPA10");
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';

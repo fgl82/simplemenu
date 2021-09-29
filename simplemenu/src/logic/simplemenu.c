@@ -78,7 +78,7 @@ void initialSetup(int w, int h) {
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
-	OCValue = OC_NO;
+	OCValue = OC_OC_LOW;
 	loadConfig();
 	initializeDisplay(w,h);
 	freeFonts();
@@ -172,8 +172,6 @@ void processEvents() {
 			resetScreenOffTimer();
 			if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
 				refreshRequest=1;
-//				updateScreen(CURRENT_SECTION.currentGameNode);
-//				refreshScreen();
 			}
 		} else if (event.type==getKeyUp()&&!alternateControls) {
 			if (currentState==BROWSING_GAME_LIST && previousState != SELECTING_EMULATOR ) {
@@ -196,8 +194,6 @@ void processEvents() {
 					aKeyComboWasPressed=0;
 					if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
 						refreshRequest=1;
-//						updateScreen(CURRENT_SECTION.currentGameNode);
-//						refreshScreen();
 					}
 				}
 			} else if (currentState==SELECTING_SECTION) {
@@ -218,7 +214,6 @@ void processEvents() {
 					}
 				}
 			}
-//			previousState = currentState;
 		} else if (alternateControls&&event.type==getKeyUp()) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SELECTING_EMULATOR) {
@@ -244,7 +239,6 @@ void processEvents() {
 					refreshRequest=1;
 				}
 			}
-//			previousState = currentState;
 		}
 		if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
 			loadGameList(0);
