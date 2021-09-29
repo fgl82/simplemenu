@@ -785,6 +785,7 @@ void performSystemSettingsChoosingAction() {
 			char *temp = malloc(1000);
 			sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%i",sharpnessValue);
 			SDL_putenv(temp);
+			screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 		} else if (chosenSetting==OC_OPTION) {
 #if defined TARGET_OD_BETA || defined TARGET_PC
 			if (OCValue==OC_OC_LOW) {
