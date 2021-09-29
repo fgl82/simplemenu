@@ -725,14 +725,7 @@ void loadRomPreferences(struct Rom *rom) {
 	}
 	rom->preferences.emulatorDir=atoifgl(configurations[0]);
 	rom->preferences.emulator=atoifgl(configurations[1]);
-	int freq = atoifgl(configurations[2]);
-	if (freq!=OC_NO) {
-		freq=OCValue;
-		if (freq!=OCValue) {
-			saveRomPreferences(rom);
-		}
-	}
-	rom->preferences.frequency=freq;
+	rom->preferences.frequency = atoifgl(configurations[2]);
 }
 
 void saveFavorites() {

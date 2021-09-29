@@ -78,8 +78,8 @@ void initialSetup(int w, int h) {
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
-	OCValue = OC_OC_LOW;
 	loadConfig();
+	OCValue = OC_OC_LOW;
 	initializeDisplay(w,h);
 	freeFonts();
 	initializeFonts();

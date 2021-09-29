@@ -205,6 +205,18 @@ void launchAutoStartGame(struct Rom *rom, char *emuDir, char *emuExec) {
 	}
 	logMessage("INFO","launchAutoStartGame","Saving last state");
 	saveLastState();
+	int freq = rom->preferences.frequency;
+	//if it's not the base clock freq
+	if (freq!=OC_NO) {
+		//then it's overclocked
+		//if it's not the configured level of OC
+		if (freq!=OCValue) {
+			//Change the freq
+			//Save the rom prefs
+			rom->preferences.frequency = OCValue;
+			saveRomPreferences(rom);
+		}
+	}
 	if (CURRENT_SECTION.onlyFileNamesNoExtension) {
 		logMessage("INFO","launchAutoStartGame","Executing");
 		executeCommand(emuDir, emuExec, getGameName(rom->name), rom->isConsoleApp, rom->preferences.frequency);
@@ -233,9 +245,31 @@ void launchGame(struct Rom *rom) {
 			generateError(error,0);
 			return;
 		}
+		int freq = favorite.frequency;
+		//if it's not the base clock freq
+		if (freq!=OC_NO) {
+			//then it's overclocked
+			//if it's not the configured level of OC
+			if (freq!=OCValue) {
+				//Change the freq to curent OC
+				favorite.frequency = OCValue;
+			}
+		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,favorite.name, favorite.isConsoleApp, favorite.frequency);
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
+		int freq = rom->preferences.frequency;
+		//if it's not the base clock freq
+		if (freq!=OC_NO) {
+			//then it's overclocked
+			//if it's not the configured level of OC
+			if (freq!=OCValue) {
+				//Change the freq
+				//Save the rom prefs
+				rom->preferences.frequency = OCValue;
+				saveRomPreferences(rom);
+			}
+		}
 		if (isLaunchAtBoot(rom->name)) {
 			setRunningFlag();
 		}
@@ -263,9 +297,31 @@ void launchGame(struct Rom *rom) {
 void launchEmulator(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
+		int freq = favorite.frequency;
+		//if it's not the base clock freq
+		if (freq!=OC_NO) {
+			//then it's overclocked
+			//if it's not the configured level of OC
+			if (freq!=OCValue) {
+				//Change the freq to curent OC
+				favorite.frequency = OCValue;
+			}
+		}
 		executeCommand(favorite.emulatorFolder,favorite.executable,"*", favorite.isConsoleApp, favorite.frequency);
 	} else if (rom->name!=NULL) {
 		loadRomPreferences(rom);
+		int freq = rom->preferences.frequency;
+		//if it's not the base clock freq
+		if (freq!=OC_NO) {
+			//then it's overclocked
+			//if it's not the configured level of OC
+			if (freq!=OCValue) {
+				//Change the freq
+				rom->preferences.frequency = OCValue;
+				//Save the rom prefs
+				saveRomPreferences(rom);
+			}
+		}
 		executeCommand(CURRENT_SECTION.emulatorDirectories[CURRENT_SECTION.currentGameNode->data->preferences.emulatorDir], CURRENT_SECTION.executables[CURRENT_SECTION.currentGameNode->data->preferences.emulator],"*", 0, rom->preferences.frequency);
 	}
 }
