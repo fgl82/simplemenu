@@ -106,7 +106,7 @@ void drawPictureTextOnScreen(char *buf) {
 void drawImgFallbackTextOnScreen(char *fallBackText) {
 	if(!footerVisibleInFullscreenMode) {
 		char *temp = malloc(strlen(fallBackText)+2);
-		if (currentCPU == OC_OC_HIGH || currentCPU == OC_OC_LOW) {
+		if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_HIGH || CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_LOW) {
 			strcpy(temp,"+");
 			strcat(temp,fallBackText);
 		} else {
@@ -168,7 +168,7 @@ void drawBatteryOnFooter(char *text) {
 }
 
 void drawCurrentSectionGroup(char *groupName, int textColor[]) {
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
 }
 
 void drawGameNameUnderPicture(char *buf, int x, int y, int maxWidth) {
