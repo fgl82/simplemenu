@@ -1,6 +1,4 @@
-//for soundcard
-
-#include <fcntl.h> //for battery
+#include <fcntl.h>
 #include <linux/soundcard.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -83,14 +81,10 @@ void clearTimer() {
 
 uint32_t suspend() {
 	if(timeoutValue!=0&&hdmiEnabled==0) {
-//		if (!isUSBMode) {
-			clearTimer();
-			oldCPU=currentCPU;
-			turnScreenOnOrOff(0);
-			isSuspended=1;
-//		} else {
-//			resetScreenOffTimer();
-//		}
+		clearTimer();
+		oldCPU=currentCPU;
+		turnScreenOnOrOff(0);
+		isSuspended=1;
 	}
 	return 0;
 };
@@ -153,7 +147,6 @@ int getBatteryLevel() {
 	fscanf(f, "%i", &charging);
 	fclose(f);
 
-//	total = (voltage_now-min_voltage)*100/ (max_voltage-min_voltage);
 	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
 	if (charging==1) {
 		return 6;
@@ -177,7 +170,6 @@ int getBatteryLevel() {
 	fscanf(f, "%i", &voltage_now);
 	fclose(f);
 
-//	total = ((voltage_now-min_voltage)*100)/(max_voltage-min_voltage);
 	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
 	if (charging==1) {
 		return 6;
@@ -201,9 +193,6 @@ int getBatteryLevel() {
 	fclose(f);
 
 	total = (voltage_now*6)/(max_voltage);
-//	if (total > 5 ) {
-//		return 5;
-//	}
 	return total;
 #endif
 }

@@ -24,16 +24,12 @@ int performAction(struct Node *node) {
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
 				logMessage("INFO","performAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//				resizeSectionBackground(&CURRENT_SECTION);
 				logMessage("INFO","performAction","Loading system picture");
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			logMessage("INFO","performAction","Loading game list");
 			if (currentSectionNumber!=favoritesSectionNumber) {
 				loadGameList(0);
-			} else {
-//				loadFavoritesSectionGameList();
 			}
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -53,7 +49,6 @@ int performAction(struct Node *node) {
 			currTime = localtime(&currRawtime);
 			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
-//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 1;
 		}
 	}
@@ -65,15 +60,6 @@ int performAction(struct Node *node) {
 			return(1);
 		}
 	}
-//	if (keys[BTN_START]&&isUSBMode) {
-//		hotKeyPressed=0;
-//		isUSBMode=0;
-//		int ret = system("./usb_mode_off.sh");
-//		if (ret==-1) {
-//			generateError("FATAL ERROR", 1);
-//		}
-//		return 0;
-//	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
@@ -142,7 +128,6 @@ int performAction(struct Node *node) {
 		}
 		if (currentState == BROWSING_GAME_LIST) {
 			if(keys[BTN_DOWN]) {
-//				currentState=(fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST);
 				hotKeyPressed=0;
 				int advanced = advanceSection(0);
 				if(advanced) {
@@ -151,7 +136,6 @@ int performAction(struct Node *node) {
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 						resizeSectionBackground(&CURRENT_SECTION);
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Advanced, loading game list");
 					loadGameList(0);
@@ -163,17 +147,14 @@ int performAction(struct Node *node) {
 				return 0;
 			}
 			if(keys[BTN_UP]) {
-//				currentState=fullscreenMode==1?SELECTING_SECTION:BROWSING_GAME_LIST;
 				hotKeyPressed=0;
 				int rewinded = rewindSection(0);
 				if(rewinded) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
 						logMessage("INFO","performAction","Loading system background");
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//						resizeSectionBackground(&CURRENT_SECTION);
 						logMessage("INFO","performAction","Loading system picture");
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Rewinded, loading game list");
 					loadGameList(0);
@@ -200,11 +181,6 @@ int performAction(struct Node *node) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				rewindSection(1);
-	//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-	//				resetPicModeHideLogoTimer();
-	//			} else if (!returnValue) {
-	//				currentState=BROWSING_GAME_LIST;
-	//			}
 			}
 		}
 	} else {
@@ -213,11 +189,6 @@ int performAction(struct Node *node) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				rewindSection(1);
-	//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-	//				resetPicModeHideLogoTimer();
-	//			} else if (!returnValue) {
-	//				currentState=BROWSING_GAME_LIST;
-	//			}
 			}
 		}
 	}
@@ -228,11 +199,6 @@ int performAction(struct Node *node) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				advanceSection(1);
-	//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-	//				resetPicModeHideLogoTimer();
-	//			}else if (!returnValue) {
-	//				currentState=BROWSING_GAME_LIST;
-	//			}
 			}
 			return 0;
 		}
@@ -242,11 +208,6 @@ int performAction(struct Node *node) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				advanceSection(1);
-	//			if(currentSectionNumber!=favoritesSectionNumber&&autoHideLogos&&returnValue) {
-	//				resetPicModeHideLogoTimer();
-	//			}else if (!returnValue) {
-	//				currentState=BROWSING_GAME_LIST;
-	//			}
 			}
 			return 0;
 		}
@@ -281,11 +242,7 @@ int performAction(struct Node *node) {
 			previousState=currentState;
 			currentState=SETTINGS_SCREEN;
 			themeChanged=activeTheme;
-//			currRawtime = time(NULL);
-//			currTime = localtime(&currRawtime);
-//			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
-//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_A]) {

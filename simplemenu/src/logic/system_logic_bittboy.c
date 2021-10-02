@@ -330,16 +330,12 @@ void clearTimer() {
 
 uint32_t suspend() {
 	if(timeoutValue!=0) {
-//		if (!isUSBMode) {
-			clearTimer();
-			backlightValue = getBacklight();
-			oldCPU=currentCPU;
-			setBacklight(0);
-			setCPU(OC_SLEEP);
-			isSuspended=1;
-//		} else {
-//			resetScreenOffTimer();
-//		}
+		clearTimer();
+		backlightValue = getBacklight();
+		oldCPU=currentCPU;
+		setBacklight(0);
+		setCPU(OC_SLEEP);
+		isSuspended=1;
 	}
 	return 0;
 };
@@ -393,15 +389,10 @@ int getBatteryLevel() {
 	fscanf(f, "%i", &voltage_now);
 	fclose(f);
 
-//	total = (voltage_now - min_voltage) * 6 / (max_voltage - min_voltage);
 	if (voltage_now > 4050) return 6;
 	if (voltage_now > 4000) return 5;
 	if (voltage_now > 3900) return 4;
 	if (voltage_now > 3800) return 3;
 	if (voltage_now > 3700) return 2;
 	if (voltage_now > 3520) return 1;
-//	if (total>5) {
-//		return 5;
-//	}
-//	return total;
 }

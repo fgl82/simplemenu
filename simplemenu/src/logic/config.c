@@ -104,18 +104,10 @@ void checkIfDefault() {
 	logMessage("INFO","checkIfDefault","Default state checked");
 }
 
-//void myGetLine(char * line, size_t len, FILE * fp) {
-//	__ssize_t result = getline(&line, &len, fp);
-//	if(result==-1) {
-//		logMessage("INFO", "myGetLine", "Huh?");
-//	}
-//}
-
 int isLaunchAtBoot(char *romName) {
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
-//	ssize_t read;
 	char pathToAutostartFilePlusFileName[300];
 	snprintf(pathToAutostartFilePlusFileName,sizeof(pathToAutostartFilePlusFileName),"%s/.simplemenu/rom_preferences/autostart.rom",home);
 
@@ -123,7 +115,6 @@ int isLaunchAtBoot(char *romName) {
 	if (fp==NULL) {
 		return 0;
 	}
-//	myGetLine(line, len, fp);
 	int i = getline(&line, &len, fp);
 	if (i==-1) {
 		logMessage("ERROR", "isLaunchAtBoot", "Error reading line");
@@ -191,27 +182,16 @@ struct AutostartRom *getLaunchAtBoot() {
 	if (fp==NULL) {
 		return NULL;
 	}
-//	fprintf(fp,"%s", rom->name);
-//	fprintf(fp,"%s", rom->directory);
-//	fprintf(fp,"%s", rom->alias);
-//	fprintf(fp,"%s", rom->isConsoleApp);
-//	fprintf(fp,"%s", rom->preferences.emulator);
-//	fprintf(fp,"%s", rom->preferences.emulatorDir);
-//	fprintf(fp,"%s", rom->preferences.frequenc
 	struct Rom *rom = malloc(sizeof(struct Rom));
-//	myGetLine(line, len, fp);
 	int i = getline(&line, &len, fp);
 	rom->name=strdup(line);
 
-//	myGetLine(line, len, fp);
 	i = getline(&line, &len, fp);
 	rom->directory=strdup(line);
 
-//	myGetLine(line, len, fp);
 	i = getline(&line, &len, fp);
 	rom->alias=strdup(line);
 
-//	myGetLine(line, len, fp);
 	i = getline(&line, &len, fp);
 	rom->isConsoleApp=atoifgl(line);
 
@@ -219,17 +199,14 @@ struct AutostartRom *getLaunchAtBoot() {
 	struct AutostartRom *autostartRom = malloc(sizeof(struct AutostartRom));
 	autostartRom->rom = rom;
 
-//	myGetLine(line, len, fp);
 	i = getline(&line, &len, fp);
 	autostartRom->emulatorDir = strdup(line);
 
-//	myGetLine(line, len, fp);
 	i = getline(&line, &len, fp);
 	if (i==-1) {
 		logMessage("ERROR", "getLaunchAtBoot", "Error reading line");
 	}
 	autostartRom->emulator = strdup(line);
-//	printf("%s%s%s%d\n", rom->name, rom->directory, rom->alias, rom->isConsoleApp);
 	fclose(fp);
 	return autostartRom;
 }
@@ -241,13 +218,10 @@ uint32_t hex2int(char *hex) {
 	int i=0;
 	while (*hexCopy) {
 		i++;
-		// get current character then increment
 		uint8_t byte = *hexCopy++;
-		// transform hex character to the 4bit equivalent number, using the ascii table indexes
 		if (byte >= '0' && byte <= '9') byte = byte - '0';
 		else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
 		else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;
-		// shift 4 to make space for new digit, and add the 4 bits of the new digit
 		val = (val << 4) | (byte & 0xF);
 	}
 	hexCopy-=i;
@@ -369,13 +343,10 @@ void loadTheme(char *theme) {
 		if(i==currentSectionNumber) {
 			logMessage("INFO","loadTheme","Loading system logo");
 			menuSections[i].systemLogoSurface = IMG_Load(menuSections[i].systemLogo);
-//			resizeSectionSystemLogo(&menuSections[i]);
 			logMessage("INFO","loadTheme","Loading system background");
 			menuSections[i].backgroundSurface = IMG_Load(menuSections[i].background);
-//			resizeSectionBackground(&menuSections[i]);
 			logMessage("INFO","loadTheme","Loading system picture");
 			menuSections[i].systemPictureSurface = IMG_Load(menuSections[i].systemPicture);
-//			resizeSectionSystemPicture(&menuSections[i]);
 		}
 
 		setThemeResourceValueInSection (themeConfig, menuSections[i].sectionName, "system", menuSections[i].systemPicture);
@@ -588,14 +559,12 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToConfigFiles[5000];
 	char pathToAppFiles[5000];
 	char pathToGameFiles[5000];
-//	char pathToThemeFiles[5000];
 	char pathToTempFiles[5000];
 	char pathToSectionGroupsFiles[5000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
 	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
-//	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%s/.simplemenu/themes",home);
 	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%s/.simplemenu/tmp",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
@@ -619,13 +588,6 @@ void createConfigFilesInHomeIfTheyDontExist() {
 		if (ret==-1) {
 			generateError("FATAL ERROR", 1);
 		}
-//		char copyThemesCommand[5000];
-//		mkdir(pathToThemeFiles,0700);
-//		snprintf(copyThemesCommand,sizeof(copyThemesCommand),"cp -r themes %s/.simplemenu",home);
-//		ret = system(copyThemesCommand);
-//		if (ret==-1) {
-//			generateError("FATAL ERROR", 1);
-//		}
 		char copySectionGroupsCommand[5000];
 		mkdir(pathToSectionGroupsFiles,0700);
 		snprintf(copySectionGroupsCommand,sizeof(copySectionGroupsCommand),"cp -r section_groups %s/.simplemenu",home);
@@ -711,7 +673,6 @@ void loadRomPreferences(struct Rom *rom) {
 	}
 	char *configurations[4];
 	char *ptr;
-//	myGetLine(line, len, fp);
 	int getLineResult = getline(&line, &len, fp);
 	if (getLineResult==-1) {
 		logMessage("ERROR", "loadRomPreferences", "Error reading line");
@@ -790,25 +751,15 @@ void loadFavorites() {
 			ptr = strtok(NULL, ";");
 			i++;
 		}
-		printf("%s\n", "PAPA1");
 		strcpy(favorites[favoritesSize].section,configurations[0]);
-		printf("%s\n", "PAPA2");
 		strcpy(favorites[favoritesSize].sectionAlias,configurations[1]);
-		printf("%s\n", "PAPA3");
 		strcpy(favorites[favoritesSize].name,configurations[2]);
-		printf("%s\n", "PAPA4");
 		strcpy(favorites[favoritesSize].alias,configurations[3]);
-		printf("%s\n", "PAPA5");
 		strcpy(favorites[favoritesSize].emulatorFolder,configurations[4]);
-		printf("%s\n", "PAPA6");
 		strcpy(favorites[favoritesSize].executable,configurations[5]);
-		printf("%s\n", "PAPA7");
 		favorites[favoritesSize].isConsoleApp = atoi(configurations[6]);
-		printf("%s\n", "PAPA8");
 		strcpy(favorites[favoritesSize].filesDirectory,configurations[7]);
-		printf("%s\n", "PAPA9");
 		favorites[favoritesSize].frequency = atoi(configurations[8]);
-		printf("%s\n", "PAPA10");
 		int len = strlen(favorites[favoritesSize].filesDirectory);
 		if (favorites[favoritesSize].filesDirectory[len-1]=='\n') {
 			favorites[favoritesSize].filesDirectory[len-1]='\0';
@@ -996,18 +947,6 @@ void loadSectionGroups() {
 		strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
 		logMessage("INFO","loadSectionGroups","Loading group background");
 		sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
-
-//		if (sectionGroups[sectionGroupCounter].groupBackgroundSurface==NULL) {
-//			strcpy(temp3,sectionGroupPath);
-//			strcat(temp3,"/");
-//			strcat(temp3,temp1);
-//			strcat(temp3,".png");
-//			strcpy(sectionGroups[sectionGroupCounter].groupBackground, temp3);
-//			sectionGroups[sectionGroupCounter].groupBackgroundSurface=IMG_Load(sectionGroups[sectionGroupCounter].groupBackground);
-//		}
-
-//		resizeGroupBackground(&sectionGroups[sectionGroupCounter]);
-
 		char *temp2 = toUpper(temp1);
 		strcpy(sectionGroups[sectionGroupCounter].groupName, temp2);
 		free(temp);
@@ -1057,8 +996,6 @@ int loadSections(char *file) {
 		char *sectionName = sectionNames[menuSectionCounter];
 		logMessage("INFO","loadSections",sectionName);
 		strcpy(menuSections[menuSectionCounter].sectionName, sectionName);
-
-		//READ EXECS
 		int execCounter=0;
 		value = ini_get(config, sectionName, "execs");
 		char *value2 = malloc(3000);
@@ -1138,13 +1075,10 @@ int loadSections(char *file) {
 		if (menuSectionCounter==currentSectionNumber) {
 			logMessage("INFO","loadSections","Loading system logo");
 			menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
-//			resizeSectionSystemLogo(&menuSections[menuSectionCounter]);
 			logMessage("INFO","loadSections","Loading system background");
 			menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
-//			resizeSectionBackground(&menuSections[menuSectionCounter]);
 			logMessage("INFO","loadSections","Loading system picture");
 			menuSections[menuSectionCounter].systemPictureSurface = IMG_Load(menuSections[menuSectionCounter].systemPicture);
-//			resizeSectionSystemPicture(&menuSections[menuSectionCounter]);
 		}
 
 		logMessage("INFO","loadSections","Set");

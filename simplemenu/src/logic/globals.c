@@ -33,7 +33,6 @@ int previousState;
 int loading;
 int isPicModeMenuHidden;
 int isSuspended;
-//int isUSBMode;
 int activeGroup;
 int beforeTryingToSwitchGroup;
 int chosenSetting;

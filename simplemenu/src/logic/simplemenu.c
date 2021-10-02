@@ -36,7 +36,6 @@ void initializeGlobals() {
 	isPicModeMenuHidden=1;
 	footerVisibleInFullscreenMode=1;
 	menuVisibleInFullscreenMode=1;
-//	autoHideLogos=0;
 	stripGames=1;
 	srand(time(0));
 }
@@ -181,9 +180,7 @@ void processEvents() {
 					}
 					hotKeyPressed=0;
 					if(fullscreenMode) {
-						if(currentState==SELECTING_SECTION) {
-	//						hideFullScreenModeMenu();
-						} else if (CURRENT_SECTION.alphabeticalPaging) {
+						if (CURRENT_SECTION.alphabeticalPaging) {
 							resetPicModeHideMenuTimer();
 						}
 					}

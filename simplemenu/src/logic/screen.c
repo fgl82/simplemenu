@@ -223,15 +223,7 @@ void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
 	char *temp = malloc(strlen(buf)+2);
-//	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_UC) {
-//		strcpy(temp,"-");
-//		strcat(temp,buf);
-//	} else 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC) {
-//		strcpy(temp,"+");
-//		strcat(temp,buf);
-//	} else {
-		strcpy(temp,buf);
-//	}
+	strcpy(temp,buf);
 	int hAlign = 0;
 	if (gameListAlignment==0) {
 		hAlign = HAlignLeft;
@@ -264,25 +256,11 @@ void drawNonShadedGameNameOnScreen(char *buf, int position) {
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	char *temp = malloc(strlen(buf)+2);
-//	if (currentCPU == OC_UC) {
-//		strcpy(temp,"-");
-//		strcat(temp,buf);
-//	} else 	if (currentCPU == OC_OC) {
-//		strcpy(temp,"+");
-//		strcat(temp,buf);
-//	} else {
-		strcpy(temp,buf);
-//	}
+	strcpy(temp,buf);
 	int color[3];
-//	if (colorfulFullscreenMenu) {
-//		color[0] = CURRENT_SECTION.fullscreenShadedMenuItemsColor[0];
-//		color[1] = CURRENT_SECTION.fullscreenShadedMenuItemsColor[1];
-//		color[2] = CURRENT_SECTION.fullscreenShadedMenuItemsColor[2];
-//	} else {
-		color[0] = 255;
-		color[1] = 255;
-		color[2] = 0;
-//	}
+	color[0] = 255;
+	color[1] = 255;
+	color[2] = 0;
 	drawTextOnScreen(font, outlineFont, 5, position, temp, color, VAlignMiddle | HAlignLeft);
 	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
 	free(temp);
@@ -342,7 +320,6 @@ void displayImageOnMenuScreen(char *fileName) {
 			heartX = SCREEN_WIDTH/2;
 			heartY = SCREEN_HEIGHT/2;
 		}
-//		displayHeart(heartX, heartY);
 		if (showArt) {
 			drawImage(screen, screenshot, artX+(artWidth/2)-w/2, artY, 0, 0, w, h, 0, smoothing);
 		}
@@ -366,7 +343,6 @@ void displayImageOnMenuScreen(char *fileName) {
 			heartX = SCREEN_WIDTH/2;
 			heartY = SCREEN_HEIGHT/2;
 		}
-//		int heartY = artY+artHeight/2;
 		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0 && showArt) {
 			char temp[500];
@@ -484,8 +460,6 @@ void freeFonts() {
 	BIGFont = NULL;
 	TTF_CloseFont(outlineCustomHeaderFont);
 	outlineCustomHeaderFont = NULL;
-	//	TTF_CloseFont(outlineFont);
-	//	outlineFont = NULL;
 	TTF_CloseFont(outlineMiniFont);
 	outlineMiniFont = NULL;
 	TTF_CloseFont(outlineHeaderFont);
@@ -569,7 +543,6 @@ void showErrorMessage(char *errorMessage) {
 	drawRectangleToScreen(width, height, SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2-height/2, filling);
 	drawError(errorMessage, textColor);
 	itsStoppedBecauseOfAnError=0;
-//	free(errorMessage);
 }
 
 int letterExistsInGameList(char *letter, char* letters) {
@@ -815,7 +788,6 @@ void showConsole() {
 	if (CURRENT_SECTION.systemLogoSurface!=NULL) {
 		displaySurface(CURRENT_SECTION.systemLogoSurface, 0, 0);
 		char *gameCount=malloc(100);
-//		snprintf(gameCount,100,"%d GAMES AVAILABLE",theSectionHasGames(&CURRENT_SECTION));
 		snprintf(gameCount,100,gameCountText,CURRENT_SECTION.gameCount);
 
 		int alignment = 0;
@@ -1612,8 +1584,6 @@ uint32_t countDownToShutdown() {
 		return 0;
 	}
 	refreshRequest=1;
-//	updateScreen(NULL);
-//	refreshScreen();
 	return 1000;
 }
 
@@ -1664,10 +1634,8 @@ uint32_t hidePicModeLogo() {
 	if (CURRENT_SECTION.backgroundSurface==NULL) {
 		logMessage("INFO","screen","Loading system background");
 		CURRENT_SECTION.backgroundSurface = loadImage(CURRENT_SECTION.background);
-//		resizeSectionBackground(&CURRENT_SECTION);
 		logMessage("INFO","screen","Loading system picture");
 		CURRENT_SECTION.systemPictureSurface = loadImage(CURRENT_SECTION.systemPicture);
-//		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
 	currentState=BROWSING_GAME_LIST_AFTER_TIMER;
 	refreshRequest=1;

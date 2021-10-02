@@ -100,7 +100,6 @@ int _shrinkSurfaceRGBA(SDL_Surface * src, SDL_Surface * dst, int factorx, int fa
 	* Scan destination
 	*/
 	sp = (tColorRGBA *) src->pixels;
-//	int sgap = src->pitch - src->w * 4;
 
 	dp = (tColorRGBA *) dst->pixels;
 	dgap = dst->pitch - dst->w * 4;
@@ -186,7 +185,6 @@ int _shrinkSurfaceY(SDL_Surface * src, SDL_Surface * dst, int factorx, int facto
 	* Scan destination
 	*/
 	sp = (Uint8 *) src->pixels;
-//	sgap = src->pitch - src->w;
 
 	dp = (Uint8 *) dst->pixels;
 	dgap = dst->pitch - dst->w;
@@ -718,8 +716,7 @@ void transformSurfaceY(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, int
 	yd = ((src->h - dst->h) << 15);
 	ax = (cx << 16) - (icos * cx);
 	ay = (cy << 16) - (isin * cx);
-//	sw = src->w - 1;
-//	sh = src->h - 1;
+
 	pc = (tColorY*) dst->pixels;
 	gap = dst->pitch - dst->w;
 	/*

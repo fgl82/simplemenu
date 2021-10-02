@@ -46,11 +46,6 @@ int calculateProportionalSizeOrDistance1(int number) {
 	if(SCREEN_RATIO>=1.33&&SCREEN_RATIO<=1.34)
 		return ((float)SCREEN_HEIGHT*(float)number)/240;
 	else {
-//		int result = (((SCREEN_HEIGHT-(SCREEN_HEIGHT*60/240))*number)/180);
-//		printf("FGL: %d\n", result);
-//		if (result==476) {
-//			result=480;
-//		}
 		return number;
 	}
 }
@@ -250,11 +245,8 @@ void drawTransparentRectangleToScreen(int w, int h, int x, int y, int rgbColor[]
 }
 
 int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, int yy , const double newwidth, const double newheight, int transparent, int smoothing) {
-	// Zoom function uses doubles for rates of scaling, rather than
-	// exact size values. This is how we get around that:
 	double zoomx = newwidth  / (float)image->w;
 	double zoomy = newheight / (float)image->h;
-	// This function assumes no smoothing, so that any colorkeys wont bleed.
 	SDL_Surface* sized = NULL;
 	if (((int)newwidth<(int)(image->w/2))&&(int)(image->w/2)%(int)newwidth==0) {
 		zoomx = (float)image->w/newwidth;
@@ -264,22 +256,17 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 		zoomx = newwidth  / (float)image->w;
 		zoomy = newheight / (float)image->h;
 		sized = zoomSurface(image, zoomx, zoomy, smoothing);
-	}	// If the original had an alpha color key, give it to the new one.
+	}
 	if( image->flags & SDL_SRCCOLORKEY ) {
-		// Acquire the original Key
 		Uint32 colorkey = image->format->colorkey;
-		// Set to the new image
 		SDL_SetColorKey( sized, SDL_SRCCOLORKEY, colorkey );
 	}
-	// The original picture is no longer needed.
 	SDL_FreeSurface(image);
-	// Set it instead to the new image.
 	image =  sized;
 	SDL_Rect src, dest;
-	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h; // size
+	src.x = xx; src.y = yy; src.w = image->w; src.h = image->h;
 	dest.x =  x; dest.y = y; dest.w = image->w; dest.h = image->h;
 	if(transparent == 1 ) {
-		//Set the color as transparent
 		SDL_SetColorKey(image,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(image->format,0x0,0x0,0x0));
 	}
 	SDL_BlitSurface(image, &src, display, &dest);
@@ -325,9 +312,6 @@ SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface) {
 		return surface;
 	}
 	int smoothing = 1;
-//	if ((surface->w!=w || surface->h!=h) && !(w%surface->w==0 && h%surface->h==0)) {
-//		smoothing=1;
-//	}
 	double zoomx = (double)(newW / (double)surface->w);
 	double zoomy = (double)(newH / (double)surface->h);
 
@@ -375,7 +359,6 @@ void displayCenteredSurface(SDL_Surface *surface) {
 		logMessage("WARN","displayCenteredSurface","Image not found, surface can't be displayed");
 		return;
 	}
-//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
 	SDL_Rect rectangleDest;
 	rectangleDest.w = 0;
 	rectangleDest.h = 0;
@@ -425,13 +408,13 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 			} else {
 				double w = img->w;
 				double h = img->h;
-				double ratio = 0;  // Used for aspect ratio
+				double ratio = 0;
 				int smoothing = 0;
-				ratio = w / h;   // get ratio for scaling image
+				ratio = w / h;
 				h = SCREEN_HEIGHT;
 				w = h*ratio;
 				if (w>SCREEN_WIDTH) {
-					ratio = h / w;   // get ratio for scaling image
+					ratio = h / w;
 					w = SCREEN_WIDTH;
 					h = w*ratio;
 				}
@@ -466,26 +449,6 @@ void initializeDisplay(int w, int h) {
 	SDL_Quit();
 #endif
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-
-
-//#ifdef TARGET_BITTBOY
-//	logMessage("INFO","yes?");
-//	logMessage("INFO","333");
-//	SCREEN_WIDTH=320;
-//	SCREEN_HEIGHT=240;
-//	logMessage("INFO","444");
-//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
-//	logMessage("INFO","555");
-//	//	TTF_Init();
-//	MAGIC_NUMBER = SCREEN_WIDTH-2;
-//	logMessage("INFO","Initialized Display");
-//	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-//	return;
-//#endif
-
-	//    SDL_JoystickEventState(SDL_ENABLE);
-	//    joystick = SDL_JoystickOpen(0);
-
 	char * line = NULL;
 	size_t len = 0;
 	FILE *fpHDMI = fopen("/sys/class/hdmi/hdmi","r");
@@ -519,8 +482,6 @@ void initializeDisplay(int w, int h) {
 	fclose(fp);
 #endif
 #ifdef TARGET_PC
-//	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
-	//	SCREEN_HEIGHT = info->current_h;
 	SCREEN_HEIGHT = h;
 	SCREEN_WIDTH = w;
 	char msg[1000];
@@ -528,7 +489,6 @@ void initializeDisplay(int w, int h) {
 	logMessage("INFO", "initializeDisplay", msg);
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, pcflags);
-//	SDL_ShowCursor(0);
 #else
 	FILE *fp1;
 	SDL_ShowCursor(0);
@@ -568,7 +528,6 @@ void initializeDisplay(int w, int h) {
 	}
 
 #endif
-	//	TTF_Init();
 	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance1(2);
 	logMessage("INFO","initializeDisplay","Initialized Display");
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
@@ -580,6 +539,4 @@ void getTextWidth(TTF_Font *font, char *text, int *widthToBeSet){
 
 void refreshScreen() {
 	SDL_Flip(screen);
-//	int black[3] = {0,0,0};
-//	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,black);
 }

@@ -191,9 +191,7 @@ void generateError(char *pErrorMessage, int pThereIsACriticalError) {
 }
 
 void quit() {
-	//	if(getLaunchAtBoot()==NULL) {
 	saveLastState();
-	//	}
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
@@ -296,9 +294,7 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 	snprintf(pSectionNumber, sizeof(pSectionNumber), "%d",
 			currentSectionNumber);
 	snprintf(pPictureMode, sizeof(pPictureMode), "%d", fullscreenMode);
-	//		if(getLaunchAtBoot()==NULL) {
 	saveLastState();
-	//		}
 
 	saveFavorites();
 	clearTimer();
@@ -307,13 +303,8 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 
 	logMessage("INFO", "executeCommand", "Launching Game");
 
-	//		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
-//	if (currentSectionNumber == favoritesSectionNumber) {
-//		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
-//	} else {
-		setCPU(frequency);
-		printf("%d\n",frequency);
-//	}
+	setCPU(frequency);
+	printf("%d\n",frequency);
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
@@ -345,17 +336,11 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 	logMessage("INFO", "executeCommand", emulatorFolder);
 	logMessage("INFO", "executeCommand", exec);
 	logMessage("INFO", "executeCommand", fileToBeExecutedWithFullPath);
-//	SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_ShowCursor(1);
 	freeResources();
-//	SDL_ShowCursor(1);
 #ifndef TARGET_OD_BETA
 	resetFrameBuffer1();
 #endif
-	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-	//		#if defined TARGET_RFW
-//		printf("            \n");
-	//		#endif
 	if (consoleApp) {
 #if defined(TARGET_OD) || defined TARGET_OD_BETA
 		/* Enable the framebuffer console */
@@ -428,84 +413,6 @@ struct Rom* findGame(char *game) {
 	}
 	return NULL;
 }
-//	struct Node *split(struct Node *head)
-//	{
-//		struct Node *fast = head,*slow = head;
-//		while (fast->next && fast->next->next)
-//		{
-//			fast = fast->next->next;
-//			slow = slow->next;
-//		}
-//		struct Node *temp = slow->next;
-//		slow->next = NULL;
-//		return temp;
-//	}
-//
-//	struct Node *merge(struct Node *first, struct Node *second)
-//	{
-//		if (!first) {
-//			return second;
-//		}
-//
-//		if (!second) {
-//			return first;
-//		}
-//
-//
-//		char s1Alias[300];
-//		if(first->data->alias!=NULL&&strlen(first->data->alias)>2) {
-//			strcpy(s1Alias,first->data->alias);
-//		} else {
-//			strcpy(s1Alias,first->data->name);
-//		}
-//		char s2Alias[300];
-//		if(second->data->alias!=NULL&&strlen(second->data->alias)>2) {
-//			strcpy(s2Alias,second->data->alias);
-//		} else {
-//			strcpy(s2Alias,second->data->name);
-//		}
-//
-//		char * noPathS1Alias=strdup(s1Alias);
-//		char * noPathS2Alias=strdup(s2Alias);
-//
-//		for(char *p = noPathS1Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
-//		for(char *p = noPathS2Alias;*p;++p) *p=*p>0x40&&*p<0x5b?*p|0x60:*p;
-//
-//		if(strlen(CURRENT_SECTION.aliasFileName)<2) {
-//			stripGameName(noPathS1Alias);
-//			stripGameName(noPathS2Alias);
-//		}
-//		if (strcmp(noPathS1Alias, noPathS2Alias)<=0)
-//		{
-//			free(noPathS1Alias);
-//			free(noPathS2Alias);
-//			first->next = merge(first->next,second);
-//			first->next->prev = first;
-//			first->prev = NULL;
-//			return first;
-//		}else {
-//			free(noPathS1Alias);
-//			free(noPathS2Alias);
-//			second->next = merge(first,second->next);
-//			second->next->prev = second;
-//			second->prev = NULL;
-//			return second;
-//		}
-//	}
-
-//	struct Node *mergeSort(struct Node *head) {
-//		if (!head || !head->next) {
-//			return head;
-//		}
-//		struct Node *second = split(head);
-//
-//		// Recur for left and right halves
-//		head = mergeSort(head);
-//		second = mergeSort(second);
-//
-//		// Merge the two sorted halves
-//		return merge(head,second);
-//	}
 
 int compareIgnoreCase(char *str1, char *str2) {
 	char *temp1 = strdup(str1);
@@ -564,7 +471,6 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
 		a->next->prev = a;
 		a->prev = NULL;
 		result = a;
-		//			result->next = SortedMerge(a->next, b);
 	} else {
 		free(noPathS1Alias);
 		free(noPathS2Alias);
@@ -572,19 +478,8 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
 		b->next->prev = b;
 		b->prev = NULL;
 		result = b;
-		//			result->next = SortedMerge(a, b->next);
 	}
-
-	/* Pick either a or b, and recur */
-	//	    if (a->data <= b->data) {
-	//	        result = a;
-	//	        result->next = SortedMerge(a->next, b);
-	//	    } else {
-	//	        result = b;
-	//	        result->next = SortedMerge(a, b->next);
-	//	    }
 	return (result);
-
 }
 
 void FrontBackSplit(struct Node *source, struct Node **frontRef,
@@ -878,7 +773,6 @@ int theSectionHasGames(struct MenuSection *section) {
 	int dirCounter = 0;
 	char *dirs[10];
 	char *ptr;
-	//	char dirsCopy[1000];
 	char *filesDirectoriesCopy = strdup(section->filesDirectories);
 	char message[300];
 	snprintf(message, 300, "Directories %s ", filesDirectoriesCopy);
@@ -993,7 +887,6 @@ char* readline(FILE *fp, char *buffer) {
 }
 
 void loadGameList(int refresh) {
-	//		Uint32 startTime = SDL_GetTicks();
 	logMessage("INFO", "loadGameList", CURRENT_SECTION.sectionName);
 	int loadedFiles=0;
 	logMessage("INFO","loadGameList","Should we skip this?");
@@ -1127,7 +1020,7 @@ void loadGameList(int refresh) {
 								}
 #endif
 								realItemCount++;
-								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2; // " -m "
+								int size = strlen(desktopFiles[desktopCounter].parentOPK)+strlen("-m|")+strlen(desktopFiles[desktopCounter].name)+2;
 								int aliasSize = strlen(desktopFiles[desktopCounter].displayName)+1;
 								struct Rom *rom;
 								rom=malloc(sizeof(struct Rom));
@@ -1236,10 +1129,8 @@ void loadGameList(int refresh) {
 			free (dirs[i]);
 		}
 
-		//			if (strlen(CURRENT_SECTION.aliasFileName) > 0) {
 		logMessage("INFO","loadGameList","The list needs to be sorted");
 		mergeSort(&CURRENT_SECTION.head);
-		//			}
 
 		if(useCache==1) {
 			fp = fopen(sectionCacheName,"w");
@@ -1299,9 +1190,7 @@ void determineStartingScreen(int sectionCount) {
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		logMessage("INFO", "determineStartingScreen", "Section background loaded and resized");
 		int gamesInSection = CURRENT_SECTION.gameCount;
@@ -1325,14 +1214,11 @@ void determineStartingScreen(int sectionCount) {
 			advanceSection(0);
 			logMessage("INFO","determineStartingScreen","Loading game list again");
 			loadGameList(0);
-			//			generateError("NO GAMES FOUND!", 0);
 		}
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-			//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages > 0 && CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {
