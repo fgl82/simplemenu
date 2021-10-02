@@ -288,7 +288,7 @@ void processEvents() {
 			refreshRequest=0;
 			refreshScreen();
 		}
-//		//Time spent on one loop
+		//Time spent on one loop
 		int timeSpent = SDL_GetTicks()-start_time;
 		//If it took less than a frame
 		if(timeSpent < FRAME_DURATION_IN_MILLISECONDS) {

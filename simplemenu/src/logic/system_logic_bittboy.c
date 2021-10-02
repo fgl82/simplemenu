@@ -370,16 +370,6 @@ void HW_Init() {
 	logMessage("INFO","HW Initialized");
 }
 
-void cycleFrequencies() {
-	if(currentCPU==OC_UC) {
-		currentCPU = OC_NO;
-	} else if (currentCPU==OC_NO) {
-		currentCPU = OC_OC;
-	} else {
-		currentCPU = OC_UC;
-	}
-}
-
 int getBatteryLevel() {
 	int max_voltage = 4050;
 	int min_voltage = 3480;

@@ -93,16 +93,6 @@ void HW_Init() {
 	logMessage("INFO","HW Initialized");
 }
 
-void cycleFrequencies() {
-	if(currentCPU==OC_UC) {
-		currentCPU = OC_NO;
-	} else if (currentCPU==OC_NO) {
-		currentCPU = OC_OC;
-	} else {
-		currentCPU = OC_UC;
-	}
-}
-
 int getBatteryLevel() {
 	int val = -1;
 	FILE *f = fopen("/proc/jz/battery", "r");

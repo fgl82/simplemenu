@@ -124,16 +124,7 @@ int advanceSection(int showLogo) {
 	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-//	#ifdef TARGET_BITTBOY
-	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-//		displayBackgroundPicture();
-//		showConsole();
-//		refreshScreen();
-//		displayLogo=1;
-	}
-//	#endif
 	return returnValue;
 }
 
@@ -163,13 +154,7 @@ int rewindSection(int showLogo) {
 	} while(1);
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-//	#ifdef TARGET_BITTBOY
-	if ((fullscreenMode||showLogo)&&currentSectionNumber!=favoritesSectionNumber) {
-//		showConsole();
-	}
-//	#endif
 	return returnValue;
 }
 
@@ -435,14 +420,11 @@ void showOrHideFavorites() {
 		if (CURRENT_SECTION.systemLogoSurface == NULL) {
 			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 			logMessage("INFO","showOrHideFavorites","Loading system logo");
-//			resizeSectionSystemLogo(&CURRENT_SECTION);
 		}
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","showOrHideFavorites","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		if (returnTo==0) {
 			if(!alternateControls) {
@@ -450,9 +432,6 @@ void showOrHideFavorites() {
 			} else {
 				currentState=BROWSING_GAME_LIST;
 			}
-//			if (autoHideLogos) {
-//				resetPicModeHideLogoTimer();
-//			}
 			logMessage("INFO","showOrHideFavorites","Determining starting screen");
 			determineStartingScreen(menuSectionCounter);
 		} else {
@@ -461,9 +440,6 @@ void showOrHideFavorites() {
 				} else {
 					currentState=BROWSING_GAME_LIST;
 				}
-//				if (autoHideLogos) {
-//					resetPicModeHideLogoTimer();
-//				}
 				logMessage("INFO","showOrHideFavorites","No return, loading game list");
 				loadGameList(0);
 		}
@@ -482,18 +458,12 @@ void showOrHideFavorites() {
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		logMessage("WARN","showOrHideFavorites","Loading system logo");
-//		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
 	if (CURRENT_SECTION.backgroundSurface == NULL) {
 		logMessage("WARN","showOrHideFavorites","Loading system background");
 		CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-//		resizeSectionBackground(&CURRENT_SECTION);
 		CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-//		resizeSectionSystemPicture(&CURRENT_SECTION);
 	}
-//	if (autoHideLogos) {
-//		resetPicModeHideLogoTimer();
-//	}
 	if(!alternateControls) {
 		currentState=SELECTING_SECTION;
 	} else {
