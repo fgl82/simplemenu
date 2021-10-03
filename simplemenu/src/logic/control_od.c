@@ -247,7 +247,13 @@ int performAction(struct Node *node) {
 				removeFavorite();
 				if(favoritesSize==0) {
 					currentState = SELECTING_SECTION;
-					advanceSection();
+					currentSectionNumber=returnTo;
+					if(CURRENT_SECTION.gameCount==0) {
+						int advanced = advanceSection();
+						if (!advanced) {
+							currentSectionNumber=0;
+						}
+					}
 				}
 			}
 			return 0;

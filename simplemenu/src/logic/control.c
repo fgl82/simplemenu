@@ -583,7 +583,7 @@ void performGroupChoosingAction() {
 		currentState=SETTINGS_SCREEN;
 		return;
 	}
-	if ((!alternateControls&&keys[BTN_UP])||keys[BTN_L1]) {
+	if ((!alternateControls&&keys[BTN_UP])||(alternateControls&&keys[BTN_L1])) {
 		if(activeGroup>0) {
 			activeGroup--;
 		} else {
@@ -591,7 +591,7 @@ void performGroupChoosingAction() {
 		}
 		return;
 	}
-	if ((!alternateControls&&keys[BTN_DOWN])||keys[BTN_R1]) {
+	if ((!alternateControls&&keys[BTN_DOWN])||(alternateControls&&keys[BTN_R1])) {
 		if(activeGroup<sectionGroupCounter-1) {
 			activeGroup++;
 		} else {
