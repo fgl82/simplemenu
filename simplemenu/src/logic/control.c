@@ -603,7 +603,8 @@ void performGroupChoosingAction() {
 //		int preFavs = favoritesSectionNumber;
 		if (beforeTryingToSwitchGroup!=activeGroup) {
 			for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
-				if(sectionCount==currentSectionNumber) {
+				if((!isFavoritesSectionSelected()&&sectionCount==currentSectionNumber)||
+					(isFavoritesSectionSelected()&&sectionCount==returnTo)) {
 					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=1;
 				} else {
 					sectionGroupStates[beforeTryingToSwitchGroup][sectionCount][0]=0;

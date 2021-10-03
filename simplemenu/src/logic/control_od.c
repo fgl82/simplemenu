@@ -191,6 +191,9 @@ int performAction(struct Node *node) {
 	if(!alternateControls) {
 		if((currentState==SELECTING_SECTION&&(keys[BTN_UP]))) {
 			if (menuSectionCounter>1) {
+				if (currentSectionNumber!=favoritesSectionNumber) {
+					returnTo=currentSectionNumber;
+				}
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				rewindSection();
@@ -199,6 +202,9 @@ int performAction(struct Node *node) {
 	} else {
 		if(keys[BTN_L1]) {
 			if (menuSectionCounter>1) {
+				if (currentSectionNumber!=favoritesSectionNumber) {
+					returnTo=currentSectionNumber;
+				}
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
 				rewindSection();
@@ -208,29 +214,42 @@ int performAction(struct Node *node) {
 
 	if(!alternateControls) {
 		if((currentState==SELECTING_SECTION&&(keys[BTN_DOWN]))) {
-//			if (currentSectionNumber!=favoritesSectionNumber) {
-				currentState=SELECTING_SECTION;
-				hotKeyPressed=0;
-				advanceSection();
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				returnTo=currentSectionNumber;
+			}
+			currentState=SELECTING_SECTION;
+			hotKeyPressed=0;
+			advanceSection();
 //			}
 			return 0;
 		}
 	} else {
 		if(keys[BTN_R1]) {
+			if (currentSectionNumber!=favoritesSectionNumber) {
+				returnTo=currentSectionNumber;
+			}
 //			if (currentSectionNumber!=favoritesSectionNumber) {
-				currentState=SELECTING_SECTION;
-				hotKeyPressed=0;
-				advanceSection();
+			currentState=SELECTING_SECTION;
+			hotKeyPressed=0;
+			advanceSection();
 //			}
 			return 0;
 		}
 	}
 
-	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&currentSectionNumber!=favoritesSectionNumber) {
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
 		if (keys[BTN_Y]) {
-//			loadFavoritesSectionGameList();
-			if(FAVORITES_SECTION.gameCount>0) {
-				showOrHideFavorites();
+			if(!isFavoritesSectionSelected()) {
+	//			loadFavoritesSectionGameList();
+				if(FAVORITES_SECTION.gameCount>0) {
+					showOrHideFavorites();
+				}
+			} else {
+				currentState=SELECTING_SECTION;
+				currentSectionNumber=returnTo;
+				if (CURRENT_SECTION.systemLogoSurface == NULL) {
+					CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+				}
 			}
 			return 0;
 		}
