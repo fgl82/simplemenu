@@ -470,7 +470,7 @@ void showOrHideFavorites() {
 		currentState=BROWSING_GAME_LIST;
 	}
 	logMessage("WARN","showOrHideFavorites","Displaying system logo 3");
-//	loadFavoritesSectionGameList();
+	loadFavoritesSectionGameList();
 }
 
 void removeFavorite() {
@@ -677,6 +677,7 @@ void performGroupChoosingAction() {
 					}
 				}
 				loadGameList(0);
+				loadFavoritesSectionGameList();
 			}
 			if (!existed) {
 				drawLoadingText();
@@ -689,6 +690,7 @@ void performGroupChoosingAction() {
 			if (CURRENT_SECTION.gameCount==0) {
 				advanceSection();
 				loadGameList(0);
+				loadFavoritesSectionGameList();
 			}
 			beforeTryingToSwitchGroup=activeGroup;
 		} else {
