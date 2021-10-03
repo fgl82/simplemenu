@@ -1524,7 +1524,7 @@ void updateScreen(struct Node *node) {
 						showLetter(rom);
 					}
 				}
-				if (currentSectionNumber != favoritesSectionNumber && CURRENT_SECTION.gameCount==0) {
+				if (CURRENT_SECTION.gameCount==0) {
 					if(fullscreenMode) {
 						drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0});
 					}
