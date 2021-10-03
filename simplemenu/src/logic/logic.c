@@ -533,6 +533,7 @@ void loadFavoritesSectionGameList() {
 	logMessage("ERROR", "loadFavoritesSectionGameList", "Setting total pages");
 	FAVORITES_SECTION.totalPages=0;
 	FAVORITES_SECTION.gameCount=0;
+	FAVORITES_SECTION.initialized=0;
 	cleanListForSection(&FAVORITES_SECTION);
 	for (int i = 0; i < favoritesSize; i++) {
 		if (gameInPage == ITEMS_PER_PAGE) {
@@ -1218,6 +1219,7 @@ void determineStartingScreen(int sectionCount) {
 	} else {
 		logMessage("INFO", "determineStartingScreen", "Loading game list");
 		loadGameList(0);
+		loadFavoritesSectionGameList();
 		if (CURRENT_SECTION.gameCount==0) {
 			advanceSection();
 			logMessage("INFO","determineStartingScreen","Loading game list again");

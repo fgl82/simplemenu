@@ -470,7 +470,7 @@ void showOrHideFavorites() {
 		currentState=BROWSING_GAME_LIST;
 	}
 	logMessage("WARN","showOrHideFavorites","Displaying system logo 3");
-	loadFavoritesSectionGameList();
+//	loadFavoritesSectionGameList();
 }
 
 void removeFavorite() {
@@ -600,7 +600,7 @@ void performGroupChoosingAction() {
 		return;
 	}
 	if (keys[BTN_A]) {
-		int preFavs = favoritesSectionNumber;
+//		int preFavs = favoritesSectionNumber;
 		if (beforeTryingToSwitchGroup!=activeGroup) {
 			for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
 				if(sectionCount==currentSectionNumber) {
@@ -655,7 +655,7 @@ void performGroupChoosingAction() {
 					menuSections[i].currentGameNode=CURRENT_SECTION.head;
 				}
 				for (int sectionCount=0;sectionCount<menuSectionCounter;sectionCount++) {
-					if(sectionCount!=favoritesSectionNumber) {
+//					if(sectionCount!=favoritesSectionNumber) {
 						if (sectionGroupStates[activeGroup][sectionCount][0]==1) {
 							currentSectionNumber=sectionCount;
 							logMessage("INFO","performGroupChoosingAction","Loading system logo");
@@ -665,16 +665,15 @@ void performGroupChoosingAction() {
 							CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 							CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 							existed = 1;
-
 						}
 						menuSections[sectionCount].currentPage=sectionGroupStates[activeGroup][sectionCount][1];
 						menuSections[sectionCount].currentGameInPage=sectionGroupStates[activeGroup][sectionCount][2];
 						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[activeGroup][sectionCount][3];
-					} else {
-						menuSections[sectionCount].currentPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][1];
-						menuSections[sectionCount].currentGameInPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][2];
-						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][3];
-					}
+//					} else {
+//						menuSections[sectionCount].currentPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][1];
+//						menuSections[sectionCount].currentGameInPage=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][2];
+//						menuSections[sectionCount].realCurrentGameNumber=sectionGroupStates[beforeTryingToSwitchGroup][preFavs][3];
+//					}
 				}
 				loadGameList(0);
 				loadFavoritesSectionGameList();
@@ -688,6 +687,7 @@ void performGroupChoosingAction() {
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 			}
 			if (CURRENT_SECTION.gameCount==0) {
+				printf("2\n");
 				advanceSection();
 				loadGameList(0);
 				loadFavoritesSectionGameList();

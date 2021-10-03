@@ -228,6 +228,7 @@ int performAction(struct Node *node) {
 
 	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&currentSectionNumber!=favoritesSectionNumber) {
 		if (keys[BTN_Y]) {
+//			loadFavoritesSectionGameList();
 			if(FAVORITES_SECTION.gameCount>0) {
 				showOrHideFavorites();
 			}
