@@ -38,7 +38,6 @@ extern int running;
 extern int itsStoppedBecauseOfAnError;
 extern int thereIsACriticalError;
 extern int favoritesChanged;
-extern int favoritesSectionSelected;
 extern int returnTo;
 extern int currentSectionNumber;
 extern int currentCPU;

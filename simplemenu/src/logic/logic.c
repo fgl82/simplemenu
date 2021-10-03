@@ -564,6 +564,7 @@ void loadFavoritesSectionGameList() {
 	if (favoritesSize > 0) {
 		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
 	}
+	CURRENT_SECTION.initialized=1;
 }
 
 int scanDirectory(char *directory, char *files[], int i) {
@@ -768,7 +769,15 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile *stolenFile, char *fileName) {
 	}
 }
 
+int isFavoritesSectionSelected() {
+	return currentSectionNumber==favoritesSectionNumber;
+}
+
 int theSectionHasGames(struct MenuSection *section) {
+	if(currentSectionNumber==favoritesSectionNumber) {
+		loadFavoritesSectionGameList();
+		return FAVORITES_SECTION.gameCount;
+	}
 	section->hidden = 1;
 	int dirCounter = 0;
 	char *dirs[10];
@@ -1184,8 +1193,8 @@ void determineStartingScreen(int sectionCount) {
 	}
 	if (sectionCount == 0 || currentSectionNumber == favoritesSectionNumber) {
 		logMessage("INFO", "determineStartingScreen", "No sections found or favorites was selected");
-		favoritesSectionSelected = 1;
 		loadFavoritesSectionGameList();
+		printf("asdas\n");
 		logMessage("INFO", "determineStartingScreen", "Favorites loaded");
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
@@ -1202,7 +1211,6 @@ void determineStartingScreen(int sectionCount) {
 		CURRENT_SECTION.totalPages=pages;
 		if (favoritesSize == 0 && sectionCount > 0) {
 			logMessage("INFO", "determineStartingScreen", "Favorites was selected but no favorites were found");
-			favoritesSectionSelected = 0;
 			currentSectionNumber = 0;
 			logMessage("INFO", "determineStartingScreen", "Trying to determine starting section again");
 			determineStartingScreen(sectionCount);
@@ -1211,7 +1219,7 @@ void determineStartingScreen(int sectionCount) {
 		logMessage("INFO", "determineStartingScreen", "Loading game list");
 		loadGameList(0);
 		if (CURRENT_SECTION.gameCount==0) {
-			advanceSection(0);
+			advanceSection();
 			logMessage("INFO","determineStartingScreen","Loading game list again");
 			loadGameList(0);
 		}

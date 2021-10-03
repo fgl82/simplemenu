@@ -1291,6 +1291,14 @@ int loadSections(char *file) {
 	logMessage("INFO","loadSections","Out 5");
 
 	strcpy(menuSections[menuSectionCounter].sectionName,"FAVORITES");
+	value = ini_get(themeConfig, menuSections[menuSectionCounter].sectionName, "name");
+
+	if (value!=NULL) {
+		strcpy(menuSections[menuSectionCounter].fantasyName, value);
+	} else {
+		strcpy(menuSections[menuSectionCounter].fantasyName, "\0");
+	}
+
 	menuSections[menuSectionCounter].emulatorDirectories[0]=strdup("/some/folder/");
 	menuSections[menuSectionCounter].activeEmulatorDirectory=0;
 	menuSections[menuSectionCounter].executables[0]=NULL;
@@ -1320,6 +1328,10 @@ int loadSections(char *file) {
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "system", menuSections[menuSectionCounter].systemPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "no_art_picture", menuSections[menuSectionCounter].noArtPicture);
 	setThemeResourceValueInSection (themeConfig, "FAVORITES", "background", menuSections[menuSectionCounter].background);
+
+	menuSections[menuSectionCounter].systemLogoSurface = IMG_Load(menuSections[menuSectionCounter].systemLogo);
+	menuSections[menuSectionCounter].backgroundSurface = IMG_Load(menuSections[menuSectionCounter].background);
+	menuSections[menuSectionCounter].systemPictureSurface = IMG_Load(menuSections[menuSectionCounter].systemPicture);
 
 	logMessage("INFO","loadSections","Out 7");
 

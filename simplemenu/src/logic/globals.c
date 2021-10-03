@@ -21,7 +21,6 @@ int running;
 int itsStoppedBecauseOfAnError;
 int thereIsACriticalError;
 int favoritesChanged;
-int favoritesSectionSelected;
 int returnTo;
 int currentSectionNumber;
 int currentCPU;

@@ -30,6 +30,8 @@ int performAction(struct Node *node) {
 			logMessage("INFO","performAction","Loading game list");
 			if (currentSectionNumber!=favoritesSectionNumber) {
 				loadGameList(0);
+			} else {
+				loadFavoritesSectionGameList();
 			}
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -57,6 +59,9 @@ int performAction(struct Node *node) {
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			logMessage("INFO","performAction","Not Favs, loading game list");
 			loadGameList(1);
+			return(1);
+		} else {
+			loadFavoritesSectionGameList();
 			return(1);
 		}
 	}
@@ -129,7 +134,7 @@ int performAction(struct Node *node) {
 		if (currentState == BROWSING_GAME_LIST) {
 			if(keys[BTN_DOWN]) {
 				hotKeyPressed=0;
-				int advanced = advanceSection(0);
+				int advanced = advanceSection();
 				if(advanced) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
 						logMessage("INFO","performAction","Loading system background");
@@ -138,7 +143,11 @@ int performAction(struct Node *node) {
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 					}
 					logMessage("INFO","performAction","Advanced, loading game list");
-					loadGameList(0);
+					if(currentSectionNumber==favoritesSectionNumber) {
+						loadFavoritesSectionGameList();
+					} else {
+						loadGameList(0);
+					}
 				}
 				if(CURRENT_SECTION.gameCount>0) {
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -148,7 +157,7 @@ int performAction(struct Node *node) {
 			}
 			if(keys[BTN_UP]) {
 				hotKeyPressed=0;
-				int rewinded = rewindSection(0);
+				int rewinded = rewindSection();
 				if(rewinded) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
 						logMessage("INFO","performAction","Loading system background");
@@ -157,7 +166,11 @@ int performAction(struct Node *node) {
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 					}
 					logMessage("INFO","performAction","Rewinded, loading game list");
-					loadGameList(0);
+					if(currentSectionNumber==favoritesSectionNumber) {
+						loadFavoritesSectionGameList();
+					} else {
+						loadGameList(0);
+					}
 				}
 				if(CURRENT_SECTION.gameCount>0) {
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -167,7 +180,7 @@ int performAction(struct Node *node) {
 			}
 		}
 	}
-	if (keys[BTN_SELECT]&&!favoritesSectionSelected&&!(currentState==SELECTING_SECTION)) {
+	if (keys[BTN_SELECT]&&currentSectionNumber!=favoritesSectionNumber&&!(currentState==SELECTING_SECTION)) {
 		currentState=SELECTING_EMULATOR;
 		chosenChoosingOption=0;
 		launchAtBoot=isLaunchAtBoot(CURRENT_SECTION.currentGameNode->data->name);
@@ -177,45 +190,47 @@ int performAction(struct Node *node) {
 	}
 	if(!alternateControls) {
 		if((currentState==SELECTING_SECTION&&(keys[BTN_UP]))) {
-			if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
+			if (menuSectionCounter>1) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				rewindSection(1);
+				rewindSection();
 			}
 		}
 	} else {
 		if(keys[BTN_L1]) {
-			if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
+			if (menuSectionCounter>1) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				rewindSection(1);
+				rewindSection();
 			}
 		}
 	}
 
 	if(!alternateControls) {
 		if((currentState==SELECTING_SECTION&&(keys[BTN_DOWN]))) {
-			if (currentSectionNumber!=favoritesSectionNumber) {
+//			if (currentSectionNumber!=favoritesSectionNumber) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				advanceSection(1);
-			}
+				advanceSection();
+//			}
 			return 0;
 		}
 	} else {
 		if(keys[BTN_R1]) {
-			if (currentSectionNumber!=favoritesSectionNumber) {
+//			if (currentSectionNumber!=favoritesSectionNumber) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				advanceSection(1);
-			}
+				advanceSection();
+//			}
 			return 0;
 		}
 	}
 
-	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
+	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed&&currentSectionNumber!=favoritesSectionNumber) {
 		if (keys[BTN_Y]) {
-			showOrHideFavorites();
+			if(FAVORITES_SECTION.gameCount>0) {
+				showOrHideFavorites();
+			}
 			return 0;
 		}
 	}
@@ -226,12 +241,13 @@ int performAction(struct Node *node) {
 			if(!isPicModeMenuHidden) {
 				resetPicModeHideMenuTimer();
 			}
-			if (!favoritesSectionSelected) {
+			if (currentSectionNumber!=favoritesSectionNumber) {
 				markAsFavorite(rom);
 			} else {
 				removeFavorite();
 				if(favoritesSize==0) {
-					showOrHideFavorites();
+					currentState = SELECTING_SECTION;
+					advanceSection();
 				}
 			}
 			return 0;

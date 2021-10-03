@@ -98,16 +98,16 @@ void scrollToGame(int gameNumber) {
 	}
 }
 
-int advanceSection(int showLogo) {
+int advanceSection() {
 	int tempCurrentSection = currentSectionNumber;
-	if(currentSectionNumber==favoritesSectionNumber) {
-		return 0;
-	}
+//	if(currentSectionNumber==favoritesSectionNumber) {
+//		return 0;
+//	}
 	int returnValue = 0;
 	do {
 		returnValue = 0;
 		currentSectionNumber++;
-		if (currentSectionNumber==menuSectionCounter-1) {
+		if (currentSectionNumber==menuSectionCounter) {
 			currentSectionNumber=0;
 		}
 		if(!CURRENT_SECTION.counted&&!CURRENT_SECTION.initialized) {
@@ -128,17 +128,17 @@ int advanceSection(int showLogo) {
 	return returnValue;
 }
 
-int rewindSection(int showLogo) {
+int rewindSection() {
 	int returnValue;
 	int tempCurrentSection = currentSectionNumber;
-	if(currentSectionNumber==favoritesSectionNumber) {
-		return 0;
-	}
+//	if(currentSectionNumber==favoritesSectionNumber) {
+//		return 0;
+//	}
 	logMessage("INFO","rewindSection","Rewinding section");
 	do {
 		currentSectionNumber--;
 		if (currentSectionNumber==-1) {
-			currentSectionNumber=menuSectionCounter-2;
+			currentSectionNumber=menuSectionCounter-1;
 		}
 		if(!CURRENT_SECTION.counted&&!CURRENT_SECTION.initialized) {
 			drawLoadingText();
@@ -219,7 +219,7 @@ void launchGame(struct Rom *rom) {
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
 	printf(" \n");
-	if (favoritesSectionSelected && favoritesSize > 0) {
+	if (isFavoritesSectionSelected() && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(tempExec,favorite.emulatorFolder);
 		strcat(tempExec,favorite.executable);
@@ -280,7 +280,7 @@ void launchGame(struct Rom *rom) {
 }
 
 void launchEmulator(struct Rom *rom) {
-	if (favoritesSectionSelected && favoritesSize > 0) {
+	if (isFavoritesSectionSelected() && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		int freq = favorite.frequency;
 		//if it's not the base clock freq
@@ -414,45 +414,45 @@ void rewindPage(struct Rom *rom) {
 }
 
 void showOrHideFavorites() {
-	if (favoritesSectionSelected) {
-		favoritesSectionSelected=0;
-		currentSectionNumber=returnTo;
-		if (CURRENT_SECTION.systemLogoSurface == NULL) {
-			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
-			logMessage("INFO","showOrHideFavorites","Loading system logo");
-		}
-		if (CURRENT_SECTION.backgroundSurface == NULL) {
-			logMessage("INFO","showOrHideFavorites","Loading system background");
-			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
-			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
-		}
-		if (returnTo==0) {
-			if(!alternateControls) {
-				currentState=SELECTING_SECTION;
-			} else {
-				currentState=BROWSING_GAME_LIST;
-			}
-			logMessage("INFO","showOrHideFavorites","Determining starting screen");
-			determineStartingScreen(menuSectionCounter);
-		} else {
-				if(!alternateControls) {
-					currentState=SELECTING_SECTION;
-				} else {
-					currentState=BROWSING_GAME_LIST;
-				}
-				logMessage("INFO","showOrHideFavorites","No return, loading game list");
-				loadGameList(0);
-		}
-		logMessage("INFO","showOrHideFavorites","hideFullScreenModeMenu()");
-		hideFullScreenModeMenu();
-		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
-		logMessage("INFO","showOrHideFavorites","scrolled");
-		return;
-	}
-	if(strlen(favorites[0].name)<1) {
-		return;
-	}
-	favoritesSectionSelected=1;
+//	if (favoritesSectionSelected()) {
+//		favoritesSectionSelected()=0;
+//		currentSectionNumber=returnTo;
+//		if (CURRENT_SECTION.systemLogoSurface == NULL) {
+//			CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
+//			logMessage("INFO","showOrHideFavorites","Loading system logo");
+//		}
+//		if (CURRENT_SECTION.backgroundSurface == NULL) {
+//			logMessage("INFO","showOrHideFavorites","Loading system background");
+//			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+//			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+//		}
+//		if (returnTo==0) {
+//			if(!alternateControls) {
+//				currentState=SELECTING_SECTION;
+//			} else {
+//				currentState=BROWSING_GAME_LIST;
+//			}
+//			logMessage("INFO","showOrHideFavorites","Determining starting screen");
+//			determineStartingScreen(menuSectionCounter);
+//		} else {
+//				if(!alternateControls) {
+//					currentState=SELECTING_SECTION;
+//				} else {
+//					currentState=BROWSING_GAME_LIST;
+//				}
+//				logMessage("INFO","showOrHideFavorites","No return, loading game list");
+//				loadGameList(0);
+//		}
+//		logMessage("INFO","showOrHideFavorites","hideFullScreenModeMenu()");
+//		hideFullScreenModeMenu();
+//		scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
+//		logMessage("INFO","showOrHideFavorites","scrolled");
+//		return;
+//	}
+//	if(strlen(favorites[0].name)<1) {
+//		return;
+//	}
+//	favoritesSectionSelected()=1;
 	returnTo=currentSectionNumber;
 	currentSectionNumber=favoritesSectionNumber;
 	if (CURRENT_SECTION.systemLogoSurface == NULL) {
@@ -470,7 +470,7 @@ void showOrHideFavorites() {
 		currentState=BROWSING_GAME_LIST;
 	}
 	logMessage("WARN","showOrHideFavorites","Displaying system logo 3");
-	loadFavoritesSectionGameList();
+//	loadFavoritesSectionGameList();
 }
 
 void removeFavorite() {
@@ -564,6 +564,7 @@ void markAsFavorite(struct Rom *rom) {
 			strcpy(favorites[favoritesSize].filesDirectory,rom->directory);
 			favorites[favoritesSize].isConsoleApp = rom->isConsoleApp;
 			favoritesSize++;
+			FAVORITES_SECTION.gameCount++;
 			qsort(favorites, favoritesSize, sizeof(struct Favorite), compareFavorites);
 		}
 	}
@@ -686,7 +687,7 @@ void performGroupChoosingAction() {
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 			}
 			if (CURRENT_SECTION.gameCount==0) {
-				advanceSection(0);
+				advanceSection();
 				loadGameList(0);
 			}
 			beforeTryingToSwitchGroup=activeGroup;
@@ -1007,7 +1008,7 @@ void performSettingsChoosingAction() {
 					loadGameList(2);
 				}
 			} else {
-				loadFavoritesSectionGameList(1);
+				loadFavoritesSectionGameList();
 			}
 		}
 	}
@@ -1104,11 +1105,11 @@ void performChoosingAction() {
 }
 
 void callDeleteGame(struct Rom *rom) {
-	if (!favoritesSectionSelected) {
+	if (!isFavoritesSectionSelected()) {
 		deleteGame(rom);
 		loadGameList(1);
 		while(CURRENT_SECTION.hidden) {
-			rewindSection(0);
+			rewindSection();
 			loadGameList(0);
 			hideFullScreenModeMenu();
 		}

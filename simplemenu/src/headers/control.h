@@ -2,8 +2,8 @@
 #define CONTROL_DEFINED
 #include <SDL/SDL_events.h>
 #include "../headers/globals.h"
-int advanceSection(int showLogo);
-int rewindSection(int showLogo);
+int advanceSection();
+int rewindSection();
 void showPicture();
 void launchGame();
 void launchEmulator();

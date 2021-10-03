@@ -179,7 +179,7 @@ int performAction(struct Node *node) {
 			if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				rewindSection(1);
+				rewindSection();
 			}
 		}
 	} else {
@@ -187,7 +187,7 @@ int performAction(struct Node *node) {
 			if (currentSectionNumber!=favoritesSectionNumber && menuSectionCounter>1) {
 				currentState=SELECTING_SECTION;
 				hotKeyPressed=0;
-				rewindSection(1);
+				rewindSection();
 			}
 		}
 	}

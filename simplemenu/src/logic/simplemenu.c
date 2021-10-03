@@ -28,7 +28,6 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=500000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
-	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
 	MENU_ITEMS_PER_PAGE=10;
@@ -175,7 +174,7 @@ void processEvents() {
 		} else if (event.type==getKeyUp()&&!alternateControls) {
 			if (currentState==BROWSING_GAME_LIST && previousState != SELECTING_EMULATOR ) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
-					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&previousState!=SETTINGS_SCREEN) {
+					if (!aKeyComboWasPressed&&previousState!=SETTINGS_SCREEN) {
 						currentState=SELECTING_SECTION;
 					}
 					hotKeyPressed=0;
@@ -196,7 +195,7 @@ void processEvents() {
 			} else if (currentState==SELECTING_SECTION) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
 					if (aKeyComboWasPressed==0) {
-						if (currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
+						if (sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
 							beforeTryingToSwitchGroup = activeGroup;
 							currentState=CHOOSING_GROUP;
 						}
@@ -214,7 +213,7 @@ void processEvents() {
 		} else if (alternateControls&&event.type==getKeyUp()) {
 			if(((int)event.key.keysym.sym)==BTN_B) {
 				if ((currentState==BROWSING_GAME_LIST || currentState==SELECTING_SECTION)&& previousState != SELECTING_EMULATOR) {
-					if (!aKeyComboWasPressed&&currentSectionNumber!=favoritesSectionNumber&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
+					if (!aKeyComboWasPressed&&sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
 						beforeTryingToSwitchGroup = activeGroup;
 						currentState=CHOOSING_GROUP;
 					}

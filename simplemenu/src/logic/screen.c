@@ -52,14 +52,14 @@ void displayHeart(int x, int y) {
 			double wh = heart->w;
 			double hh = heart->h;
 			double ratioh = 0;  // Used for aspect ratio
-			int smoothing = 1;
+			int smoothing = 0;
 			ratioh = wh / hh;   // get ratio for scaling image
 			hh = heart->h;
 			if(hh!=heart->h) {
-				smoothing = 1;
+				smoothing = 0;
 			}
 			wh = hh*ratioh;
-			smoothing = 1;
+			smoothing = 0;
 			drawImage(screen, heart, x-(wh/2), y-(hh/2), 0, 0, wh, hh, 0, smoothing);
 		}
 	}
@@ -87,7 +87,7 @@ void drawPictureTextOnScreen(char *buf) {
 			strcpy(temp,buf);
 		}
 	}
-	if(!favoritesSectionSelected) {
+	if(!isFavoritesSectionSelected()) {
 		if (colorfulFullscreenMenu) {
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2), CURRENT_SECTION.fullScreenMenuBackgroundColor, 180);
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2),(int[]){0,0,0}, 100);
@@ -291,7 +291,7 @@ void displayImageOnMenuScreen(char *fileName) {
 		double w = screenshot->w;
 		double h = screenshot->h;
 		double ratio = 0;  // Used for aspect ratio
-		int smoothing = 1;
+		int smoothing = 0;
 		ratio = w / h;   // get ratio for scaling image
 		h = artHeight;
 		w = h*ratio;
@@ -305,7 +305,7 @@ void displayImageOnMenuScreen(char *fileName) {
 				h = artHeight;
 				w = h*ratio;
 			}
-			smoothing=1;
+			smoothing=0;
 		}
 		currentH = artY+h;
 		currentW = artX+w;
@@ -384,10 +384,19 @@ void drawTextOnHeader() {
 		break;
 	}
 	if (currentSectionNumber==favoritesSectionNumber) {
-		if (favorites[CURRENT_GAME_NUMBER].sectionAlias[0]!=' ') {
-			genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		if(favoritesSize>0) {
+			if (favorites[CURRENT_GAME_NUMBER].sectionAlias[0]!=' ') {
+				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+			} else {
+				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+			}
 		} else {
-			genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+			if (menuSections[favoritesSectionNumber].fantasyName[0]!='\0') {
+				printf("%s\n", menuSections[favoritesSectionNumber].fantasyName);
+				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].fantasyName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+			} else {
+				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+			}
 		}
 	} else {
 		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, strlen(menuSections[currentSectionNumber].fantasyName)>1?menuSections[currentSectionNumber].fantasyName:menuSections[currentSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
@@ -816,7 +825,7 @@ void displayGamePicture(struct Rom *rom) {
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	char *originalGameName = NULL;
-	if (favoritesSectionSelected) {
+	if (currentSectionNumber==favoritesSectionNumber) {
 		if (favoritesSize == 0) {
 			return;
 		}
@@ -859,7 +868,7 @@ void displayGamePicture(struct Rom *rom) {
 		if (rom!=NULL) {
 			displayName=getFileNameOrAlias(rom);
 		}
-		if (!favoritesSectionSelected&&rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
+		if (!isFavoritesSectionSelected()&&rom!=NULL&&(stripGames||strlen(CURRENT_SECTION.aliasFileName)>1)) {
 			if (stripGames) {
 				strcpy(displayName,getAliasWithoutAlternateNameOrParenthesis(rom->alias));
 			} else {
@@ -872,7 +881,7 @@ void displayGamePicture(struct Rom *rom) {
 			}
 			drawPictureTextOnScreen(displayName);
 		} else {
-			if (favoritesSectionSelected) {
+			if (isFavoritesSectionSelected()) {
 				if (rom!=NULL) {
 					if (strlen(rom->alias)<2) {
 						char tmp[300];
@@ -945,7 +954,7 @@ void displayGamePicture(struct Rom *rom) {
 		}
 	}
 	if (!isPicModeMenuHidden&&menuVisibleInFullscreenMode) {
-		if(!favoritesSectionSelected) {
+		if(!isFavoritesSectionSelected()) {
 			if (colorfulFullscreenMenu) {
 				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, CURRENT_SECTION.fullScreenMenuBackgroundColor, 180);
 				drawTransparentRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, (int[]){0,0,0},100);
@@ -966,7 +975,7 @@ void displayGamePictureInMenu(struct Rom *rom) {
 	char *pictureWithFullPath=malloc(600);
 	char *tempGameName=malloc(300);
 	char *originalGameName = NULL;
-	if (favoritesSectionSelected) {
+	if (currentSectionNumber==favoritesSectionNumber) {
 		if (favoritesSize == 0) {
 			return;
 		}
@@ -1098,11 +1107,18 @@ void drawGameList() {
 				strcpy(temp,buf);
 			}
 		} else {
-			if (favorites[i].frequency == OC_OC_HIGH||favorites[i].frequency == OC_OC_LOW) {
-				strcpy(temp,"+");
-				strcat(temp,buf);
+			if (CURRENT_SECTION.gameCount>0) {
+				if (favorites[i].frequency == OC_OC_HIGH||favorites[i].frequency == OC_OC_LOW) {
+					strcpy(temp,"+");
+					strcat(temp,buf);
+				} else {
+					strcpy(temp,buf);
+				}
 			} else {
-				strcpy(temp,buf);
+				free(nameWithoutExtension);
+				free(buf);
+				free(temp);
+				currentNode=NULL;
 			}
 		}
 

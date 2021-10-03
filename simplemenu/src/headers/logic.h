@@ -26,4 +26,5 @@ int recursivelyScanDirectory (char *directory, char* files[], int i);
 int scanDirectory(char *directory, char* files[], int i);
 int findDirectoriesInDirectory (char *directory, char* files[], int i);
 int is43();
+int isFavoritesSectionSelected();
 #endif

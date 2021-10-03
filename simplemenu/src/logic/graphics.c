@@ -284,7 +284,7 @@ SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
 	}
 	int smoothing = 0;
 	if ((surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) && !(SCREEN_WIDTH%surface->w==0 && SCREEN_HEIGHT%surface->h==0)) {
-		smoothing=1;
+		smoothing=0;
 	}
 	double zoomx = (float)SCREEN_WIDTH / surface->w;
 	double zoomy = (float)SCREEN_HEIGHT / surface->h;
@@ -311,7 +311,7 @@ SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface) {
 	if (newW==surface->w&&newH==surface->h) {
 		return surface;
 	}
-	int smoothing = 1;
+	int smoothing = 0;
 	double zoomx = (double)(newW / (double)surface->w);
 	double zoomy = (double)(newH / (double)surface->h);
 
@@ -338,7 +338,7 @@ SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 	}
 	int smoothing = 0;
 	if ((surface->w!=w || surface->h!=h) && !(w%surface->w==0 && h%surface->h==0)) {
-		smoothing=1;
+		smoothing=0;
 	}
 	double zoomx = (float)(newW / (float)surface->w);
 	double zoomy = (float)(newH / (float)surface->h);
@@ -422,7 +422,7 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 					w=SCREEN_WIDTH;
 				}
 				if ((int)h!=(int)img->h) {
-					smoothing = 1;
+					smoothing = 0;
 				}
 				drawImage(screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 			}
@@ -490,6 +490,9 @@ void initializeDisplay(int w, int h) {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, pcflags);
 #else
+	char res[20];
+	sprintf(res, "resolution: %dx%d", w, h);
+	logMessage("INFO" , "initializeDisplay", res);
 	FILE *fp1;
 	SDL_ShowCursor(0);
 
