@@ -77,7 +77,6 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 		TTF_SizeText(font, (const char *) bufCopy1, &retW, NULL);
 		free(bufCopy1);
 	}
-
 	if (shaded) {
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
@@ -164,17 +163,23 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, 
 			if (msg->w>maxWidth) {
 				test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 			}
-			int h = 0;
-			int w = 0;
-			TTF_SizeText(font, test, &w, &h);
+//			int h = 0;
+//			int w = 0;
+//			TTF_SizeText(font, test, &w, &h);
+			int tempNum = MAGIC_NUMBER;
+			MAGIC_NUMBER=maxWidth;
 			genericDrawTextOnScreen(font,outline,x,y,test,txtColor,align,NULL,0);
-			free(test);
+			MAGIC_NUMBER=tempNum;
+//			free(test);
 			y+=lineSeparation;
 		}
 		if (printCounter==wordCounter) {
 			y-=lineSeparation;
 			if (msg->w>maxWidth) {
+				int tempNum = MAGIC_NUMBER;
+				MAGIC_NUMBER=maxWidth;
 				genericDrawTextOnScreen(font,outline,x,y+lineSeparation,wordsInBuf[printCounter],txtColor,align,NULL,0);
+				MAGIC_NUMBER=tempNum;
 			}
 		}
 		SDL_FreeSurface(msg);
@@ -183,10 +188,13 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, 
 		}
 
 	} else {
-		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+//		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		int tempNum = MAGIC_NUMBER;
+		MAGIC_NUMBER=maxWidth;
 		genericDrawTextOnScreen(font,outline,x,y,buf,txtColor,align,NULL,0);
-		free(wordsInBuf[0]);
-		SDL_FreeSurface(msg);
+		MAGIC_NUMBER=tempNum;
+//		free(wordsInBuf[0]);
+//		SDL_FreeSurface(msg);
 	}
 }
 
