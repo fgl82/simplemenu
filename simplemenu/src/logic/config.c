@@ -490,6 +490,13 @@ void loadTheme(char *theme) {
 			setRGBFromHex(gameCountFontColor, value);
 		}
 
+		value = ini_get(themeConfig, "GENERAL", "newspaper_mode");
+		if (value==NULL) {
+			newspaperMode = 0;
+		} else {
+			newspaperMode = atoi (value);
+		}
+
 		value = ini_get(themeConfig, "GENERAL", "text2_font_size");
 		text2FontSize = atoi (value);
 
@@ -1189,6 +1196,13 @@ int loadSections(char *file) {
 	value = ini_get(themeConfig, "GENERAL", "text1_font_size");
 	text1FontSize = atoi (value);
 
+	value = ini_get(themeConfig, "GENERAL", "newspaper_mode");
+	if (value==NULL) {
+		newspaperMode = 0;
+	} else {
+		newspaperMode = atoi (value);
+	}
+
 	value = ini_get(themeConfig, "GENERAL", "text1_x");
 	text1X = atoifgl(value);
 
@@ -1245,6 +1259,13 @@ int loadSections(char *file) {
 		gameCountAlignment = atoifgl(value);
 		value = ini_get(themeConfig, "GENERAL", "game_count_font_color");
 		setRGBFromHex(gameCountFontColor, value);
+	}
+
+	value = ini_get(themeConfig, "GENERAL", "newspaper_mode");
+	if (value==NULL) {
+		newspaperMode = 0;
+	} else {
+		newspaperMode = atoi (value);
 	}
 
 	value = ini_get(themeConfig, "GENERAL", "text2_font_size");
@@ -1400,6 +1421,7 @@ void saveLastState() {
 }
 
 void loadLastState() {
+	printf("loadLast\n");
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
@@ -1482,6 +1504,7 @@ void loadLastState() {
 			if (groupCounter==startInGroup) {
 				menuSections[sectionNumber].currentPage=page;
 				menuSections[sectionNumber].currentGameInPage=game;
+				printf("%d\n",game);
 				menuSections[sectionNumber].realCurrentGameNumber=realCurrentGameNumber;
 				returnTo=retTo;
 			}

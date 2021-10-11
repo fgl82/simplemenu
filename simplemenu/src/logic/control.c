@@ -218,7 +218,6 @@ void launchGame(struct Rom *rom) {
 
 	char tempExecDirPlusFileName[3000];
 	char tempExecFile[3000];
-	printf(" \n");
 	if (isFavoritesSectionSelected() && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(tempExec,favorite.emulatorFolder);
@@ -688,7 +687,6 @@ void performGroupChoosingAction() {
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
 			}
 			if (CURRENT_SECTION.gameCount==0) {
-				printf("2\n");
 				advanceSection();
 				loadGameList(0);
 				loadFavoritesSectionGameList();

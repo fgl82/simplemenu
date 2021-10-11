@@ -161,6 +161,7 @@ extern SDL_Surface* surfaceBattCharging;
 extern int battX;
 extern int battY;
 extern int text1FontSize;
+extern int newspaperMode;
 extern int text1X;
 extern int text1Y;
 extern int text1Alignment;

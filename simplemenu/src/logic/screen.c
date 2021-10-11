@@ -314,17 +314,26 @@ void displayImageOnMenuScreen(char *fileName) {
 		int heartY = 0;
 
 		if (showArt) {
-			heartX = artX+artWidth/2;
-			heartY = artY+artHeight/2;
+			if(newspaperMode) {
+				heartX = artX+artWidth/2;
+				heartY = artY+h/2;
+			} else {
+				heartX = artX+artWidth/2;
+				heartY = artY+artHeight/2;
+			}
 		} else {
 			heartX = SCREEN_WIDTH/2;
 			heartY = SCREEN_HEIGHT/2;
 		}
 		if (showArt) {
-			drawImage(screen, screenshot, artX+(artWidth/2)-w/2, artY, 0, 0, w, h, 0, smoothing);
+			if(newspaperMode) {
+				drawImage(screen, screenshot, artX+(artWidth/2)-w/2, artY, 0, 0, w, h, 0, smoothing);
+			} else {
+				drawImage(screen, screenshot, artX+(artWidth/2)-w/2, artY+(artHeight/2)-h/2, 0, 0, w, h, 0, smoothing);
+			}
 		}
 		displayHeart(heartX, heartY);
-		if(artTextDistanceFromPicture>=0 && showArt) {
+		if(artTextDistanceFromPicture>=0 && showArt && !newspaperMode) {
 			char temp[500];
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			if (currentGameNameBeingDisplayed[0]=='+') {
@@ -349,10 +358,12 @@ void displayImageOnMenuScreen(char *fileName) {
 			snprintf(temp,sizeof(temp),"%d/%d", CURRENT_SECTION.realCurrentGameNumber, CURRENT_SECTION.gameCount);
 			int artHeight = (artWidth/4)*3;
 			if (CURRENT_SECTION.gameCount>0) {
-				if (currentGameNameBeingDisplayed[0]=='+') {
-					drawGameNameUnderPicture(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
-				} else {
-					drawGameNameUnderPicture(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+				if(!newspaperMode) {
+					if (currentGameNameBeingDisplayed[0]=='+') {
+						drawGameNameUnderPicture(currentGameNameBeingDisplayed+1, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+					} else {
+						drawGameNameUnderPicture(currentGameNameBeingDisplayed, artX+artWidth/2, artY+artHeight+artTextDistanceFromPicture,artWidth);
+					}
 				}
 			}
 		}
@@ -392,7 +403,6 @@ void drawTextOnHeader() {
 			}
 		} else {
 			if (menuSections[favoritesSectionNumber].fantasyName[0]!='\0') {
-				printf("%s\n", menuSections[favoritesSectionNumber].fantasyName);
 				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].fantasyName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 			} else {
 				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);

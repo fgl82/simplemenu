@@ -60,12 +60,17 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	int width = MAGIC_NUMBER;
 
 	int retW = 1;
+	int retH = 1;
 
-	TTF_SizeText(font, (const char *) buf, &retW, NULL);
+	TTF_SizeText(font, (const char *) buf, &retW, &retH);
 
-	while ((artTextDistanceFromPicture==-1&&y<=currentH&&retW>width)||
-		   (artTextDistanceFromPicture==-1&&y>currentH&&retW>=currentW-(SCREEN_WIDTH*18/640)&&currentW>0)||
-		   (artTextDistanceFromPicture!=-1&&retW>width)) {
+	if(currentState == BROWSING_GAME_LIST
+			&& newspaperMode
+			&& y >= (currentH)) {
+		width = SCREEN_WIDTH-(gameListX*2);
+	}
+
+	while (retW>width) {
 		bufCopy[len]='\0';
 		char *bufCopy1=strdup(bufCopy);
 		len--;

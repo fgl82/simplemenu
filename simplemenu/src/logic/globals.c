@@ -140,6 +140,7 @@ SDL_Surface* surfaceBattCharging;
 int battX;
 int battY;
 int text1FontSize;
+int newspaperMode;
 int text1X;
 int text1Y;
 int text1Alignment;

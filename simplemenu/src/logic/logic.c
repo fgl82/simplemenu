@@ -304,7 +304,6 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 	logMessage("INFO", "executeCommand", "Launching Game");
 
 	setCPU(frequency);
-	printf("%d\n",frequency);
 
 #ifdef TARGET_RFW
 	//	ipu modes (/proc/jz/ipu):
@@ -1195,7 +1194,6 @@ void determineStartingScreen(int sectionCount) {
 	if (sectionCount == 0 || currentSectionNumber == favoritesSectionNumber) {
 		logMessage("INFO", "determineStartingScreen", "No sections found or favorites was selected");
 		loadFavoritesSectionGameList();
-		printf("asdas\n");
 		logMessage("INFO", "determineStartingScreen", "Favorites loaded");
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
