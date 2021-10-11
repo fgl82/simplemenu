@@ -567,12 +567,14 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToAppFiles[5000];
 	char pathToGameFiles[5000];
 	char pathToTempFiles[5000];
+	char pathToRomPreferencesFiles[5000];
 	char pathToSectionGroupsFiles[5000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
 	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
 	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%s/.simplemenu/tmp",home);
+	snprintf(pathToRomPreferencesFiles,sizeof(pathToRomPreferencesFiles),"%s/.simplemenu/rom_preferences",home);
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[5000];
@@ -619,6 +621,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 			generateError("FATAL ERROR", 1);
 		}
 		mkdir(pathToTempFiles,0700);
+		mkdir(pathToRomPreferencesFiles,0700);
 	}
 	logMessage("INFO","createConfigFilesInHomeIfTheyDontExist","Validated configuration existence");
 }
