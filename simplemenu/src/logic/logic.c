@@ -561,7 +561,7 @@ void loadFavoritesSectionGameList() {
 		FAVORITES_SECTION.gameCount++;
 	}
 	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount-1);
-	if (favoritesSize > 0) {
+	if (favoritesSize > 0 && currentSectionNumber == favoritesSectionNumber) {
 		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
 	}
 	CURRENT_SECTION.initialized=1;

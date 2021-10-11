@@ -1421,7 +1421,6 @@ void saveLastState() {
 }
 
 void loadLastState() {
-	printf("loadLast\n");
 	FILE * fp;
 	char * line = NULL;
 	size_t len = 0;
@@ -1504,7 +1503,6 @@ void loadLastState() {
 			if (groupCounter==startInGroup) {
 				menuSections[sectionNumber].currentPage=page;
 				menuSections[sectionNumber].currentGameInPage=game;
-				printf("%d\n",game);
 				menuSections[sectionNumber].realCurrentGameNumber=realCurrentGameNumber;
 				returnTo=retTo;
 			}
