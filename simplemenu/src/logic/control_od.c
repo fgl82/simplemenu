@@ -245,8 +245,11 @@ int performAction(struct Node *node) {
 					showOrHideFavorites();
 				}
 			} else {
-				currentState=SELECTING_SECTION;
 				currentSectionNumber=returnTo;
+				if (CURRENT_SECTION.gameCount==0) {
+					CURRENT_SECTION.gameCount=theSectionHasGames(&CURRENT_SECTION);
+				}
+				currentState=SELECTING_SECTION;
 				if (CURRENT_SECTION.systemLogoSurface == NULL) {
 					CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 				}

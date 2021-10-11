@@ -801,9 +801,8 @@ void performSystemSettingsChoosingAction() {
 			}
 			setBrightness(brightnessValue);
 		} else if (chosenSetting==SHARPNESS_OPTION) {
-			printf("%d\n", sharpnessValue);
 			if (keys[BTN_LEFT]) {
-				if (sharpnessValue>=0) {
+				if (sharpnessValue>0) {
 					sharpnessValue-=1;
 				}
 			} else {
