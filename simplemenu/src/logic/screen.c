@@ -1372,14 +1372,15 @@ void setupSystemSettings() {
 
 	options[2]="Sharpness ";
 	values[2]=malloc(100);
-	char *temp = getenv("SDL_VIDEO_KMSDRM_SCALING_SHARPNESS");
-	if (temp!=NULL) {
-		sprintf(values[2],"%s",temp);
-		sharpnessValue=atoi(values[2]);
-	} else {
-		sharpnessValue=0;
-		values[2]="0";
-	}
+//	char *temp = getenv("SDL_VIDEO_KMSDRM_SCALING_SHARPNESS");
+//	if (temp!=NULL) {
+//		sprintf(values[2],"%s",temp);
+//		sharpnessValue=atoi(values[2]);
+//	} else {
+//		sharpnessValue=0;
+//		values[2]="0";
+//	}
+	sprintf(values[2],"%d",sharpnessValue);
 	hints[2] = "ADJUST SHARPNESS LEVEL";
 
 	options[3]="Screen timeout ";

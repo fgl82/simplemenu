@@ -801,19 +801,20 @@ void performSystemSettingsChoosingAction() {
 			}
 			setBrightness(brightnessValue);
 		} else if (chosenSetting==SHARPNESS_OPTION) {
+			printf("%d\n", sharpnessValue);
 			if (keys[BTN_LEFT]) {
-				if (sharpnessValue>0) {
+				if (sharpnessValue>=0) {
 					sharpnessValue-=1;
 				}
 			} else {
-				if (sharpnessValue<15) {
+				if (sharpnessValue<32) {
 					sharpnessValue+=1;
 				}
 			}
-			char *temp = malloc(1000);
+			char temp[100];
 			sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%i",sharpnessValue);
 			SDL_putenv(temp);
-			screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
+//			screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 		} else if (chosenSetting==OC_OPTION) {
 #if defined TARGET_OD_BETA || defined TARGET_PC
 			if (OCValue==OC_OC_LOW) {

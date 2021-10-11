@@ -78,6 +78,7 @@ void initialSetup(int w, int h) {
 	createConfigFilesInHomeIfTheyDontExist();
 	loadConfig();
 	OCValue = OC_OC_LOW;
+	sharpnessValue=8;
 	initializeDisplay(w,h);
 	freeFonts();
 	initializeFonts();
@@ -85,6 +86,10 @@ void initialSetup(int w, int h) {
 	createThemesInHomeIfTheyDontExist();
 	checkThemes();
 	loadLastState();
+	char temp[100];
+	sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%i",sharpnessValue);
+	SDL_putenv(temp);
+//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 	HW_Init();
 	currentCPU = OC_NO;
 #ifndef TARGET_OD_BETA

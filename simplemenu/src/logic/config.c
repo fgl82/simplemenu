@@ -1403,6 +1403,7 @@ void saveLastState() {
 	fprintf(fp, "%d;\n", currentSectionNumber);
 	fprintf(fp, "%d;\n", currentMode);
 	fprintf(fp, "%d;\n", OCValue);
+	fprintf(fp, "%d;\n", sharpnessValue);
 	for(int groupCount=0;groupCount<sectionGroupCounter;groupCount++) {
 		int sectionsNum=countSections(sectionGroups[groupCount].groupPath);
 		for (int sectionCount=0;sectionCount<=sectionsNum;sectionCount++) {
@@ -1433,7 +1434,7 @@ void loadLastState() {
 		saveLastState();
 		return;
 	}
-	char *configurations[6];
+	char *configurations[7];
 	char *ptr;
 	int startInSection = -1;
 	int startInPictureMode = -1;
@@ -1447,6 +1448,7 @@ void loadLastState() {
 	int savedVersion=-1;
 	int itemsRead=-1;
 	int OCValueRead=-1;
+	int sharpnessValueRead=-1;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		ptr = strtok(line, ";");
 		int i=0;
@@ -1485,6 +1487,8 @@ void loadLastState() {
 			itemsRead=atoifgl(configurations[0]);
 		} else if (OCValueRead==-1) {
 			OCValueRead=atoifgl(configurations[0]);
+		} else if (sharpnessValueRead==-1) {
+			sharpnessValueRead=atoifgl(configurations[0]);
 		} else {
 			if(atoifgl(configurations[1])==0) {
 				groupCounter++;
@@ -1519,6 +1523,7 @@ void loadLastState() {
 	activeGroup = startInGroup;
 	currentMode=itemsRead;
 	OCValue=OCValueRead;
+	sharpnessValue=sharpnessValueRead;
 	fclose(fp);
 	if (line) {
 		free(line);
