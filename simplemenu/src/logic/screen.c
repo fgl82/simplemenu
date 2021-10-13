@@ -91,14 +91,14 @@ void drawPictureTextOnScreen(char *buf) {
 		if (colorfulFullscreenMenu) {
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2), CURRENT_SECTION.fullScreenMenuBackgroundColor, 180);
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2),(int[]){0,0,0}, 100);
-			drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, CURRENT_SECTION.fullscreenMenuItemsColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+			drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, CURRENT_SECTION.fullscreenMenuItemsColor, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter, (int[]){}, 0);
 		} else {
 			drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2), (int[]){0,0,0}, 180);
-			drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, (int[]){255,255,255}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+			drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, (int[]){255,255,255}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter, (int[]){}, 0);
 		}
 	} else {
 		drawTransparentRectangleToScreen(SCREEN_WIDTH, h+2, 0, footerOnTop?0:SCREEN_HEIGHT-(h+2), (int[]){0,0,0}, 180);
-		drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter);
+		drawTextOnScreen(font, NULL, SCREEN_WIDTH/2, footerOnTop?2:SCREEN_HEIGHT-h, temp, (int[]){255,255,0}, footerOnTop?VAlignBottom|HAlignCenter:VAlignBottom|HAlignCenter, (int[]){}, 0);
 	}
 	free(temp);
 }
@@ -112,63 +112,39 @@ void drawImgFallbackTextOnScreen(char *fallBackText) {
 		} else {
 			strcpy(temp,fallBackText);
 		}
-		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2), 120, temp, CURRENT_SECTION.menuItemsFontColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2), 120, temp, CURRENT_SECTION.menuItemsFontColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 		free(temp);
 	} else {
 		drawPictureTextOnScreen(fallBackText);
 	}
 }
 
-void drawTextOnHeaderWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(headerFont, outlineHeaderFont, (SCREEN_WIDTH/2), 13, text, txtColor, VAlignMiddle | HAlignCenter);
-}
-
-void drawTextOnSettingsHeaderWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, (SCREEN_WIDTH/2), calculateProportionalSizeOrDistance1(13), text, txtColor, VAlignMiddle | HAlignCenter);
-}
-
 void drawTextOnSettingsHeaderLeftWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsHeaderFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(24), text, txtColor, VAlignMiddle | HAlignLeft);
-}
-
-void drawTextOnSettingsHeaderRightWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(13), text, txtColor, VAlignMiddle | HAlignRight);
-}
-
-void drawTextOnSettingsHeaderRightWithColor1(char *text, int x, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, x, calculateProportionalSizeOrDistance1(33), text, txtColor, VAlignMiddle | HAlignRight);
+	drawTextOnScreen(settingsHeaderFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(24), text, txtColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 }
 
 void drawCurrentLetter(char *letter, int textColor[], int x, int y) {
-	drawTextOnScreen(font, NULL, x, y, letter, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(font, NULL, x, y, letter, textColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 }
 
 void drawBigWhiteText(char *text) {
 	int white[3]={255, 255, 255};
-	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text, white, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 }
 
 void drawLoadingText() {
 	int white[3]={255, 255, 255};
-	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(8), "LOADING...", white, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(8), "LOADING...", white, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 	refreshScreen();
 }
 
 void drawCopyingText() {
 	int white[3]={255, 255, 255};
-	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "COPYING FILES, PLEASE WAIT", white, VAlignMiddle | HAlignCenter);
-}
-
-void drawTimeOnFooter(char *text) {
-	drawTextOnScreen(font, NULL, 316, 232, text, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | HAlignRight);
-}
-
-void drawBatteryOnFooter(char *text) {
-	drawTextOnScreen(font, NULL, 4, 232, text, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "COPYING FILES, PLEASE WAIT", white, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 }
 
 void drawCurrentSectionGroup(char *groupName, int textColor[]) {
-	drawTextOnScreen(BIGFont, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter);
+	drawTextOnScreen(BIGFont, NULL, (SCREEN_WIDTH/2)+calculateProportionalSizeOrDistance1(2), (SCREEN_HEIGHT/2), groupName, textColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 }
 
 void drawGameNameUnderPicture(char *buf, int x, int y, int maxWidth) {
@@ -182,7 +158,7 @@ void drawGameNumber(char *buf, int x, int y) {
 	} else if (text2Alignment==2) {
 		hAlign = HAlignRight;
 	}
-	genericDrawTextOnScreen(inMenuGameCountFont, outlineCustomCountFont, x, y, buf, CURRENT_SECTION.fullscreenMenuItemsColor, VAlignMiddle|hAlign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+	drawTextOnScreen(inMenuGameCountFont, outlineCustomCountFont, x, y, buf, CURRENT_SECTION.fullscreenMenuItemsColor, VAlignMiddle|hAlign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 }
 
 void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
@@ -192,33 +168,17 @@ void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int positi
 	getTextWidth(settingsfont, option, &retW);
 	getTextWidth(settingsfont, " ", &retW2);
 	getTextWidth(settingsfont, value, &retW3);
-	drawShadedTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor);
+	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor, 1);
 }
 
 void drawSettingsOptionValueOnScreen(char *value, int position, int txtColor[]) {
 	int retW3=3;
 	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
-	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft);
+	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 }
 
 void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
-	drawTextOnScreen(settingsfont, NULL, 5, position, buf, txtColor, VAlignBottom | HAlignLeft);
-}
-
-void drawShadedGameNameOnScreen(char *buf, int position) {
-	char *temp = malloc(strlen(buf)+2);
-	if (currentCPU == OC_OC_LOW||currentCPU == OC_OC_HIGH) {
-		strcpy(temp,"+");
-		strcat(temp,buf);
-	} else {
-		strcpy(temp,buf);
-	}
-	drawShadedTextOnScreen(font, outlineFont, SCREEN_WIDTH/2, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | HAlignCenter, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
-	free(temp);
-}
-
-void drawNonShadedGameNameOnScreenLeft(char *buf, int position) {
-	drawTextOnScreen(font, outlineFont, 3, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft);
+	drawTextOnScreen(settingsfont, NULL, 5, position, buf, txtColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 }
 
 void drawShadedGameNameOnScreenCustom(char *buf, int position){
@@ -233,25 +193,21 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 		hAlign = HAlignRight;
 	}
 	if (transparentShading) {
-		drawTextOnScreen(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign);
+		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, (int[]){}, 0);
 	} else {
-		drawShadedTextOnScreen(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor);
+		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor, 1);
 	}
 	free(temp);
 }
 
 void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
 	if (gameListAlignment == 0) {
-		drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft);
+		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 	} else if (gameListAlignment == 1) {
-		drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter);
+		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter, (int[]){}, 0);
 	} else {
-		drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignRight);
+		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignRight, (int[]){}, 0);
 	}
-}
-
-void drawNonShadedGameNameOnScreen(char *buf, int position) {
-	drawTextOnScreen(font, outlineFont, SCREEN_WIDTH/2, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter);
 }
 
 void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
@@ -261,8 +217,7 @@ void drawShadedGameNameOnScreenPicMode(char *buf, int position) {
 	color[0] = 255;
 	color[1] = 255;
 	color[2] = 0;
-	drawTextOnScreen(font, outlineFont, 5, position, temp, color, VAlignMiddle | HAlignLeft);
-	TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
+	drawTextOnScreen(font, outlineFont, 5, position, temp, color, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	free(temp);
 }
 
@@ -277,7 +232,7 @@ void drawNonShadedGameNameOnScreenPicMode(char *buf, int position) {
 		color[1] = 255;
 		color[2] = 255;
 	}
-	drawTextOnScreen(font, outlineFont, 5, position, buf, color, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, outlineFont, 5, position, buf, color, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 }
 
 void displayImageOnMenuScreen(char *fileName) {
@@ -373,12 +328,8 @@ void displayImageOnMenuScreen(char *fileName) {
 	}
 }
 
-void drawTextOnFooterWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(footerFont, outlineFooterFont, SCREEN_WIDTH/2, SCREEN_HEIGHT-9, text, txtColor, VAlignMiddle| HAlignCenter);
-}
-
 void drawTextOnSettingsFooterWithColor(char *text, int txtColor[]) {
-	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(231), text, txtColor, VAlignMiddle| HAlignLeft);
+	drawTextOnScreen(settingsStatusFont, NULL, calculateProportionalSizeOrDistance1(5), calculateProportionalSizeOrDistance1(231), text, txtColor, VAlignMiddle| HAlignLeft, (int[]){}, 0);
 }
 
 void drawTextOnHeader() {
@@ -397,19 +348,19 @@ void drawTextOnHeader() {
 	if (currentSectionNumber==favoritesSectionNumber) {
 		if(favoritesSize>0) {
 			if (favorites[CURRENT_GAME_NUMBER].sectionAlias[0]!=' ') {
-				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+				drawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].sectionAlias, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 			} else {
-				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+				drawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 			}
 		} else {
 			if (menuSections[favoritesSectionNumber].fantasyName[0]!='\0') {
-				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].fantasyName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+				drawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].fantasyName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 			} else {
-				genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+				drawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, menuSections[favoritesSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 			}
 		}
 	} else {
-		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, strlen(menuSections[currentSectionNumber].fantasyName)>1?menuSections[currentSectionNumber].fantasyName:menuSections[currentSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		drawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, text1X, text1Y, strlen(menuSections[currentSectionNumber].fantasyName)>1?menuSections[currentSectionNumber].fantasyName:menuSections[currentSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 	}
 }
 
@@ -520,7 +471,7 @@ void resizeSectionSystemPicture(struct MenuSection *section) {
 
 void drawError(char *errorMessage, int textColor[]) {
 	if(strchr(errorMessage,'-')==NULL) {
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3), errorMessage, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3), errorMessage, textColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 	} else {
 		char *line2 = strchr(errorMessage,'-');
 		int index = (line2-errorMessage);
@@ -528,8 +479,8 @@ void drawError(char *errorMessage, int textColor[]) {
 		char line1[200];
 		strcpy(line1, errorMessage);
 		line1[index]='\0';
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)-calculateProportionalSizeOrDistance1(12), line1, textColor, VAlignMiddle | HAlignCenter);
-		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)+calculateProportionalSizeOrDistance1(12), line2, textColor, VAlignMiddle | HAlignCenter);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)-calculateProportionalSizeOrDistance1(12), line1, textColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
+		drawTextOnScreen(settingsfont, NULL, (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(3)+calculateProportionalSizeOrDistance1(12), line2, textColor, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 	}
 }
 
@@ -755,42 +706,42 @@ void showRomPreferences() {
 
 	//Name
 	char * name = getNameWithoutPath(CURRENT_SECTION.currentGameNode->data->name);
-	drawTextOnScreen(font, NULL, calculateProportionalSizeOrDistance1(6), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(28), name, (int[]) {255,255,255}, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, calculateProportionalSizeOrDistance1(6), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(28), name, (int[]) {255,255,255}, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	free(name);
 
 	TTF_SizeText(font, (const char *) "Overclock: " , &textWidth, NULL);
 	textWidth+=calculateProportionalSizeOrDistance1(2);
 
 	//Frequency option text
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	//Frequency option value
 #if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_LOW || CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_HIGH) {
-		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	} else {
-		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	}
 #else
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "not available", valueColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "not available", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 #endif
 
 	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, problematicGray);
 
 	//Launch at boot option text
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "Autostart: ", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "Autostart: ", textColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	//Launch at boot option value
 	if (launchAtBoot) {
-		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	} else {
-		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft);
+		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	}
 
 	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2+height/4, problematicGray);
 
 	//Emulator option text
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(27), "Emulator: ", textColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(27), "Emulator: ", textColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	//Emulator option value
-	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(27), emuName, valueColor, VAlignMiddle | HAlignLeft);
+	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)+calculateProportionalSizeOrDistance1(27), emuName, valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 
 	free(emuName);
 	free(frequency);
@@ -820,13 +771,13 @@ void showConsole() {
 		}
 
 		if (displayGameCount) {
-			drawTextOnScreen(sectionCardsGameCountFont,NULL,gameCountX,gameCountY,gameCount,gameCountFontColor,alignment);
+			drawTextOnScreen(sectionCardsGameCountFont, NULL, gameCountX, gameCountY, gameCount, gameCountFontColor, alignment, (int[]){}, 0);
 			free(gameCount);
 		}
 
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,(int[]){180,180,180});
-		drawTextOnScreen(font,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter);
+		drawTextOnScreen(font,NULL,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,CURRENT_SECTION.sectionName,(int[]){0,0,0},VAlignMiddle|HAlignCenter, (int[]){}, 0);
 	}
 	logMessage("INFO","showConsole","Current console shown");
 }
@@ -1041,11 +992,9 @@ void drawTimedShutDownScreen() {
 	}
 	snprintf(text1,30,"IN %d SECONDS",countDown);
 	snprintf(text2,30,"X TO CANCEL");
-	genericDrawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/4, text, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
-
-	genericDrawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text1, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
-
-	genericDrawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT-SCREEN_HEIGHT/4, text2, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/4, text, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, text1, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
+	drawTextOnScreen(BIGFont, NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT-SCREEN_HEIGHT/4, text2, (int[]){255,255,255}, VAlignMiddle | HAlignCenter, (int[]){0,0,0}, 0);
 }
 
 void drawShutDownScreen() {

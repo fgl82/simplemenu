@@ -50,7 +50,7 @@ int calculateProportionalSizeOrDistance1(int number) {
 	}
 }
 
-int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
+int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
 	SDL_Surface *msg1 = malloc(sizeof(msg));
 	char *bufCopy=malloc(strlen(buf)+1);
@@ -122,6 +122,55 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	return 1;
 }
 
+int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
+	SDL_Surface *msg;
+	SDL_Surface *msg1 = malloc(sizeof(msg));
+
+	if (shaded) {
+		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
+			msg1 = TTF_RenderText_Shaded(outline, buf, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		} else {
+			msg = TTF_RenderText_Shaded(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+		}
+	} else {
+		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
+			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
+			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		} else {
+			msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+		}
+	}
+
+	if (align & HAlignCenter) {
+		x -= msg->w / 2;
+	} else if (align & HAlignRight) {
+		x -= msg->w;
+	}
+	if (align & VAlignMiddle) {
+		y -= msg->h / 2;
+	} else if (align & VAlignTop) {
+		y -= msg->h;
+	}
+	SDL_Rect rect2;
+	rect2.x = x;
+	rect2.y = y;
+	rect2.w = msg->w;
+	rect2.h = msg->h;
+
+	if(currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
+		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
+		SDL_BlitSurface(msg, NULL, msg1, &rect);
+		SDL_BlitSurface(msg1, NULL, screen, &rect2);
+		SDL_FreeSurface(msg1);
+	} else {
+		SDL_BlitSurface(msg, NULL, screen, &rect2);
+	}
+	SDL_FreeSurface(msg);
+	return 1;
+}
+
+
 void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int maxWidth, int lineSeparation) {
 	SDL_Surface *msg;
 	char *bufCopy;
@@ -163,23 +212,14 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, 
 			if (msg->w>maxWidth) {
 				test[strlen(test)-strlen(wordsInBuf[printCounter])]='\0';
 			}
-//			int h = 0;
-//			int w = 0;
-//			TTF_SizeText(font, test, &w, &h);
-			int tempNum = MAGIC_NUMBER;
-			MAGIC_NUMBER=maxWidth;
-			genericDrawTextOnScreen(font,outline,x,y,test,txtColor,align,NULL,0);
-			MAGIC_NUMBER=tempNum;
-//			free(test);
+			drawTextOnScreen(font,outline,x,y,test,txtColor,align,NULL,0);
+			free(test);
 			y+=lineSeparation;
 		}
 		if (printCounter==wordCounter) {
 			y-=lineSeparation;
 			if (msg->w>maxWidth) {
-				int tempNum = MAGIC_NUMBER;
-				MAGIC_NUMBER=maxWidth;
-				genericDrawTextOnScreen(font,outline,x,y+lineSeparation,wordsInBuf[printCounter],txtColor,align,NULL,0);
-				MAGIC_NUMBER=tempNum;
+				drawTextOnScreen(font,outline,x,y+lineSeparation,wordsInBuf[printCounter],txtColor,align,NULL,0);
 			}
 		}
 		SDL_FreeSurface(msg);
@@ -188,22 +228,9 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, 
 		}
 
 	} else {
-//		msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
-		int tempNum = MAGIC_NUMBER;
-		MAGIC_NUMBER=maxWidth;
-		genericDrawTextOnScreen(font,outline,x,y,buf,txtColor,align,NULL,0);
-		MAGIC_NUMBER=tempNum;
-//		free(wordsInBuf[0]);
-//		SDL_FreeSurface(msg);
+		drawTextOnScreen(font,outline,x,y,buf,txtColor,align,NULL,0);
+		free(wordsInBuf[0]);
 	}
-}
-
-int drawShadedTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[]) {
-	return genericDrawTextOnScreen(font, outline, x, y, buf, txtColor, align, backgroundColor, 1);
-}
-
-int drawTextOnScreen(TTF_Font *pfont, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align) {
-	return genericDrawTextOnScreen(pfont, outline, x, y, buf, txtColor, align, NULL, 0);
 }
 
 SDL_Rect drawRectangleToScreen(int width, int height, int x, int y, int rgbColor[]) {
