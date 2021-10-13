@@ -50,7 +50,7 @@ int calculateProportionalSizeOrDistance1(int number) {
 	}
 }
 
-int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
+int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded, int textWidth) {
 	SDL_Surface *msg;
 	SDL_Surface *msg1 = malloc(sizeof(msg));
 	char *bufCopy=malloc(strlen(buf)+1);
@@ -59,10 +59,7 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 	int len=strlen(buf);
 	int width = MAGIC_NUMBER;
 
-	int retW = 1;
-	int retH = 1;
-
-	TTF_SizeText(font, (const char *) buf, &retW, &retH);
+	int retW = textWidth;
 
 	if(currentState == BROWSING_GAME_LIST
 			&& newspaperMode
@@ -314,33 +311,6 @@ int drawImage(SDL_Surface* display, SDL_Surface *image, int x, int y, int xx, in
 	return 1;
 }
 
-SDL_Surface *resizeSurfaceToFitScreen (SDL_Surface *surface) {
-	if (surface==NULL) {
-		logMessage("WARN","resizeSurfaceToFitScreen","Image not found, surface can't be resized");
-		return NULL;
-	}
-	if (SCREEN_WIDTH==surface->w&&SCREEN_HEIGHT==surface->h) {
-		return surface;
-	}
-	int smoothing = 0;
-	if ((surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) && !(SCREEN_WIDTH%surface->w==0 && SCREEN_HEIGHT%surface->h==0)) {
-		smoothing=0;
-	}
-	double zoomx = (float)SCREEN_WIDTH / surface->w;
-	double zoomy = (float)SCREEN_HEIGHT / surface->h;
-	SDL_Surface *sized = NULL;
-	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
-	if(surface->flags & SDL_SRCCOLORKEY ) {
-		Uint32 colorkey = surface->format->colorkey;
-		SDL_SetColorKey(sized, SDL_SRCCOLORKEY, colorkey);
-	}
-	if(sized->h==(SCREEN_HEIGHT-1)) {
-		sized->h+=1;
-	}
-	free(surface);
-	return sized;
-}
-
 SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface) {
 	if (surface==NULL) {
 		logMessage("WARN","resizeSurface","Image not found, surface can't be resized");
@@ -354,6 +324,12 @@ SDL_Surface *resizeSurfaceToScreenSize(SDL_Surface *surface) {
 	int smoothing = 0;
 	double zoomx = (double)(newW / (double)surface->w);
 	double zoomy = (double)(newH / (double)surface->h);
+
+	if ((surface->w!=SCREEN_WIDTH || surface->h!=SCREEN_HEIGHT) && !(SCREEN_WIDTH%surface->w==0 && SCREEN_HEIGHT%surface->h==0)) {
+		if(SCREEN_WIDTH==320) {
+			smoothing=1;
+		}
+	}
 
 	SDL_Surface *sized = NULL;
 	sized = zoomSurface(surface, zoomx, zoomy, smoothing);
@@ -378,7 +354,9 @@ SDL_Surface *resizeSurface(SDL_Surface *surface, int w, int h) {
 	}
 	int smoothing = 0;
 	if ((surface->w!=w || surface->h!=h) && !(w%surface->w==0 && h%surface->h==0)) {
-		smoothing=0;
+		if(SCREEN_WIDTH==320) {
+			smoothing=1;
+		}
 	}
 	double zoomx = (float)(newW / (float)surface->w);
 	double zoomy = (float)(newH / (float)surface->h);
@@ -462,7 +440,9 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 					w=SCREEN_WIDTH;
 				}
 				if ((int)h!=(int)img->h) {
-					smoothing = 0;
+					if(SCREEN_WIDTH==320) {
+						smoothing=1;
+					}
 				}
 				drawImage(screen, img, SCREEN_WIDTH/2-w/2, SCREEN_HEIGHT/2-h/2, 0, 0, w, h, 0, smoothing);
 			}

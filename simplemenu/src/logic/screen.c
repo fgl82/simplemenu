@@ -196,17 +196,15 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 	int retW = 1;
 	int width=MAGIC_NUMBER;
 	TTF_SizeText(font, (const char *) buf, &retW, NULL);
-
 	if (transparentShading) {
 		if (retW>width) {
-			printf("%s\n", buf);
-			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, (int[]){}, 0);
+			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, (int[]){}, 0, retW);
 		} else {
 			drawTextOnScreen(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, (int[]){}, 0);
 		}
 	} else {
 		if (retW>width) {
-			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor, 1);
+			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor, 1, retW);
 		} else {
 			drawTextOnScreen(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, menuSections[currentSectionNumber].bodySelectedTextBackgroundColor, 1);
 		}
@@ -215,12 +213,27 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 }
 
 void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
+	int retW = 1;
+	int width=MAGIC_NUMBER;
+	TTF_SizeText(font, (const char *) buf, &retW, NULL);
 	if (gameListAlignment == 0) {
-		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
+		if (retW>width) {
+			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft, (int[]){}, 0, retW);
+		} else {
+			drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
+		}
 	} else if (gameListAlignment == 1) {
-		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter, (int[]){}, 0);
+		if (retW>width) {
+			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter, (int[]){}, 0, retW);
+		} else {
+			drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignCenter, (int[]){}, 0);
+		}
 	} else {
-		drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignRight, (int[]){}, 0);
+		if (retW>width) {
+			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignRight, (int[]){}, 0, retW);
+		} else {
+			drawTextOnScreen(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignRight, (int[]){}, 0);
+		}
 	}
 }
 
@@ -274,11 +287,13 @@ void displayImageOnMenuScreen(char *fileName) {
 				h = artHeight;
 				w = h*ratio;
 			}
-			smoothing=0;
+			if(SCREEN_WIDTH==320) {
+				smoothing=1;
+			}
 		}
 		currentH = artY+h;
 		currentW = artX+w;
-		smoothing=0;
+//		smoothing=0;
 		int heartX = 0;
 		int heartY = 0;
 
