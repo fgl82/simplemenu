@@ -75,8 +75,11 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 		TTF_SizeText(font, (const char *) bufCopy1, &retW, &retH);
 		free(bufCopy1);
 	}
+	if(retH==1) {
+		TTF_SizeText(font, (const char *) bufCopy, &retW, &retH);
+	}
 	if (shaded) {
-		drawRectangleToScreen(gameListWidth+((SCREEN_WIDTH*5)/640)*2, retH, gameListX-((SCREEN_WIDTH*5)/640), y, backgroundColor);
+		drawRectangleToScreen(width+((SCREEN_WIDTH*3)/640)*2, retH, gameListX-((SCREEN_WIDTH*3)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
@@ -125,11 +128,21 @@ int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf,
 	SDL_Surface *msg;
 	SDL_Surface *msg1 = malloc(sizeof(msg));
 
+	int width;
+
+	if(currentState == BROWSING_GAME_LIST
+			&& newspaperMode
+			&& y >= (currentH)) {
+		width = SCREEN_WIDTH-(gameListX*2);
+	} else {
+		width = gameListWidth;
+	}
+
 	if (shaded) {
 		int retW = 1;
 		int retH = 1;
 		TTF_SizeText(font, (const char *) buf, &retW, &retH);
-		drawRectangleToScreen(gameListWidth+((SCREEN_WIDTH*5)/640)*2, retH, gameListX-((SCREEN_WIDTH*5)/640), y, backgroundColor);
+		drawRectangleToScreen(width+((SCREEN_WIDTH*3)/640)*2, retH, gameListX-((SCREEN_WIDTH*3)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
