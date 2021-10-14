@@ -76,7 +76,7 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 		free(bufCopy1);
 	}
 	if (shaded) {
-		drawRectangleToScreen(gameListWidth, retH, gameListX, y, backgroundColor);
+		drawRectangleToScreen(gameListWidth+((SCREEN_WIDTH*5)/640)*2, retH, gameListX-((SCREEN_WIDTH*5)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
@@ -129,7 +129,7 @@ int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf,
 		int retW = 1;
 		int retH = 1;
 		TTF_SizeText(font, (const char *) buf, &retW, &retH);
-		drawRectangleToScreen(gameListWidth, retH, gameListX, y, backgroundColor);
+		drawRectangleToScreen(gameListWidth+((SCREEN_WIDTH*5)/640)*2, retH, gameListX-((SCREEN_WIDTH*5)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
 			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
