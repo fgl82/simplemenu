@@ -60,6 +60,7 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 	int width = MAGIC_NUMBER;
 
 	int retW = textWidth;
+	int retH = 1;
 
 	if(currentState == BROWSING_GAME_LIST
 			&& newspaperMode
@@ -71,15 +72,16 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 		bufCopy[len]='\0';
 		char *bufCopy1=strdup(bufCopy);
 		len--;
-		TTF_SizeText(font, (const char *) bufCopy1, &retW, NULL);
+		TTF_SizeText(font, (const char *) bufCopy1, &retW, &retH);
 		free(bufCopy1);
 	}
 	if (shaded) {
+		drawRectangleToScreen(gameListWidth, retH, gameListX, y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Shaded(outline, bufCopy, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Shaded(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	} else {
 		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
@@ -124,11 +126,15 @@ int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf,
 	SDL_Surface *msg1 = malloc(sizeof(msg));
 
 	if (shaded) {
+		int retW = 1;
+		int retH = 1;
+		TTF_SizeText(font, (const char *) buf, &retW, &retH);
+		drawRectangleToScreen(gameListWidth, retH, gameListX, y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Shaded(outline, buf, make_color(50,50,50), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
 			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Shaded(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]), make_color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	} else {
 		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {

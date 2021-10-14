@@ -161,23 +161,13 @@ void drawGameNumber(char *buf, int x, int y) {
 	drawTextOnScreen(inMenuGameCountFont, outlineCustomCountFont, x, y, buf, CURRENT_SECTION.fullscreenMenuItemsColor, VAlignMiddle|hAlign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 }
 
-void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
-	int retW=1;
-	int retW2=1;
-	int retW3=3;
-	getTextWidth(settingsfont, option, &retW);
-	getTextWidth(settingsfont, " ", &retW2);
-	getTextWidth(settingsfont, value, &retW3);
-	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, txtBackgroundColor, 1);
-}
-
 void drawSettingsOptionValueOnScreen(char *value, int position, int txtColor[]) {
 	int retW3=3;
 	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
 	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 }
 
-void drawNonShadedSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
+void drawSettingsOptionOnScreen(char *buf, int position, int txtColor[]) {
 	drawTextOnScreen(settingsfont, NULL, 5, position, buf, txtColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 }
 
@@ -315,7 +305,7 @@ void displayImageOnMenuScreen(char *fileName) {
 			} else {
 				drawImage(screen, screenshot, artX+(artWidth/2)-w/2, artY+(artHeight/2)-h/2, 0, 0, w, h, 0, smoothing);
 			}
-		}
+		}//proper rectangle
 		displayHeart(heartX, heartY);
 		if(artTextDistanceFromPicture>=0 && showArt && !newspaperMode) {
 			char temp[500];
@@ -1235,8 +1225,6 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			} else {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(20), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			}
-			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,problematicGray);
 			selected=i;
 		} else {
 			if(!interactive) {
@@ -1245,9 +1233,9 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
-			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawSettingsOptionValueOnScreen(values[i], nextLineText, bodyHighlightedText);
 		}
+		drawSettingsOptionOnScreen(options[i], nextLineText, bodyText);
+		drawSettingsOptionValueOnScreen(values[i], nextLineText, bodyHighlightedText);
 		int lineColor[] = { 229,229,229};
 		logMessage("INFO","drawSettingsScreen","Drawing rect");
 		if (i<max)  {
