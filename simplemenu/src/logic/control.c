@@ -909,6 +909,7 @@ void performSettingsChoosingAction() {
 				}
 			}
 		} else if (chosenSetting==DEFAULT_OPTION) {
+			#ifndef MIYOOMINI
 			char command [300];
 			if (shutDownEnabled) {
 				#ifdef TARGET_BITTBOY
@@ -945,6 +946,7 @@ void performSettingsChoosingAction() {
 				selectedShutDownOption = 0;
 			}
 			shutDownEnabled=1+shutDownEnabled*-1;
+			#endif
 		}
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;

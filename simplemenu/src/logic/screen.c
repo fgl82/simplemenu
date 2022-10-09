@@ -1443,11 +1443,15 @@ void setupSettingsScreen() {
 	hints[1] = "LAUNCHER THEME";
 
 	options[2]="Default launcher ";
+	#ifdef MIYOOMINI
+	values[2] = "not available";
+	#else
 	if (shutDownEnabled) {
 		values[2] = "yes";
 	} else {
 		values[2] = "no";
 	}
+	#endif
 	hints[2] = "LAUNCH AFTER BOOTING";
 
 	options[3]="Appearance ";
