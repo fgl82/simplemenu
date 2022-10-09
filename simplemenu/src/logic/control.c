@@ -827,9 +827,11 @@ void performSystemSettingsChoosingAction() {
 		}
 #endif
 	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
+#ifndef MIYOOMINI
 		if (keys[BTN_A]) {
 			executeCommand ("/usr/bin", "alsamixer", "#", 1, OC_NO);
 		}
+#endif
 	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 #if defined TARGET_RFW
 		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0, OC_NO);
@@ -958,6 +960,7 @@ void performSettingsChoosingAction() {
 		previouslyChosenSetting=chosenSetting;
 		chosenSetting=0;
 		currentState=SYSTEM_SETTINGS;
+		brightnessValue = getCurrentBrightness();
 	} else if (keys[BTN_B]) {
 		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {

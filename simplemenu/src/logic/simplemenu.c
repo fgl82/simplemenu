@@ -259,6 +259,8 @@ void processEvents() {
 	logMessage("INFO","main","Setup 1");
 #ifdef TARGET_PC
 	initialSetup(atoi(argv[1]), atoi(argv[2]));
+#elif defined MIYOOMINI
+	initialSetup(640,480);
 #else
 	initialSetup(320,240);
 #endif

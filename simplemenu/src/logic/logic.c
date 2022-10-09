@@ -9,7 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include </home/bittboy/git/libopk/opk.h>
+#include "opk.h"
 
 #include <sys/ioctl.h>
 #if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
@@ -205,13 +205,21 @@ void quit() {
 		if (selectedShutDownOption == 1) {
 			execlp("sh", "sh", "-c", "sync && reboot", NULL);
 		} else {
+			#ifdef MIYOOMINI
+			execlp("sh", "sh", "-c", "sync && reboot", NULL);
+			#else
 			execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+			#endif
 		}
 	} else {
 		if (selectedShutDownOption == 1) {
 			execlp("sh", "sh", "-c", "sync && reboot", NULL);
 		} else if (selectedShutDownOption == 2) {
+			#ifdef MIYOOMINI
+			execlp("sh", "sh", "-c", "sync && reboot", NULL);
+			#else
 			execlp("sh", "sh", "-c", "sync && poweroff", NULL);
+			#endif
 		} else {
 			exit(0);
 		}
@@ -340,8 +348,8 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 #ifndef TARGET_OD_BETA
 	resetFrameBuffer1();
 #endif
-	if (consoleApp) {
 #if defined(TARGET_OD) || defined TARGET_OD_BETA
+	if (consoleApp) {
 		/* Enable the framebuffer console */
 		char c = '1';
 		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
@@ -360,8 +368,8 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 				printf("Unable to activate tty1\n");
 			close(fd);
 		}
-#endif
 	}
+#endif
 
 	if(consoleApp) {
 		execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
@@ -834,6 +842,12 @@ int theSectionHasGames(struct MenuSection *section) {
 								desktopCounter++;
 								continue;
 							}
+#elif defined(MIYOOMINI)
+							if(strstr(desktopFiles[desktopCounter].name,"miyoomini")==NULL) {
+								logMessage("WARN", "loadGameList", "Non-miyoomini desktop file found");
+								desktopCounter++;
+								continue;
+							}
 #else
 							if(strstr(desktopFiles[desktopCounter].name,"gcw0")==NULL) {
 								logMessage("WARN", "loadGameList", "Non-OD desktop file found");
@@ -1018,6 +1032,12 @@ void loadGameList(int refresh) {
 #ifdef TARGET_RFW
 								if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
 									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
+									desktopCounter++;
+									continue;
+								}
+#elif defined(MIYOOMINI)
+								if(strstr(desktopFiles[desktopCounter].name,"miyoomini")==NULL) {
+									logMessage("WARN", "loadGameList", "Non-miyoomini desktop file found");
 									desktopCounter++;
 									continue;
 								}

@@ -70,7 +70,7 @@ void drawPictureTextOnScreen(char *buf) {
 		return;
 	}
 	int h = 0;
-	TTF_SizeText(font, buf, NULL, &h);
+	TTF_SizeUTF8(font, buf, NULL, &h);
 	char *temp = malloc(strlen(buf)+2);
 	if(currentSectionNumber!=favoritesSectionNumber) {
 		if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_LOW||CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC_HIGH) {
@@ -163,7 +163,7 @@ void drawGameNumber(char *buf, int x, int y) {
 
 void drawSettingsOptionValueOnScreen(char *value, int position, int txtColor[]) {
 	int retW3=3;
-	TTF_SizeText(settingsfont, (const char *) value, &retW3, NULL);
+	TTF_SizeUTF8(settingsfont, (const char *) value, &retW3, NULL);
 	drawTextOnScreen(settingsfont, NULL, SCREEN_WIDTH-5-retW3, position, value, txtColor, VAlignBottom | HAlignLeft, (int[]){}, 0);
 }
 
@@ -185,7 +185,7 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 
 	int retW = 1;
 	int width=MAGIC_NUMBER;
-	TTF_SizeText(font, (const char *) buf, &retW, NULL);
+	TTF_SizeUTF8(font, (const char *) buf, &retW, NULL);
 	if (transparentShading) {
 		if (retW>width) {
 			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, temp, menuSections[currentSectionNumber].bodySelectedTextTextColor, VAlignBottom | hAlign, (int[]){}, 0, retW);
@@ -205,7 +205,7 @@ void drawShadedGameNameOnScreenCustom(char *buf, int position){
 void drawNonShadedGameNameOnScreenCustom(char *buf, int position) {
 	int retW = 1;
 	int width=MAGIC_NUMBER;
-	TTF_SizeText(font, (const char *) buf, &retW, NULL);
+	TTF_SizeUTF8(font, (const char *) buf, &retW, NULL);
 	if (gameListAlignment == 0) {
 		if (retW>width) {
 			drawTextOnScreenMaxWidth(font, outlineFont, gameListX, position, buf, menuSections[currentSectionNumber].menuItemsFontColor, VAlignBottom | HAlignLeft, (int[]){}, 0, retW);
@@ -728,13 +728,13 @@ void showRomPreferences() {
 	drawTextOnScreen(font, NULL, calculateProportionalSizeOrDistance1(6), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(28), name, (int[]) {255,255,255}, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	free(name);
 
-	TTF_SizeText(font, (const char *) "Overclock: " , &textWidth, NULL);
+	TTF_SizeUTF8(font, (const char *) "Overclock: " , &textWidth, NULL);
 	textWidth+=calculateProportionalSizeOrDistance1(2);
 
 	//Frequency option text
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	//Frequency option value
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC
+#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC || defined MIYOOMINI
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_LOW || CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_HIGH) {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	} else {
@@ -1020,7 +1020,11 @@ void drawShutDownScreen() {
 	int black[] = {0,0,0};
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, black);
 	if (selectedShutDownOption==1) {
+		#ifdef MIYOOMINI
+		drawBigWhiteText("SHUTTING DOWN");
+		#else
 		drawBigWhiteText("REBOOTING");
+		#endif
 	} else {
 		drawBigWhiteText("SHUTTING DOWN");
 	}
@@ -1329,6 +1333,9 @@ void setupAppearanceSettings() {
 
 void setupSystemSettings() {
 	options[0]="Sound ";
+#ifdef MIYOOMINI
+	values[0] = "not available";
+#endif
 	hints[0] = "PRESS A TO LAUNCH ALSAMIXER";
 
 	options[1]="Brightness ";
@@ -1375,6 +1382,8 @@ void setupSystemSettings() {
 	options[5]="HDMI ";
 #if defined TARGET_RFW || defined TARGET_OD_BETA
 	values[5] = " \0";
+#elif defined MIYOOMINI
+	values[5] = "not available";
 #else
 	if (hdmiChanged==1) {
 		values[5] = "enabled";
@@ -1401,7 +1410,11 @@ void setupSettingsScreen() {
 				values[0] = "shutdown";
 				break;
 			case 1:
+				#ifdef MIYOOMINI
+				values[0] = "shutdown";
+				#else
 				values[0] = "reboot";
+				#endif
 				break;
 		}
 	} else {
@@ -1410,7 +1423,11 @@ void setupSettingsScreen() {
 				values[0] = "quit";
 				break;
 			case 1:
+				#ifdef MIYOOMINI
+				values[0] = "shutdown";
+				#else
 				values[0] = "reboot";
+				#endif
 				break;
 			case 2:
 				values[0] = "shutdown";

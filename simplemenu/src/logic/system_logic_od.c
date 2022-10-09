@@ -218,12 +218,12 @@ int getMaxBrightness() {
 	int level;
 	FILE *f = fopen("/sys/class/backlight/backlight/max_brightness", "r");
 	if (f==NULL) {
-		logMessage("INFO","getCurrentBrightness","Error, file not found");
+		logMessage("INFO","getMaxBrightness","Error, file not found");
 		return 12;
 	} else {
 		int ret = fscanf(f, "%i", &level);
 		if(ret==-1) {
-			logMessage("INFO","getCurrentBrightness","Error reading file");
+			logMessage("INFO","getMaxBrightness","Error reading file");
 			return 12;
 		}
 		fclose(f);

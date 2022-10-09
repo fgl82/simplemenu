@@ -39,7 +39,7 @@ SDL_Color make_color(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 SDL_Surface * getBlendedText(TTF_Font *font, const char *text, int txtColor[]) {
-	return TTF_RenderText_Blended(font, text, make_color(txtColor[0], txtColor[1], txtColor[2]));
+	return TTF_RenderUTF8_Blended(font, text, make_color(txtColor[0], txtColor[1], txtColor[2]));
 }
 
 int calculateProportionalSizeOrDistance1(int number) {
@@ -72,26 +72,26 @@ int drawTextOnScreenMaxWidth(TTF_Font *font, TTF_Font *outline, int x, int y, ch
 		bufCopy[len]='\0';
 		char *bufCopy1=strdup(bufCopy);
 		len--;
-		TTF_SizeText(font, (const char *) bufCopy1, &retW, &retH);
+		TTF_SizeUTF8(font, (const char *) bufCopy1, &retW, &retH);
 		free(bufCopy1);
 	}
 	if(retH==1) {
-		TTF_SizeText(font, (const char *) bufCopy, &retW, &retH);
+		TTF_SizeUTF8(font, (const char *) bufCopy, &retW, &retH);
 	}
 	if (shaded) {
 		drawRectangleToScreen(width+((SCREEN_WIDTH*3)/640)*2, retH, gameListX-((SCREEN_WIDTH*3)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
-			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg1 = TTF_RenderUTF8_Blended(outline, bufCopy, make_color(50, 50, 50));
+			msg = TTF_RenderUTF8_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg = TTF_RenderUTF8_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	} else {
 		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Blended(outline, bufCopy, make_color(50, 50, 50));
-			msg = TTF_RenderText_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg1 = TTF_RenderUTF8_Blended(outline, bufCopy, make_color(50, 50, 50));
+			msg = TTF_RenderUTF8_Solid(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg = TTF_RenderUTF8_Blended(font, bufCopy, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	}
 
@@ -141,20 +141,20 @@ int drawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf,
 	if (shaded) {
 		int retW = 1;
 		int retH = 1;
-		TTF_SizeText(font, (const char *) buf, &retW, &retH);
+		TTF_SizeUTF8(font, (const char *) buf, &retW, &retH);
 		drawRectangleToScreen(width+((SCREEN_WIDTH*3)/640)*2, retH, gameListX-((SCREEN_WIDTH*3)/640), y, backgroundColor);
 		if (currentState==BROWSING_GAME_LIST  && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
-			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg1 = TTF_RenderUTF8_Blended(outline, buf, make_color(50, 50, 50));
+			msg = TTF_RenderUTF8_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg = TTF_RenderUTF8_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	} else {
 		if (currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
-			msg1 = TTF_RenderText_Blended(outline, buf, make_color(50, 50, 50));
-			msg = TTF_RenderText_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg1 = TTF_RenderUTF8_Blended(outline, buf, make_color(50, 50, 50));
+			msg = TTF_RenderUTF8_Solid(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		} else {
-			msg = TTF_RenderText_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg = TTF_RenderUTF8_Blended(font, buf, make_color(txtColor[0], txtColor[1], txtColor[2]));
 		}
 	}
 
@@ -212,14 +212,14 @@ void genericDrawMultiLineTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, 
 			if (printCounter>0) {
 				SDL_FreeSurface(msg);
 			}
-			msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
+			msg = TTF_RenderUTF8_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 			while (msg->w<=maxWidth&&printCounter<wordCounter) {
 				printCounter++;
 				if (strcmp(wordsInBuf[printCounter],"-")!=0) {
 					strcat(test," ");
 					strcat(test,wordsInBuf[printCounter]);
 					SDL_FreeSurface(msg);
-					msg = TTF_RenderText_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
+					msg = TTF_RenderUTF8_Blended(font, test, make_color(txtColor[0], txtColor[1], txtColor[2]));
 				} else {
 					printCounter++;
 					break;
@@ -472,10 +472,10 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 
 void initializeDisplay(int w, int h) {
 	int depth=16;
-#ifndef TARGET_PC
-	Uint32 flags = SDL_SWSURFACE|SDL_NOFRAME;
-#else
+#if defined(TARGET_PC) || defined(MIYOOMINI)
 	Uint32 pcflags = SDL_HWSURFACE|SDL_NOFRAME;
+#else
+	Uint32 flags = SDL_SWSURFACE|SDL_NOFRAME;
 #endif
 	SDL_ShowCursor(0);
 	logMessage("INFO","initializeDisplay","well...");
@@ -520,7 +520,7 @@ void initializeDisplay(int w, int h) {
 	fprintf(fp,"0");
 	fclose(fp);
 #endif
-#ifdef TARGET_PC
+#if defined(TARGET_PC) || defined(MIYOOMINI)
 	SCREEN_HEIGHT = h;
 	SCREEN_WIDTH = w;
 	char msg[1000];
@@ -528,6 +528,13 @@ void initializeDisplay(int w, int h) {
 	logMessage("INFO", "initializeDisplay", msg);
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, pcflags);
+	char tempString[1000];
+	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/resources/loading.png",getenv("HOME"));
+	SDL_Surface* image;
+	image = IMG_Load(tempString);
+	SDL_BlitSurface(image, NULL, screen, NULL);
+	SDL_FreeSurface(image);
+	SDL_Flip(screen);
 #else
 	char res[20];
 	sprintf(res, "resolution: %dx%d", w, h);
@@ -576,7 +583,7 @@ void initializeDisplay(int w, int h) {
 }
 
 void getTextWidth(TTF_Font *font, char *text, int *widthToBeSet){
-	TTF_SizeText(font, (const char *) text, widthToBeSet, NULL);
+	TTF_UTF8Text(font, (const char *) text, widthToBeSet, NULL);
 }
 
 void refreshScreen() {
