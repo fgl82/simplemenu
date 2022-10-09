@@ -10,6 +10,7 @@ PLATFORM = PC
 #PLATFORM = MMIYOO
 
 #Flags
+MM_NOQUIT = 0  # Controls if we show Quit option in Session menu on Miyoo Mini. In that device there is no optional startup script. The closest is /mnt/SDCARD/.tmp_update/updater but we can't count on it because it is used by most distributions, so we control the quit menu manually by mean of this flag.
 NOLOADING = 0  # Controls whether the 'LOADING...' message is displayed at the bottom right of the screen during some slow processes.
 
 # Compiler
