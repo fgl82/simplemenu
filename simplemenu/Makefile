@@ -9,6 +9,9 @@ PLATFORM = PC
 #PLATFORM = RK3326
 #PLATFORM = MMIYOO
 
+#Flags
+NOLOADING = 0  # Controls whether the 'LOADING...' message is displayed at the bottom right of the screen during some slow processes.
+
 # Compiler
 ifeq ($(PLATFORM), BITTBOY)
 	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
@@ -49,6 +52,9 @@ else
 	LINKER   = gcc
 	CFLAGS = -DTARGET_PC -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra -std=gnu99
 	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lopk -lz
+endif
+ifeq ($(NOLOADING), 1)
+	CFLAGS += -DNOLOADING
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.

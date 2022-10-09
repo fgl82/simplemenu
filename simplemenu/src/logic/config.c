@@ -79,7 +79,7 @@ void checkIfDefault() {
 	//In Miyoo Mini there is no optional startup script.
 	//The closest is /mnt/SDCARD/.tmp_update/updater but we can't count on it because
 	//it is used by most distributions, so we control the quit menu manually by means
-	//of the define NOQUIT.
+	//of the define MM_NOQUIT.
 	#ifdef MM_NOQUIT
 	shutDownEnabled=1;
 	#else

@@ -133,9 +133,11 @@ void drawBigWhiteText(char *text) {
 }
 
 void drawLoadingText() {
+	#ifndef NOLOADING
 	int white[3]={255, 255, 255};
 	drawTextOnScreen(settingsFooterFont, NULL, SCREEN_WIDTH-calculateProportionalSizeOrDistance1(44), SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(8), "LOADING...", white, VAlignMiddle | HAlignCenter, (int[]){}, 0);
 	refreshScreen();
+	#endif
 }
 
 void drawCopyingText() {
