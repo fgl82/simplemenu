@@ -529,7 +529,7 @@ void initializeDisplay(int w, int h) {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, depth, pcflags);
 	char tempString[1000];
-	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/resources/loading.png",getenv("HOME"));
+	snprintf(tempString, sizeof(tempString), "%s/.simplemenu/resources/loading.png", getenv("HOME"));
 	SDL_Surface* image;
 	image = IMG_Load(tempString);
 	SDL_BlitSurface(image, NULL, screen, NULL);

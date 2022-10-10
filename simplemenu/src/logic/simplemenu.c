@@ -51,6 +51,9 @@ void critical_error_handler()
 {
 	logMessage("ERROR","critical_error_handler","Nice, a critical error!!!");
 	closeLogFile();
+	char command[100];
+	snprintf(command, sizeof(command), "rm %s/.simplemenu/last_state.sav && sync", getenv("HOME"));
+	system(command);
 	exit(0);
 }
 
