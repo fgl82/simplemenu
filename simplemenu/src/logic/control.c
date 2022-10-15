@@ -753,6 +753,79 @@ void performAppearanceSettingsChoosingAction() {
 	}
 }
 
+#if defined MIYOOMINI
+void performScreenSettingsChoosingAction() {
+    LUMINATION_OPTION = 0;
+    HUE_OPTION = 1;
+    SATURATION_OPTION = 2;
+    CONTRAST_OPTION = 3;
+    NUM_SCREEN_OPTIONS = 4;
+
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		} else {
+			chosenSetting=NUM_SCREEN_OPTIONS-1;
+		}
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<NUM_SCREEN_OPTIONS-1) {
+			chosenSetting++;
+		} else {
+			chosenSetting=0;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==LUMINATION_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (luminationValue>1) {
+					luminationValue-=1;
+				}
+			} else {
+				if (luminationValue<10) {
+					luminationValue+=1;
+				}
+			}
+			setSystemValue("lumination", luminationValue);
+		} else if (chosenSetting==HUE_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (hueValue>1) {
+					hueValue-=1;
+				}
+			} else {
+				if (hueValue<10) {
+					hueValue+=1;
+				}
+			}
+			setSystemValue("hue", hueValue);
+		} else if (chosenSetting==SATURATION_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (saturationValue>1) {
+					saturationValue-=1;
+				}
+			} else {
+				if (saturationValue<10) {
+					saturationValue+=1;
+				}
+			}
+			setSystemValue("saturation", saturationValue);
+		} else if (chosenSetting==CONTRAST_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (contrastValue>1) {
+					contrastValue-=1;
+				}
+			} else {
+				if (contrastValue<10) {
+					contrastValue+=1;
+				}
+			}
+			setSystemValue("contrast", contrastValue);
+		}
+	} else if (keys[BTN_B]) {
+		chosenSetting=SCREEN_OPTION;
+		currentState=SYSTEM_SETTINGS;
+	}
+}
+#endif
+
 void performSystemSettingsChoosingAction() {
 	VOLUME_OPTION=0;
 	BRIGHTNESS_OPTION=1;
@@ -762,18 +835,19 @@ void performSystemSettingsChoosingAction() {
 	USB_OPTION=5;
 #if defined MIYOOMINI
     AUDIOFIX_OPTION = 6;
-    NUM_OPTIONS = 7;
+    SCREEN_OPTION = 7;
+    NUM_SYSTEM_OPTIONS = 8;
 #else
-    NUM_OPTIONS = 6;
+    NUM_SYSTEM_OPTIONS = 6;
 #endif
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=NUM_OPTIONS-1;
+			chosenSetting=NUM_SYSTEM_OPTIONS-1;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<NUM_OPTIONS-1) {
+		if(chosenSetting<NUM_SYSTEM_OPTIONS-1) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -833,9 +907,8 @@ void performSystemSettingsChoosingAction() {
         }
 #if defined MIYOOMINI
         else if (chosenSetting==AUDIOFIX_OPTION) {
-            if (audioFix) audioFix = 0;
-            else          audioFix = 1;
-            setAudioFix(audioFix);
+            audioFix = 1 - audioFix;
+            setSystemValue("audiofix", audioFix);
         }
 #endif
 	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
@@ -851,6 +924,11 @@ void performSystemSettingsChoosingAction() {
 #elif defined TARGET_OD_BETA
 		selectedShutDownOption=1;
 		running=0;
+#endif
+#if defined MIYOOMINI
+	} else if (chosenSetting==SCREEN_OPTION&&keys[BTN_A]) {
+		chosenSetting=0;
+		currentState=SCREEN_SETTINGS;
 #endif
 	} else if (keys[BTN_B]) {
 		chosenSetting=previouslyChosenSetting;

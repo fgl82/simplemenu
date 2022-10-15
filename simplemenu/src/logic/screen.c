@@ -1333,6 +1333,30 @@ void setupAppearanceSettings() {
 	hints[2] = "DISPLAY A TRANSLUCENT MENU";
 }
 
+#ifdef MIYOOMINI
+void setupScreenSettings() {
+    options[0]="Lumination ";
+	values[0]=malloc(100);
+	sprintf(values[0], "%d", luminationValue);
+	hints[0] = "REBOOT TO APPLY AFTER CHANGING";
+
+    options[1]="Hue ";
+	values[1]=malloc(100);
+	sprintf(values[1], "%d", hueValue);
+	hints[1] = "REBOOT TO APPLY AFTER CHANGING";
+
+    options[2]="Saturation ";
+	values[2]=malloc(100);
+	sprintf(values[2], "%d", saturationValue);
+	hints[2] = "REBOOT TO APPLY AFTER CHANGING";
+
+    options[3]="Contrast ";
+	values[3]=malloc(100);
+	sprintf(values[3], "%d", contrastValue);
+	hints[3] = "REBOOT TO APPLY AFTER CHANGING";
+}
+#endif
+
 void setupSystemSettings() {
 	options[0]="Sound ";
 #ifdef MIYOOMINI
@@ -1410,6 +1434,9 @@ void setupSystemSettings() {
 		values[6] = "no";
 	}
     hints[6] = "REBOOT TO APPLY AFTER CHANGING";
+
+    options[7]="Screen ";
+	hints[7] = "SCREEN OPTIONS";
 #endif
 }
 
@@ -1567,6 +1594,13 @@ void updateScreen(struct Node *node) {
 				setupSystemSettings();
 				drawSpecialScreen("SYSTEM", options, values, hints, 1);
 				break;
+#if defined MIYOOMINI
+            case SCREEN_SETTINGS:
+				clearOptionsValuesAndHints();
+				setupScreenSettings();
+				drawSpecialScreen("SCREEN", options, values, hints, 1);
+				break;
+#endif
 			case CHOOSING_GROUP:
 				showCurrentGroup();
 				break;

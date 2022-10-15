@@ -79,6 +79,12 @@ int DEFAULT_OPTION;
 int USB_OPTION;
 #if defined MIYOOMINI
 int AUDIOFIX_OPTION;
+int SCREEN_OPTION;
+int LUMINATION_OPTION;
+int HUE_OPTION;
+int SATURATION_OPTION;
+int CONTRAST_OPTION;
+int NUM_SCREEN_OPTIONS;
 #endif
 int VOLUME_OPTION;
 int BRIGHTNESS_OPTION;
@@ -88,7 +94,7 @@ int SHUTDOWN_OPTION;
 int HELP_OPTION;
 int APPEARANCE_OPTION;
 int SYSTEM_OPTION;
-int NUM_OPTIONS;
+int NUM_SYSTEM_OPTIONS;
 
 char mediaFolder[1000];
 int stripGames;
@@ -111,6 +117,10 @@ int backlightValue;
 int hdmiChanged;
 #if defined MIYOOMINI
 int audioFix;
+int luminationValue;
+int hueValue;
+int saturationValue;
+int contrastValue;
 #endif
 pthread_t myThread;
 

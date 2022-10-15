@@ -196,14 +196,7 @@ char* load_file(char const* path) {
 }
 
 int getCurrentBrightness() {
-    cJSON* request_json = NULL;
-    cJSON* itemBrightness;
-
-    const char *request_body = load_file("/appconfigs/system.json");
-    request_json = cJSON_Parse(request_body);
-    itemBrightness = cJSON_GetObjectItem(request_json, "brightness");
-    int dBrightness = cJSON_GetNumberValue(itemBrightness);
-    return dBrightness;
+    return getCurrentSystemValue("brightness");
 }
 
 int getMaxBrightness() {
@@ -211,47 +204,34 @@ int getMaxBrightness() {
 }
 
 void setBrightness(int value) {
-    cJSON* request_json = NULL;
-    cJSON* itemBrightness;
-
     FILE *f = fopen("/sys/class/pwm/pwmchip0/pwm0/duty_cycle", "w");
     if (f!=NULL) {
         fprintf(f, "%d", value * 10);
         fclose(f);
     }
 
-    // Store in system.json
-    const char *request_body = load_file("/appconfigs/system.json");
-    request_json = cJSON_Parse(request_body);
-    itemBrightness = cJSON_GetObjectItem(request_json, "brightness");
-    cJSON_SetNumberValue(itemBrightness, value);
-
-    FILE *file = fopen("/appconfigs/system.json", "w");
-    char *test = cJSON_Print(request_json);
-    fputs(test, file);
-    fclose(file);
+    setSystemValue("brightness", value);
 }
 
-int getCurrentAudioFix() {
+int getCurrentSystemValue(char const* key) {
     cJSON* request_json = NULL;
-    cJSON* itemAudioFix;
+    cJSON* item;
 
     const char *request_body = load_file("/appconfigs/system.json");
     request_json = cJSON_Parse(request_body);
-    itemAudioFix = cJSON_GetObjectItem(request_json, "audiofix");
-    int dAudioFix = cJSON_GetNumberValue(itemAudioFix);
-    return dAudioFix;
+    item = cJSON_GetObjectItem(request_json, key);
+    return cJSON_GetNumberValue(item);
 }
 
-void setAudioFix(int value) {
+void setSystemValue(char const* key, int value) {
     cJSON* request_json = NULL;
-    cJSON* itemAudioFix;
+    cJSON* item;
 
     // Store in system.json
     const char *request_body = load_file("/appconfigs/system.json");
     request_json = cJSON_Parse(request_body);
-    itemAudioFix = cJSON_GetObjectItem(request_json, "audiofix");
-    cJSON_SetNumberValue(itemAudioFix, value);
+    item = cJSON_GetObjectItem(request_json, key);
+    cJSON_SetNumberValue(item, value);
 
     FILE *file = fopen("/appconfigs/system.json", "w");
     char *test = cJSON_Print(request_json);

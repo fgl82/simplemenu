@@ -133,7 +133,11 @@ void initialSetup2() {
 	brightnessValue = getCurrentBrightness();
 	maxBrightnessValue = getMaxBrightness();
     #if defined MIYOOMINI
-    audioFix = getCurrentAudioFix();
+    audioFix = getCurrentSystemValue("audiofix");
+    luminationValue = getCurrentSystemValue("lumination");
+    hueValue = getCurrentSystemValue("hue");
+    saturationValue = getCurrentSystemValue("saturation");
+    contrastValue = getCurrentSystemValue("contrast");
     #endif
 }
 
@@ -176,6 +180,11 @@ void processEvents() {
 					case AFTER_RUNNING_LAUNCH_AT_BOOT:
 						performLaunchAtBootQuitScreenChoosingAction();
 						break;
+#if defined MIYOOMINI
+                    case SCREEN_SETTINGS:
+                        performScreenSettingsChoosingAction();
+                        break;
+#endif
 				}
 			}
 			resetScreenOffTimer();
