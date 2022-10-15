@@ -1401,6 +1401,16 @@ void setupSystemSettings() {
 #else
 	hints[5] = "ENABLE OR DISABLE HDMI";
 #endif
+
+#if defined MIYOOMINI
+	options[6] = "Audio fix ";
+    if (audioFix) {
+		values[6] = "yes";
+	} else {
+		values[6] = "no";
+	}
+    hints[6] = "REBOOT TO APPLY AFTER CHANGING";
+#endif
 }
 
 void setupSettingsScreen() {

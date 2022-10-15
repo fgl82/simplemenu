@@ -132,6 +132,9 @@ void initialSetup2() {
 	beforeTryingToSwitchGroup = activeGroup;
 	brightnessValue = getCurrentBrightness();
 	maxBrightnessValue = getMaxBrightness();
+    #if defined MIYOOMINI
+    audioFix = getCurrentAudioFix();
+    #endif
 }
 
 void processEvents() {

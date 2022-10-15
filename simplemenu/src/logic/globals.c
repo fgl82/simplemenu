@@ -77,6 +77,9 @@ int THEME_OPTION;
 int SCREEN_TIMEOUT_OPTION;
 int DEFAULT_OPTION;
 int USB_OPTION;
+#if defined MIYOOMINI
+int AUDIOFIX_OPTION;
+#endif
 int VOLUME_OPTION;
 int BRIGHTNESS_OPTION;
 int SHARPNESS_OPTION;
@@ -85,6 +88,7 @@ int SHUTDOWN_OPTION;
 int HELP_OPTION;
 int APPEARANCE_OPTION;
 int SYSTEM_OPTION;
+int NUM_OPTIONS;
 
 char mediaFolder[1000];
 int stripGames;
@@ -105,6 +109,9 @@ int OC_OC_HIGH;
 int OC_SLEEP;
 int backlightValue;
 int hdmiChanged;
+#if defined MIYOOMINI
+int audioFix;
+#endif
 pthread_t myThread;
 
 /* THEME */

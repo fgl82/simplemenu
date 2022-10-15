@@ -96,6 +96,9 @@ extern int THEME_OPTION;
 extern int SCREEN_TIMEOUT_OPTION;
 extern int DEFAULT_OPTION;
 extern int USB_OPTION;
+#if defined MIYOOMINI
+extern int AUDIOFIX_OPTION;
+#endif
 extern int VOLUME_OPTION;
 extern int BRIGHTNESS_OPTION;
 extern int SHARPNESS_OPTION;
@@ -105,6 +108,7 @@ extern int HELP_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern int APPEARANCE_OPTION;
 extern int SYSTEM_OPTION;
+extern int NUM_OPTIONS;
 
 extern char mediaFolder[1000];
 extern int stripGames;
@@ -125,6 +129,9 @@ extern int OC_OC_HIGH;
 extern int OC_SLEEP;
 extern int backlightValue;
 extern int hdmiChanged;
+#if defined MIYOOMINI
+extern int audioFix;
+#endif
 extern pthread_t myThread;
 
 /* THEME */

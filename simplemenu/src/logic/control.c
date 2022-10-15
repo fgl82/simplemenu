@@ -760,14 +760,20 @@ void performSystemSettingsChoosingAction() {
 	SCREEN_TIMEOUT_OPTION=3;
 	OC_OPTION=4;
 	USB_OPTION=5;
+#if defined MIYOOMINI
+    AUDIOFIX_OPTION = 6;
+    NUM_OPTIONS = 7;
+#else
+    NUM_OPTIONS = 6;
+#endif
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=5;
+			chosenSetting=NUM_OPTIONS-1;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<5) {
+		if(chosenSetting<NUM_OPTIONS-1) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -821,10 +827,16 @@ void performSystemSettingsChoosingAction() {
 			} else {
 				OCValue=OC_OC_LOW;
 			}
-		}
 #else
 			OCValue=OC_NO;
-		}
+#endif
+        }
+#if defined MIYOOMINI
+        else if (chosenSetting==AUDIOFIX_OPTION) {
+            if (audioFix) audioFix = 0;
+            else          audioFix = 1;
+            setAudioFix(audioFix);
+        }
 #endif
 	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
 #ifndef MIYOOMINI
