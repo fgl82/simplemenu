@@ -760,6 +760,7 @@ void performScreenSettingsChoosingAction() {
     SATURATION_OPTION = 2;
     CONTRAST_OPTION = 3;
     NUM_SCREEN_OPTIONS = 4;
+    COLOR_MAX_VALUE = 20;
 
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
@@ -780,7 +781,7 @@ void performScreenSettingsChoosingAction() {
 					luminationValue-=1;
 				}
 			} else {
-				if (luminationValue<10) {
+				if (luminationValue<COLOR_MAX_VALUE) {
 					luminationValue+=1;
 				}
 			}
@@ -791,7 +792,7 @@ void performScreenSettingsChoosingAction() {
 					hueValue-=1;
 				}
 			} else {
-				if (hueValue<10) {
+				if (hueValue<COLOR_MAX_VALUE) {
 					hueValue+=1;
 				}
 			}
@@ -802,7 +803,7 @@ void performScreenSettingsChoosingAction() {
 					saturationValue-=1;
 				}
 			} else {
-				if (saturationValue<10) {
+				if (saturationValue<COLOR_MAX_VALUE) {
 					saturationValue+=1;
 				}
 			}
@@ -813,7 +814,7 @@ void performScreenSettingsChoosingAction() {
 					contrastValue-=1;
 				}
 			} else {
-				if (contrastValue<10) {
+				if (contrastValue<COLOR_MAX_VALUE) {
 					contrastValue+=1;
 				}
 			}

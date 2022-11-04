@@ -107,6 +107,7 @@ extern int HUE_OPTION;
 extern int SATURATION_OPTION;
 extern int CONTRAST_OPTION;
 extern int NUM_SCREEN_OPTIONS;
+extern int COLOR_MAX_VALUE;
 #endif
 extern int VOLUME_OPTION;
 extern int BRIGHTNESS_OPTION;
