@@ -178,17 +178,17 @@ int getBatteryLevel() {
 char* load_file(char const* path) {
     char* buffer = 0;
     long length = 0;
-    FILE * f = fopen (path, "rb"); //was "rb"
 
+    FILE * f = fopen(path, "rb"); //was "rb"
     if (f) {
-        fseek (f, 0, SEEK_END);
-        length = ftell (f);
-        fseek (f, 0, SEEK_SET);
-        buffer = (char*)malloc ((length+1)*sizeof(char));
+        fseek(f, 0, SEEK_END);
+        length = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        buffer = (char*) malloc((length+1)*sizeof(char));
         if (buffer) {
-            fread (buffer, sizeof(char), length, f);
+            fread(buffer, sizeof(char), length, f);
         }
-        fclose (f);
+        fclose(f);
     }
     buffer[length] = '\0';
 
@@ -213,19 +213,22 @@ void setBrightness(int value) {
     setSystemValue("brightness", value);
 }
 
-int getCurrentSystemValue(char const* key) {
+int getCurrentSystemValue(char const *key) {
     cJSON* request_json = NULL;
-    cJSON* item;
+    cJSON* item = NULL;
+    int result = 0;
 
     const char *request_body = load_file("/appconfigs/system.json");
     request_json = cJSON_Parse(request_body);
     item = cJSON_GetObjectItem(request_json, key);
-    return cJSON_GetNumberValue(item);
+    result = cJSON_GetNumberValue(item);
+    free(request_body);
+    return result;
 }
 
-void setSystemValue(char const* key, int value) {
+void setSystemValue(char const *key, int value) {
     cJSON* request_json = NULL;
-    cJSON* item;
+    cJSON* item = NULL;
 
     // Store in system.json
     const char *request_body = load_file("/appconfigs/system.json");
@@ -237,4 +240,5 @@ void setSystemValue(char const* key, int value) {
     char *test = cJSON_Print(request_json);
     fputs(test, file);
     fclose(file);
+    free(request_body);
 }

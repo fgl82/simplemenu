@@ -435,6 +435,8 @@ void initializeFonts() {
 void freeFonts() {
 	TTF_CloseFont(font);
 	font = NULL;
+	TTF_CloseFont(outlineFont);
+	outlineFont = NULL;
 	TTF_CloseFont(headerFont);
 	headerFont = NULL;
 	TTF_CloseFont(customHeaderFont);

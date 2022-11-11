@@ -709,6 +709,7 @@ void loadRomPreferences(struct Rom *rom) {
 	rom->preferences.emulatorDir=atoifgl(configurations[0]);
 	rom->preferences.emulator=atoifgl(configurations[1]);
 	rom->preferences.frequency = atoifgl(configurations[2]);
+    fclose(fp);
 }
 
 void saveFavorites() {

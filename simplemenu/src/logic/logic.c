@@ -657,7 +657,7 @@ int recursivelyScanDirectory(char *directory, char *files[], int i) {
 			i++;
 		}
 	}
-	free(d);
+    closedir(d);
 	return i;
 }
 
@@ -685,7 +685,7 @@ int findDirectoriesInDirectory(char *directory, char *files[], int i) {
 			}
 		}
 	}
-	free(d);
+    closedir(d);
 	return i;
 }
 
