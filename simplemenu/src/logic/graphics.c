@@ -533,8 +533,9 @@ void initializeDisplay(int w, int h) {
 	SDL_Surface* image;
 	image = IMG_Load(tempString);
 	SDL_BlitSurface(image, NULL, screen, NULL);
-	SDL_FreeSurface(image);
 	SDL_Flip(screen);
+	SDL_FreeSurface(image);
+	image = NULL;
 #else
 	char res[20];
 	sprintf(res, "resolution: %dx%d", w, h);
