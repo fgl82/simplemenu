@@ -14,6 +14,9 @@
 #define LOADING 10
 #define APPEARANCE_SETTINGS 11
 #define SYSTEM_SETTINGS 12
+#if defined MIYOOMINI
+#define SCREEN_SETTINGS 13
+#endif
 
 #include <pthread.h>
 #include <SDL/SDL_timer.h>
@@ -96,6 +99,16 @@ extern int THEME_OPTION;
 extern int SCREEN_TIMEOUT_OPTION;
 extern int DEFAULT_OPTION;
 extern int USB_OPTION;
+#if defined MIYOOMINI
+extern int AUDIOFIX_OPTION;
+extern int SCREEN_OPTION;
+extern int LUMINATION_OPTION;
+extern int HUE_OPTION;
+extern int SATURATION_OPTION;
+extern int CONTRAST_OPTION;
+extern int NUM_SCREEN_OPTIONS;
+extern int COLOR_MAX_VALUE;
+#endif
 extern int VOLUME_OPTION;
 extern int BRIGHTNESS_OPTION;
 extern int SHARPNESS_OPTION;
@@ -105,6 +118,7 @@ extern int HELP_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern int APPEARANCE_OPTION;
 extern int SYSTEM_OPTION;
+extern int NUM_SYSTEM_OPTIONS;
 
 extern char mediaFolder[1000];
 extern int stripGames;
@@ -125,6 +139,13 @@ extern int OC_OC_HIGH;
 extern int OC_SLEEP;
 extern int backlightValue;
 extern int hdmiChanged;
+#if defined MIYOOMINI
+extern int audioFix;
+extern int luminationValue;
+extern int hueValue;
+extern int saturationValue;
+extern int contrastValue;
+#endif
 extern pthread_t myThread;
 
 /* THEME */

@@ -63,11 +63,11 @@ void checkIfDefault() {
 	fp = fopen("/home/retrofw/autoexec.sh", "r");
 	fpScripts = fopen("scripts/autoexec.sh", "r");
 	#endif
-	#if defined TARGET_OD
+	#ifdef TARGET_OD
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
-	#if defined TARGET_OD_BETA
+	#ifdef TARGET_OD_BETA
 	fp = fopen("/media/data/local/home/.autostart", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
@@ -75,6 +75,17 @@ void checkIfDefault() {
 	fp = fopen("/media/data/local/sbin/frontend_start", "r");
 	fpScripts = fopen("scripts/frontend_start", "r");
 	#endif
+	#ifdef MIYOOMINI
+	//In Miyoo Mini there is no optional startup script.
+	//The closest is /mnt/SDCARD/.tmp_update/updater but we can't count on it because
+	//it is used by most distributions, so we control the quit menu manually by means
+	//of the define MM_NOQUIT.
+	#ifdef MM_NOQUIT
+	shutDownEnabled=1;
+	#else
+	shutDownEnabled=0;
+	#endif
+	#else
 	shutDownEnabled=1;
 	int sameFile=1;
 	int c1, c2;
@@ -101,6 +112,7 @@ void checkIfDefault() {
 	if (fpScripts!=NULL) {
 		fclose(fpScripts);
 	}
+	#endif
 	logMessage("INFO","checkIfDefault","Default state checked");
 }
 
@@ -570,7 +582,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToRomPreferencesFiles[5000];
 	char pathToSectionGroupsFiles[5000];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%s/.simplemenu",home);
-	snprintf(pathToAppFiles,sizeof(pathToConfigFiles),"%s/.simplemenu/apps",home);
+	snprintf(pathToAppFiles,sizeof(pathToAppFiles),"%s/.simplemenu/apps",home);
 	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%s/.simplemenu/games",home);
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%s/.simplemenu/section_groups",home);
 	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%s/.simplemenu/tmp",home);
@@ -697,6 +709,7 @@ void loadRomPreferences(struct Rom *rom) {
 	rom->preferences.emulatorDir=atoifgl(configurations[0]);
 	rom->preferences.emulator=atoifgl(configurations[1]);
 	rom->preferences.frequency = atoifgl(configurations[2]);
+    fclose(fp);
 }
 
 void saveFavorites() {

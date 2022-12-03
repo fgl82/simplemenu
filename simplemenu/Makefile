@@ -7,6 +7,11 @@ PLATFORM = PC
 #PLATFORM = RFW
 #PLATFORM = BITTBOY
 #PLATFORM = RK3326
+#PLATFORM = MMIYOO
+
+#Flags
+MM_NOQUIT = 0  # Controls if we show Quit option in Session menu on Miyoo Mini. In that device there is no optional startup script. The closest is /mnt/SDCARD/.tmp_update/updater but we can't count on it because it is used by most distributions, so we control the quit menu manually by mean of this flag.
+NOLOADING = 0  # Controls whether the 'LOADING...' message is displayed at the bottom right of the screen during some slow processes.
 
 # Compiler
 ifeq ($(PLATFORM), BITTBOY)
@@ -33,13 +38,24 @@ else ifeq ($(PLATFORM), RK3326)
 	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
 	LINKER = /opt/rk3326-toolchain/usr/bin/arm-buildroot-linux-uclibcgnueabi-gcc
 	CFLAGS = -DTARGET_RK3326 -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz -lbz2	
+	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lz -lbz2
+else ifeq ($(PLATFORM), MMIYOO)
+    CC = arm-linux-gnueabihf-gcc
+    LINKER   = arm-linux-gnueabihf-gcc
+    CFLAGS = -DMIYOOMINI -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra -std=gnu99
+	ifeq ($(MM_NOQUIT), 1)
+		CFLAGS += -DMM_NOQUIT
+	endif
+    LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lopk -lini -lz
 else
 	TARGET = simplemenu-x86
 	CC = gcc
 	LINKER   = gcc
 	CFLAGS = -DTARGET_PC -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra -std=gnu99
-	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lopk -lz 	
+	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lopk -lz
+endif
+ifeq ($(NOLOADING), 1)
+	CFLAGS += -DNOLOADING
 endif
 
 # You can use Ofast too but it can be more prone to bugs, careful.
@@ -63,32 +79,50 @@ ifeq ($(PLATFORM), BITTBOY)
 	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))	
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))
 else ifeq ($(PLATFORM), RFW)
 	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))		
-else ifeq ($(PLATFORM), OD)  
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))		
+else ifeq ($(PLATFORM), OD)
 	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
-else ifeq ($(PLATFORM), OD-BETA)  
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))
+else ifeq ($(PLATFORM), OD-BETA)
 	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
-else ifeq ($(PLATFORM), NPG)  
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))
+else ifeq ($(PLATFORM), NPG)
 	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))
+else ifeq ($(PLATFORM), MMIYOO)
+	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
 else
 	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
 	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
+	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/system_logic_mmiyoo.c, $(SOURCES))
+	SOURCES := $(filter-out src/logic/cJSON.c, $(SOURCES))
 endif 
 
 OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

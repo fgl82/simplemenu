@@ -51,6 +51,10 @@ void critical_error_handler()
 {
 	logMessage("ERROR","critical_error_handler","Nice, a critical error!!!");
 	closeLogFile();
+	char command[100];
+	snprintf(command, sizeof(command), "rm %s/.simplemenu/last_state.sav && sync", getenv("HOME"));
+	system(command);
+	freeResources();
 	exit(0);
 }
 
@@ -129,6 +133,13 @@ void initialSetup2() {
 	beforeTryingToSwitchGroup = activeGroup;
 	brightnessValue = getCurrentBrightness();
 	maxBrightnessValue = getMaxBrightness();
+    #if defined MIYOOMINI
+    audioFix = getCurrentSystemValue("audiofix");
+    luminationValue = getCurrentSystemValue("lumination");
+    hueValue = getCurrentSystemValue("hue");
+    saturationValue = getCurrentSystemValue("saturation");
+    contrastValue = getCurrentSystemValue("contrast");
+    #endif
 }
 
 void processEvents() {
@@ -170,6 +181,11 @@ void processEvents() {
 					case AFTER_RUNNING_LAUNCH_AT_BOOT:
 						performLaunchAtBootQuitScreenChoosingAction();
 						break;
+#if defined MIYOOMINI
+                    case SCREEN_SETTINGS:
+                        performScreenSettingsChoosingAction();
+                        break;
+#endif
 				}
 			}
 			resetScreenOffTimer();
@@ -259,6 +275,8 @@ void processEvents() {
 	logMessage("INFO","main","Setup 1");
 #ifdef TARGET_PC
 	initialSetup(atoi(argv[1]), atoi(argv[2]));
+#elif defined MIYOOMINI
+	initialSetup(640,480);
 #else
 	initialSetup(320,240);
 #endif

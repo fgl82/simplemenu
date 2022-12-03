@@ -753,6 +753,80 @@ void performAppearanceSettingsChoosingAction() {
 	}
 }
 
+#if defined MIYOOMINI
+void performScreenSettingsChoosingAction() {
+    LUMINATION_OPTION = 0;
+    HUE_OPTION = 1;
+    SATURATION_OPTION = 2;
+    CONTRAST_OPTION = 3;
+    NUM_SCREEN_OPTIONS = 4;
+    COLOR_MAX_VALUE = 20;
+
+	if (keys[BTN_UP]) {
+		if(chosenSetting>0) {
+			chosenSetting--;
+		} else {
+			chosenSetting=NUM_SCREEN_OPTIONS-1;
+		}
+	} else if (keys[BTN_DOWN]) {
+		if(chosenSetting<NUM_SCREEN_OPTIONS-1) {
+			chosenSetting++;
+		} else {
+			chosenSetting=0;
+		}
+	} else if (keys[BTN_LEFT]||keys[BTN_RIGHT]) {
+		if (chosenSetting==LUMINATION_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (luminationValue>1) {
+					luminationValue-=1;
+				}
+			} else {
+				if (luminationValue<COLOR_MAX_VALUE) {
+					luminationValue+=1;
+				}
+			}
+			setSystemValue("lumination", luminationValue);
+		} else if (chosenSetting==HUE_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (hueValue>1) {
+					hueValue-=1;
+				}
+			} else {
+				if (hueValue<COLOR_MAX_VALUE) {
+					hueValue+=1;
+				}
+			}
+			setSystemValue("hue", hueValue);
+		} else if (chosenSetting==SATURATION_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (saturationValue>1) {
+					saturationValue-=1;
+				}
+			} else {
+				if (saturationValue<COLOR_MAX_VALUE) {
+					saturationValue+=1;
+				}
+			}
+			setSystemValue("saturation", saturationValue);
+		} else if (chosenSetting==CONTRAST_OPTION) {
+			if (keys[BTN_LEFT]) {
+				if (contrastValue>1) {
+					contrastValue-=1;
+				}
+			} else {
+				if (contrastValue<COLOR_MAX_VALUE) {
+					contrastValue+=1;
+				}
+			}
+			setSystemValue("contrast", contrastValue);
+		}
+	} else if (keys[BTN_B]) {
+		chosenSetting=SCREEN_OPTION;
+		currentState=SYSTEM_SETTINGS;
+	}
+}
+#endif
+
 void performSystemSettingsChoosingAction() {
 	VOLUME_OPTION=0;
 	BRIGHTNESS_OPTION=1;
@@ -760,14 +834,21 @@ void performSystemSettingsChoosingAction() {
 	SCREEN_TIMEOUT_OPTION=3;
 	OC_OPTION=4;
 	USB_OPTION=5;
+#if defined MIYOOMINI
+    AUDIOFIX_OPTION = 6;
+    SCREEN_OPTION = 7;
+    NUM_SYSTEM_OPTIONS = 8;
+#else
+    NUM_SYSTEM_OPTIONS = 6;
+#endif
 	if (keys[BTN_UP]) {
 		if(chosenSetting>0) {
 			chosenSetting--;
 		} else {
-			chosenSetting=5;
+			chosenSetting=NUM_SYSTEM_OPTIONS-1;
 		}
 	} else if (keys[BTN_DOWN]) {
-		if(chosenSetting<5) {
+		if(chosenSetting<NUM_SYSTEM_OPTIONS-1) {
 			chosenSetting++;
 		} else {
 			chosenSetting=0;
@@ -821,15 +902,22 @@ void performSystemSettingsChoosingAction() {
 			} else {
 				OCValue=OC_OC_LOW;
 			}
-		}
 #else
 			OCValue=OC_NO;
-		}
+#endif
+        }
+#if defined MIYOOMINI
+        else if (chosenSetting==AUDIOFIX_OPTION) {
+            audioFix = 1 - audioFix;
+            setSystemValue("audiofix", audioFix);
+        }
 #endif
 	} else if (chosenSetting==VOLUME_OPTION&&keys[BTN_A]) {
+#ifndef MIYOOMINI
 		if (keys[BTN_A]) {
 			executeCommand ("/usr/bin", "alsamixer", "#", 1, OC_NO);
 		}
+#endif
 	} else if (chosenSetting==USB_OPTION&&keys[BTN_A]) {
 #if defined TARGET_RFW
 		executeCommand ("./scripts/", "usb_mode_on.sh", "#", 0, OC_NO);
@@ -837,6 +925,11 @@ void performSystemSettingsChoosingAction() {
 #elif defined TARGET_OD_BETA
 		selectedShutDownOption=1;
 		running=0;
+#endif
+#if defined MIYOOMINI
+	} else if (chosenSetting==SCREEN_OPTION&&keys[BTN_A]) {
+		chosenSetting=0;
+		currentState=SCREEN_SETTINGS;
 #endif
 	} else if (keys[BTN_B]) {
 		chosenSetting=previouslyChosenSetting;
@@ -907,6 +1000,7 @@ void performSettingsChoosingAction() {
 				}
 			}
 		} else if (chosenSetting==DEFAULT_OPTION) {
+			#ifndef MIYOOMINI
 			char command [300];
 			if (shutDownEnabled) {
 				#ifdef TARGET_BITTBOY
@@ -943,6 +1037,7 @@ void performSettingsChoosingAction() {
 				selectedShutDownOption = 0;
 			}
 			shutDownEnabled=1+shutDownEnabled*-1;
+			#endif
 		}
 	} else if (chosenSetting==SHUTDOWN_OPTION&&keys[BTN_A]) {
 		running=0;
@@ -958,6 +1053,7 @@ void performSettingsChoosingAction() {
 		previouslyChosenSetting=chosenSetting;
 		chosenSetting=0;
 		currentState=SYSTEM_SETTINGS;
+		brightnessValue = getCurrentBrightness();
 	} else if (keys[BTN_B]) {
 		#if defined TARGET_OD
 		if (hdmiChanged!=hdmiEnabled) {
