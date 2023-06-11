@@ -232,10 +232,12 @@ void launchGame(struct Rom *rom) {
 	if (favoritesSectionSelected && favoritesSize > 0) {
 		struct Favorite favorite = favorites[CURRENT_GAME_NUMBER];
 		strcpy(tempExec,favorite.emulatorFolder);
-		strcat(tempExec,favorite.executable);
+		char executableFileWithExtra[100];
+		strcpy(executableFileWithExtra, favorite.executable);
+		strcat(tempExec, strtok(executableFileWithExtra, " "));
 		file = fopen(tempExec, "r");
 		if (!file&&strstr(tempExec,"#")==NULL) {
-			strcpy(error,favorite.executable);
+			strcpy(error, executableFileWithExtra);
 			strcat(error,"-NOT FOUND");
 			generateError(error,0);
 			return;
