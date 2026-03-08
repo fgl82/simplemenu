@@ -61,15 +61,6 @@ void InsertAtTailInSection(struct MenuSection *section, struct Rom *rom) {
 	newNode->prev = temp;
 }
 
-void PrintDoublyLinkedRomList() {
-	struct Node* temp = CURRENT_SECTION.head;
-	while(temp != NULL) {
-		printf("%s \n",temp->data->name);
-		temp = temp->next;
-	}
-	printf("\n");
-}
-
 struct Rom* GetNthElement(int index)
 {
 	struct Node* current = CURRENT_SECTION.head;

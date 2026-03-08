@@ -28,6 +28,7 @@ void initializeGlobals() {
 	MAX_GAMES_IN_SECTION=500000;
 	favoritesSectionNumber=0;
 	favoritesSize=0;
+	favoritesSectionSelected=0;
 	favoritesChanged=0;
 	FULLSCREEN_ITEMS_PER_PAGE=12;
 	MENU_ITEMS_PER_PAGE=10;
@@ -35,6 +36,7 @@ void initializeGlobals() {
 	isPicModeMenuHidden=1;
 	footerVisibleInFullscreenMode=1;
 	menuVisibleInFullscreenMode=1;
+	autoHideLogos=0;
 	stripGames=1;
 	srand(time(0));
 }
@@ -76,7 +78,7 @@ void initialSetup(int w, int h) {
 	sigaction(SIGABRT, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+	#if defined RG350
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
@@ -93,10 +95,9 @@ void initialSetup(int w, int h) {
 	char temp[100];
 	sprintf(temp,"SDL_VIDEO_KMSDRM_SCALING_SHARPNESS=%i",sharpnessValue);
 	SDL_putenv(temp);
-//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
 	HW_Init();
 	currentCPU = OC_NO;
-#ifndef TARGET_OD_BETA
+#ifndef RG350
 	logMessage("INFO","initialSetup","Setting CPU to base");
 	setCPU(currentCPU);
 #endif
@@ -124,7 +125,7 @@ void initialSetup2() {
 	} else {
 		ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 	}
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
+	#if defined MIYOO || defined RETROFW || defined RG350
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
@@ -194,32 +195,32 @@ void processEvents() {
 			}
 		} else if (event.type==getKeyUp()&&!alternateControls) {
 			if (currentState==BROWSING_GAME_LIST && previousState != SELECTING_EMULATOR ) {
-				if(((int)event.key.keysym.sym)==BTN_B) {
+			if(((int)event.key.keysym.sym)==BTN_B) {
 					if (!aKeyComboWasPressed&&previousState!=SETTINGS_SCREEN) {
 						currentState=SELECTING_SECTION;
-					}
-					hotKeyPressed=0;
-					if(fullscreenMode) {
+				}
+				hotKeyPressed=0;
+				if(fullscreenMode) {
 						if (CURRENT_SECTION.alphabeticalPaging) {
-							resetPicModeHideMenuTimer();
-						}
-					}
-					CURRENT_SECTION.alphabeticalPaging=0;
-					if (aKeyComboWasPressed) {
-						currentState=BROWSING_GAME_LIST;
-					}
-					aKeyComboWasPressed=0;
-					if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
-						refreshRequest=1;
+						resetPicModeHideMenuTimer();
 					}
 				}
+				CURRENT_SECTION.alphabeticalPaging=0;
+				if (aKeyComboWasPressed) {
+					currentState=BROWSING_GAME_LIST;
+				}
+				aKeyComboWasPressed=0;
+				if (currentState!=AFTER_RUNNING_LAUNCH_AT_BOOT) {
+						refreshRequest=1;
+				}
+			}
 			} else if (currentState==SELECTING_SECTION) {
 				if(((int)event.key.keysym.sym)==BTN_B) {
 					if (aKeyComboWasPressed==0) {
 						if (sectionGroupCounter>1&&previousState!=SETTINGS_SCREEN) {
 							beforeTryingToSwitchGroup = activeGroup;
 							currentState=CHOOSING_GROUP;
-						}
+		}
 					} else {
 						hotKeyPressed=0;
 						aKeyComboWasPressed=0;
@@ -257,23 +258,24 @@ void processEvents() {
 				}
 			}
 		}
-		if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
-			loadGameList(0);
-			currentState=BROWSING_GAME_LIST;
+			if (currentState==BROWSING_GAME_LIST_AFTER_TIMER) {
+				loadGameList(0);
+				currentState=BROWSING_GAME_LIST;
 		}
 	}
 }
-#ifdef TARGET_PC
+#ifdef PC
 	int main(int argc, char* argv[]) {
 		if(argc<3) {
 			printf("Usage: simplemenu-x86 [width] [height] \n");
 			exit(0);
-		}
+	}
+}
 #else
-	int main() {
+int main() {
 #endif
 	logMessage("INFO","main","Setup 1");
-#ifdef TARGET_PC
+#ifdef PC
 	initialSetup(atoi(argv[1]), atoi(argv[2]));
 #elif defined MIYOOMINI
 	initialSetup(640,480);

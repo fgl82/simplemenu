@@ -24,7 +24,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 #include <shake.h>
 #endif
 
@@ -41,6 +41,7 @@ extern int running;
 extern int itsStoppedBecauseOfAnError;
 extern int thereIsACriticalError;
 extern int favoritesChanged;
+extern int favoritesSectionSelected;
 extern int returnTo;
 extern int currentSectionNumber;
 extern int currentCPU;
@@ -66,6 +67,7 @@ extern SDL_TimerID picModeHideMenuTimer;
 extern SDL_TimerID picModeHideLogoTimer;
 extern SDL_TimerID hideHeartTimer;
 extern SDL_TimerID batteryTimer;
+extern SDL_TimerID screenTimer;
 
 typedef struct thread_picture {
 	  SDL_Surface* display;
@@ -115,6 +117,7 @@ extern int SHARPNESS_OPTION;
 extern int OC_OPTION;
 extern int SHUTDOWN_OPTION;
 extern int HELP_OPTION;
+extern int AUTO_HIDE_LOGOS_OPTION;
 extern int ITEMS_PER_PAGE_OPTION;
 extern int APPEARANCE_OPTION;
 extern int SYSTEM_OPTION;
@@ -127,6 +130,7 @@ extern int shutDownEnabled;
 extern int selectedShutDownOption;
 extern int footerVisibleInFullscreenMode;
 extern int menuVisibleInFullscreenMode;
+extern int autoHideLogos;
 extern int timeoutValue;
 extern int OCValue;
 extern int brightnessValue;
@@ -357,7 +361,7 @@ extern int BTN_R1;
 extern int BTN_L2;
 extern int BTN_R2;
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 extern Shake_Device *device;
 extern Shake_Effect effect;
 extern int effect_id;

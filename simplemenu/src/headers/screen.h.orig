@@ -1,0 +1,44 @@
+#include "../headers/globals.h"
+#ifndef SCREEN_DEFINED
+#define SCREEN_DEFINED
+void updateScreen(struct Node *node);
+void drawHeader();
+void drawGameList();
+void drawFooter(char *text);
+void setupKeys();
+void setupDecorations();
+void freeResources();
+void displayGamePicture();
+void displayBackgroundPicture();
+void showConsole();
+void drawShutDownScreen();
+uint32_t hideFullScreenModeMenu();
+void resetPicModeHideMenuTimer();
+void resetPicModeHideLogoTimer();
+void clearPicModeHideMenuTimer();
+void clearPicModeHideLogoTimer();
+void clearHideHeartTimer();
+void resetHideHeartTimer();
+<<<<<<< HEAD
+void drawSpecialScreen();
+=======
+void drawSettingsScreen();
+>>>>>>> 7f02f2071c44846467d3a68971acff4fa94ea0ce
+void drawHelpScreen(int page);
+void clearShutdownTimer();
+void resetShutdownTimer();
+void startBatteryTimer();
+void clearBatteryTimer();
+<<<<<<< HEAD
+void drawLoadingText();
+void drawCopyingText();
+void resizeSectionBackground(struct MenuSection *section);
+void initializeFonts();
+void freeResources();
+void freeFonts();
+void freeSettingsFonts();
+void initializeSettingsFonts();
+
+=======
+>>>>>>> 7f02f2071c44846467d3a68971acff4fa94ea0ce
+#endif

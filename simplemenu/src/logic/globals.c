@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 #include <shake.h>
 #endif
 SDL_Surface *screen;
@@ -21,6 +21,7 @@ int running;
 int itsStoppedBecauseOfAnError;
 int thereIsACriticalError;
 int favoritesChanged;
+int favoritesSectionSelected;
 int returnTo;
 int currentSectionNumber;
 int currentCPU;
@@ -32,6 +33,7 @@ int previousState;
 int loading;
 int isPicModeMenuHidden;
 int isSuspended;
+//int isUSBMode;
 int activeGroup;
 int beforeTryingToSwitchGroup;
 int chosenSetting;
@@ -92,6 +94,7 @@ int BRIGHTNESS_OPTION;
 int SHARPNESS_OPTION;
 int OC_OPTION;
 int SHUTDOWN_OPTION;
+int AUTO_HIDE_LOGOS_OPTION;
 int HELP_OPTION;
 int APPEARANCE_OPTION;
 int SYSTEM_OPTION;
@@ -104,6 +107,7 @@ int shutDownEnabled;
 int selectedShutDownOption;
 int footerVisibleInFullscreenMode;
 int menuVisibleInFullscreenMode;
+int autoHideLogos;
 int timeoutValue;
 int OCValue;
 int brightnessValue;
@@ -332,7 +336,7 @@ int BTN_R1;
 int BTN_L2;
 int BTN_R2;
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
  Shake_Device *device;
  Shake_Effect effect;
  int effect_id;

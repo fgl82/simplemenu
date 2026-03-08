@@ -1,6 +1,3 @@
-#if defined (TARGET_OD) || defined (TARGET_OD_BETA)
-#include <shake.h>
-#endif
 #include <stdlib.h>
 #include "../headers/config.h"
 #include "../headers/control.h"
@@ -24,12 +21,16 @@ int performAction(struct Node *node) {
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
 				logMessage("INFO","performAction","Loading system background");
 				CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+				resizeSectionBackground(&CURRENT_SECTION);
 				logMessage("INFO","performAction","Loading system picture");
 				CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+				resizeSectionSystemPicture(&CURRENT_SECTION);
 			}
 			logMessage("INFO","performAction","Loading game list");
 			if (currentSectionNumber!=favoritesSectionNumber) {
 				loadGameList(0);
+			} else {
+//				loadFavoritesSectionGameList();
 			}
 			if(CURRENT_SECTION.gameCount>0) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -41,6 +42,7 @@ int performAction(struct Node *node) {
 		if (keys[BTN_START]) {
 			previousState=currentState;
 			currentState=SETTINGS_SCREEN;
+			themeChanged = activeTheme;
 			chosenSetting=SHUTDOWN_OPTION;
 			themeChanged = activeTheme;
 			selectedShutDownOption=0;
@@ -48,6 +50,7 @@ int performAction(struct Node *node) {
 			currTime = localtime(&currRawtime);
 			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 1;
 		}
 	}
@@ -59,6 +62,15 @@ int performAction(struct Node *node) {
 			return(1);
 		}
 	}
+//	if (keys[BTN_START]&&isUSBMode) {
+//		hotKeyPressed=0;
+//		isUSBMode=0;
+//		int ret = system("./usb_mode_off.sh");
+//		if (ret==-1) {
+//			generateError("FATAL ERROR", 1);
+//		}
+//		return 0;
+//	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
@@ -83,7 +95,7 @@ int performAction(struct Node *node) {
 				int flag = 0;
 				const int GAME_FPS=60;
 				const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
-				Uint32 start_time;
+				Uint32 start_time = 0;
 				for(int i=0;i<25;i++) {
 					selectRandomGame();
 					if (fullscreenMode==0) {
@@ -135,6 +147,7 @@ int performAction(struct Node *node) {
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
 						resizeSectionBackground(&CURRENT_SECTION);
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Advanced, loading game list");
 					loadGameList(0);
@@ -147,13 +160,15 @@ int performAction(struct Node *node) {
 			}
 			if(keys[BTN_UP]) {
 				hotKeyPressed=0;
-				int rewinded = rewindSection(0);
+				int rewinded = rewindSection(1);
 				if(rewinded) {
 					if (CURRENT_SECTION.backgroundSurface == NULL) {
 						logMessage("INFO","performAction","Loading system background");
 						CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+						resizeSectionBackground(&CURRENT_SECTION);
 						logMessage("INFO","performAction","Loading system picture");
 						CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+						resizeSectionSystemPicture(&CURRENT_SECTION);
 					}
 					logMessage("INFO","performAction","Rewinded, loading game list");
 					loadGameList(0);
@@ -161,10 +176,11 @@ int performAction(struct Node *node) {
 				if(CURRENT_SECTION.gameCount>0) {
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 				}
-				aKeyComboWasPressed=1;
+				aKeyComboWasPressed=0;
 				return 0;
 			}
-		}
+//		}
+	}
 	}
 	if (keys[BTN_SELECT]&&!isFavoritesSectionSelected()&&!(currentState==SELECTING_SECTION)) {
 		currentState=SELECTING_EMULATOR;
@@ -208,7 +224,7 @@ int performAction(struct Node *node) {
 				hotKeyPressed=0;
 				advanceSection(1);
 			}
-			return 0;
+		return 0;
 		}
 	}
 
@@ -242,10 +258,11 @@ int performAction(struct Node *node) {
 			currentState=SETTINGS_SCREEN;
 			themeChanged=activeTheme;
 			lastChargeLevel = getBatteryLevel();
+//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_A]) {
-			if(itsStoppedBecauseOfAnError) {
+		if(itsStoppedBecauseOfAnError) {
 				if(thereIsACriticalError) {
 					#ifndef TARGET_PC
 					running=0;
@@ -267,16 +284,16 @@ int performAction(struct Node *node) {
 		}
 		if(!alternateControls) {
 			if (keys[BTN_R]) {
-				int number = CURRENT_GAME_NUMBER;
-				if (fullscreenMode) {
-					fullscreenMode=0;
-					ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
-				} else {
-					fullscreenMode=1;
-					ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
-				}
-				if (CURRENT_SECTION.gameCount>0) {
-					scrollToGame(number);
+			int number = CURRENT_GAME_NUMBER;
+			if (fullscreenMode) {
+				fullscreenMode=0;
+				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+ 			} else {
+				fullscreenMode=1;
+				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			}
+			if (CURRENT_SECTION.gameCount>0) {
+				scrollToGame(number);
 				}
 			}
 		} else {

@@ -9,10 +9,10 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include "opk.h"
+#include <opk.h>
 
 #include <sys/ioctl.h>
-#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined(RG350)
 #include <linux/vt.h>
 #endif
 #include <fcntl.h>
@@ -87,19 +87,19 @@ char* getRomRealName(char *romName) {
 	return (nameTakenFromAlias);
 }
 
+#ifndef MIYOO
 int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
-#ifndef TARGET_BITTBOY
+	int i = 0;
 	struct OPK *opk = opk_open(package_path);
 	if (opk == NULL) {
 		return 0;
 	}
-#endif
+
 	char *name;
 	char *category;
 	char *terminal;
 
 	int i = 0;
-#ifndef TARGET_BITTBOY
 	while (1) {
 		const char *metadata_name;
 		if (opk_open_metadata(opk, &metadata_name) <= 0) {
@@ -136,9 +136,9 @@ int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
 		i++;
 	}
 	opk_close(opk);
-#endif
 	return i;
 }
+#endif
 
 char* getAlias(char *romName) {
 	char *alias = malloc(300);
@@ -199,7 +199,7 @@ void quit() {
 	clearBatteryTimer();
 	freeResources();
 	if (shutDownEnabled) {
-#ifdef TARGET_PC
+#ifdef PC
 		exit(0);
 #endif
 		if (selectedShutDownOption == 1) {
@@ -313,7 +313,7 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 
 	setCPU(frequency);
 
-#ifdef TARGET_RFW
+#ifdef RETROFW
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -323,7 +323,7 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 	fprintf(fp,CURRENT_SECTION.scaling);
 	fclose(fp);
 #endif
-#ifdef TARGET_OD_BETA
+#ifdef RG350
 	if (strcmp(CURRENT_SECTION.scaling,"0")==0) { //0: stretch
 		SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=0");
 	} else if (strcmp(CURRENT_SECTION.scaling,"1")==0) { //1: aspect
@@ -343,41 +343,42 @@ void executeCommand(char *emulatorFolder, char *executable,	char *fileToBeExecut
 	logMessage("INFO", "executeCommand", emulatorFolder);
 	logMessage("INFO", "executeCommand", exec);
 	logMessage("INFO", "executeCommand", fileToBeExecutedWithFullPath);
+	SDL_SetVideoMode(320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_ShowCursor(1);
 	freeResources();
-#ifndef TARGET_OD_BETA
+#ifndef RG350
 	resetFrameBuffer1();
 #endif
-#if defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined RG350
 	if (consoleApp) {
-		/* Enable the framebuffer console */
-		char c = '1';
-		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
-		if (fd < 0) {
-			printf("Unable to open fbcon handle\n");
-		} else {
-			write(fd, &c, 1);
-			close(fd);
-		}
+			/* Enable the framebuffer console */
+			char c = '1';
+			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
+			if (fd < 0) {
+				printf("Unable to open fbcon handle\n");
+			} else {
+				write(fd, &c, 1);
+				close(fd);
+			}
 
-		fd = open("/dev/tty1", O_RDWR);
-		if (fd < 0) {
-			printf("Unable to open tty1 handle\n");
-		} else {
-			if (ioctl(fd, VT_ACTIVATE, 1) < 0)
-				printf("Unable to activate tty1\n");
-			close(fd);
+			fd = open("/dev/tty1", O_RDWR);
+			if (fd < 0) {
+				printf("Unable to open tty1 handle\n");
+			} else {
+				if (ioctl(fd, VT_ACTIVATE, 1) < 0)
+					printf("Unable to activate tty1\n");
+				close(fd);
+			}
 		}
-	}
 #endif
 
 	if(consoleApp) {
-		execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
+	execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
 				fileToBeExecutedWithFullPath1, NULL);
 	} else {
 		execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
 				fileToBeExecutedWithFullPath, NULL);
-	}
+		}
 
 }
 
@@ -430,9 +431,11 @@ int compareIgnoreCase(char *str1, char *str2) {
 	for (int i = 0; temp2[i]; i++) {
 		temp2[i] = tolower(temp2[i]);
 	}
+	
+        int result = strcmp(temp1, temp2);
 	free(temp1);
 	free(temp2);
-	return strcmp(temp1, temp2);
+        return result;
 }
 
 struct Node* SortedMerge(struct Node *a, struct Node *b) {
@@ -594,7 +597,6 @@ int scanDirectory(char *directory, char *files[], int i) {
 				if (e == NULL) {
 					strcat(d_name, "/");
 				}
-				free(e);
 				snprintf(path, PATH_MAX, "%s%s", directory, d_name);
 				CURRENT_SECTION.hasDirs = 1;
 				i = scanDirectory(path, files, i);
@@ -642,7 +644,9 @@ int recursivelyScanDirectory(char *directory, char *files[], int i) {
 				if (e == NULL) {
 					strcat(d_name, "/");
 				}
-				free(e);
+                                if(e != NULL) {
+                                        *e = '\0';
+                                }
 				snprintf(path, PATH_MAX, "%s%s", directory, d_name);
 				logMessage("INFO", "recursivelyScanDirectory","Recursing to path");
 				logMessage("INFO", "recursivelyScanDirectory",path);
@@ -657,7 +661,7 @@ int recursivelyScanDirectory(char *directory, char *files[], int i) {
 			i++;
 		}
 	}
-    closedir(d);
+	closedir(d);
 	return i;
 }
 
@@ -685,7 +689,7 @@ int findDirectoriesInDirectory(char *directory, char *files[], int i) {
 			}
 		}
 	}
-    closedir(d);
+	closedir(d);
 	return i;
 }
 
@@ -820,6 +824,7 @@ int theSectionHasGames(struct MenuSection *section) {
 			if (ext && strcmp((files[i]), "..") != 0
 					&& strcmp((files[i]), ".") != 0
 					&& isExtensionValid(ext, section->fileExtensions)) {
+#ifndef MIYOO					
 				if (strcmp(ext, ".opk") == 0) {
 					struct OPKDesktopFile desktopFiles[10];
 					int desktopFilesCount = getOPK(files[i], desktopFiles);
@@ -860,8 +865,11 @@ int theSectionHasGames(struct MenuSection *section) {
 						desktopCounter++;
 					}
 				} else {
+#endif				
 					value++;
+#ifndef MIYOO					
 				}
+#endif
 			}
 		}
 		for (int i = 0; i < n; i++) {
@@ -918,7 +926,9 @@ void loadGameList(int refresh) {
 		logMessage("INFO","loadGameList","No, loading game list");
 		if(getLaunchAtBoot()==NULL) {
 			drawLoadingText();
+			refreshScreen();
 		}
+		logMessage("INFO","loadGameList","No, loading game list");
 		CURRENT_SECTION.initialized=1;
 		//We don't need to reload the alias file if just refreshing
 		if (!refresh) {
@@ -950,6 +960,7 @@ void loadGameList(int refresh) {
 				while (fgets(currentline, sizeof(currentline), fp) != NULL) {
 					if(getLaunchAtBoot()==NULL) {
 						drawLoadingText();
+						refreshScreen();
 					}
 
 					int size = strlen(currentline)+1;
@@ -1008,6 +1019,7 @@ void loadGameList(int refresh) {
 		for(int k=0;k<dirCounter;k++) {
 			if(getLaunchAtBoot()==NULL) {
 				drawLoadingText();
+				refreshScreen();
 			}
 
 			int n = 0;
@@ -1018,8 +1030,8 @@ void loadGameList(int refresh) {
 			for (int i=0;i<n;i++) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
-						strcmp((files[i]),".")!=0 &&
-						isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+				strcmp((files[i]),".")!=0 &&
+				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {
 						struct OPKDesktopFile desktopFiles[10];
@@ -1029,8 +1041,8 @@ void loadGameList(int refresh) {
 							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 								break;
 							} else {
-#ifdef TARGET_RFW
-								if(strstr(desktopFiles[desktopCounter].name,"retrofw")==NULL) {
+#ifdef RETROFW
+								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
 									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
 									desktopCounter++;
 									continue;
@@ -1065,7 +1077,7 @@ void loadGameList(int refresh) {
 										game = 0;
 									}
 								}
-#ifdef TARGET_RFW
+#ifdef RETROFW
 								strcpy(rom->name,"-m|");
 								strcat(rom->name,desktopFiles[desktopCounter].name);
 								strcat(rom->name,"|");
@@ -1091,6 +1103,7 @@ void loadGameList(int refresh) {
 					}
 					//it's not an opk
 					else {
+#endif					
 						int size = 2000;
 						struct Rom *rom;
 						rom=malloc(sizeof(struct Rom));
@@ -1138,9 +1151,12 @@ void loadGameList(int refresh) {
 						InsertAtTail(rom);
 						loadedFiles++;
 						game++;
+#ifndef MIYOO						
 					}
+#endif					
 				}
 			}
+
 			logMessage("INFO","loadGameList","All files loaded");
 			for (int i=0;i<n;i++) {
 				free(files[i]);
@@ -1157,7 +1173,6 @@ void loadGameList(int refresh) {
 		for (int i=0;i<dirCounter;i++) {
 			free (dirs[i]);
 		}
-
 		logMessage("INFO","loadGameList","The list needs to be sorted");
 		mergeSort(&CURRENT_SECTION.head);
 
@@ -1213,12 +1228,15 @@ void determineStartingScreen(int sectionCount) {
 	}
 	if (sectionCount == 0 || currentSectionNumber == favoritesSectionNumber) {
 		logMessage("INFO", "determineStartingScreen", "No sections found or favorites was selected");
+		favoritesSectionSelected = 1;
 		loadFavoritesSectionGameList();
 		logMessage("INFO", "determineStartingScreen", "Favorites loaded");
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		logMessage("INFO", "determineStartingScreen", "Section background loaded and resized");
 		int gamesInSection = CURRENT_SECTION.gameCount;
@@ -1230,6 +1248,7 @@ void determineStartingScreen(int sectionCount) {
 		CURRENT_SECTION.totalPages=pages;
 		if (favoritesSize == 0 && sectionCount > 0) {
 			logMessage("INFO", "determineStartingScreen", "Favorites was selected but no favorites were found");
+			favoritesSectionSelected = 0;
 			currentSectionNumber = 0;
 			logMessage("INFO", "determineStartingScreen", "Trying to determine starting section again");
 			determineStartingScreen(sectionCount);
@@ -1246,7 +1265,9 @@ void determineStartingScreen(int sectionCount) {
 		if (CURRENT_SECTION.backgroundSurface == NULL) {
 			logMessage("INFO","determineStartingScreen","Loading system background");
 			CURRENT_SECTION.backgroundSurface = IMG_Load(CURRENT_SECTION.background);
+			resizeSectionBackground(&CURRENT_SECTION);
 			CURRENT_SECTION.systemPictureSurface = IMG_Load(CURRENT_SECTION.systemPicture);
+			resizeSectionSystemPicture(&CURRENT_SECTION);
 		}
 		int pages = CURRENT_SECTION.gameCount / ITEMS_PER_PAGE;
 		if (pages > 0 && CURRENT_SECTION.gameCount%ITEMS_PER_PAGE==0) {

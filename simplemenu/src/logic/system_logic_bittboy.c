@@ -3,9 +3,13 @@
 #include <sys/mman.h>
 #include <SDL/SDL_timer.h>
 #include <unistd.h>
+#include <math.h>
 
+#include "../headers/utils.h"
 #include "../headers/globals.h"
 #include "../headers/system_logic.h"
+
+#define BAT_CRITICAL 3330
 
 volatile uint32_t *memregs;
 
@@ -284,24 +288,24 @@ void setCPU(uint32_t mhz) {
 	currentCPU=mhz;
 	uint32_t x, v;
 	uint32_t total=sizeof(oc_table)/sizeof(uint32_t);
-	logMessage("INFO", "Into for");
+	logMessage("INFO", "setCPU", "Into for");
 	for(x=0; x<total; x++) {
 		if((oc_table[x] >> 16) >= mhz) {
-			logMessage("INFO", "Found if");
+			logMessage("INFO", "setCPU", "Found if");
 			v = memregs[0];
-			logMessage("INFO", "Found if 1");
+			logMessage("INFO","setCPU", "Found if 1");
 			v&= 0xffff0000;
-			logMessage("INFO", "Found if 2");
+			logMessage("INFO","setCPU", "Found if 2");
 			v|= (oc_table[x] &  0x0000ffff);
-			logMessage("INFO", "Found if 3");
+			logMessage("INFO","setCPU", "Found if 3");
 			memregs[0] = v;
-			logMessage("INFO", "Break");
+			logMessage("INFO","setCPU", "Break");
 			break;
 		}
 	}
 	char temp[300];
 	snprintf(temp,sizeof(temp),"CPU speed set: %d",currentCPU);
-	logMessage("INFO",temp);
+	logMessage("INFO","setCPU", temp);
 }
 
 int getBacklight()
@@ -341,7 +345,7 @@ uint32_t suspend() {
 };
 
 void resetScreenOffTimer() {
-#ifndef TARGET_PC
+#ifndef PC
 	if(isSuspended) {
 		setCPU(OC_NO);
 		setBacklight(backlightValue);
@@ -356,7 +360,7 @@ void resetScreenOffTimer() {
 void initSuspendTimer() {
 	timeoutTimer=SDL_AddTimer(timeoutValue * 1e3, suspend, NULL);
 	isSuspended=0;
-	logMessage("INFO","Suspend timer initialized");
+	logMessage("INFO", "initSuspendTimer", "Suspend timer initialized");
 }
 
 void HW_Init() {
@@ -367,7 +371,17 @@ void HW_Init() {
 			close(memdev);
 		}
 	}
-	logMessage("INFO","HW Initialized");
+	logMessage("INFO", "HW_Init", "HW Initialized");
+}
+
+void cycleFrequencies() {
+	if(currentCPU==OC_UC) {
+		currentCPU = OC_NO;
+	} else if (currentCPU==OC_NO) {
+		currentCPU = OC_OC;
+	} else {
+		currentCPU = OC_UC;
+	}
 }
 
 int getBatteryLevel() {

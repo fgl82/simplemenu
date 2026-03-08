@@ -667,6 +667,7 @@ void showLetter(struct Rom *rom) {
 
 
 void showCurrentGroup() {
+	int height = SCREEN_HEIGHT;
 	int backgroundColor[3];
 	backgroundColor[0]=50;
 	backgroundColor[1]=50;
@@ -738,15 +739,12 @@ void showRomPreferences() {
 	//Frequency option text
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance1(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	//Frequency option value
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY || defined TARGET_PC || defined MIYOOMINI
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_LOW || CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC_HIGH) {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "yes", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	} else {
 		drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "no", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
 	}
-#else
 	drawTextOnScreen(font, NULL, (SCREEN_WIDTH/2)-width/2+textWidth, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance1(9), "not available", valueColor, VAlignMiddle | HAlignLeft, (int[]){}, 0);
-#endif
 
 	drawRectangleToScreen(width, calculateProportionalSizeOrDistance1(1), SCREEN_WIDTH/2-width/2,SCREEN_HEIGHT/2, problematicGray);
 
@@ -1088,17 +1086,17 @@ void drawGameList() {
 		if(currentSectionNumber!=favoritesSectionNumber) {
 			if (rom->preferences.frequency == OC_OC_HIGH||rom->preferences.frequency == OC_OC_LOW) {
 				strcpy(temp,"+");
-				strcat(temp,buf);
+			strcat(temp,buf);
 			} else {
 				strcpy(temp,buf);
 			}
 		} else {
 			if (CURRENT_SECTION.gameCount>0) {
 				if (favorites[i].frequency == OC_OC_HIGH||favorites[i].frequency == OC_OC_LOW) {
-					strcpy(temp,"+");
-					strcat(temp,buf);
-				} else {
-					strcpy(temp,buf);
+			strcpy(temp,"+");
+			strcat(temp,buf);
+		} else {
+			strcpy(temp,buf);
 				}
 			} else {
 				free(nameWithoutExtension);
@@ -1183,8 +1181,8 @@ void drawBatteryMeter() {
 		}
 	} else {
 		drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(4), 0, calculateProportionalSizeOrDistance1(42), (int[]){80,80,255});
+		}
 	}
-}
 
 void drawSpecialScreen(char *title, char **options, char** values, char** hints, int interactive) {
 	int headerAndFooterBackground[3]={37,50,56};
@@ -1195,6 +1193,7 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 	int problematicGray[3] = {225,225,225};
 
 	logMessage("INFO","drawSettingsScreen","Setting options and values");
+	setOptionsAndValues(options, values, hints);
 
 	logMessage("INFO","drawSettingsScreen","Drawing shit");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), 0,calculateProportionalSizeOrDistance1(22), bodyBackground);
@@ -1206,9 +1205,9 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 	int nextLine = calculateProportionalSizeOrDistance1(50);
 	int nextLineText = calculateProportionalSizeOrDistance1(50);
 	int selected=0;
-	#if defined TARGET_RFW
+	#if defined RETROF"
 	int max = 9;
-	#elif defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
+	#elif defined RG350 || defined PC
 	int max = 9;
 	#else
 	int max = 8;
@@ -1226,6 +1225,7 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			logMessage("INFO","drawSettingsScreen","Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
+			int lineColor[] = { 219,219,219};
 			if (i==0) {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(19), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			} else if (i==max){
@@ -1233,6 +1233,8 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			} else {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(20), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			}
+			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
+			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,lineColor);
 			selected=i;
 		} else {
 			if(!interactive) {
@@ -1241,6 +1243,8 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
+			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
+			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText);
 		}
 		drawSettingsOptionOnScreen(options[i], nextLineText, bodyText);
 		drawSettingsOptionValueOnScreen(values[i], nextLineText, bodyHighlightedText);
@@ -1276,7 +1280,7 @@ void setupHelpScreen(int page) {
 			options[3]="Y";
 			values[3]="Show/Hide favorites";
 
-#if defined TARGET_BITTBOY
+#if defined MIYOO
 			options[4]="R";
 #else
 			options[4]="R1";
@@ -1395,7 +1399,7 @@ void setupSystemSettings() {
 
 	options[4]="Overclocking level";
 
-#if defined TARGET_OD_BETA || defined TARGET_PC
+#if defined RG350 || defined PC
 	if (OCValue==OC_OC_LOW) {
 		values[4]="low";
 	} else if (OCValue==OC_OC_HIGH){
@@ -1408,7 +1412,7 @@ void setupSystemSettings() {
 	hints[4] = "AFFECTS THE ROM MENU OC SETTING";
 
 	options[5]="HDMI ";
-#if defined TARGET_RFW || defined TARGET_OD_BETA
+#if defined RETROFW || defined RG350
 	values[5] = " \0";
 #elif defined MIYOOMINI
 	values[5] = "not available";
@@ -1420,9 +1424,9 @@ void setupSystemSettings() {
 	}
 #endif
 
-#if defined TARGET_RFW
+#if defined RETROFW
 	hints[5] = "PRESS A TO ENABLE USB";
-#elif defined TARGET_OD_BETA
+#elif defined RG350
 	hints[5] = "PRESS A TO REBOOT AND ENABLE HDMI";
 #else
 	hints[5] = "ENABLE OR DISABLE HDMI";
@@ -1524,10 +1528,10 @@ void updateScreen(struct Node *node) {
 			case BROWSING_GAME_LIST:
 				if (fullscreenMode) {
 					if (currentSectionNumber == favoritesSectionNumber || CURRENT_SECTION.gameCount>0) {
-						logMessage("INFO","updateScreen","Fullscreen mode");
-						displayGamePicture(rom);
-						drawGameList();
-						displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+					logMessage("INFO","updateScreen","Fullscreen mode");
+					displayGamePicture(rom);
+					drawGameList();
+					displayHeart(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 					}
 				} else {
 					logMessage("INFO","updateScreen","Menu mode");
@@ -1754,13 +1758,13 @@ void freeResources() {
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
 #endif
-#ifndef TARGET_PC
+#ifndef PC
 	closeLogFile();
 #endif
 	SDL_Quit();
