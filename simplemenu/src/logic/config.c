@@ -578,20 +578,19 @@ void checkThemes() {
 
 void createConfigFilesInHomeIfTheyDontExist() {
 	snprintf(home,sizeof(home),"%s",getenv("HOME"));
+	printf("1\n");	
 	char pathToConfigFiles[PATH_BUFFER_SIZE];
 	char pathToAppFiles[PATH_BUFFER_SIZE];
 	char pathToGameFiles[PATH_BUFFER_SIZE];
-//	char pathToThemeFiles[PATH_BUFFER_SIZE];
 	char pathToTempFiles[PATH_BUFFER_SIZE];
 	char pathToRomPreferencesFiles[PATH_BUFFER_SIZE];
-	char pathToSectionGroupsFiles[PATH_BUFFER_SIZE];
-	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%.*s/.simplemenu", MAX_HOME_LIMIT, home);
+	char pathToSectionGroupsFiles[PATH_BUFFER_SIZE];	
+	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%.*s/.simplemenu", MAX_HOME_LIMIT, home);	
 	snprintf(pathToAppFiles, sizeof(pathToAppFiles), "%.*s/.simplemenu/apps", MAX_HOME_LIMIT, home);
-	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%.*s/.simplemenu/games", MAX_HOME_LIMIT, home);
+	snprintf(pathToGameFiles,sizeof(pathToGameFiles),"%.*s/.simplemenu/games", MAX_HOME_LIMIT, home);	
 	snprintf(pathToSectionGroupsFiles,sizeof(pathToSectionGroupsFiles),"%.*s/.simplemenu/section_groups", MAX_HOME_LIMIT, home);
-//	snprintf(pathToThemeFiles,sizeof(pathToThemeFiles),"%.*s/.simplemenu/themes", MAX_HOME_LIMIT, home);
-	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%.*s/.simplemenu/tmp", MAX_HOME_LIMIT, home);
-	snprintf(pathToRomPreferencesFiles,sizeof(pathToRomPreferencesFiles),"%s/.simplemenu/rom_preferences", MAX_HOME_LIMIT, home);
+	snprintf(pathToTempFiles,sizeof(pathToTempFiles),"%.*s/.simplemenu/tmp", MAX_HOME_LIMIT, home);	
+	snprintf(pathToRomPreferencesFiles,sizeof(pathToRomPreferencesFiles),"%.*s/.simplemenu/rom_preferences", MAX_HOME_LIMIT, home);	
 	int directoryExists=mkdir(pathToConfigFiles,0700);
 	if (!directoryExists) {
 		char copyCommand[PATH_BUFFER_SIZE];
@@ -665,7 +664,7 @@ void createThemesInHomeIfTheyDontExist() {
 void saveRomPreferences(struct Rom *rom) {
 	FILE * fp;
 	char pathToPreferencesFilePlusFileName[PATH_BUFFER_SIZE];
-	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s/%s", MAX_HOME_LIMIT, home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s/%s", MAX_HOME_LIMIT, home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
 	fp = fopen(pathToPreferencesFilePlusFileName, "w");
 	fprintf(fp,"%d;", rom->preferences.emulatorDir);
 	fprintf(fp,"%d;", rom->preferences.emulator);
@@ -681,8 +680,8 @@ void loadRomPreferences(struct Rom *rom) {
 	char pathToPreferencesFilePlusFileName[PATH_BUFFER_SIZE];
 	char pathToPreferencesFiles[PATH_BUFFER_SIZE];
 	if (currentSectionNumber!=favoritesSectionNumber) {
-		snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s%s", MAX_HOME_LIMIT, home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
-		snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%s/.simplemenu/rom_preferences", MAX_HOME_LIMIT, home);
+		snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s%s", MAX_HOME_LIMIT, home, CURRENT_SECTION.sectionName, getNameWithoutPath(rom->name));
+		snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%.*s/.simplemenu/rom_preferences", MAX_HOME_LIMIT, home);
 		mkdir(pathToPreferencesFiles,0700);
 	} else {
 		snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%s/.simplemenu/rom_preferences/%s/%s",home, favorites[CURRENT_GAME_NUMBER].section, getNameWithoutPath(rom->name));

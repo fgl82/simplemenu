@@ -598,6 +598,7 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 }
 
 void initializeDisplay(int w, int h) {
+printf("1\n");
 	int depth=16;
 #if defined(PC) || defined(MIYOOMINI)
 	Uint32 pcflags = SDL_HWSURFACE|SDL_NOFRAME;

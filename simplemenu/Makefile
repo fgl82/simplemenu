@@ -5,6 +5,7 @@ TARGET ?= pc
 SRCS = $(shell find src -name "*.c" ! -name "system_logic_*.c" ! -name "control_*.c" ! -name "unsqfs.c")
 
 ifeq ($(TARGET), pc)
+    EXE = simplemenu-portable/simplemenu
     SRCS += src/logic/system_logic_od.c src/logic/control_od.c
     CFLAGS += $(shell pkg-config --cflags sdl SDL_image SDL_ttf SDL_mixer) -DPC
     LIBS    = $(shell pkg-config --libs sdl SDL_image SDL_ttf SDL_mixer) -lpng -ljpeg -lz -lm -lpthread

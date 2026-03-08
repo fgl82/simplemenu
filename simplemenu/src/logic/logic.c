@@ -1025,14 +1025,14 @@ void loadGameList(int refresh) {
 			logMessage("INFO","loadGameList","Scanning directory");
 			n = scanDirectory(dirs[k], files, 0);
 			logMessage("INFO","loadGameList","Processing files");
-			int realItemCount = n;
-			for (int i=0;i<n;i++) {
+			int realItemCount = n;			
+			for (int i=0;i<n;i++) {			
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
-				strcmp((files[i]),".")!=0 &&
-				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+				strcmp((files[i]),".")!=0 &&				
+				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {				
 					//it's an opk
-					if(strcmp(ext,".opk")==0) {
+					if(strcmp(ext,".opk")==0) {					
 						struct OPKDesktopFile desktopFiles[10];
 						int desktopFilesCount=getOPK(files[i], desktopFiles);
 						int desktopCounter=0;
@@ -1112,7 +1112,7 @@ void loadGameList(int refresh) {
 						strcpy(rom->directory,dirs[k]);
 						rom->isConsoleApp=0;
 						//it's a custom link
-						if(strcmp(ext,".fgl")==0) {
+						if(strcmp(ext,".fgl")==0) {						
 							struct StolenGMenuFile stolenFile;
 							logMessage("INFO","loadGameList", "STOLEN FILE!!!");
 							fillUpStolenGMenuFile(&stolenFile, files[i]);
@@ -1144,8 +1144,8 @@ void loadGameList(int refresh) {
 								CURRENT_SECTION.totalPages++;
 								game = 0;
 							}
-						}
-						loadRomPreferences(rom);
+						}						
+						loadRomPreferences(rom);						
 						InsertAtTail(rom);
 						loadedFiles++;
 						game++;					

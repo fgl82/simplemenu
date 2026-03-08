@@ -1,0 +1,1 @@
+simplemenu-portable/simplemenu: error while loading shared libraries: libSDL_image-1.2.so.0: cannot open shared object file: No such file or directory

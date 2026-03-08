@@ -1,0 +1,327 @@
+Sun Mar  8 17:59:36 2026 | INFO  | loadConfig                               | Config loaded
+Sun Mar  8 17:59:36 2026 | INFO  | initializeDisplay                        | well...
+Sun Mar  8 17:59:36 2026 | INFO  | initializeDisplay                        | maybe...
+Sun Mar  8 17:59:36 2026 | INFO  | initializeDisplay                        | 320x240
+Sun Mar  8 17:59:36 2026 | INFO  | initializeDisplay                        | Initialized Display
+Sun Mar  8 17:59:36 2026 | INFO  | initializeFonts                          | Fonts initialized
+Sun Mar  8 17:59:36 2026 | INFO  | initializeSettingsFonts                  | Initializing Settings Fonts
+Sun Mar  8 17:59:36 2026 | INFO  | initializeSettingsFonts                  | Settings Fonts initialized
+Sun Mar  8 17:59:36 2026 | INFO  | checkThemes                              | Themes checked
+Sun Mar  8 17:59:36 2026 | INFO  | loadLastState                            | Last state loaded
+Sun Mar  8 17:59:36 2026 | INFO  | HW_Init                                  | HW Initialized
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup                             | Setting CPU to base
+Sun Mar  8 17:59:36 2026 | INFO  | setupKeys                                | Input successfully configured
+Sun Mar  8 17:59:36 2026 | INFO  | main                                     | Setup 2
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | Loading theme
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | Loading section groups
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Entering
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | /home/arch-user/Development/C/simplemenu/simplemenu/simplemenu-portable/.simplemenu/section_groups/
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Read dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | It's a dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Read dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | It's a dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Read dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | It's a file
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | /home/arch-user/Development/C/simplemenu/simplemenu/simplemenu-portable/.simplemenu/section_groups/apps and games.png
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Read dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | It's a file
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | /home/arch-user/Development/C/simplemenu/simplemenu/simplemenu-portable/.simplemenu/section_groups/apps and games.ini
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | Read dir
+Sun Mar  8 17:59:36 2026 | INFO  | recursivelyScanDirectory                 | No entry
+Sun Mar  8 17:59:36 2026 | INFO  | loadSectionGroups                        | Loading group background
+Sun Mar  8 17:59:36 2026 | INFO  | loadSectionGroups                        | Loaded section groups
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | Loading sections
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | APPS
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Current exec ready
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | free as a bird
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | free as a bird 2
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Executable set
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Setting logo, background and system
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Set
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | GAMES
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Current exec ready
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | free as a bird
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | free as a bird 2
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Executable set
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Setting logo, background and system
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Set
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 1
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out2
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 3
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 4
+Sun Mar  8 17:59:36 2026 | INFO  | initializeFonts                          | Fonts initialized
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 5
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 6
+Sun Mar  8 17:59:36 2026 | INFO  | loadSections                             | Out 7
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | Loading favorites
+Sun Mar  8 17:59:36 2026 | INFO  | loadFavorites                            | Loaded favorites
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | No sections found or favorites was selected
+Sun Mar  8 17:59:36 2026 | ERROR | loadFavoritesSectionGameList             | Setting total pages
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | Favorites loaded
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | Loading system background
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | Section background loaded and resized
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | Pages set
+Sun Mar  8 17:59:36 2026 | INFO  | determineStartingScreen                  | Found starting screen
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | MY NEW MESSAGE
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | MY NEW MESSAGE2
+Sun Mar  8 17:59:36 2026 | INFO  | initialSetup2                            | MY NEW MESSAGE3
+Sun Mar  8 17:59:36 2026 | INFO  | main                                     | Checking launch at boot
+Sun Mar  8 17:59:36 2026 | INFO  | updateScreen                             | Menu mode
+Sun Mar  8 17:59:36 2026 | INFO  | drawRectangleToScreen                    | 320 - 240 - 0 - 0 - {180,180,180}
+Sun Mar  8 17:59:36 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:36 2026 | INFO  | displayCenteredSurface                   | Displayed surface
+Sun Mar  8 17:59:36 2026 | INFO  | drawGameList                             | Game list - Done
+Sun Mar  8 17:59:36 2026 | INFO  | displayGamePictureInMenu                 | Displayed game picture
+Sun Mar  8 17:59:36 2026 | INFO  | setupDecorations                         | Decorations set
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Setting options and values
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Full screen menu option
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Fullscreen menu 
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Default option
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Default launcher  
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Full screen menu hint
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | DISPLAY A TRANSLUCENT MENU
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Default option hint
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | LAUNCH AFTER BOOTING
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Full screen menu is...
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | enabled
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | Default option value
+Sun Mar  8 17:59:37 2026 | INFO  | setOptionsAndValues                      | no
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing shit
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 218 - 0 - 22 - {250,250,250}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 42 - 0 - 0 - {37,50,56}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 4 - 0 - 42 - {121,121,121}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Positioning batt 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 4 - 0 - 42 - {80,80,255}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Defining number of items
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | About to go through items
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Session 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | quit
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 19 - 0 - 46 - {219,219,219}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 65 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Theme 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | 0A
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 84 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Screen timeout 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | 5
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 103 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Tidy rom names 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 122 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Fullscreen rom names 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 141 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Fullscreen menu 
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 160 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Default launcher  
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | no
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 179 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | HDMI
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | disabled
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 198 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Help
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       |  
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 217 - {229,229,229}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Out of the loop
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | 320 - 22 - 0 - 218 - {37,50,56}
+Sun Mar  8 17:59:37 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Drawing Footer
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Freeign options
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Freeign values
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Freeign hints
+Sun Mar  8 17:59:37 2026 | INFO  | drawSettingsScreen                       | Settings drawn
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Setting options and values
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Full screen menu option
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Fullscreen menu 
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Default option
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Default launcher  
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Full screen menu hint
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | DISPLAY A TRANSLUCENT MENU
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Default option hint
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | LAUNCH AFTER BOOTING
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Full screen menu is...
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | enabled
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | Default option value
+Sun Mar  8 17:59:38 2026 | INFO  | setOptionsAndValues                      | no
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing shit
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 218 - 0 - 22 - {250,250,250}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 42 - 0 - 0 - {37,50,56}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 4 - 0 - 42 - {121,121,121}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Positioning batt 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 4 - 0 - 42 - {80,80,255}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Defining number of items
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | About to go through items
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Session 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | quit
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 19 - 0 - 46 - {219,219,219}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 65 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Theme 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | 0A
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 84 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Screen timeout 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | 5
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 103 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Tidy rom names 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 122 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Fullscreen rom names 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 141 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Fullscreen menu 
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | enabled
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 160 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Default launcher  
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | no
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 179 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | HDMI
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | disabled
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 198 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | one item
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Non-Chosen setting
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Help
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       |  
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing rect
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 1 - 0 - 217 - {229,229,229}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 1
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Next line 2
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | ---
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Out of the loop
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | 320 - 22 - 0 - 218 - {37,50,56}
+Sun Mar  8 17:59:38 2026 | INFO  | drawRectangleToScreen                    | Filling
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Drawing Footer
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Freeign options
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Freeign values
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Freeign hints
+Sun Mar  8 17:59:38 2026 | INFO  | drawSettingsScreen                       | Settings drawn
