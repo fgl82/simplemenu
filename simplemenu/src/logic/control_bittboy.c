@@ -1,4 +1,4 @@
-#if defined (TARGET_OD) || defined (TARGET_OD_BETA)
+#if defined (RG350) || defined (RG350)
 #include <shake.h>
 #endif
 #include <stdlib.h>
@@ -96,7 +96,7 @@ int performAction(struct Node *node) {
 				int flag = 0;
 				const int GAME_FPS=60;
 				const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
-				Uint32 start_time;
+				Uint32 start_time = 0;
 				for(int i=0;i<25;i++) {
 					selectRandomGame();
 					if (fullscreenMode==0) {
@@ -257,7 +257,7 @@ int performAction(struct Node *node) {
 		if (rom!=NULL&&keys[BTN_A]) {
 			if(itsStoppedBecauseOfAnError) {
 				if(thereIsACriticalError) {
-					#ifndef TARGET_PC
+					#ifndef PC
 					running=0;
 					#else
 					freeResources();

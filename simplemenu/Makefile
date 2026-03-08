@@ -1,114 +1,48 @@
-# Software Name
-TARGET = simplemenu
-PLATFORM = PC
-#PLATFORM = RFW
-#PLATFORM = OD
-#PLATFORM = OD-BETA
-#PLATFORM = NPG
-#PLATFORM = RFW
-#PLATFORM = BITTBOY
+EXE = simplemenu
+TARGET ?= pc
 
-# Compiler
-ifeq ($(PLATFORM), BITTBOY)
-	CC = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
-	LINKER = /opt/bittboy-toolchain/bin/arm-buildroot-linux-musleabi-gcc
-	CFLAGS = -DTARGET_BITTBOY -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
-	LIBS += -lSDL -lasound -lSDL_image -lpng -ljpeg -lSDL_ttf -lfreetype -lz -lbz2
-else ifeq ($(PLATFORM), RFW)
-	CC = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
-	LINKER = /opt/rg300-toolchain/usr/bin/mipsel-linux-gcc
-	CFLAGS = -DTARGET_RFW -DUSE_GZIP -O2 -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lopk -lz
-else ifeq ($(PLATFORM), OD)
-	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_OD -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lopk -lz
-else ifeq ($(PLATFORM), OD-BETA)
-	CC = /home/bittboy/Downloads/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	LINKER = /home/bittboy/Downloads/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_OD_BETA -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -Wextra 
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lshake -lpthread -lopk -lz	
-else ifeq ($(PLATFORM), NPG)
-	CC = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	LINKER = /opt/gcw0-toolchain/usr/bin/mipsel-gcw0-linux-uclibc-gcc
-	CFLAGS = -DTARGET_NPG -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fno-PIC -flto -Wall -std=gnu99
-	LIBS += -lSDL -lSDL_sound -lSDL_image -lSDL_ttf -lpthread -lopk -lz -lbz2	
+# Exclude system drivers and internal unsqfs (using Paul's instead)
+SRCS = $(shell find src -name "*.c" ! -name "system_logic_*.c" ! -name "control_*.c" ! -name "unsqfs.c")
+
+ifeq ($(TARGET), pc)
+    SRCS += src/logic/system_logic_od.c src/logic/control_od.c
+    CFLAGS += $(shell pkg-config --cflags sdl SDL_image SDL_ttf SDL_mixer) -DPC
+    LIBS    = $(shell pkg-config --libs sdl SDL_image SDL_ttf SDL_mixer) -lpng -ljpeg -lz -lm -lpthread
 else
-	TARGET = simplemenu-x86
-	CC = gcc
-	LINKER   = gcc
-	CFLAGS = -DTARGET_PC -DUSE_GZIP -Ofast -fdata-sections -ffunction-sections -fPIC -flto -Wall -Wextra -std=gnu99
-	LIBS += -lSDL -lasound -lSDL_image -lSDL_ttf -lpthread -lopk -lini -lz 	
+    LIBS = -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -lpng -ljpeg -lz -lm -pthread
+    ifeq ($(TARGET), miyoo)
+        SRCS += src/logic/system_logic_bittboy.c src/logic/control_bittboy.c
+        CFLAGS += -DMIYOO
+    else ifeq ($(TARGET), retrofw)
+        SRCS += src/logic/system_logic_rfw.c src/logic/control_rfw.c
+        CFLAGS += -DRETROFW
+    else ifeq ($(TARGET), rg350)
+        SRCS += src/logic/system_logic_od.c src/logic/control_od.c
+        CFLAGS += -DRG350
+        LIBS += -lshake
+    endif
 endif
 
-# You can use Ofast too but it can be more prone to bugs, careful.
-CFLAGS +=  -I.
-LDFLAGS = -Wl,--start-group $(LIBS) -Wl,--end-group -Wl,--as-needed -Wl,--gc-sections -flto
+SRCS += $(EXTRA_SRCS)
+OBJS = $(SRCS:.c=.o)
+CC  = $(CROSS_COMPILE)gcc
+CFLAGS += -Wall -Wextra -O2 -std=gnu99
 
-DEBUG=NO
-
-ifeq ($(DEBUG), NO)
-	CFLAGS +=  -DDEBUG -g3
-else
-	LDFLAGS	+=  -s -lm
+ifneq ($(TARGET), pc)
+    ifneq ($(SYSROOT),)
+        CFLAGS  += --sysroot=$(SYSROOT)
+        LDFLAGS += --sysroot=$(SYSROOT)
+    endif
 endif
 
-SRCDIR   = src/logic
-OBJDIR   = src/obj
-BINDIR   = output
-SOURCES  := $(wildcard $(SRCDIR)/*.c)
+all: $(EXE)
 
-ifeq ($(PLATFORM), BITTBOY)
-	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))	
-else ifeq ($(PLATFORM), RFW)
-	SOURCES := $(filter-out src/logic/control_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_od.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))		
-else ifeq ($(PLATFORM), OD)  
-	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))
-else ifeq ($(PLATFORM), OD-BETA)  
-	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
-else ifeq ($(PLATFORM), NPG)  
-	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
-else
-	SOURCES := $(filter-out src/logic/control_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/control_bittboy.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_rfw.c, $(SOURCES))
-	SOURCES := $(filter-out src/logic/system_logic_bittboy.c, $(SOURCES))	
-endif 
+$(EXE): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
-OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-rm       = rm -f
-	
-$(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LINKER) $(OBJECTS) $(LDFLAGS) -o $@
-	@echo "Linking complete!"
-
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
-
-.PHONY: clean
 clean:
-	@$(rm) $(OBJECTS)
-	@echo "Cleanup complete!"
-
-.PHONY: remove
-remove: clean
-	@$(rm) $(BINDIR)/$(TARGET)
-	@echo "Executable removed!"
+	find . -name "*.o" -delete
+	rm -f $(EXE)

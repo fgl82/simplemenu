@@ -74,7 +74,7 @@ void initialSetup() {
 	sigaction(SIGABRT, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGTERM, &sig_term_handler);
-	#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+	#if defined RG350
 	resetFrameBuffer();
 	#endif
 	createConfigFilesInHomeIfTheyDontExist();
@@ -88,7 +88,7 @@ void initialSetup() {
 	loadLastState();
 	HW_Init();
 	currentCPU = OC_NO;
-#ifndef TARGET_OD_BETA
+#ifndef RG350
 	logMessage("INFO","initialSetup","Setting CPU to base");
 	setCPU(currentCPU);
 #endif
@@ -116,12 +116,15 @@ void initialSetup2() {
 	} else {
 		ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
 	}
-	#if defined(TARGET_BITTBOY) || defined(TARGET_RFW) || defined(TARGET_OD) || defined(TARGET_OD_BETA) || defined(TARGET_NPG)
+	#if defined(MIYOO) || defined(RETROFW) || defined(RG350)
 	initSuspendTimer();
 	#endif
 	determineStartingScreen(sectionCount);
+	logMessage("INFO","initialSetup2","MY NEW MESSAGE");
 	enableKeyRepeat();
+		logMessage("INFO","initialSetup2","MY NEW MESSAGE2");
 	lastChargeLevel=getBatteryLevel();
+		logMessage("INFO","initialSetup2","MY NEW MESSAGE3");
 }
 
 void processEvents() {
@@ -209,7 +212,7 @@ void processEvents() {
 			}
 			previousState = currentState;
 		}
-//#if defined (TARGET_BITTBOY)
+//#if defined (MIYOO)
 //		else if (event.type==getKeyUp()&&currentState==SELECTING_SECTION) {
 //			if(aKeyComboWasPressed==1&&((int)event.key.keysym.sym)==BTN_B) {
 //				hotKeyPressed=0;

@@ -8,7 +8,9 @@
 
 #include "../headers/string_utils.h"
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <SDL/SDL.h>
@@ -18,7 +20,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/screen.h"
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
 #include <shake.h>
 #endif
 
@@ -1021,7 +1023,7 @@ void initializeDisplay() {
 	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 	logMessage("INFO","initializeDisplay","maybe...");
-#ifdef TARGET_OD
+#ifdef RG350
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE);
 	SDL_FreeSurface(screen);
@@ -1030,7 +1032,7 @@ void initializeDisplay() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
 
-//#ifdef TARGET_BITTBOY
+//#ifdef MIYOO
 //	logMessage("INFO","yes?");
 //	logMessage("INFO","333");
 //	SCREEN_WIDTH=320;
@@ -1069,7 +1071,7 @@ void initializeDisplay() {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 
 
-#ifdef TARGET_RFW
+#ifdef RETROFW
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -1080,7 +1082,7 @@ void initializeDisplay() {
 	fprintf(fp,"0");
 	fclose(fp);
 #endif
-#ifdef TARGET_PC
+#ifdef PC
 //	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
 	//	SCREEN_HEIGHT = info->current_h;
 	SCREEN_HEIGHT = 240;
@@ -1097,16 +1099,16 @@ void initializeDisplay() {
 
 	SCREEN_WIDTH=320;
 	SCREEN_HEIGHT=240;
-
+#ifdef RG350
 	SDL_Rect** modes = SDL_ListModes(NULL,SDL_NOFRAME|SDL_SWSURFACE);
-
+#endif
 	fp1 = fopen("/sys/class/graphics/fb0/device/allow_downscaling","w");
 	if (fp1!=NULL) {
 		fprintf(fp1, "%d" , 0);
 		fclose(fp1);
 	}
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
 	if(modes==(SDL_Rect **)0) {
 		printf("No available modes\n");
 	} else if(modes==(SDL_Rect **)-1) {
@@ -1178,7 +1180,7 @@ void initializeFonts() {
 
 	customCountFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text2FontSize));
 	outlineCustomCountFont = TTF_OpenFont(textXFont, calculateProportionalSizeOrDistance(text2FontSize));
-	if (menuFont!=NULL && strlen(menuFont)>2) {
+	if (menuFont[0] != '\0' && strlen(menuFont) > 2) {
 		TTF_SetFontOutline(outlineFont,fontOutline);
 		TTF_SetFontOutline(outlineMiniFont,fontOutline);
 		TTF_SetFontOutline(outlineHeaderFont,fontOutline);
@@ -1240,13 +1242,13 @@ void freeResources() {
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
 	Shake_Stop(device, effect_id);
 	Shake_EraseEffect(device, effect_id);
 	Shake_Close(device);
 	Shake_Quit();
 #endif
-#ifndef TARGET_PC
+#ifndef PC
 	closeLogFile();
 #endif
 	SDL_Quit();

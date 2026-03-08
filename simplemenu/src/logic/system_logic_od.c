@@ -11,11 +11,11 @@
 #include "../headers/system_logic.h"
 #include "../headers/globals.h"
 #include "../headers/utils.h"
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
 #include <shake.h>
 #endif
 
-#if defined TARGET_OD_BETA
+#if defined RG350
 #define SYSFS_CPUFREQ_DIR "/sys/devices/system/cpu/cpu0/cpufreq"
 #define SYSFS_CPUFREQ_LIST SYSFS_CPUFREQ_DIR "/scaling_available_frequencies"
 #define SYSFS_CPUFREQ_SET SYSFS_CPUFREQ_DIR "/scaling_setspeed"
@@ -48,7 +48,7 @@ void to_string(char str[], int num)
 void setCPU(uint32_t mhz)
 {
 	currentCPU = mhz;
-	#if defined TARGET_OD_BETA
+	#if defined RG350
 		char strMhz[10];
 		int fd = open(SYSFS_CPUFREQ_SET, O_RDWR);
 		to_string(strMhz, (mhz * 1000));
@@ -96,7 +96,7 @@ uint32_t suspend() {
 };
 
 void resetScreenOffTimer() {
-#ifndef TARGET_PC
+#ifndef PC
 	if(isSuspended) {
 		turnScreenOnOrOff(1);
 		currentCPU=oldCPU;
@@ -115,7 +115,7 @@ void initSuspendTimer() {
 
 void HW_Init()
 {
-	#if defined TARGET_OD || defined TARGET_OD_BETA
+	#if defined RG350 || defined RG350
 	Shake_Init();
 	device = Shake_Open(0);
 	Shake_SimplePeriodic(&effect, SHAKE_PERIODIC_SQUARE, 0.5, 0.1, 0.05, 0.1);
@@ -142,10 +142,10 @@ void rumble() {
 
 int getBatteryLevel() {
 	int max_voltage;
-	int charging=0;
 	int voltage_now;
 	int total;
-#if defined (TARGET_OD_BETA)
+#if defined (RG350)
+	int charging=0;
 	int min_voltage;
 	FILE *f = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
 	fscanf(f, "%i", &max_voltage);
@@ -172,7 +172,8 @@ int getBatteryLevel() {
 		return 5;
 	}
 	return total;
-#elif defined (TARGET_OD)
+#elif defined (RG350)
+	int charging=0;
 	int min_voltage;
 	FILE *f = fopen("/sys/class/power_supply/battery/voltage_max_design", "r");
 	fscanf(f, "%i", &max_voltage);

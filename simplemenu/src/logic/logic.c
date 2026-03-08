@@ -1,4 +1,6 @@
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <ctype.h>
 #include <dirent.h>
 #include <limits.h>
@@ -9,10 +11,10 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include </home/bittboy/git/libopk/opk.h>
+#include <opk.h>
 
 #include <sys/ioctl.h>
-#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined(RG350)
 #include <linux/vt.h>
 #endif
 #include <fcntl.h>
@@ -87,19 +89,18 @@ char* getRomRealName(char *romName) {
 	return (nameTakenFromAlias);
 }
 
+#ifndef MIYOO
 int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
-#ifndef TARGET_BITTBOY
+	int i = 0;
 	struct OPK *opk = opk_open(package_path);
 	if (opk == NULL) {
 		return 0;
 	}
-#endif
+
 	char *name;
 	char *category;
 	char *terminal;
 
-	int i = 0;
-#ifndef TARGET_BITTBOY
 	while (1) {
 		const char *metadata_name;
 		if (opk_open_metadata(opk, &metadata_name) <= 0) {
@@ -136,9 +137,9 @@ int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
 		i++;
 	}
 	opk_close(opk);
-#endif
 	return i;
 }
+#endif
 
 char* getAlias(char *romName) {
 	char *alias = malloc(300);
@@ -201,7 +202,7 @@ void quit() {
 	clearBatteryTimer();
 	freeResources();
 	if (shutDownEnabled) {
-#ifdef TARGET_PC
+#ifdef PC
 		exit(0);
 #endif
 		if (selectedShutDownOption == 1) {
@@ -273,7 +274,7 @@ void resetFrameBuffer1() {
 	}
 }
 
-#ifndef TARGET_PC
+#ifndef PC
 void executeCommand(char *emulatorFolder, char *executable,
 		char *fileToBeExecutedWithFullPath, int consoleApp) {
 #else
@@ -282,7 +283,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	FILE *fp;
 	char *exec = malloc(strlen(executable) + 5000);
 	strcpy(exec, executable);
-	//#ifndef TARGET_OD_BETA
+	//#ifndef RG350
 	unsetenv("SDL_FBCON_DONT_CLEAR");
 	//#endif
 	char pReturnTo[3];
@@ -295,14 +296,14 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 //		if(getLaunchAtBoot()==NULL) {
 	saveLastState();
 //		}
-#ifndef TARGET_PC
+#ifndef PC
 	saveFavorites();
 	clearTimer();
 	clearPicModeHideLogoTimer();
 	clearBatteryTimer();
 #endif
 	logMessage("INFO", "executeCommand", "Launching Game");
-#ifndef TARGET_PC
+#ifndef PC
 //		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 	if (currentSectionNumber == favoritesSectionNumber) {
 		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
@@ -310,7 +311,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
 	}
 #endif
-#ifdef TARGET_RFW
+#ifdef RETROFW
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -320,7 +321,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	fprintf(fp,CURRENT_SECTION.scaling);
 	fclose(fp);
 #endif
-#ifdef TARGET_OD_BETA
+#ifdef RG350
 	if (strcmp(CURRENT_SECTION.scaling,"0")==0) { //0: stretch
 		SDL_putenv("SDL_VIDEO_KMSDRM_SCALING_MODE=0");
 	} else if (strcmp(CURRENT_SECTION.scaling,"1")==0) { //1: aspect
@@ -336,7 +337,7 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 		fprintf(fp, "%d", 1);
 		fclose(fp);
 	}
-#ifndef TARGET_PC
+#ifndef PC
 	logMessage("INFO", "executeCommand", emulatorFolder);
 	logMessage("INFO", "executeCommand", exec);
 	logMessage("INFO", "executeCommand", fileToBeExecutedWithFullPath);
@@ -344,15 +345,15 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 	SDL_ShowCursor(1);
 	freeResources();
 	SDL_ShowCursor(1);
-#ifndef TARGET_OD_BETA
+#ifndef RG350
 	resetFrameBuffer1();
 #endif
 	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-//		#if defined TARGET_RFW
+#ifdef RETROFW
 	printf("\n");
-//		#endif
+#endif
 	if (consoleApp) {
-#if defined(TARGET_NPG) || defined(TARGET_OD) || defined TARGET_OD_BETA
+#if defined RG350
 			/* Enable the framebuffer console */
 			char c = '1';
 			int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
@@ -380,9 +381,9 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 //		getcwd(menuDirectory, sizeof(menuDirectory));
 //		int ret = chdir(directory);
 	//I NEED THIS PRINTF SO IT LAUNCHES ON RFW, WHY!!!!
-//		#if defined TARGET_RFW
+#if defined RETROFW
 	printf("            ");
-//		#endif
+#endif
 //		execlp("opkrun","invoker","-m","default.retrofw.desktop", exec,fileToBeExecutedWithFullPath,NULL);
 
 	execlp("./invoker.dge", "invoker.dge", emulatorFolder, exec,
@@ -534,9 +535,11 @@ int compareIgnoreCase(char *str1, char *str2) {
 	for (int i = 0; temp2[i]; i++) {
 		temp2[i] = tolower(temp2[i]);
 	}
-	free(temp1);
-	free(temp2);
-	return strcmp(temp1, temp2);
+	
+        int result = strcmp(temp1, temp2);
+        free(temp1);
+        free(temp2);
+        return result;
 }
 
 struct Node* SortedMerge(struct Node *a, struct Node *b) {
@@ -706,9 +709,8 @@ int scanDirectory(char *directory, char *files[], int i) {
 				char path[PATH_MAX];
 				char *e = strrchr(d_name, '/');
 				if (e == NULL) {
-					strcat(d_name, "/");
+				      strcat(d_name, "/");
 				}
-				free(e);
 				snprintf(path, PATH_MAX, "%s%s", directory, d_name);
 				CURRENT_SECTION.hasDirs = 1;
 				i = scanDirectory(path, files, i);
@@ -756,7 +758,9 @@ int recursivelyScanDirectory(char *directory, char *files[], int i) {
 				if (e == NULL) {
 					strcat(d_name, "/");
 				}
-				free(e);
+                                if(e != NULL) {
+                                        *e = '\0';
+                                }
 				snprintf(path, PATH_MAX, "%s%s", directory, d_name);
 				logMessage("INFO", "recursivelyScanDirectory","Recursing to path");
 				logMessage("INFO", "recursivelyScanDirectory",path);
@@ -771,7 +775,7 @@ int recursivelyScanDirectory(char *directory, char *files[], int i) {
 			i++;
 		}
 	}
-	free(d);
+	closedir(d);
 	return i;
 }
 
@@ -799,7 +803,7 @@ int findDirectoriesInDirectory(char *directory, char *files[], int i) {
 			}
 		}
 	}
-	free(d);
+	closedir(d);
 	return i;
 }
 
@@ -927,6 +931,7 @@ int theSectionHasGames(struct MenuSection *section) {
 			if (ext && strcmp((files[i]), "..") != 0
 					&& strcmp((files[i]), ".") != 0
 					&& isExtensionValid(ext, section->fileExtensions)) {
+#ifndef MIYOO					
 				if (strcmp(ext, ".opk") == 0) {
 					struct OPKDesktopFile desktopFiles[10];
 					int desktopFilesCount = getOPK(files[i], desktopFiles);
@@ -948,8 +953,11 @@ int theSectionHasGames(struct MenuSection *section) {
 						desktopCounter++;
 					}
 				} else {
+#endif				
 					value++;
+#ifndef MIYOO					
 				}
+#endif
 			}
 		}
 		for (int i = 0; i < n; i++) {
@@ -1108,7 +1116,9 @@ void loadGameList(int refresh) {
 				char *ext = getExtension(files[i]);
 				if (ext&&strcmp((files[i]),"..")!=0 &&
 				strcmp((files[i]),".")!=0 &&
-				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {
+
+				isExtensionValid(ext,CURRENT_SECTION.fileExtensions)) {				
+#ifndef MIYOO				
 					//it's an opk
 					if(strcmp(ext,".opk")==0) {
 						struct OPKDesktopFile desktopFiles[10];
@@ -1118,7 +1128,7 @@ void loadGameList(int refresh) {
 							if(strstr(desktopFiles[desktopCounter].category,CURRENT_SECTION.category)==NULL&&strcmp(CURRENT_SECTION.category,"all")!=0) {
 								break;
 							} else {
-#ifdef TARGET_RFW
+#ifdef RETROFW
 								while(strstr(desktopFiles[desktopCounter].name,"gcw0")!=NULL) {
 									logMessage("WARN", "loadGameList", "Non-RetroFW desktop file found");
 									desktopCounter++;
@@ -1141,7 +1151,7 @@ void loadGameList(int refresh) {
 										game = 0;
 									}
 								}
-#ifdef TARGET_RFW
+#ifdef RETROFW
 								strcpy(rom->name,"-m|");
 								strcat(rom->name,desktopFiles[desktopCounter].name);
 								strcat(rom->name,"|");
@@ -1162,9 +1172,10 @@ void loadGameList(int refresh) {
 							desktopCounter++;
 						}
 						loadedFiles++;
-					}
+					}					
 					//it's not an opk
 					else {
+#endif					
 						int size = 2000;
 						struct Rom *rom;
 						rom=malloc(sizeof(struct Rom));
@@ -1212,9 +1223,12 @@ void loadGameList(int refresh) {
 						InsertAtTail(rom);
 						loadedFiles++;
 						game++;
+#ifndef MIYOO						
 					}
-				}
+#endif					
+				}				
 			}
+
 			logMessage("INFO","loadGameList","All files loaded");
 			for (int i=0;i<n;i++) {
 				free(files[i]);

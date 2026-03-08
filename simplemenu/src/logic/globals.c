@@ -7,7 +7,7 @@
 #include "../headers/hashtable.h"
 #include "../headers/constants.h"
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
 #include <shake.h>
 #endif
 SDL_Surface *screen;
@@ -290,7 +290,7 @@ int BTN_R1;
 int BTN_L2;
 int BTN_R2;
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350 || defined RG350
  Shake_Device *device;
  Shake_Effect effect;
  int effect_id;

@@ -246,7 +246,7 @@ void showRomPreferences() {
 	//Frequency option text
 	drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+calculateProportionalSizeOrDistance(4), (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance(9), "Overclock: ", textColor, VAlignMiddle | HAlignLeft);
 	//Frequency option value
-#if defined TARGET_OD_BETA || defined TARGET_RFW || defined TARGET_BITTBOY
+#if defined RG350 || defined RETROFW || defined MIYOO
 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency==OC_OC) {
 		drawTextOnScreen(getFont(), NULL, (SCREEN_WIDTH/2)-width/2+textWidth+1, (SCREEN_HEIGHT/2)-calculateProportionalSizeOrDistance(9), "yes", valueColor, VAlignMiddle | HAlignLeft);
 	} else {
@@ -658,8 +658,8 @@ void setupDecorations() {
 	if (text1X!=-1&&text1Y!=-1) {
 		drawHeader();
 	}
-	char *gameNumber=malloc(10);
-	snprintf(gameNumber,10,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
+	char *gameNumber=malloc(24);
+	snprintf(gameNumber,24,"%d/%d",CURRENT_SECTION.gameCount>0?(CURRENT_SECTION.currentGameInPage+ITEMS_PER_PAGE*CURRENT_SECTION.currentPage)+1:0,CURRENT_SECTION.gameCount);
 	drawCustomGameNumber(gameNumber, calculateProportionalSizeOrDistance(text2X), calculateProportionalSizeOrDistance(text2Y));
 	free(gameNumber);
 	logMessage("INFO","setupDecorations","Decorations set");
@@ -707,7 +707,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	strcpy(options[DEFAULT_OPTION],"Default launcher  ");
 	logMessage("INFO","setOptionsAndValues","Default option");
 	logMessage("INFO","setOptionsAndValues",options[DEFAULT_OPTION]);
-	#if defined TARGET_RFW
+	#if defined RETROFW
 	strcpy(options[USB_OPTION],"USB mode");
 	#else
 	strcpy(options[USB_OPTION],"HDMI");
@@ -727,7 +727,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 	logMessage("INFO","setOptionsAndValues",hints[DEFAULT_OPTION]);
 	strcpy(hints[HELP_OPTION],"HOW TO USE THIS MENU");
 
-	#if defined TARGET_RFW
+	#if defined RETROFW
 	strcpy(hints[USB_OPTION],"PRESS A TO ENABLE USB");
 	#else
 	strcpy(hints[USB_OPTION],"ENABLE OR DISABLE HDMI");
@@ -792,7 +792,7 @@ void setOptionsAndValues (char **options, char **values, char **hints){
 		logMessage("INFO","setOptionsAndValues","Default option value");
 		logMessage("INFO","setOptionsAndValues",values[DEFAULT_OPTION]);
 	}
-	#if defined TARGET_RFW
+	#if defined RETROFW
 	strcpy(values[USB_OPTION]," \0");
 	#else
 	if (hdmiChanged==1) {
@@ -844,7 +844,7 @@ void drawSettingsScreen() {
 	FULL_SCREEN_FOOTER_OPTION=4;
 	FULL_SCREEN_MENU_OPTION=5;
 	DEFAULT_OPTION=6;
-	#if defined TARGET_BITTBOY
+	#if defined MIYOO
 	USB_OPTION=8;
 	HELP_OPTION=7;
 	#else
@@ -875,9 +875,9 @@ void drawSettingsScreen() {
 	int nextLine = calculateProportionalSizeOrDistance(50);
 	int nextLineText = calculateProportionalSizeOrDistance(50);
 	int selected=0;
-	#if defined TARGET_RFW
+	#if defined RETROFW
 	int max = 9;
-	#elif defined TARGET_OD || defined TARGET_OD_BETA || defined TARGET_PC
+	#elif defined RG350 || defined RG350 || defined PC
 	int max = 9;
 	#else
 	int max = 8;
@@ -1002,7 +1002,7 @@ void drawHelpScreen(int page) {
 						drawSettingsOptionValueOnScreen("Show/Hide favorites", nextLineText, bodyHighlightedText);
 						break;
 					case 4:
-						#if defined TARGET_BITTBOY
+						#if defined MIYOO
 						drawNonShadedSettingsOptionOnScreen("R", nextLineText, bodyText);
 						#else
 						drawNonShadedSettingsOptionOnScreen("R1", nextLineText, bodyText);
