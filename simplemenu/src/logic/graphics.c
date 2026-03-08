@@ -17,7 +17,7 @@
 #include <SDL/SDL_video.h>
 #include "../headers/screen.h"
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 #include <shake.h>
 #endif
 
@@ -599,7 +599,7 @@ int displayCenteredImageOnScreen(char *fileName, char *fallBackText, int scaleTo
 
 void initializeDisplay(int w, int h) {
 	int depth=16;
-#if defined(TARGET_PC) || defined(MIYOOMINI)
+#if defined(PC) || defined(MIYOOMINI)
 	Uint32 pcflags = SDL_HWSURFACE|SDL_NOFRAME;
 #else
 	Uint32 flags = SDL_SWSURFACE|SDL_NOFRAME;
@@ -608,7 +608,7 @@ void initializeDisplay(int w, int h) {
 	logMessage("INFO","initializeDisplay","well...");
 	setenv("SDL_FBCON_DONT_CLEAR", "1", 0);
 	logMessage("INFO","initializeDisplay","maybe...");
-#ifdef TARGET_OD
+#ifdef RG350
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	screen = SDL_SetVideoMode(320, 240, depth, flags);
 	SDL_FreeSurface(screen);
@@ -636,7 +636,7 @@ void initializeDisplay(int w, int h) {
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 
 
-#ifdef TARGET_RFW
+#ifdef RETROFW
 	//	ipu modes (/proc/jz/ipu):
 	//	0: stretch
 	//	1: aspect
@@ -647,7 +647,7 @@ void initializeDisplay(int w, int h) {
 	fprintf(fp,"0");
 	fclose(fp);
 #endif
-#if defined(TARGET_PC) || defined(MIYOOMINI)
+#if defined PC || defined(MIYOOMINI)
 	SCREEN_HEIGHT = h;
 	SCREEN_WIDTH = w;
 	char msg[1000];
@@ -681,7 +681,7 @@ void initializeDisplay(int w, int h) {
 		fclose(fp1);
 	}
 
-#if defined TARGET_OD || defined TARGET_OD_BETA
+#if defined RG350
 	if(modes==(SDL_Rect **)0) {
 		logMessage("INFO", "initializeDisplay", "No available modes");
 	} else if(modes==(SDL_Rect **)-1) {
