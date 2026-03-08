@@ -583,6 +583,7 @@ void createConfigFilesInHomeIfTheyDontExist() {
 	char pathToGameFiles[PATH_BUFFER_SIZE];
 //	char pathToThemeFiles[PATH_BUFFER_SIZE];
 	char pathToTempFiles[PATH_BUFFER_SIZE];
+	char pathToRomPreferencesFiles[PATH_BUFFER_SIZE];
 	char pathToSectionGroupsFiles[PATH_BUFFER_SIZE];
 	snprintf(pathToConfigFiles,sizeof(pathToConfigFiles),"%.*s/.simplemenu", MAX_HOME_LIMIT, home);
 	snprintf(pathToAppFiles, sizeof(pathToAppFiles), "%.*s/.simplemenu/apps", MAX_HOME_LIMIT, home);

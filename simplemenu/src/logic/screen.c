@@ -45,6 +45,7 @@ char *hints[10];
 
 int countDown;
 
+
 void displayHeart(int x, int y) {
 	if(hideHeartTimer!=NULL) {
 		SDL_Surface *heart = loadImage(favoriteIndicator);
@@ -64,6 +65,7 @@ void displayHeart(int x, int y) {
 		}
 	}
 }
+
 
 void drawPictureTextOnScreen(char *buf) {
 	if(!footerVisibleInFullscreenMode||!isPicModeMenuHidden) {
@@ -1192,9 +1194,6 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 	int bodyBackground[3]={250,250,250};
 	int problematicGray[3] = {225,225,225};
 
-	logMessage("INFO","drawSettingsScreen","Setting options and values");
-	setOptionsAndValues(options, values, hints);
-
 	logMessage("INFO","drawSettingsScreen","Drawing shit");
 	drawRectangleToScreen(SCREEN_WIDTH, SCREEN_HEIGHT-calculateProportionalSizeOrDistance1(22), 0,calculateProportionalSizeOrDistance1(22), bodyBackground);
 	drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(42), 0, 0, headerAndFooterBackground);
@@ -1205,7 +1204,7 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 	int nextLine = calculateProportionalSizeOrDistance1(50);
 	int nextLineText = calculateProportionalSizeOrDistance1(50);
 	int selected=0;
-	#if defined RETROF"
+	#if defined RETROFW
 	int max = 9;
 	#elif defined RG350 || defined PC
 	int max = 9;
@@ -1233,8 +1232,6 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			} else {
 				drawRectangleToScreen(SCREEN_WIDTH, calculateProportionalSizeOrDistance1(20), 0, nextLine-calculateProportionalSizeOrDistance1(4), problematicGray);
 			}
-			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawShadedSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText,lineColor);
 			selected=i;
 		} else {
 			if(!interactive) {
@@ -1243,8 +1240,6 @@ void drawSpecialScreen(char *title, char **options, char** values, char** hints,
 			logMessage("INFO","drawSettingsScreen","Non-Chosen setting");
 			logMessage("INFO","drawSettingsScreen",options[i]);
 			logMessage("INFO","drawSettingsScreen",values[i]);
-			drawNonShadedSettingsOptionOnScreen(options[i], nextLineText, bodyText);
-			drawSettingsOptionValueOnScreen(options[i],values[i], nextLineText, bodyHighlightedText);
 		}
 		drawSettingsOptionOnScreen(options[i], nextLineText, bodyText);
 		drawSettingsOptionValueOnScreen(values[i], nextLineText, bodyHighlightedText);

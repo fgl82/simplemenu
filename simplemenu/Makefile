@@ -26,7 +26,8 @@ endif
 SRCS += $(EXTRA_SRCS)
 OBJS = $(SRCS:.c=.o)
 CC  = $(CROSS_COMPILE)gcc
-CFLAGS += -Wall -Wextra -O2 -std=gnu99
+#CFLAGS += -Wall -Wextra -O2 -std=gnu99
+CFLAGS += -w -O2 -std=gnu99
 
 ifneq ($(TARGET), pc)
     ifneq ($(SYSROOT),)

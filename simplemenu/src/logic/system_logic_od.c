@@ -119,16 +119,6 @@ void HW_Init() {
 	logMessage("INFO","HW_Init","HW Initialized");
 }
 
-void cycleFrequencies() {
-	if(currentCPU==OC_UC) {
-		currentCPU = OC_NO;
-	} else if (currentCPU==OC_NO) {
-		currentCPU = OC_OC;
-	} else {
-		currentCPU = OC_UC;
-	}
-}
-
 void rumble() {
 
 }

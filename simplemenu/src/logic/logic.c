@@ -99,7 +99,6 @@ int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
 	char *category;
 	char *terminal;
 
-	int i = 0;
 	while (1) {
 		const char *metadata_name;
 		if (opk_open_metadata(opk, &metadata_name) <= 0) {
@@ -1103,7 +1102,6 @@ void loadGameList(int refresh) {
 					}
 					//it's not an opk
 					else {
-#endif					
 						int size = 2000;
 						struct Rom *rom;
 						rom=malloc(sizeof(struct Rom));
@@ -1150,10 +1148,8 @@ void loadGameList(int refresh) {
 						loadRomPreferences(rom);
 						InsertAtTail(rom);
 						loadedFiles++;
-						game++;
-#ifndef MIYOO						
-					}
-#endif					
+						game++;					
+					}					
 				}
 			}
 

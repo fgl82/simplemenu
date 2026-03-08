@@ -127,7 +127,7 @@ int advanceSection() {
 		CURRENT_SECTION.systemLogoSurface = IMG_Load(CURRENT_SECTION.systemLogo);
 		resizeSectionSystemLogo(&CURRENT_SECTION);
 	}
-	returnValue;
+	return returnValue;
 }
 
 int rewindSection() {
