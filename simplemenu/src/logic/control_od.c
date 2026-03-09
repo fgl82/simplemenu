@@ -39,7 +39,7 @@ int performAction(struct Node *node) {
 				scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
 			}
 			pushEvent();
-			currentState=BROWSING_GAME_LIST;
+			currentState=BROWSING_GAME_LIST;			
 			return 1;
 		}
 		if (keys[BTN_START]) {
@@ -53,7 +53,6 @@ int performAction(struct Node *node) {
 			currTime = localtime(&currRawtime);
 			lastMin=currTime->tm_min;
 			lastChargeLevel = getBatteryLevel();
-//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 1;
 		}
 	}
@@ -68,15 +67,6 @@ int performAction(struct Node *node) {
 			return(1);
 		}
 	}
-//	if (keys[BTN_START]&&isUSBMode) {
-//		hotKeyPressed=0;
-//		isUSBMode=0;
-//		int ret = system("./usb_mode_off.sh");
-//		if (ret==-1) {
-//			generateError("FATAL ERROR", 1);
-//		}
-//		return 0;
-//	}
 	if(itsStoppedBecauseOfAnError&&!keys[BTN_A]) {
 		return(0);
 	}
@@ -160,7 +150,8 @@ int performAction(struct Node *node) {
 					if(currentSectionNumber==favoritesSectionNumber) {
 						loadFavoritesSectionGameList();
 					} else {
-					loadGameList(0);
+						loadGameList(0);
+					}
 				}
 				if(CURRENT_SECTION.gameCount>0) {
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -303,7 +294,6 @@ int performAction(struct Node *node) {
 			currentState=SETTINGS_SCREEN;
 			themeChanged=activeTheme;
 			lastChargeLevel = getBatteryLevel();
-//			pthread_create(&clockThread, NULL, updateClock,NULL);
 			return 0;
 		}
 		if (rom!=NULL&&keys[BTN_A]) {
@@ -387,4 +377,3 @@ int performAction(struct Node *node) {
 	}
 	return 0;
     }
-}
