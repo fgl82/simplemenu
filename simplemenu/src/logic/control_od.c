@@ -19,6 +19,7 @@ int performAction(struct Node *node) {
 	} else {
 		rom = NULL;
 	}
+	printf("FER %d\n",currentState);
 	if((!alternateControls&&currentState==SELECTING_SECTION)||(alternateControls&&(currentState==CHOOSING_GROUP||currentState==SELECTING_SECTION))) {
 		if (keys[BTN_A]) {
 			if (CURRENT_SECTION.backgroundSurface==NULL) {
@@ -150,8 +151,8 @@ int performAction(struct Node *node) {
 					if(currentSectionNumber==favoritesSectionNumber) {
 						loadFavoritesSectionGameList();
 					} else {
-						loadGameList(0);
-					}
+					loadGameList(0);
+				}
 				}
 				if(CURRENT_SECTION.gameCount>0) {
 					scrollToGame(CURRENT_SECTION.realCurrentGameNumber);
@@ -226,7 +227,6 @@ int performAction(struct Node *node) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
 			advanceSection();
-//			}
 			return 0;
 		}
 	} else {
@@ -234,22 +234,19 @@ int performAction(struct Node *node) {
 			if (currentSectionNumber!=favoritesSectionNumber) {
 				returnTo=currentSectionNumber;
 			}
-//			if (currentSectionNumber!=favoritesSectionNumber) {
 			currentState=SELECTING_SECTION;
 			hotKeyPressed=0;
 			advanceSection();
-//			}
 			return 0;
 		}
 	}
 
 	if (currentState!=SELECTING_EMULATOR&&!hotKeyPressed) {
 		if (keys[BTN_Y]) {
-			if(!isFavoritesSectionSelected()) {
-	//			loadFavoritesSectionGameList();
-				if(FAVORITES_SECTION.gameCount>0) {
-			showOrHideFavorites();
-				}
+                        if(!isFavoritesSectionSelected()) {
+			        if(FAVORITES_SECTION.gameCount>0) {
+	    		                showOrHideFavorites();
+			        }
 			} else {
 				currentSectionNumber=returnTo;
 				if (CURRENT_SECTION.gameCount==0) {
@@ -288,6 +285,7 @@ int performAction(struct Node *node) {
 			return 0;
 		}
 		if (keys[BTN_START]) {
+		                printf("FER2\n");
 			chosenSetting=SHUTDOWN_OPTION;
 			selectedShutDownOption=0;
 			previousState=currentState;
@@ -319,18 +317,18 @@ int performAction(struct Node *node) {
 		}
 		if(!alternateControls) {
 			if (keys[BTN_R1]) {
-			int number = CURRENT_GAME_NUMBER;
-			if (fullscreenMode) {
-				fullscreenMode=0;
-				ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
- 			} else {
-				fullscreenMode=1;
-				ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
-			}
-			if (CURRENT_SECTION.gameCount>0) {
-				scrollToGame(number);
-				}
-			}
+			        int number = CURRENT_GAME_NUMBER;
+			        if (fullscreenMode) {
+				        fullscreenMode=0;
+				        ITEMS_PER_PAGE=MENU_ITEMS_PER_PAGE;
+         			} else {
+				        fullscreenMode=1;
+				        ITEMS_PER_PAGE=FULLSCREEN_ITEMS_PER_PAGE;
+			        }
+			        if (CURRENT_SECTION.gameCount>0) {
+				        scrollToGame(number);
+			        }
+		        }
 		} else {
 			if (keys[BTN_L2]) {
 				int number = CURRENT_GAME_NUMBER;
