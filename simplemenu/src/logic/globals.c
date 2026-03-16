@@ -211,8 +211,14 @@ struct Rom {
 	int isConsoleApp;
 };
 
+typedef enum {
+	NODE_TYPE_ROM,
+	NODE_TYPE_FAVORITE
+} NodeType;
+
 struct Node  {
-	struct Rom  *data;
+	void  *data;
+	NodeType nodeType;
 	struct Node *next;
 	struct Node *prev;
 };
@@ -269,7 +275,10 @@ struct MenuSection {
 struct SectionGroup sectionGroups[100];
 int sectionGroupStates[100][100][5];
 struct MenuSection menuSections[100];
-struct Favorite favorites[2000];
+struct MenuSection FAVORITES_SECTION;
+struct Node* favoritesHead = NULL;
+struct Node* favoritesTail = NULL;
+int favoritesSize = 0;
 
 /* CONTROL */
 uint8_t *keys;
@@ -306,6 +315,9 @@ int HDMI_WIDTH;
 int HDMI_HEIGHT;
 double SCREEN_RATIO;
 int hdmiEnabled;
+#ifdef PC
+SDL_Surface *displayScreen;
+#endif
 
 /* MISC */
 time_t currRawtime;

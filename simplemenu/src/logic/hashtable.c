@@ -133,3 +133,26 @@ char *ht_get( hashtable_t *hashtable, char *key ) {
 	}
 
 }
+
+void ht_destroy(hashtable_t *hashtable) {
+	int i;
+	entry_t *entry, *tmp;
+
+	if (hashtable == NULL) {
+		return;
+	}
+
+	for (i = 0; i < hashtable->size; i++) {
+		entry = hashtable->table[i];
+		while (entry != NULL) {
+			tmp = entry->next;
+			free(entry->key);
+			free(entry->value);
+			free(entry);
+			entry = tmp;
+		}
+	}
+
+	free(hashtable->table);
+	free(hashtable);
+}

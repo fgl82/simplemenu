@@ -122,9 +122,9 @@ void initialSetup2() {
 	determineStartingScreen(sectionCount);
 	logMessage("INFO","initialSetup2","MY NEW MESSAGE");
 	enableKeyRepeat();
-		logMessage("INFO","initialSetup2","MY NEW MESSAGE2");
+	logMessage("INFO","initialSetup2","MY NEW MESSAGE2");
 	lastChargeLevel=getBatteryLevel();
-		logMessage("INFO","initialSetup2","MY NEW MESSAGE3");
+	logMessage("INFO","initialSetup2","MY NEW MESSAGE3");
 }
 
 void processEvents() {
@@ -240,6 +240,41 @@ void processEvents() {
 	}
 }
 
+void freeRom(struct Rom *rom) {
+	if (rom == NULL) {
+		return;
+	}
+	if (rom->name != NULL) {
+		free(rom->name);
+	}
+	if (rom->alias != NULL) {
+		// As with cleanListForSection, avoid literal "\0"
+		if (rom->alias[0] != '\0') {
+			free(rom->alias);
+		}
+	}
+	if (rom->directory != NULL) {
+		free(rom->directory);
+	}
+	free(rom);
+}
+
+void freeAutostartRom(struct AutostartRom *autostartRom) {
+	if (autostartRom == NULL) {
+		return;
+	}
+	if (autostartRom->rom != NULL) {
+		freeRom(autostartRom->rom);
+	}
+	if (autostartRom->emulator != NULL) {
+		free(autostartRom->emulator);
+	}
+	if (autostartRom->emulatorDir != NULL) {
+		free(autostartRom->emulatorDir);
+	}
+	free(autostartRom);
+}
+
 int main() {
 	logMessage("INFO","main","Setup 1");
 	initialSetup();
@@ -255,13 +290,14 @@ int main() {
 			logMessage("INFO","main","Launching at boot");
 			launchAutoStartGame(launchAtBootGame->rom, launchAtBootGame->emulatorDir, launchAtBootGame->emulator);
 		}
+		freeAutostartRom(launchAtBootGame);
 	} else {
 		currentState=BROWSING_GAME_LIST;
 		pushEvent();
 	}
 	const int GAME_FPS=60;
 	const int FRAME_DURATION_IN_MILLISECONDS = 1000/GAME_FPS;
-	Uint32 start_time;
+	Uint32 start_time;	
 	updateScreen(CURRENT_SECTION.currentGameNode);
 	refreshScreen();
 	startBatteryTimer();

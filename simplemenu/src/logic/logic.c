@@ -39,12 +39,15 @@ FILE* getCurrentSectionAliasFile() {
 }
 
 struct Favorite findFavorite(char *name) {
+	struct Node* current = favoritesHead;
 	struct Favorite favorite;
-	for (int i = 0; i < favoritesSize; i++) {
-		favorite = favorites[i];
+	memset(&favorite, 0, sizeof(favorite));
+	while (current != NULL) {
+		favorite = *(struct Favorite*)current->data;
 		if (strcmp(favorite.name, name) == 0) {
 			return favorite;
 		}
+		current = current->next;
 	}
 	return favorite;
 }
@@ -75,10 +78,12 @@ char* getRomRealName(char *romName) {
 	stripGameName(strippedNameWithoutExtension);
 	nameTakenFromAlias = ht_get(CURRENT_SECTION.aliasHashTable,strippedNameWithoutExtension);
 	if (nameTakenFromAlias != NULL) {
+		free(strippedNameWithoutExtension);
 		return (nameTakenFromAlias);
 	} else {
 		char *dup = strdup(romName);
 		stripGameName(dup);
+		free(strippedNameWithoutExtension);
 		return (dup);
 	}
 	if (strippedNameWithoutExtension != NULL) {
@@ -144,7 +149,9 @@ int getOPK(char *package_path, struct OPKDesktopFile *desktopFiles) {
 char* getAlias(char *romName) {
 	char *alias = malloc(300);
 	if (strlen(CURRENT_SECTION.aliasFileName)>1) {
-		strcpy(alias, getRomRealName(romName));
+		char *realName = getRomRealName(romName);
+		strcpy(alias, realName);
+		free(realName);
 	} else {
 		strcpy(alias, romName);
 	}
@@ -222,10 +229,13 @@ void quit() {
 }
 
 int doesFavoriteExist(char *name) {
-	for (int i = 0; i < favoritesSize; i++) {
-		if (strstr(name, favorites[i].name)) {
+	struct Node* current = favoritesHead;
+	while (current != NULL) {
+		struct Favorite favorite = *(struct Favorite*)current->data;
+		if (strcmp(name, favorite.name) == 0) {
 			return 1;
 		}
+		current = current->next;
 	}
 	return 0;
 }
@@ -306,9 +316,12 @@ void executeCommandPC (char *executable, char *fileToBeExecutedWithFullPath) {
 #ifndef PC
 //		loadRomPreferences(CURRENT_SECTION.currentGameNode->data);
 	if (currentSectionNumber == favoritesSectionNumber) {
-		setCPU(favorites[CURRENT_GAME_NUMBER].frequency);
+		struct Favorite* favorite = GetNthFavorite(CURRENT_GAME_NUMBER);
+		if (favorite != NULL) {
+			setCPU(favorite->frequency);
+		}
 	} else {
-		setCPU(CURRENT_SECTION.currentGameNode->data->preferences.frequency);
+		setCPU(((struct Rom *)CURRENT_SECTION.currentGameNode->data)->preferences.frequency);
 	}
 #endif
 #ifdef RETROFW
@@ -438,8 +451,9 @@ int countGamesInSection() {
 
 struct Rom* findGame(char *game) {
 	for (int i = 0; i < CURRENT_SECTION.gameCount;i++) {
-		if (strcmp(CURRENT_SECTION.currentGameNode->data->name, game)==0) {
-			return (CURRENT_SECTION.currentGameNode->data);
+		struct Rom *rom = (struct Rom *)CURRENT_SECTION.currentGameNode->data;
+		if (strcmp(rom->name, game)==0) {
+			return rom;
 		}
 		if (CURRENT_SECTION.currentGameNode->next!=NULL) {
 			CURRENT_SECTION.currentGameNode = CURRENT_SECTION.currentGameNode->next;
@@ -551,17 +565,19 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
 	else if (b == NULL)
 		return (a);
 
+	struct Rom *romA = (struct Rom *)a->data;
+	struct Rom *romB = (struct Rom *)b->data;
 	char *s1Alias = malloc(1000);
-	if (a->data->alias != NULL && strlen(a->data->alias) > 2) {
-		strcpy(s1Alias, a->data->alias);
+	if (romA->alias != NULL && strlen(romA->alias) > 2) {
+		strcpy(s1Alias, romA->alias);
 	} else {
-		strcpy(s1Alias, a->data->name);
+		strcpy(s1Alias, romA->name);
 	}
 	char *s2Alias = malloc(1000);
-	if (b->data->alias != NULL && strlen(b->data->alias) > 2) {
-		strcpy(s2Alias, b->data->alias);
+	if (romB->alias != NULL && strlen(romB->alias) > 2) {
+		strcpy(s2Alias, romB->alias);
 	} else {
-		strcpy(s2Alias, b->data->name);
+		strcpy(s2Alias, romB->name);
 	}
 
 	char *noPathS1Alias = strdup(s1Alias);
@@ -654,41 +670,56 @@ void mergeSort(struct Node **headRef) {
 }
 
 void loadFavoritesSectionGameList() {
+	struct MenuSection *section = &menuSections[favoritesSectionNumber];
 	int gameInPage = 0;
 	int page = 0;
-	logMessage("ERROR", "loadFavoritesSectionGameList", "Setting total pages");
-	FAVORITES_SECTION.totalPages=0;
-	FAVORITES_SECTION.gameCount=0;
-	cleanListForSection(&FAVORITES_SECTION);
-	for (int i = 0; i < favoritesSize; i++) {
+	cleanListForSection(section);
+	section->gameCount = 0;
+	section->totalPages = 1;
+	section->currentPage = 0;
+	section->currentGameInPage = 0;
+	section->realCurrentGameNumber = 0;
+	section->currentGameNode = NULL;
+
+	struct Node* current = favoritesHead;
+	while (current != NULL) {
 		if (gameInPage == ITEMS_PER_PAGE) {
-			if (i != favoritesSize) {
-				page++;
-				gameInPage = 0;
-				logMessage("ERROR", "loadFavoritesSectionGameList",
-						"Increasing total pages");
-				FAVORITES_SECTION.totalPages++;
-			}
+			page++;
+			gameInPage = 0;
+			section->totalPages++;
 		}
 
-		int size = strlen(favorites[i].name)+1;
-		int aliasSize = strlen(favorites[i].alias)+1;
+		struct Favorite* favorite = (struct Favorite*)current->data;
+
+		int size = strlen(favorite->name)+1;
+		int aliasSize = strlen(favorite->alias)+1;
 
 		struct Rom *rom = malloc(sizeof(struct Rom));
 		rom->name=malloc(size);
 		rom->alias=malloc(aliasSize);
-		rom->directory=malloc(1);
-		strcpy(rom->alias, favorites[i].alias);
-		strcpy(rom->name, favorites[i].name);
-		rom->isConsoleApp = favorites[i].isConsoleApp;
+		rom->directory=malloc(strlen(favorite->filesDirectory) + 1);
+		strcpy(rom->directory, favorite->filesDirectory);
+		strcpy(rom->alias, favorite->alias);
+		strcpy(rom->name, favorite->name);
+		rom->isConsoleApp = favorite->isConsoleApp;
 		loadRomPreferences(rom);
-		InsertAtTailInSection(&FAVORITES_SECTION, rom);
+		InsertAtTailInSection(section, rom);
 		gameInPage++;
-		FAVORITES_SECTION.gameCount++;
+		section->gameCount++;
+		current = current->next;
 	}
-	FAVORITES_SECTION.tail=GetNthNode(FAVORITES_SECTION.gameCount-1);
+
+	if (section->gameCount > 0) {
+		struct Node *n = section->head;
+		while (n != NULL && n->next != NULL) {
+			n = n->next;
+		}
+		section->tail = n;
+	} else {
+		section->tail = NULL;
+	}
 	if (favoritesSize > 0) {
-		scrollToGame(FAVORITES_SECTION.realCurrentGameNumber);
+		scrollToGame(section->realCurrentGameNumber);
 	}
 }
 
@@ -1279,7 +1310,8 @@ int countGamesInPage() {
 	node = CURRENT_SECTION.currentGameNode;
 	for (int i = number; i < number + ITEMS_PER_PAGE; i++) {
 		if (node != NULL) {
-			if (node->data->name != NULL && strlen(node->data->name) > 1) {
+			struct Rom *rom = (struct Rom *)node->data;
+			if (rom->name != NULL && strlen(rom->name) > 1) {
 				gamesCounter++;
 			}
 			if (node->next == NULL) {

@@ -6,6 +6,7 @@
 #include <SDL/SDL_timer.h>
 #include <unistd.h>
 
+#include <math.h>
 #include "../headers/string_utils.h"
 
 #ifndef _GNU_SOURCE
@@ -18,7 +19,6 @@
 #include <SDL/SDL_mouse.h>
 #include <SDL/SDL_stdinc.h>
 #include <SDL/SDL_video.h>
-#include "../headers/screen.h"
 
 #if defined RG350 || defined RG350
 #include <shake.h>
@@ -31,6 +31,12 @@
 #include "../headers/graphics.h"
 #include "../headers/globals.h"
 #include "../headers/utils.h"
+#include "../headers/screen.h"
+#include "../headers/doubly_linked_rom_list.h"
+
+void ht_destroy(hashtable_t *hashtable);
+void freeSections();
+void freeSectionGroups();
 
 TTF_Font *font = NULL;
 TTF_Font *miniFont = NULL;
@@ -73,6 +79,9 @@ TTF_Font *getFooterFont() {
 }
 
 TTF_Font *getBigFont() {
+	if (BIGFont != NULL) {
+		return BIGFont;
+	}
 	char *akashi = "resources/akashi.ttf";
 	BIGFont = TTF_OpenFont(akashi, calculateProportionalSizeOrDistance(14+18));
 	return BIGFont;
@@ -102,7 +111,7 @@ int calculateProportionalSizeOrDistance(int number) {
 
 int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, char *buf, int txtColor[], int align, int backgroundColor[], int shaded) {
 	SDL_Surface *msg;
-	SDL_Surface *msg1 = malloc(sizeof(msg));
+	SDL_Surface *msg1 = NULL;
 	char *bufCopy=malloc(strlen(buf)+1);
 	strcpy(bufCopy,buf);
 
@@ -153,7 +162,7 @@ int genericDrawTextOnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, cha
 	rect2.w = msg->w;
 	rect2.h = msg->h;
 
-	if(currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0) {
+	if(currentState==BROWSING_GAME_LIST && outline != NULL && fontOutline > 0 && msg1 != NULL) {
 		SDL_Rect rect = {fontOutline, fontOutline, msg1->w, msg1->h};
 		SDL_BlitSurface(msg, NULL, msg1, &rect);
 		SDL_BlitSurface(msg1, NULL, screen, &rect2);
@@ -293,6 +302,7 @@ void drawCustomText1OnScreen(TTF_Font *font, TTF_Font *outline, int x, int y, co
 
 	SDL_FreeSurface(msg);
 	free(bufCopy);
+	free(bufCopy1);
 }
 
 void drawShadedSettingsOptionValueOnScreen(char *option, char *value, int position, int txtColor[], int txtBackgroundColor[]) {
@@ -460,10 +470,10 @@ void drawPictureTextOnScreen(char *buf) {
 	int h = 0;
 	TTF_SizeText(font, buf, NULL, &h);
 	char *temp = malloc(strlen(buf)+2);
-	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_UC) {
+	if (((struct Rom *)CURRENT_SECTION.currentGameNode->data)->preferences.frequency == OC_UC) {
 		strcpy(temp,"-");
 		strcat(temp,buf);
-	} else 	if (CURRENT_SECTION.currentGameNode->data->preferences.frequency == OC_OC) {
+	} else 	if (((struct Rom *)CURRENT_SECTION.currentGameNode->data)->preferences.frequency == OC_OC) {
 		strcpy(temp,"+");
 		strcat(temp,buf);
 	} else {
@@ -527,7 +537,10 @@ void drawTextOnHeader() {
 		break;
 	}
 	if (currentSectionNumber==favoritesSectionNumber) {
-		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, calculateProportionalSizeOrDistance(text1X), calculateProportionalSizeOrDistance(text1Y), favorites[CURRENT_GAME_NUMBER].section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		struct Favorite* favorite = GetNthFavorite(CURRENT_GAME_NUMBER);
+		if (favorite != NULL) {
+			genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, calculateProportionalSizeOrDistance(text1X), calculateProportionalSizeOrDistance(text1Y), favorite->section, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
+		}
 	} else {
 		genericDrawTextOnScreen(customHeaderFont, outlineCustomHeaderFont, calculateProportionalSizeOrDistance(text1X), calculateProportionalSizeOrDistance(text1Y), strlen(menuSections[currentSectionNumber].fantasyName)>1?menuSections[currentSectionNumber].fantasyName:menuSections[currentSectionNumber].sectionName, menuSections[currentSectionNumber].fullscreenMenuItemsColor, VAlignMiddle | Halign, CURRENT_SECTION.fullScreenMenuBackgroundColor, 0);
 	}
@@ -1031,22 +1044,6 @@ void initializeDisplay() {
 #endif
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
-
-//#ifdef MIYOO
-//	logMessage("INFO","yes?");
-//	logMessage("INFO","333");
-//	SCREEN_WIDTH=320;
-//	SCREEN_HEIGHT=240;
-//	logMessage("INFO","444");
-//	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_NOFRAME|SDL_SWSURFACE);
-//	logMessage("INFO","555");
-//	//	TTF_Init();
-//	MAGIC_NUMBER = SCREEN_WIDTH-calculateProportionalSizeOrDistance(2);
-//	logMessage("INFO","Initialized Display");
-//	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-//	return;
-//#endif
-
 	//    SDL_JoystickEventState(SDL_ENABLE);
 	//    joystick = SDL_JoystickOpen(0);
 
@@ -1068,6 +1065,25 @@ void initializeDisplay() {
 		SCREEN_WIDTH = HDMI_WIDTH;
 		SCREEN_HEIGHT = HDMI_HEIGHT;
 	}
+
+	if (SCREEN_WIDTH == 0 || SCREEN_HEIGHT == 0) {
+#ifdef PC
+		const SDL_VideoInfo* info = SDL_GetVideoInfo();
+		if (info != NULL && info->current_w > 0 && info->current_h > 0) {
+			SCREEN_WIDTH = info->current_w;
+			SCREEN_HEIGHT = info->current_h;
+		} else {
+			// Fallback to a safe default on PC
+			logMessage("WARN", "initializeDisplay", "SDL_GetVideoInfo() returned invalid dimensions. Falling back to 640x480.");
+			SCREEN_WIDTH = 640;
+			SCREEN_HEIGHT = 480;
+		}
+#else
+		SCREEN_WIDTH = 320;
+		SCREEN_HEIGHT = 240;
+#endif
+	}
+
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
 
 
@@ -1083,16 +1099,35 @@ void initializeDisplay() {
 	fclose(fp);
 #endif
 #ifdef PC
-//	const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();
-	//	SCREEN_HEIGHT = info->current_h;
+	// PC: use a larger window, render to a fixed 320x240 logical surface.
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	int windowW = 0;
+	int windowH = 0;
+	if (info != NULL && info->current_w > 0 && info->current_h > 0) {
+		windowW = info->current_w;
+		windowH = info->current_h;
+	} else {
+		windowW = 640;
+		windowH = 480;
+	}
+	// Logical resolution stays at 320x240 as before
 	SCREEN_HEIGHT = 240;
 	SCREEN_WIDTH = (SCREEN_HEIGHT/3)*4;
-	char msg[1000];
-	snprintf(msg,1000,"%dx%d",SCREEN_WIDTH,SCREEN_HEIGHT);
-	logMessage("INFO", "initializeDisplay", msg);
 	SCREEN_RATIO = (double)SCREEN_WIDTH/SCREEN_HEIGHT;
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_NOFRAME);
-//	SDL_ShowCursor(0);
+
+	char msg[1000];
+	snprintf(msg, sizeof(msg), "logical=%dx%d window=%dx%d", SCREEN_WIDTH, SCREEN_HEIGHT, windowW, windowH);
+	logMessage("INFO", "initializeDisplay", msg);
+
+	// Create fullscreen window/backbuffer and logical render surface
+	displayScreen = SDL_SetVideoMode(windowW, windowH, 32, SDL_FULLSCREEN|SDL_HWSURFACE|SDL_DOUBLEBUF);
+	if (displayScreen == NULL) {
+		// Fallback to 320x240 fullscreen if desktop mode fails
+		windowW = SCREEN_WIDTH;
+		windowH = SCREEN_HEIGHT;
+		displayScreen = SDL_SetVideoMode(windowW, windowH, 32, SDL_FULLSCREEN|SDL_SWSURFACE|SDL_DOUBLEBUF);
+	}
+	screen = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 #else
 	FILE *fp1;
 	SDL_ShowCursor(0);
@@ -1118,8 +1153,8 @@ void initializeDisplay() {
 		for(int i=0; modes[i]; i++) {
 			printf("%dx%d\n", modes[i]->w, modes[i]->h);
 			if (modes[i]->w==640 && modes[i]->h ==480) {
-				SCREEN_WIDTH=640;
-				SCREEN_HEIGHT=480;
+					SCREEN_WIDTH=640;
+					SCREEN_HEIGHT=480;
 				break;
 			}
 		}
@@ -1142,7 +1177,25 @@ void initializeDisplay() {
 
 
 void refreshScreen() {
+	#ifdef PC
+	if (displayScreen != NULL && screen != NULL) {
+		// Scale logical 320x240 surface to the actual window size.
+		if (displayScreen->w == SCREEN_WIDTH && displayScreen->h == SCREEN_HEIGHT) {
+			SDL_BlitSurface(screen, NULL, displayScreen, NULL);
+		} else {
+			double zoomx = (double)displayScreen->w / (double)SCREEN_WIDTH;
+			double zoomy = (double)displayScreen->h / (double)SCREEN_HEIGHT;
+			SDL_Surface *scaled = zoomSurface(screen, zoomx, zoomy, 1);
+			if (scaled != NULL) {
+				SDL_BlitSurface(scaled, NULL, displayScreen, NULL);
+				SDL_FreeSurface(scaled);
+			}
+		}
+		SDL_Flip(displayScreen);
+	}
+	#else
 	SDL_Flip(screen);
+	#endif
 //	int black[3] = {0,0,0};
 //	drawRectangleToScreen(SCREEN_WIDTH,SCREEN_HEIGHT,0,0,black);
 }
@@ -1239,6 +1292,18 @@ void freeSettingsFonts() {
 }
 
 void freeResources() {
+	int i;
+
+	for (i = 0; i < themeCounter; i++) {
+		if (themes[i] != NULL) {
+			free(themes[i]);
+			themes[i] = NULL;
+		}
+	}
+
+	freeSectionGroups();
+	freeSections();
+
 	freeFonts();
 	freeSettingsFonts();
 	TTF_Quit();

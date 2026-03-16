@@ -1,4 +1,4 @@
-EXE = simplemenu
+EXE = simplemenu-portable/simplemenu
 TARGET ?= pc
 
 # Exclude system drivers and internal unsqfs (using Paul's instead)
