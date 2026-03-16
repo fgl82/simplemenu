@@ -32,6 +32,9 @@
 #include "../headers/doubly_linked_rom_list.h"
 #include "../headers/utils.h"
 
+/* Forward decl: used by qsort() before definition below */
+int compareFavorites(const void *f1, const void *f2);
+
 FILE* getCurrentSectionAliasFile() {
 	FILE *aliasFile;
 	aliasFile = fopen(CURRENT_SECTION.aliasFileName, "r");
@@ -673,6 +676,7 @@ void loadFavoritesSectionGameList() {
 	struct MenuSection *section = &menuSections[favoritesSectionNumber];
 	int gameInPage = 0;
 	int page = 0;
+
 	cleanListForSection(section);
 	section->gameCount = 0;
 	section->totalPages = 1;
@@ -681,32 +685,80 @@ void loadFavoritesSectionGameList() {
 	section->realCurrentGameNumber = 0;
 	section->currentGameNode = NULL;
 
-	struct Node* current = favoritesHead;
-	while (current != NULL) {
-		if (gameInPage == ITEMS_PER_PAGE) {
-			page++;
-			gameInPage = 0;
-			section->totalPages++;
+	/* If there are no favorites, nothing else to do */
+	if (favoritesSize <= 0 || favoritesHead == NULL) {
+		section->head = NULL;
+		section->tail = NULL;
+		return;
+	}
+
+	/* Copy favorites into a temporary array so we can sort them alphabetically */
+	struct Favorite *favoritesArray = malloc(sizeof(struct Favorite) * favoritesSize);
+	if (favoritesArray == NULL) {
+		/* Fallback: just keep existing insertion order */
+		struct Node* currentFallback = favoritesHead;
+		while (currentFallback != NULL) {
+			struct Favorite* favorite = (struct Favorite*)currentFallback->data;
+
+			int size = strlen(favorite->name)+1;
+			int aliasSize = strlen(favorite->alias)+1;
+
+			struct Rom *rom = malloc(sizeof(struct Rom));
+			rom->name=malloc(size);
+			rom->alias=malloc(aliasSize);
+			rom->directory=malloc(strlen(favorite->filesDirectory) + 1);
+			strcpy(rom->directory, favorite->filesDirectory);
+			strcpy(rom->alias, favorite->alias);
+			strcpy(rom->name, favorite->name);
+			rom->isConsoleApp = favorite->isConsoleApp;
+			loadRomPreferences(rom);
+			InsertAtTailInSection(section, rom);
+			gameInPage++;
+			section->gameCount++;
+			currentFallback = currentFallback->next;
+		}
+	} else {
+		/* Fill array with copies of all favorites */
+		struct Node* current = favoritesHead;
+		int index = 0;
+		while (current != NULL && index < favoritesSize) {
+			struct Favorite* favorite = (struct Favorite*)current->data;
+			favoritesArray[index] = *favorite;
+			index++;
+			current = current->next;
 		}
 
-		struct Favorite* favorite = (struct Favorite*)current->data;
+		/* Sort the favorites using existing alphabetical comparator */
+		qsort(favoritesArray, favoritesSize, sizeof(struct Favorite), compareFavorites);
 
-		int size = strlen(favorite->name)+1;
-		int aliasSize = strlen(favorite->alias)+1;
+		/* Build the ROM list for the favorites section from the sorted array */
+		for (int i = 0; i < favoritesSize; i++) {
+			struct Favorite *favorite = &favoritesArray[i];
 
-		struct Rom *rom = malloc(sizeof(struct Rom));
-		rom->name=malloc(size);
-		rom->alias=malloc(aliasSize);
-		rom->directory=malloc(strlen(favorite->filesDirectory) + 1);
-		strcpy(rom->directory, favorite->filesDirectory);
-		strcpy(rom->alias, favorite->alias);
-		strcpy(rom->name, favorite->name);
-		rom->isConsoleApp = favorite->isConsoleApp;
-		loadRomPreferences(rom);
-		InsertAtTailInSection(section, rom);
-		gameInPage++;
-		section->gameCount++;
-		current = current->next;
+			if (gameInPage == ITEMS_PER_PAGE) {
+				page++;
+				gameInPage = 0;
+				section->totalPages++;
+			}
+
+			int size = strlen(favorite->name)+1;
+			int aliasSize = strlen(favorite->alias)+1;
+
+			struct Rom *rom = malloc(sizeof(struct Rom));
+			rom->name=malloc(size);
+			rom->alias=malloc(aliasSize);
+			rom->directory=malloc(strlen(favorite->filesDirectory) + 1);
+			strcpy(rom->directory, favorite->filesDirectory);
+			strcpy(rom->alias, favorite->alias);
+			strcpy(rom->name, favorite->name);
+			rom->isConsoleApp = favorite->isConsoleApp;
+			loadRomPreferences(rom);
+			InsertAtTailInSection(section, rom);
+			gameInPage++;
+			section->gameCount++;
+		}
+
+		free(favoritesArray);
 	}
 
 	if (section->gameCount > 0) {
@@ -761,46 +813,55 @@ int scanDirectory(char *directory, char *files[], int i) {
 	return i;
 }
 
-int recursivelyScanDirectory(char *directory, char *files[], int i) {
+int recursivelyScanDirectory(char *directory, char *files[], int i, int maxFiles) {
 	logMessage("INFO", "recursivelyScanDirectory","Entering");
 	DIR *d;
 	logMessage("INFO", "recursivelyScanDirectory",directory);
+	if (i >= maxFiles) {
+		return i;
+	}
 	d = opendir(directory);
 	if (d == NULL) {
 		logMessage("INFO", "recursivelyScanDirectory","0 files");
-		return 0;
+		return i;
 	}
 	while (1) {
 		struct dirent *entry;
-		char *d_name;
 		logMessage("INFO", "recursivelyScanDirectory","Read dir");
 		entry = readdir(d);
 		if (!entry) {
 			logMessage("INFO", "recursivelyScanDirectory","No entry");
 			break;
 		}
-		d_name = entry->d_name;
+		const char *d_name = entry->d_name;
 		if (entry->d_type & DT_DIR) {
 			logMessage("INFO", "recursivelyScanDirectory","It's a dir");
 			if (strcmp(d_name, mediaFolder) != 0 && strcmp(d_name, "..") != 0
 					&& strcmp(d_name, ".") != 0) {
-				char path[PATH_MAX];
-				char *e = strrchr(d_name, '/');
-				if (e == NULL) {
-					strcat(d_name, "/");
+				/* Never mutate entry->d_name (dirent storage is not ours). */
+				char nameBuf[PATH_MAX];
+				snprintf(nameBuf, sizeof(nameBuf), "%s", d_name);
+				size_t nameLen = strlen(nameBuf);
+				if (nameLen > 0 && nameBuf[nameLen - 1] != '/') {
+					/* ensure trailing slash when recursing */
+					if (nameLen + 1 < sizeof(nameBuf)) {
+						nameBuf[nameLen] = '/';
+						nameBuf[nameLen + 1] = '\0';
+					}
 				}
-                                if(e != NULL) {
-                                        *e = '\0';
-                                }
-				snprintf(path, PATH_MAX, "%s%s", directory, d_name);
+				char path[PATH_MAX];
+				snprintf(path, sizeof(path), "%s%s", directory, nameBuf);
 				logMessage("INFO", "recursivelyScanDirectory","Recursing to path");
 				logMessage("INFO", "recursivelyScanDirectory",path);
-				i = recursivelyScanDirectory(path, files, i);
+				i = recursivelyScanDirectory(path, files, i, maxFiles);
 			}
 		} else {
 			logMessage("INFO", "recursivelyScanDirectory","It's a file");
+			if (i >= maxFiles) {
+				break;
+			}
 			char path[PATH_MAX];
-			snprintf(path, PATH_MAX, "%s%s", directory, d_name);
+			snprintf(path, sizeof(path), "%s%s", directory, d_name);
 			files[i] = strdup(path);
 			logMessage("INFO", "recursivelyScanDirectory",files[i]);
 			i++;
@@ -870,6 +931,9 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile *stolenFile, char *fileName) {
 	size_t len = 0;
 	ssize_t read;
 	fp = fopen(fileName, "r");
+	if (fp == NULL) {
+		return;
+	}
 	int paramsFlag = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		char *ptr;
@@ -929,7 +993,7 @@ void fillUpStolenGMenuFile(struct StolenGMenuFile *stolenFile, char *fileName) {
 int theSectionHasGames(struct MenuSection *section) {
 	section->hidden = 1;
 	int dirCounter = 0;
-	char *dirs[10];
+	char *dirs[100];
 	char *ptr;
 //	char dirsCopy[1000];
 	char *filesDirectoriesCopy = strdup(section->filesDirectories);
@@ -942,6 +1006,10 @@ int theSectionHasGames(struct MenuSection *section) {
 	char *files[MAX_GAMES_IN_SECTION];
 	int value = 0;
 	while (ptr != NULL) {
+		if (dirCounter >= 100) {
+			logMessage("WARN", "theSectionHasGames", "Too many directories in filesDirectories; truncating to 100");
+			break;
+		}
 		dirs[dirCounter] = strdup(ptr);
 		ptr = strtok(NULL, ",");
 		snprintf(message, 300, "Looking at %s", ptr);
@@ -954,7 +1022,7 @@ int theSectionHasGames(struct MenuSection *section) {
 	for (int k = 0; k < dirCounter; k++) {
 		snprintf(message, 300, "k is %d", k);
 		logMessage("INFO", "theSectionHasGames", message);
-		int n = recursivelyScanDirectory(dirs[k], files, 0);
+		int n = recursivelyScanDirectory(dirs[k], files, 0, MAX_GAMES_IN_SECTION);
 		snprintf(message, 300, "Directory %s has %d files", dirs[k], n);
 		logMessage("INFO", "theSectionHasGames", message);
 		for (int i = 0; i < n; i++) {
@@ -1057,7 +1125,7 @@ void loadGameList(int refresh) {
 		char *files[MAX_GAMES_IN_SECTION];
 		int game = -1;
 		int dirCounter=0;
-		char *dirs[10];
+		char *dirs[100];
 		char *ptr=NULL;
 
 		char sectionCacheName[PATH_MAX];
@@ -1067,10 +1135,10 @@ void loadGameList(int refresh) {
 			logMessage("INFO","loadGameList","Cleaned section list");
 		}
 		if (useCache==1) {
+			snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 			if (refresh) {
 				remove(sectionCacheName);
 			}
-			snprintf(sectionCacheName,sizeof(sectionCacheName),"%s/.simplemenu/tmp/%s.tmp",getenv("HOME"),CURRENT_SECTION.sectionName);
 			fp = fopen(sectionCacheName,"r");
 			if (fp!=NULL) {
 				logMessage("INFO","loadGameList","Using cache file");
@@ -1128,6 +1196,10 @@ void loadGameList(int refresh) {
 		ptr = strtok(filesDirectoriesCopy, ",");
 		loading=1;
 		while (ptr!=NULL) {
+			if (dirCounter >= 100) {
+				logMessage("WARN", "loadGameList", "Too many directories in filesDirectories; truncating to 100");
+				break;
+			}
 			dirs[dirCounter]=strdup(ptr);
 			ptr = strtok(NULL, ",");
 			dirCounter++;
@@ -1140,7 +1212,7 @@ void loadGameList(int refresh) {
 
 			int n = 0;
 			logMessage("INFO","loadGameList","Scanning directory");
-			n = recursivelyScanDirectory(dirs[k], files, 0);
+			n = recursivelyScanDirectory(dirs[k], files, 0, MAX_GAMES_IN_SECTION);
 			logMessage("INFO","loadGameList","Processing files");
 			int realItemCount = n;
 			for (int i=0;i<n;i++) {

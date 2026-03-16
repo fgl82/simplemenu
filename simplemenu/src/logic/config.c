@@ -115,9 +115,15 @@ int isLaunchAtBoot(char *romName) {
 	line[strlen(line)-1] = '\0';
 	if (!strcmp(line,romName)) {
 		fclose(fp);
+		if (line) {
+			free(line);
+		}
 		return 1;
 	}
 	fclose(fp);
+	if (line) {
+		free(line);
+	}
 	return 0;
 }
 
@@ -198,6 +204,9 @@ struct AutostartRom *getLaunchAtBoot() {
 	getline(&line, &len, fp);
 	autostartRom->emulator = strdup(line);
 	fclose(fp);
+	if (line != NULL) {
+		free(line);
+	}
 	return autostartRom;
 }
 
@@ -636,8 +645,13 @@ void createThemesInHomeIfTheyDontExist() {
 void saveRomPreferences(struct Rom *rom) {
 	FILE * fp;
 	char pathToPreferencesFilePlusFileName[PATH_BUFFER_SIZE];
-	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s", MAX_HOME_LIMIT, home, getNameWithoutPath(rom->name));
+	char *romNameWithoutPath = getNameWithoutPath(rom->name);
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s", MAX_HOME_LIMIT, home, romNameWithoutPath);
+	free(romNameWithoutPath);
 	fp = fopen(pathToPreferencesFilePlusFileName, "w");
+	if (fp == NULL) {
+		return;
+	}
 	fprintf(fp,"%d;", rom->preferences.emulatorDir);
 	fprintf(fp,"%d;", rom->preferences.emulator);
 	fprintf(fp,"%d", rom->preferences.frequency);
@@ -651,7 +665,9 @@ void loadRomPreferences(struct Rom *rom) {
 	size_t len = 0;
 	char pathToPreferencesFilePlusFileName[PATH_BUFFER_SIZE];
 	char pathToPreferencesFiles[PATH_BUFFER_SIZE];
-	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s", MAX_HOME_LIMIT, home, getNameWithoutPath(rom->name));
+	char *romNameWithoutPath = getNameWithoutPath(rom->name);
+	snprintf(pathToPreferencesFilePlusFileName,sizeof(pathToPreferencesFilePlusFileName),"%.*s/.simplemenu/rom_preferences/%s", MAX_HOME_LIMIT, home, romNameWithoutPath);
+	free(romNameWithoutPath);
 	snprintf(pathToPreferencesFiles,sizeof(pathToPreferencesFiles),"%.*s/.simplemenu/rom_preferences", MAX_HOME_LIMIT, home);
 
 	mkdir(pathToPreferencesFiles,0700);
@@ -678,6 +694,11 @@ void loadRomPreferences(struct Rom *rom) {
 	rom->preferences.emulatorDir=atoifgl(configurations[0]);
 	rom->preferences.emulator=atoifgl(configurations[1]);
 	rom->preferences.frequency=atoifgl(configurations[2]);
+
+	fclose(fp);
+	if (line != NULL) {
+		free(line);
+	}
 }
 
 void saveFavorites() {
@@ -929,7 +950,7 @@ void loadSectionGroups() {
 
 	snprintf(tempString,sizeof(tempString),"%s/.simplemenu/section_groups/",getenv("HOME"));
 
-	int n = recursivelyScanDirectory(tempString, files, 0);
+	int n = recursivelyScanDirectory(tempString, files, 0, 1000);
 
 	for(int i=0;i<n;i++) {
 		if(strstr(files[i],".png")!=NULL) {
