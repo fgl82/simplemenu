@@ -737,6 +737,60 @@ void saveFavorites() {
 	}
 }
 
+int cmpfncfavs(const void *a, const void *b) {
+    struct Node *nodeA = *(struct Node **)a;
+    struct Node *nodeB = *(struct Node **)b;
+
+    struct Favorite *favA = (struct Favorite *)nodeA->data;
+    struct Favorite *favB = (struct Favorite *)nodeB->data;
+
+    // Determine which string to use for A
+    // We check if alias[0] is not a null terminator (meaning it's not empty)
+    char *displayA = (favA->alias[0] != ' ') ? favA->alias : favA->name;
+    
+    // Determine which string to use for B
+    char *displayB = (favB->alias[0] != ' ') ? favB->alias : favB->name;
+
+    // Sort alphabetically by the chosen display strings
+    return strcasecmp(displayA, displayB);
+}
+
+void sortFavorites() {
+    // Basic safety checks
+    if (favoritesSize < 2 || favoritesHead == NULL) {
+        return;
+    }
+
+    // Allocate an array to hold 'struct Node' pointers
+    struct Node **ptrArray = malloc(favoritesSize * sizeof(struct Node *));
+    if (ptrArray == NULL) {
+        return; // Always check malloc on systems like your Arch laptop
+    }
+
+    // 1. Traverse the list and fill the array with the Nodes
+    struct Node *current = favoritesHead;
+    for (int i = 0; i < favoritesSize && current != NULL; i++) {
+        ptrArray[i] = current;
+        current = current->next;
+    }
+
+    // 2. Sort the array of Node pointers using our comparison function
+    qsort(ptrArray, favoritesSize, sizeof(struct Node *), cmpfncfavs);
+
+    // 3. Re-link all the 'next' and 'prev' pointers in the new order
+    for (int i = 0; i < favoritesSize; i++) {
+        ptrArray[i]->next = (i < favoritesSize - 1) ? ptrArray[i + 1] : NULL;
+        ptrArray[i]->prev = (i > 0) ? ptrArray[i - 1] : NULL;
+    }
+
+    // 4. Update the global head and tail pointers
+    favoritesHead = ptrArray[0];
+    favoritesTail = ptrArray[favoritesSize - 1];
+
+    // 5. Free the temporary array (Valgrind will thank you)
+    free(ptrArray);
+}
+
 void loadFavorites() {
 	FILE * fp;
 	char * line = NULL;
@@ -784,6 +838,7 @@ void loadFavorites() {
 	if (line) {
 		free(line);
 	}
+	sortFavorites();
 	// Sorting is now handled by the doubly linked list implementation
 	logMessage("INFO","loadFavorites","Loaded favorites");
 }
@@ -804,7 +859,6 @@ int cmpfnc(const void *f1, const void *f2)
 	}
 	return strcmp(temp1, temp2);
 }
-
 
 void loadConfig() {
 	char pathToConfigFilePlusFileName[PATH_BUFFER_SIZE];
